@@ -1,0 +1,23 @@
+# LLaMA 3.2 3B Model Configuration (optional secondary model)
+model:
+  name: "meta-llama/Llama-3.2-3B-Instruct"
+  revision: "main"
+  dtype: "float16"
+  quantization:
+    enabled: true
+    bits: 4
+    quant_type: "nf4"
+    compute_dtype: "float16"
+    use_double_quant: true
+  device: "cuda:0"
+  trust_remote_code: false
+
+tokenizer:
+  name: "meta-llama/Llama-3.2-3B-Instruct"
+  padding_side: "left"
+  truncation: true
+
+hardware:
+  gpu: "RTX 4050 Laptop"
+  vram_gb: 6
+  vram_budget_gb: 5.5

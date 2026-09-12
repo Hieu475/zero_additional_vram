@@ -1,0 +1,27 @@
+# Adaptive K Experiment Configuration
+experiment:
+  name: "adaptive_k"
+  description: "Entropy-based adaptive draft length"
+
+adaptive_k:
+  k_min: 1
+  k_max: 8
+  initial_k: 4
+
+  entropy:
+    low_threshold: 0.5    # Low entropy -> increase K
+    high_threshold: 2.0   # High entropy -> decrease K
+    smoothing: 0.1        # EMA smoothing factor
+
+  acceptance:
+    target_rate: 0.7
+    history_window: 20
+    increase_threshold: 0.8
+    decrease_threshold: 0.5
+
+evaluation:
+  compare_fixed_k:
+    - 2
+    - 4
+    - 6
+    - 8

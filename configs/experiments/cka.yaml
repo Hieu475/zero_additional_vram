@@ -1,0 +1,29 @@
+# CKA Layer Selection Experiment Configuration
+experiment:
+  name: "cka_analysis"
+  description: "Centered Kernel Alignment analysis for layer selection"
+
+cka:
+  kernel: "linear"  # linear or rbf
+  num_calibration_samples: 256
+  batch_size: 4
+  max_seq_length: 512
+
+  calibration_data:
+    dataset: "wikitext"
+    subset: "wikitext-2-raw-v1"
+    split: "train"
+
+  analysis:
+    compute_pairwise: true
+    compute_adjacent: true
+    threshold: 0.9  # CKA similarity threshold for redundancy
+
+layer_selection:
+  method: "cka_threshold"
+  min_layers_kept: 8     # Never skip below this
+  max_skip_ratio: 0.5    # Never skip more than 50%
+  always_keep:
+    - 0           # First layer
+    - -1          # Last layer
+    - -2          # Second to last

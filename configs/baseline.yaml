@@ -1,0 +1,32 @@
+# Baseline Benchmark Configuration
+generation:
+  batch_size: 1
+  temperature: 0.0
+  top_p: 1.0
+  max_new_tokens: 128
+  do_sample: false
+  repetition_penalty: 1.0
+
+benchmark:
+  warmup_runs: 10
+  measured_runs: 30
+  context_lengths:
+    - 128
+    - 512
+    - 1024
+    - 2048
+    - 4096
+  seed: 42
+
+profiling:
+  measure_vram: true
+  measure_power: true
+  measure_utilization: true
+  measure_energy: true
+  sampling_interval_ms: 100
+
+output:
+  save_metrics: true
+  save_outputs: true
+  save_hardware_log: true
+  results_dir: "results/raw"

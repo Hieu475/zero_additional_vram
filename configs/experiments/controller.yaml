@@ -1,0 +1,42 @@
+# Hardware-Aware Controller Experiment Configuration
+experiment:
+  name: "hardware_aware_controller"
+  description: "Joint hardware-aware speculation controller"
+
+controller:
+  observation_space:
+    - "entropy"              # H_t
+    - "acceptance_rate"       # A_{t-1}
+    - "draft_latency"        # T_draft
+    - "verify_latency"       # T_verify
+    - "vram_usage"           # VRAM_t
+    - "gpu_power"            # P_t
+    - "gpu_utilization"      # U_t
+
+  action_space:
+    layer_configs:
+      - "full"              # No skipping
+      - "cka_light"         # Skip 25% (CKA-selected)
+      - "cka_medium"        # Skip 40%
+      - "cka_aggressive"    # Skip 50%
+    k_values: [1, 2, 3, 4, 5, 6, 7, 8]
+
+  objective:
+    weights:
+      speedup: 1.0
+      latency_penalty: 0.3
+      vram_penalty: 0.5
+      energy_penalty: 0.2
+
+  constraints:
+    max_vram_mb: 5632       # 5.5 GB
+    max_latency_ms: 100     # Per-token target
+    max_power_w: 80
+
+ablation:
+  variants:
+    - "static"              # Fixed config, no adaptation
+    - "entropy_only"        # Only entropy feedback
+    - "acceptance_only"     # Only acceptance rate feedback
+    - "hardware_aware"      # Full hardware signals
+    - "joint_controller"    # Full system
