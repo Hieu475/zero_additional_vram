@@ -39,8 +39,9 @@ zero_additional_vram/
 conda create -n zassd python=3.11 -y
 conda activate zassd
 
-# Install PyTorch (check https://pytorch.org for correct CUDA version)
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+# Install PyTorch — use the official selector for your CUDA version:
+# https://pytorch.org/get-started/locally/
+# Actual versions used are recorded in experiments/00_environment/
 
 # Install dependencies
 pip install -r requirements.txt

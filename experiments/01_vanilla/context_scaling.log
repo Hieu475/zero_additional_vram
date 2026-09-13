@@ -1,0 +1,296 @@
+2026-09-13 12:54:26 | __main__                       | INFO     | ============================================================
+2026-09-13 12:54:26 | __main__                       | INFO     | CONTEXT-SCALING VANILLA BASELINE
+2026-09-13 12:54:26 | __main__                       | INFO     | ============================================================
+2026-09-13 12:54:26 | __main__                       | INFO     | Model:          Qwen/Qwen2.5-3B-Instruct
+2026-09-13 12:54:26 | __main__                       | INFO     | Quantization:   4-bit
+2026-09-13 12:54:26 | __main__                       | INFO     | Context lengths: [128, 512, 1024, 2048, 4096]
+2026-09-13 12:54:26 | __main__                       | INFO     | Max new tokens: 128
+2026-09-13 12:54:26 | __main__                       | INFO     | Warmup/Measured: 10/30
+2026-09-13 12:54:26 | __main__                       | INFO     | 
+Loading model: Qwen/Qwen2.5-3B-Instruct
+2026-09-13 12:54:26 | zassd.models.loader            | INFO     | Loading Qwen/Qwen2.5-3B-Instruct with 4-bit quantization
+2026-09-13 12:54:26 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 12:54:26 | huggingface_hub.utils._http    | WARNING  | Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-09-13 12:54:26 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-13 12:54:26 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 12:54:26 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-13 12:54:30 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 12:54:30 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+2026-09-13 12:54:30 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-09-13 12:54:30 | zassd.models.loader            | INFO     | Model loaded. Parameters: 1,698,672,640
+2026-09-13 12:54:30 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 12:54:31 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-13 12:54:31 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 12:54:31 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-09-13 12:54:31 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-09-13 12:54:31 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-09-13 12:54:32 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+2026-09-13 12:54:32 | __main__                       | INFO     | Model VRAM: {'allocated_mb': 1969.328125, 'reserved_mb': 2028.0, 'max_allocated_mb': 2009.9130859375, 'max_reserved_mb': 2028.0}
+2026-09-13 12:54:32 | zassd.profiling.gpu            | INFO     | GPU Profiler initialized for: NVIDIA GeForce RTX 4050 Laptop GPU
+2026-09-13 12:54:32 | __main__                       | INFO     | 
+============================================================
+2026-09-13 12:54:32 | __main__                       | INFO     | CONTEXT LENGTH: 128
+2026-09-13 12:54:32 | __main__                       | INFO     | ============================================================
+2026-09-13 12:54:32 | __main__                       | INFO     | Prepared 40 prompts at ~128 tokens
+2026-09-13 12:54:32 | __main__                       | INFO     | Warmup: 10 runs...
+2026-09-13 12:54:40 | __main__                       | INFO     | Measuring: 30 runs, 128 new tokens each...
+2026-09-13 12:54:43 | __main__                       | INFO     |   Run 1/30: 40.7 tok/s, TTFT=22.7ms, TPOT=20.8ms, VRAM=1985MB, Power=55.9W, J/tok=1.366
+2026-09-13 12:54:47 | __main__                       | INFO     |   Run 2/30: 39.8 tok/s, TTFT=23.1ms, TPOT=21.3ms, VRAM=1983MB, Power=55.7W, J/tok=1.377
+2026-09-13 12:54:50 | __main__                       | INFO     |   Run 3/30: 40.6 tok/s, TTFT=23.2ms, TPOT=20.9ms, VRAM=1984MB, Power=56.1W, J/tok=1.364
+2026-09-13 12:54:53 | __main__                       | INFO     |   Run 4/30: 41.0 tok/s, TTFT=23.7ms, TPOT=20.6ms, VRAM=1984MB, Power=56.8W, J/tok=1.382
+2026-09-13 12:54:56 | __main__                       | INFO     |   Run 5/30: 40.2 tok/s, TTFT=25.4ms, TPOT=21.1ms, VRAM=1985MB, Power=56.6W, J/tok=1.399
+2026-09-13 12:54:59 | __main__                       | INFO     |   Run 6/30: 42.1 tok/s, TTFT=32.7ms, TPOT=19.9ms, VRAM=1983MB, Power=57.6W, J/tok=1.356
+2026-09-13 12:55:02 | __main__                       | INFO     |   Run 7/30: 42.4 tok/s, TTFT=27.7ms, TPOT=19.8ms, VRAM=1984MB, Power=58.6W, J/tok=1.378
+2026-09-13 12:55:05 | __main__                       | INFO     |   Run 8/30: 41.9 tok/s, TTFT=21.1ms, TPOT=20.1ms, VRAM=1984MB, Power=58.5W, J/tok=1.376
+2026-09-13 12:55:08 | __main__                       | INFO     |   Run 9/30: 42.1 tok/s, TTFT=21.7ms, TPOT=20.0ms, VRAM=1984MB, Power=59.0W, J/tok=1.387
+2026-09-13 12:55:11 | __main__                       | INFO     |   Run 10/30: 40.1 tok/s, TTFT=21.9ms, TPOT=21.2ms, VRAM=1983MB, Power=58.0W, J/tok=1.432
+2026-09-13 12:55:14 | __main__                       | INFO     |   Run 11/30: 40.6 tok/s, TTFT=21.2ms, TPOT=20.9ms, VRAM=1985MB, Power=57.9W, J/tok=1.408
+2026-09-13 12:55:18 | __main__                       | INFO     |   Run 12/30: 41.4 tok/s, TTFT=21.7ms, TPOT=20.4ms, VRAM=1985MB, Power=59.3W, J/tok=1.419
+2026-09-13 12:55:21 | __main__                       | INFO     |   Run 13/30: 39.7 tok/s, TTFT=20.7ms, TPOT=21.5ms, VRAM=1984MB, Power=57.9W, J/tok=1.453
+2026-09-13 12:55:24 | __main__                       | INFO     |   Run 14/30: 41.9 tok/s, TTFT=23.5ms, TPOT=20.1ms, VRAM=1983MB, Power=59.0W, J/tok=1.388
+2026-09-13 12:55:27 | __main__                       | INFO     |   Run 15/30: 40.9 tok/s, TTFT=21.1ms, TPOT=20.6ms, VRAM=1984MB, Power=59.4W, J/tok=1.443
+2026-09-13 12:55:30 | __main__                       | INFO     |   Run 16/30: 40.8 tok/s, TTFT=22.9ms, TPOT=20.8ms, VRAM=1983MB, Power=59.3W, J/tok=1.442
+2026-09-13 12:55:33 | __main__                       | INFO     |   Run 17/30: 40.0 tok/s, TTFT=22.6ms, TPOT=21.3ms, VRAM=1983MB, Power=58.4W, J/tok=1.441
+2026-09-13 12:55:36 | __main__                       | INFO     |   Run 18/30: 41.5 tok/s, TTFT=22.6ms, TPOT=20.4ms, VRAM=1983MB, Power=59.4W, J/tok=1.423
+2026-09-13 12:55:40 | __main__                       | INFO     |   Run 19/30: 39.5 tok/s, TTFT=138.0ms, TPOT=20.7ms, VRAM=1987MB, Power=59.0W, J/tok=1.480
+2026-09-13 12:55:43 | __main__                       | INFO     |   Run 20/30: 41.7 tok/s, TTFT=20.8ms, TPOT=20.2ms, VRAM=1984MB, Power=60.2W, J/tok=1.440
+2026-09-13 12:55:46 | __main__                       | INFO     |   Run 21/30: 38.9 tok/s, TTFT=30.2ms, TPOT=22.0ms, VRAM=1989MB, Power=58.7W, J/tok=1.495
+2026-09-13 12:55:49 | __main__                       | INFO     |   Run 22/30: 40.1 tok/s, TTFT=30.0ms, TPOT=21.1ms, VRAM=1993MB, Power=59.2W, J/tok=1.461
+2026-09-13 12:55:52 | __main__                       | INFO     |   Run 23/30: 39.6 tok/s, TTFT=31.3ms, TPOT=21.5ms, VRAM=1991MB, Power=59.5W, J/tok=1.495
+2026-09-13 12:55:56 | __main__                       | INFO     |   Run 24/30: 39.0 tok/s, TTFT=28.0ms, TPOT=21.8ms, VRAM=1992MB, Power=59.0W, J/tok=1.505
+2026-09-13 12:55:59 | __main__                       | INFO     |   Run 25/30: 38.8 tok/s, TTFT=30.0ms, TPOT=22.0ms, VRAM=1991MB, Power=58.4W, J/tok=1.488
+2026-09-13 12:56:02 | __main__                       | INFO     |   Run 26/30: 40.6 tok/s, TTFT=28.9ms, TPOT=20.9ms, VRAM=1989MB, Power=60.0W, J/tok=1.460
+2026-09-13 12:56:05 | __main__                       | INFO     |   Run 27/30: 41.6 tok/s, TTFT=27.9ms, TPOT=20.3ms, VRAM=1988MB, Power=60.9W, J/tok=1.457
+2026-09-13 12:56:08 | __main__                       | INFO     |   Run 28/30: 41.9 tok/s, TTFT=32.3ms, TPOT=20.0ms, VRAM=1991MB, Power=61.4W, J/tok=1.446
+2026-09-13 12:56:12 | __main__                       | INFO     |   Run 29/30: 38.2 tok/s, TTFT=29.8ms, TPOT=22.4ms, VRAM=1990MB, Power=59.7W, J/tok=1.546
+2026-09-13 12:56:15 | __main__                       | INFO     |   Run 30/30: 40.7 tok/s, TTFT=29.1ms, TPOT=20.8ms, VRAM=1993MB, Power=60.2W, J/tok=1.465
+2026-09-13 12:56:15 | __main__                       | INFO     | 
+--- Summary (ctx=128) ---
+2026-09-13 12:56:15 | __main__                       | INFO     |   tok/s:  40.6 ± 1.1
+2026-09-13 12:56:15 | __main__                       | INFO     |   TTFT:   29.2 ± 20.6 ms
+2026-09-13 12:56:15 | __main__                       | INFO     |   TPOT:   20.9 ± 0.7 ms
+2026-09-13 12:56:15 | __main__                       | INFO     |   VRAM:   peak=1986MB, alloc=1983MB
+2026-09-13 12:56:15 | __main__                       | INFO     |   GPU:    util=73%, power=58.7W, temp=75°C
+2026-09-13 12:56:15 | __main__                       | INFO     |   Energy: 1.4324 J/token
+2026-09-13 12:56:15 | __main__                       | INFO     | 
+============================================================
+2026-09-13 12:56:15 | __main__                       | INFO     | CONTEXT LENGTH: 512
+2026-09-13 12:56:15 | __main__                       | INFO     | ============================================================
+2026-09-13 12:56:15 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/wikitext/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 12:56:15 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 12:56:15 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/Salesforce/wikitext/b08601e04326c79dfdd32d625aee71d232d685c3/README.md "HTTP/1.1 200 OK"
+2026-09-13 12:56:15 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/Salesforce/wikitext/b08601e04326c79dfdd32d625aee71d232d685c3/README.md "HTTP/1.1 200 OK"
+2026-09-13 12:56:16 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext.py "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 12:56:16 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext.py "HTTP/1.1 404 Not Found"
+2026-09-13 12:56:17 | httpx                          | INFO     | HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/wikitext/wikitext.py "HTTP/1.1 200 OK"
+2026-09-13 12:56:17 | __main__                       | WARNING  | Could not load wikitext: Invalid HF URI 'hf://datasets/wikitext@b08601e04326c79dfdd32d625aee71d232d685c3/.huggingface.yaml'. Repository id must be 'namespace/name', got 'wikitext'.. Using repeated text.
+2026-09-13 12:56:20 | __main__                       | INFO     | Prepared 40 prompts at ~512 tokens
+2026-09-13 12:56:20 | __main__                       | INFO     | Warmup: 10 runs...
+2026-09-13 12:56:30 | __main__                       | INFO     | Measuring: 30 runs, 128 new tokens each...
+2026-09-13 12:56:33 | __main__                       | INFO     |   Run 1/30: 37.2 tok/s, TTFT=133.9ms, TPOT=21.7ms, VRAM=2147MB, Power=62.8W, J/tok=1.675
+2026-09-13 12:56:37 | __main__                       | INFO     |   Run 2/30: 38.9 tok/s, TTFT=134.3ms, TPOT=20.4ms, VRAM=2147MB, Power=62.9W, J/tok=1.604
+2026-09-13 12:56:40 | __main__                       | INFO     |   Run 3/30: 36.6 tok/s, TTFT=135.0ms, TPOT=22.1ms, VRAM=2147MB, Power=62.2W, J/tok=1.682
+2026-09-13 12:56:44 | __main__                       | INFO     |   Run 4/30: 36.3 tok/s, TTFT=135.0ms, TPOT=22.3ms, VRAM=2147MB, Power=60.7W, J/tok=1.667
+2026-09-13 12:56:47 | __main__                       | INFO     |   Run 5/30: 36.4 tok/s, TTFT=140.8ms, TPOT=22.2ms, VRAM=2147MB, Power=61.6W, J/tok=1.689
+2026-09-13 12:56:51 | __main__                       | INFO     |   Run 6/30: 36.6 tok/s, TTFT=142.7ms, TPOT=22.0ms, VRAM=2147MB, Power=61.8W, J/tok=1.673
+2026-09-13 12:56:54 | __main__                       | INFO     |   Run 7/30: 36.5 tok/s, TTFT=139.8ms, TPOT=22.1ms, VRAM=2147MB, Power=61.6W, J/tok=1.667
+2026-09-13 12:56:58 | __main__                       | INFO     |   Run 8/30: 36.4 tok/s, TTFT=143.2ms, TPOT=22.1ms, VRAM=2147MB, Power=61.5W, J/tok=1.688
+2026-09-13 12:57:01 | __main__                       | INFO     |   Run 9/30: 38.7 tok/s, TTFT=147.0ms, TPOT=20.4ms, VRAM=2147MB, Power=62.5W, J/tok=1.595
+2026-09-13 12:57:04 | __main__                       | INFO     |   Run 10/30: 38.6 tok/s, TTFT=151.6ms, TPOT=20.4ms, VRAM=2147MB, Power=63.7W, J/tok=1.648
+2026-09-13 12:57:08 | __main__                       | INFO     |   Run 11/30: 35.5 tok/s, TTFT=156.4ms, TPOT=22.7ms, VRAM=2147MB, Power=61.3W, J/tok=1.706
+2026-09-13 12:57:12 | __main__                       | INFO     |   Run 12/30: 35.8 tok/s, TTFT=154.6ms, TPOT=22.5ms, VRAM=2147MB, Power=61.0W, J/tok=1.698
+2026-09-13 12:57:15 | __main__                       | INFO     |   Run 13/30: 37.2 tok/s, TTFT=158.3ms, TPOT=21.4ms, VRAM=2147MB, Power=62.2W, J/tok=1.657
+2026-09-13 12:57:19 | __main__                       | INFO     |   Run 14/30: 35.1 tok/s, TTFT=149.3ms, TPOT=23.1ms, VRAM=2147MB, Power=60.9W, J/tok=1.718
+2026-09-13 12:57:22 | __main__                       | INFO     |   Run 15/30: 36.1 tok/s, TTFT=156.6ms, TPOT=22.2ms, VRAM=2147MB, Power=60.5W, J/tok=1.661
+2026-09-13 12:57:26 | __main__                       | INFO     |   Run 16/30: 38.6 tok/s, TTFT=146.2ms, TPOT=20.5ms, VRAM=2147MB, Power=61.4W, J/tok=1.588
+2026-09-13 12:57:29 | __main__                       | INFO     |   Run 17/30: 36.8 tok/s, TTFT=159.5ms, TPOT=21.7ms, VRAM=2147MB, Power=60.7W, J/tok=1.640
+2026-09-13 12:57:33 | __main__                       | INFO     |   Run 18/30: 36.1 tok/s, TTFT=150.0ms, TPOT=22.3ms, VRAM=2147MB, Power=59.9W, J/tok=1.643
+2026-09-13 12:57:36 | __main__                       | INFO     |   Run 19/30: 38.3 tok/s, TTFT=146.8ms, TPOT=20.7ms, VRAM=2147MB, Power=60.4W, J/tok=1.564
+2026-09-13 12:57:40 | __main__                       | INFO     |   Run 20/30: 36.9 tok/s, TTFT=149.4ms, TPOT=21.7ms, VRAM=2147MB, Power=59.3W, J/tok=1.603
+2026-09-13 12:57:43 | __main__                       | INFO     |   Run 21/30: 37.6 tok/s, TTFT=150.0ms, TPOT=21.2ms, VRAM=2147MB, Power=59.1W, J/tok=1.552
+2026-09-13 12:57:46 | __main__                       | INFO     |   Run 22/30: 36.7 tok/s, TTFT=149.3ms, TPOT=21.8ms, VRAM=2147MB, Power=58.4W, J/tok=1.580
+2026-09-13 12:57:50 | __main__                       | INFO     |   Run 23/30: 38.2 tok/s, TTFT=149.9ms, TPOT=20.7ms, VRAM=2147MB, Power=58.7W, J/tok=1.520
+2026-09-13 12:57:53 | __main__                       | INFO     |   Run 24/30: 37.2 tok/s, TTFT=149.6ms, TPOT=21.5ms, VRAM=2147MB, Power=57.8W, J/tok=1.540
+2026-09-13 12:57:57 | __main__                       | INFO     |   Run 25/30: 35.2 tok/s, TTFT=150.9ms, TPOT=23.0ms, VRAM=2147MB, Power=57.6W, J/tok=1.625
+2026-09-13 12:58:00 | __main__                       | INFO     |   Run 26/30: 35.4 tok/s, TTFT=150.2ms, TPOT=22.9ms, VRAM=2147MB, Power=58.0W, J/tok=1.615
+2026-09-13 12:58:04 | __main__                       | INFO     |   Run 27/30: 35.6 tok/s, TTFT=163.2ms, TPOT=22.5ms, VRAM=2147MB, Power=58.6W, J/tok=1.631
+2026-09-13 12:58:08 | __main__                       | INFO     |   Run 28/30: 37.0 tok/s, TTFT=150.7ms, TPOT=21.6ms, VRAM=2147MB, Power=60.3W, J/tok=1.608
+2026-09-13 12:58:11 | __main__                       | INFO     |   Run 29/30: 37.0 tok/s, TTFT=149.1ms, TPOT=21.7ms, VRAM=2147MB, Power=60.9W, J/tok=1.622
+2026-09-13 12:58:14 | __main__                       | INFO     |   Run 30/30: 38.0 tok/s, TTFT=151.9ms, TPOT=20.9ms, VRAM=2147MB, Power=61.6W, J/tok=1.619
+2026-09-13 12:58:14 | __main__                       | INFO     | 
+--- Summary (ctx=512) ---
+2026-09-13 12:58:14 | __main__                       | INFO     |   tok/s:  36.9 ± 1.1
+2026-09-13 12:58:14 | __main__                       | INFO     |   TTFT:   148.2 ± 7.4 ms
+2026-09-13 12:58:14 | __main__                       | INFO     |   TPOT:   21.8 ± 0.8 ms
+2026-09-13 12:58:14 | __main__                       | INFO     |   VRAM:   peak=2147MB, alloc=2001MB
+2026-09-13 12:58:14 | __main__                       | INFO     |   GPU:    util=74%, power=60.7W, temp=86°C
+2026-09-13 12:58:14 | __main__                       | INFO     |   Energy: 1.6326 J/token
+2026-09-13 12:58:14 | __main__                       | INFO     | 
+============================================================
+2026-09-13 12:58:14 | __main__                       | INFO     | CONTEXT LENGTH: 1024
+2026-09-13 12:58:14 | __main__                       | INFO     | ============================================================
+2026-09-13 12:58:15 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/wikitext/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 12:58:15 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 12:58:15 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/Salesforce/wikitext/b08601e04326c79dfdd32d625aee71d232d685c3/README.md "HTTP/1.1 200 OK"
+2026-09-13 12:58:15 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext.py "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 12:58:16 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext.py "HTTP/1.1 404 Not Found"
+2026-09-13 12:58:16 | httpx                          | INFO     | HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/wikitext/wikitext.py "HTTP/1.1 200 OK"
+2026-09-13 12:58:16 | __main__                       | WARNING  | Could not load wikitext: Invalid HF URI 'hf://datasets/wikitext@b08601e04326c79dfdd32d625aee71d232d685c3/.huggingface.yaml'. Repository id must be 'namespace/name', got 'wikitext'.. Using repeated text.
+2026-09-13 12:58:19 | __main__                       | INFO     | Prepared 40 prompts at ~1024 tokens
+2026-09-13 12:58:19 | __main__                       | INFO     | Warmup: 10 runs...
+2026-09-13 12:58:32 | __main__                       | INFO     | Measuring: 30 runs, 128 new tokens each...
+2026-09-13 12:58:35 | __main__                       | INFO     |   Run 1/30: 34.3 tok/s, TTFT=281.1ms, TPOT=22.1ms, VRAM=2316MB, Power=61.8W, J/tok=1.792
+2026-09-13 12:58:39 | __main__                       | INFO     |   Run 2/30: 34.7 tok/s, TTFT=279.6ms, TPOT=21.8ms, VRAM=2316MB, Power=61.7W, J/tok=1.767
+2026-09-13 12:58:43 | __main__                       | INFO     |   Run 3/30: 36.3 tok/s, TTFT=283.0ms, TPOT=20.5ms, VRAM=2316MB, Power=63.4W, J/tok=1.739
+2026-09-13 12:58:46 | __main__                       | INFO     |   Run 4/30: 36.0 tok/s, TTFT=273.8ms, TPOT=20.7ms, VRAM=2316MB, Power=63.9W, J/tok=1.753
+2026-09-13 12:58:50 | __main__                       | INFO     |   Run 5/30: 34.6 tok/s, TTFT=290.3ms, TPOT=21.7ms, VRAM=2316MB, Power=62.2W, J/tok=1.782
+2026-09-13 12:58:53 | __main__                       | INFO     |   Run 6/30: 35.4 tok/s, TTFT=276.7ms, TPOT=21.2ms, VRAM=2316MB, Power=63.2W, J/tok=1.760
+2026-09-13 12:58:57 | __main__                       | INFO     |   Run 7/30: 34.6 tok/s, TTFT=277.4ms, TPOT=21.8ms, VRAM=2316MB, Power=61.8W, J/tok=1.771
+2026-09-13 12:59:01 | __main__                       | INFO     |   Run 8/30: 34.8 tok/s, TTFT=282.2ms, TPOT=21.6ms, VRAM=2316MB, Power=62.5W, J/tok=1.788
+2026-09-13 12:59:05 | __main__                       | INFO     |   Run 9/30: 34.3 tok/s, TTFT=273.7ms, TPOT=22.1ms, VRAM=2316MB, Power=61.3W, J/tok=1.780
+2026-09-13 12:59:08 | __main__                       | INFO     |   Run 10/30: 35.9 tok/s, TTFT=273.0ms, TPOT=20.9ms, VRAM=2316MB, Power=62.7W, J/tok=1.747
+2026-09-13 12:59:12 | __main__                       | INFO     |   Run 11/30: 36.5 tok/s, TTFT=278.0ms, TPOT=20.3ms, VRAM=2316MB, Power=64.0W, J/tok=1.732
+2026-09-13 12:59:15 | __main__                       | INFO     |   Run 12/30: 35.8 tok/s, TTFT=279.1ms, TPOT=20.8ms, VRAM=2316MB, Power=63.2W, J/tok=1.758
+2026-09-13 12:59:19 | __main__                       | INFO     |   Run 13/30: 36.6 tok/s, TTFT=274.6ms, TPOT=20.4ms, VRAM=2316MB, Power=64.2W, J/tok=1.738
+2026-09-13 12:59:22 | __main__                       | INFO     |   Run 14/30: 35.4 tok/s, TTFT=266.6ms, TPOT=21.3ms, VRAM=2316MB, Power=62.6W, J/tok=1.766
+2026-09-13 12:59:26 | __main__                       | INFO     |   Run 15/30: 35.4 tok/s, TTFT=270.6ms, TPOT=21.3ms, VRAM=2316MB, Power=62.7W, J/tok=1.768
+2026-09-13 12:59:30 | __main__                       | INFO     |   Run 16/30: 35.0 tok/s, TTFT=278.1ms, TPOT=21.5ms, VRAM=2316MB, Power=62.7W, J/tok=1.770
+2026-09-13 12:59:33 | __main__                       | INFO     |   Run 17/30: 35.0 tok/s, TTFT=280.0ms, TPOT=21.5ms, VRAM=2316MB, Power=62.4W, J/tok=1.761
+2026-09-13 12:59:37 | __main__                       | INFO     |   Run 18/30: 35.6 tok/s, TTFT=280.3ms, TPOT=20.9ms, VRAM=2316MB, Power=63.3W, J/tok=1.761
+2026-09-13 12:59:41 | __main__                       | INFO     |   Run 19/30: 34.4 tok/s, TTFT=266.2ms, TPOT=22.2ms, VRAM=2316MB, Power=62.4W, J/tok=1.810
+2026-09-13 12:59:45 | __main__                       | INFO     |   Run 20/30: 34.3 tok/s, TTFT=269.5ms, TPOT=22.2ms, VRAM=2316MB, Power=61.6W, J/tok=1.788
+2026-09-13 12:59:48 | __main__                       | INFO     |   Run 21/30: 32.7 tok/s, TTFT=271.5ms, TPOT=23.6ms, VRAM=2316MB, Power=61.1W, J/tok=1.867
+2026-09-13 12:59:52 | __main__                       | INFO     |   Run 22/30: 35.0 tok/s, TTFT=276.2ms, TPOT=21.6ms, VRAM=2316MB, Power=61.3W, J/tok=1.732
+2026-09-13 12:59:56 | __main__                       | INFO     |   Run 23/30: 35.3 tok/s, TTFT=276.0ms, TPOT=21.3ms, VRAM=2316MB, Power=62.8W, J/tok=1.773
+2026-09-13 12:59:59 | __main__                       | INFO     |   Run 24/30: 34.7 tok/s, TTFT=279.0ms, TPOT=21.7ms, VRAM=2316MB, Power=62.3W, J/tok=1.782
+2026-09-13 13:00:03 | __main__                       | INFO     |   Run 25/30: 35.5 tok/s, TTFT=276.6ms, TPOT=21.2ms, VRAM=2316MB, Power=62.6W, J/tok=1.741
+2026-09-13 13:00:07 | __main__                       | INFO     |   Run 26/30: 35.7 tok/s, TTFT=263.2ms, TPOT=21.1ms, VRAM=2316MB, Power=63.1W, J/tok=1.756
+2026-09-13 13:00:10 | __main__                       | INFO     |   Run 27/30: 35.9 tok/s, TTFT=271.9ms, TPOT=20.8ms, VRAM=2316MB, Power=63.1W, J/tok=1.756
+2026-09-13 13:00:14 | __main__                       | INFO     |   Run 28/30: 36.0 tok/s, TTFT=269.6ms, TPOT=20.9ms, VRAM=2316MB, Power=64.0W, J/tok=1.757
+2026-09-13 13:00:18 | __main__                       | INFO     |   Run 29/30: 34.7 tok/s, TTFT=277.0ms, TPOT=21.8ms, VRAM=2316MB, Power=61.2W, J/tok=1.753
+2026-09-13 13:00:21 | __main__                       | INFO     |   Run 30/30: 36.3 tok/s, TTFT=279.5ms, TPOT=20.5ms, VRAM=2316MB, Power=63.4W, J/tok=1.742
+2026-09-13 13:00:21 | __main__                       | INFO     | 
+--- Summary (ctx=1024) ---
+2026-09-13 13:00:21 | __main__                       | INFO     |   tok/s:  35.2 ± 0.8
+2026-09-13 13:00:21 | __main__                       | INFO     |   TTFT:   275.8 ± 5.6 ms
+2026-09-13 13:00:21 | __main__                       | INFO     |   TPOT:   21.4 ± 0.7 ms
+2026-09-13 13:00:21 | __main__                       | INFO     |   VRAM:   peak=2316MB, alloc=2020MB
+2026-09-13 13:00:21 | __main__                       | INFO     |   GPU:    util=76%, power=62.6W, temp=85°C
+2026-09-13 13:00:21 | __main__                       | INFO     |   Energy: 1.7663 J/token
+2026-09-13 13:00:21 | __main__                       | INFO     | 
+============================================================
+2026-09-13 13:00:21 | __main__                       | INFO     | CONTEXT LENGTH: 2048
+2026-09-13 13:00:21 | __main__                       | INFO     | ============================================================
+2026-09-13 13:00:21 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/wikitext/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:00:22 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:00:22 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/Salesforce/wikitext/b08601e04326c79dfdd32d625aee71d232d685c3/README.md "HTTP/1.1 200 OK"
+2026-09-13 13:00:22 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext.py "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:00:22 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext.py "HTTP/1.1 404 Not Found"
+2026-09-13 13:00:23 | httpx                          | INFO     | HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/wikitext/wikitext.py "HTTP/1.1 200 OK"
+2026-09-13 13:00:23 | __main__                       | WARNING  | Could not load wikitext: Invalid HF URI 'hf://datasets/wikitext@b08601e04326c79dfdd32d625aee71d232d685c3/.huggingface.yaml'. Repository id must be 'namespace/name', got 'wikitext'.. Using repeated text.
+2026-09-13 13:00:26 | __main__                       | INFO     | Prepared 40 prompts at ~2048 tokens
+2026-09-13 13:00:26 | __main__                       | INFO     | Warmup: 10 runs...
+2026-09-13 13:00:43 | __main__                       | INFO     | Measuring: 30 runs, 128 new tokens each...
+2026-09-13 13:00:47 | __main__                       | INFO     |   Run 1/30: 31.0 tok/s, TTFT=534.3ms, TPOT=21.6ms, VRAM=2653MB, Power=63.5W, J/tok=2.042
+2026-09-13 13:00:51 | __main__                       | INFO     |   Run 2/30: 32.3 tok/s, TTFT=518.2ms, TPOT=20.5ms, VRAM=2653MB, Power=64.3W, J/tok=1.964
+2026-09-13 13:00:55 | __main__                       | INFO     |   Run 3/30: 32.4 tok/s, TTFT=533.3ms, TPOT=20.3ms, VRAM=2653MB, Power=65.5W, J/tok=2.004
+2026-09-13 13:00:59 | __main__                       | INFO     |   Run 4/30: 31.0 tok/s, TTFT=532.0ms, TPOT=21.7ms, VRAM=2653MB, Power=63.6W, J/tok=2.046
+2026-09-13 13:01:03 | __main__                       | INFO     |   Run 5/30: 31.3 tok/s, TTFT=536.5ms, TPOT=21.4ms, VRAM=2653MB, Power=63.5W, J/tok=2.016
+2026-09-13 13:01:07 | __main__                       | INFO     |   Run 6/30: 32.0 tok/s, TTFT=510.7ms, TPOT=21.0ms, VRAM=2653MB, Power=63.8W, J/tok=1.977
+2026-09-13 13:01:11 | __main__                       | INFO     |   Run 7/30: 31.5 tok/s, TTFT=534.2ms, TPOT=21.3ms, VRAM=2653MB, Power=64.2W, J/tok=2.040
+2026-09-13 13:01:15 | __main__                       | INFO     |   Run 8/30: 32.3 tok/s, TTFT=526.8ms, TPOT=20.5ms, VRAM=2653MB, Power=64.2W, J/tok=1.966
+2026-09-13 13:01:19 | __main__                       | INFO     |   Run 9/30: 30.9 tok/s, TTFT=517.5ms, TPOT=22.0ms, VRAM=2653MB, Power=63.6W, J/tok=2.046
+2026-09-13 13:01:23 | __main__                       | INFO     |   Run 10/30: 32.4 tok/s, TTFT=522.7ms, TPOT=20.4ms, VRAM=2653MB, Power=64.2W, J/tok=1.966
+2026-09-13 13:01:27 | __main__                       | INFO     |   Run 11/30: 31.6 tok/s, TTFT=528.7ms, TPOT=21.2ms, VRAM=2653MB, Power=64.8W, J/tok=2.034
+2026-09-13 13:01:31 | __main__                       | INFO     |   Run 12/30: 31.7 tok/s, TTFT=539.5ms, TPOT=21.0ms, VRAM=2653MB, Power=63.0W, J/tok=1.977
+2026-09-13 13:01:35 | __main__                       | INFO     |   Run 13/30: 31.1 tok/s, TTFT=536.3ms, TPOT=21.6ms, VRAM=2653MB, Power=64.2W, J/tok=2.039
+2026-09-13 13:01:39 | __main__                       | INFO     |   Run 14/30: 31.2 tok/s, TTFT=533.5ms, TPOT=21.5ms, VRAM=2653MB, Power=63.2W, J/tok=2.006
+2026-09-13 13:01:43 | __main__                       | INFO     |   Run 15/30: 32.3 tok/s, TTFT=526.6ms, TPOT=20.5ms, VRAM=2653MB, Power=64.8W, J/tok=1.984
+2026-09-13 13:01:48 | __main__                       | INFO     |   Run 16/30: 31.0 tok/s, TTFT=526.8ms, TPOT=21.8ms, VRAM=2653MB, Power=63.6W, J/tok=2.044
+2026-09-13 13:01:52 | __main__                       | INFO     |   Run 17/30: 31.2 tok/s, TTFT=538.4ms, TPOT=21.6ms, VRAM=2653MB, Power=63.6W, J/tok=2.020
+2026-09-13 13:01:56 | __main__                       | INFO     |   Run 18/30: 31.0 tok/s, TTFT=521.9ms, TPOT=21.9ms, VRAM=2653MB, Power=63.2W, J/tok=2.032
+2026-09-13 13:02:00 | __main__                       | INFO     |   Run 19/30: 31.0 tok/s, TTFT=516.2ms, TPOT=21.6ms, VRAM=2653MB, Power=63.8W, J/tok=2.051
+2026-09-13 13:02:04 | __main__                       | INFO     |   Run 20/30: 31.2 tok/s, TTFT=514.6ms, TPOT=21.8ms, VRAM=2653MB, Power=63.9W, J/tok=2.031
+2026-09-13 13:02:08 | __main__                       | INFO     |   Run 21/30: 30.7 tok/s, TTFT=505.9ms, TPOT=22.3ms, VRAM=2653MB, Power=63.0W, J/tok=2.049
+2026-09-13 13:02:12 | __main__                       | INFO     |   Run 22/30: 32.5 tok/s, TTFT=511.1ms, TPOT=20.4ms, VRAM=2653MB, Power=64.3W, J/tok=1.964
+2026-09-13 13:02:16 | __main__                       | INFO     |   Run 23/30: 32.3 tok/s, TTFT=512.7ms, TPOT=20.6ms, VRAM=2653MB, Power=64.9W, J/tok=1.985
+2026-09-13 13:02:20 | __main__                       | INFO     |   Run 24/30: 31.3 tok/s, TTFT=526.0ms, TPOT=21.5ms, VRAM=2653MB, Power=64.0W, J/tok=2.034
+2026-09-13 13:02:24 | __main__                       | INFO     |   Run 25/30: 31.0 tok/s, TTFT=525.4ms, TPOT=21.8ms, VRAM=2653MB, Power=63.7W, J/tok=2.048
+2026-09-13 13:02:29 | __main__                       | INFO     |   Run 26/30: 31.7 tok/s, TTFT=518.2ms, TPOT=21.3ms, VRAM=2653MB, Power=64.1W, J/tok=2.011
+2026-09-13 13:02:33 | __main__                       | INFO     |   Run 27/30: 32.5 tok/s, TTFT=517.1ms, TPOT=20.4ms, VRAM=2653MB, Power=64.7W, J/tok=1.980
+2026-09-13 13:02:36 | __main__                       | INFO     |   Run 28/30: 32.2 tok/s, TTFT=528.3ms, TPOT=20.5ms, VRAM=2653MB, Power=64.2W, J/tok=1.987
+2026-09-13 13:02:40 | __main__                       | INFO     |   Run 29/30: 32.7 tok/s, TTFT=544.2ms, TPOT=20.0ms, VRAM=2653MB, Power=65.2W, J/tok=1.992
+2026-09-13 13:02:44 | __main__                       | INFO     |   Run 30/30: 31.9 tok/s, TTFT=531.3ms, TPOT=20.9ms, VRAM=2653MB, Power=64.6W, J/tok=2.001
+2026-09-13 13:02:44 | __main__                       | INFO     | 
+--- Summary (ctx=2048) ---
+2026-09-13 13:02:44 | __main__                       | INFO     |   tok/s:  31.6 ± 0.6
+2026-09-13 13:02:44 | __main__                       | INFO     |   TTFT:   525.6 ± 9.6 ms
+2026-09-13 13:02:44 | __main__                       | INFO     |   TPOT:   21.2 ± 0.6 ms
+2026-09-13 13:02:44 | __main__                       | INFO     |   VRAM:   peak=2653MB, alloc=2061MB
+2026-09-13 13:02:44 | __main__                       | INFO     |   GPU:    util=81%, power=64.0W, temp=85°C
+2026-09-13 13:02:44 | __main__                       | INFO     |   Energy: 2.0112 J/token
+2026-09-13 13:02:44 | __main__                       | INFO     | 
+============================================================
+2026-09-13 13:02:44 | __main__                       | INFO     | CONTEXT LENGTH: 4096
+2026-09-13 13:02:44 | __main__                       | INFO     | ============================================================
+2026-09-13 13:02:45 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/wikitext/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:02:45 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:02:45 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/Salesforce/wikitext/b08601e04326c79dfdd32d625aee71d232d685c3/README.md "HTTP/1.1 200 OK"
+2026-09-13 13:02:45 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext.py "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:02:46 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext.py "HTTP/1.1 404 Not Found"
+2026-09-13 13:02:46 | httpx                          | INFO     | HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/wikitext/wikitext.py "HTTP/1.1 200 OK"
+2026-09-13 13:02:46 | __main__                       | WARNING  | Could not load wikitext: Invalid HF URI 'hf://datasets/wikitext@b08601e04326c79dfdd32d625aee71d232d685c3/.huggingface.yaml'. Repository id must be 'namespace/name', got 'wikitext'.. Using repeated text.
+2026-09-13 13:02:49 | __main__                       | INFO     | Prepared 40 prompts at ~4096 tokens
+2026-09-13 13:02:49 | __main__                       | INFO     | Warmup: 10 runs...
+2026-09-13 13:03:16 | __main__                       | INFO     | Measuring: 30 runs, 128 new tokens each...
+2026-09-13 13:03:21 | __main__                       | INFO     |   Run 1/30: 24.5 tok/s, TTFT=1170.8ms, TPOT=22.2ms, VRAM=3328MB, Power=63.9W, J/tok=2.606
+2026-09-13 13:03:26 | __main__                       | INFO     |   Run 2/30: 25.2 tok/s, TTFT=1130.9ms, TPOT=21.4ms, VRAM=3328MB, Power=65.2W, J/tok=2.583
+2026-09-13 13:03:31 | __main__                       | INFO     |   Run 3/30: 24.7 tok/s, TTFT=1129.3ms, TPOT=22.3ms, VRAM=3328MB, Power=64.6W, J/tok=2.608
+2026-09-13 13:03:37 | __main__                       | INFO     |   Run 4/30: 24.9 tok/s, TTFT=1172.3ms, TPOT=21.2ms, VRAM=3328MB, Power=64.9W, J/tok=2.594
+2026-09-13 13:03:42 | __main__                       | INFO     |   Run 5/30: 25.5 tok/s, TTFT=1163.4ms, TPOT=20.7ms, VRAM=3328MB, Power=64.6W, J/tok=2.508
+2026-09-13 13:03:47 | __main__                       | INFO     |   Run 6/30: 25.4 tok/s, TTFT=1140.4ms, TPOT=21.0ms, VRAM=3328MB, Power=64.7W, J/tok=2.535
+2026-09-13 13:03:52 | __main__                       | INFO     |   Run 7/30: 25.5 tok/s, TTFT=1160.2ms, TPOT=20.5ms, VRAM=3328MB, Power=65.1W, J/tok=2.524
+2026-09-13 13:03:57 | __main__                       | INFO     |   Run 8/30: 25.3 tok/s, TTFT=1155.0ms, TPOT=21.0ms, VRAM=3328MB, Power=64.8W, J/tok=2.540
+2026-09-13 13:04:02 | __main__                       | INFO     |   Run 9/30: 25.4 tok/s, TTFT=1140.5ms, TPOT=21.1ms, VRAM=3328MB, Power=64.9W, J/tok=2.541
+2026-09-13 13:04:07 | __main__                       | INFO     |   Run 10/30: 24.1 tok/s, TTFT=1161.0ms, TPOT=22.9ms, VRAM=3328MB, Power=63.2W, J/tok=2.599
+2026-09-13 13:04:12 | __main__                       | INFO     |   Run 11/30: 24.9 tok/s, TTFT=1157.9ms, TPOT=21.8ms, VRAM=3328MB, Power=64.2W, J/tok=2.569
+2026-09-13 13:04:17 | __main__                       | INFO     |   Run 12/30: 24.8 tok/s, TTFT=1141.5ms, TPOT=21.9ms, VRAM=3328MB, Power=63.6W, J/tok=2.539
+2026-09-13 13:04:23 | __main__                       | INFO     |   Run 13/30: 23.0 tok/s, TTFT=1191.6ms, TPOT=24.7ms, VRAM=3328MB, Power=61.3W, J/tok=2.644
+2026-09-13 13:04:29 | __main__                       | INFO     |   Run 14/30: 23.1 tok/s, TTFT=1161.4ms, TPOT=24.9ms, VRAM=3328MB, Power=62.0W, J/tok=2.676
+2026-09-13 13:04:34 | __main__                       | INFO     |   Run 15/30: 24.0 tok/s, TTFT=1158.0ms, TPOT=23.2ms, VRAM=3328MB, Power=62.6W, J/tok=2.603
+2026-09-13 13:04:39 | __main__                       | INFO     |   Run 16/30: 24.9 tok/s, TTFT=1157.9ms, TPOT=21.5ms, VRAM=3328MB, Power=63.2W, J/tok=2.525
+2026-09-13 13:04:44 | __main__                       | INFO     |   Run 17/30: 24.3 tok/s, TTFT=1200.8ms, TPOT=22.2ms, VRAM=3328MB, Power=63.3W, J/tok=2.582
+2026-09-13 13:04:50 | __main__                       | INFO     |   Run 18/30: 25.1 tok/s, TTFT=1164.3ms, TPOT=21.2ms, VRAM=3328MB, Power=63.6W, J/tok=2.517
+2026-09-13 13:04:55 | __main__                       | INFO     |   Run 19/30: 24.6 tok/s, TTFT=1150.2ms, TPOT=22.1ms, VRAM=3328MB, Power=63.4W, J/tok=2.558
+2026-09-13 13:05:00 | __main__                       | INFO     |   Run 20/30: 25.1 tok/s, TTFT=1155.5ms, TPOT=21.3ms, VRAM=3328MB, Power=63.7W, J/tok=2.526
+2026-09-13 13:05:05 | __main__                       | INFO     |   Run 21/30: 24.9 tok/s, TTFT=1166.4ms, TPOT=21.6ms, VRAM=3328MB, Power=63.1W, J/tok=2.524
+2026-09-13 13:05:10 | __main__                       | INFO     |   Run 22/30: 24.7 tok/s, TTFT=1141.6ms, TPOT=22.0ms, VRAM=3328MB, Power=63.5W, J/tok=2.566
+2026-09-13 13:05:15 | __main__                       | INFO     |   Run 23/30: 25.4 tok/s, TTFT=1156.4ms, TPOT=20.8ms, VRAM=3328MB, Power=64.5W, J/tok=2.529
+2026-09-13 13:05:20 | __main__                       | INFO     |   Run 24/30: 24.4 tok/s, TTFT=1194.0ms, TPOT=21.9ms, VRAM=3328MB, Power=63.9W, J/tok=2.605
+2026-09-13 13:05:25 | __main__                       | INFO     |   Run 25/30: 25.6 tok/s, TTFT=1166.8ms, TPOT=20.5ms, VRAM=3328MB, Power=63.6W, J/tok=2.468
+2026-09-13 13:05:31 | __main__                       | INFO     |   Run 26/30: 24.5 tok/s, TTFT=1156.1ms, TPOT=22.2ms, VRAM=3328MB, Power=63.1W, J/tok=2.574
+2026-09-13 13:05:36 | __main__                       | INFO     |   Run 27/30: 24.8 tok/s, TTFT=1155.5ms, TPOT=21.8ms, VRAM=3328MB, Power=62.9W, J/tok=2.515
+2026-09-13 13:05:41 | __main__                       | INFO     |   Run 28/30: 24.4 tok/s, TTFT=1162.7ms, TPOT=22.3ms, VRAM=3328MB, Power=63.5W, J/tok=2.587
+2026-09-13 13:05:46 | __main__                       | INFO     |   Run 29/30: 25.2 tok/s, TTFT=1151.5ms, TPOT=21.2ms, VRAM=3328MB, Power=64.3W, J/tok=2.543
+2026-09-13 13:05:51 | __main__                       | INFO     |   Run 30/30: 24.8 tok/s, TTFT=1156.7ms, TPOT=21.6ms, VRAM=3328MB, Power=63.8W, J/tok=2.554
+2026-09-13 13:05:51 | __main__                       | INFO     | 
+--- Summary (ctx=4096) ---
+2026-09-13 13:05:51 | __main__                       | INFO     |   tok/s:  24.8 ± 0.6
+2026-09-13 13:05:51 | __main__                       | INFO     |   TTFT:   1159.0 ± 16.0 ms
+2026-09-13 13:05:51 | __main__                       | INFO     |   TPOT:   21.8 ± 1.0 ms
+2026-09-13 13:05:51 | __main__                       | INFO     |   VRAM:   peak=3328MB, alloc=2129MB
+2026-09-13 13:05:51 | __main__                       | INFO     |   GPU:    util=86%, power=63.8W, temp=86°C
+2026-09-13 13:05:51 | __main__                       | INFO     |   Energy: 2.5614 J/token
+2026-09-13 13:05:51 | __main__                       | INFO     | 
+================================================================================
+2026-09-13 13:05:51 | __main__                       | INFO     | CONTEXT SCALING RESULTS
+2026-09-13 13:05:51 | __main__                       | INFO     | ================================================================================
+2026-09-13 13:05:51 | __main__                       | INFO     |  Context |      tok/s |   TTFT(ms) |   TPOT(ms) |   VRAM(MB) |   Power(W) |    J/tok
+2026-09-13 13:05:51 | __main__                       | INFO     | --------------------------------------------------------------------------------
+2026-09-13 13:05:51 | __main__                       | INFO     |      128 |     40.6±1.1 |     29.2±20.6 |     20.9±0.7 |       1986 |     58.7±1.4 |   1.4324
+2026-09-13 13:05:51 | __main__                       | INFO     |      512 |     36.9±1.1 |    148.2±7.4 |     21.8±0.8 |       2147 |     60.7±1.6 |   1.6326
+2026-09-13 13:05:51 | __main__                       | INFO     |     1024 |     35.2±0.8 |    275.8±5.6 |     21.4±0.7 |       2316 |     62.6±0.9 |   1.7663
+2026-09-13 13:05:51 | __main__                       | INFO     |     2048 |     31.6±0.6 |    525.6±9.6 |     21.2±0.6 |       2653 |     64.0±0.6 |   2.0112
+2026-09-13 13:05:51 | __main__                       | INFO     |     4096 |     24.8±0.6 |   1159.0±16.0 |     21.8±1.0 |       3328 |     63.8±0.9 |   2.5614
+2026-09-13 13:05:51 | __main__                       | INFO     | 
+All results saved to experiments/01_vanilla
