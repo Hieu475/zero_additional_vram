@@ -1,0 +1,84 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "max_new_tokens": 32,
+  "runs": 10,
+  "ablation_table": [
+    {
+      "method": "Vanilla",
+      "cka": false,
+      "adaptive_k": false,
+      "hw_feedback": false,
+      "tok_per_s": 38.281522386552005,
+      "speedup": 1.0,
+      "acceptance_rate": 0.0,
+      "exact_match": 1.0,
+      "peak_vram_mb": 1984.93310546875
+    },
+    {
+      "method": "Random Layer Skip",
+      "cka": false,
+      "adaptive_k": false,
+      "hw_feedback": false,
+      "tok_per_s": 46.39999999999999,
+      "speedup": 1.212073008264163,
+      "acceptance_rate": 0.0,
+      "exact_match": 0.0,
+      "peak_vram_mb": 1988.0
+    },
+    {
+      "method": "Static Layer Skip",
+      "cka": false,
+      "adaptive_k": false,
+      "hw_feedback": false,
+      "tok_per_s": 47.8,
+      "speedup": 1.2486441766169611,
+      "acceptance_rate": 0.0,
+      "exact_match": 0.0,
+      "peak_vram_mb": 1987.0
+    },
+    {
+      "method": "CKA Layer Skip",
+      "cka": true,
+      "adaptive_k": false,
+      "hw_feedback": false,
+      "tok_per_s": 46.3,
+      "speedup": 1.209460781953249,
+      "acceptance_rate": 0.0,
+      "exact_match": 0.0,
+      "peak_vram_mb": 1988.0
+    },
+    {
+      "method": "CKA + Fixed K=2",
+      "cka": true,
+      "adaptive_k": false,
+      "hw_feedback": false,
+      "tok_per_s": 17.815841664927756,
+      "speedup": 0.4653901034820475,
+      "acceptance_rate": 0.38496005688149654,
+      "exact_match": 0.6,
+      "peak_vram_mb": 2028.4921875
+    },
+    {
+      "method": "CKA + Adaptive K",
+      "cka": true,
+      "adaptive_k": true,
+      "hw_feedback": false,
+      "tok_per_s": 14.217759377056975,
+      "speedup": 0.37140005126994535,
+      "acceptance_rate": 0.4867174854131376,
+      "exact_match": 0.6,
+      "peak_vram_mb": 2029.0234375
+    },
+    {
+      "method": "Joint HW Controller",
+      "cka": true,
+      "adaptive_k": true,
+      "hw_feedback": true,
+      "tok_per_s": 10.467596330923717,
+      "speedup": 0.273437305476673,
+      "acceptance_rate": 0.03225806451612903,
+      "exact_match": 0.6,
+      "peak_vram_mb": 2028.787109375
+    }
+  ]
+}
