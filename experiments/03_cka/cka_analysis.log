@@ -1,0 +1,114 @@
+2026-09-13 13:42:53 | __main__                       | INFO     | ======================================================================
+2026-09-13 13:42:53 | __main__                       | INFO     | PHASE 3 — CKA LAYER ANALYSIS & REDUNDANCY INVESTIGATION
+2026-09-13 13:42:53 | __main__                       | INFO     | ======================================================================
+2026-09-13 13:42:53 | zassd.models.loader            | INFO     | Loading Qwen/Qwen2.5-3B-Instruct with 4-bit quantization
+2026-09-13 13:42:54 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:42:54 | huggingface_hub.utils._http    | WARNING  | Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-09-13 13:42:54 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-13 13:42:54 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:42:54 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-13 13:42:58 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:42:58 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+2026-09-13 13:42:58 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-09-13 13:42:58 | zassd.models.loader            | INFO     | Model loaded. Parameters: 1,698,672,640
+2026-09-13 13:42:58 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:42:58 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-13 13:42:58 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:42:58 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-09-13 13:42:59 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-09-13 13:42:59 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-09-13 13:43:00 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+2026-09-13 13:43:00 | zassd.models.model_adapter     | INFO     | ModelAdapter initialized for Qwen2ForCausalLM with 36 layers
+2026-09-13 13:43:00 | __main__                       | INFO     | Loaded Qwen/Qwen2.5-3B-Instruct with 36 layers
+2026-09-13 13:43:00 | __main__                       | INFO     | Loaded 40 calibration prompts
+2026-09-13 13:43:00 | __main__                       | INFO     | Collecting activations across all layers...
+2026-09-13 13:43:00 | __main__                       | INFO     |   Processed 10/40 calibration prompts
+2026-09-13 13:43:01 | __main__                       | INFO     |   Processed 20/40 calibration prompts
+2026-09-13 13:43:01 | __main__                       | INFO     |   Processed 30/40 calibration prompts
+2026-09-13 13:43:02 | __main__                       | INFO     |   Processed 40/40 calibration prompts
+2026-09-13 13:43:02 | __main__                       | INFO     | Activations collected: 36 layers, 1205 tokens per layer, dim=2048
+2026-09-13 13:43:02 | __main__                       | INFO     | Computing full 36x36 CKA similarity matrix...
+2026-09-13 13:43:46 | __main__                       | INFO     | Saved CKA heatmap to results/figures/cka_heatmap.png
+2026-09-13 13:43:47 | __main__                       | INFO     | Saved adjacent similarity plot to results/figures/cka_adjacent_similarity.png
+2026-09-13 13:43:47 | __main__                       | INFO     | 
+--- Top 10 Most Redundant Layers ---
+2026-09-13 13:43:47 | __main__                       | INFO     |   Rank  1: Layer  5 (score=1.0000)
+2026-09-13 13:43:47 | __main__                       | INFO     |   Rank  2: Layer  4 (score=1.0000)
+2026-09-13 13:43:47 | __main__                       | INFO     |   Rank  3: Layer  6 (score=1.0000)
+2026-09-13 13:43:47 | __main__                       | INFO     |   Rank  4: Layer  7 (score=1.0000)
+2026-09-13 13:43:47 | __main__                       | INFO     |   Rank  5: Layer 13 (score=1.0000)
+2026-09-13 13:43:47 | __main__                       | INFO     |   Rank  6: Layer 12 (score=1.0000)
+2026-09-13 13:43:47 | __main__                       | INFO     |   Rank  7: Layer 11 (score=1.0000)
+2026-09-13 13:43:47 | __main__                       | INFO     |   Rank  8: Layer 10 (score=1.0000)
+2026-09-13 13:43:47 | __main__                       | INFO     |   Rank  9: Layer  3 (score=1.0000)
+2026-09-13 13:43:47 | __main__                       | INFO     |   Rank 10: Layer 16 (score=1.0000)
+2026-09-13 13:43:47 | __main__                       | INFO     | Evaluating single-layer skips for CKA correlation analysis...
+2026-09-13 13:44:28 | __main__                       | INFO     | Correlation Results:
+  CKA vs Logit Cosine: Pearson r=0.703 (p=3.611e-06), Spearman r=0.634
+  CKA vs Top-1 Match:  Pearson r=0.705 (p=3.247e-06), Spearman r=0.544
+  CKA vs -KL Div:      Pearson r=0.702 (p=3.660e-06), Spearman r=0.496
+2026-09-13 13:44:29 | __main__                       | INFO     | Saved correlation scatter plots to results/figures/cka_vs_metrics.png
+2026-09-13 13:45:25 | __main__                       | INFO     | ======================================================================
+2026-09-13 13:45:25 | __main__                       | INFO     | PHASE 3 — CKA LAYER ANALYSIS & REDUNDANCY INVESTIGATION
+2026-09-13 13:45:25 | __main__                       | INFO     | ======================================================================
+2026-09-13 13:45:25 | zassd.models.loader            | INFO     | Loading Qwen/Qwen2.5-3B-Instruct with 4-bit quantization
+2026-09-13 13:45:25 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:45:25 | huggingface_hub.utils._http    | WARNING  | Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-09-13 13:45:25 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-13 13:45:25 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:45:25 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-13 13:45:29 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:45:29 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+2026-09-13 13:45:30 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-09-13 13:45:30 | zassd.models.loader            | INFO     | Model loaded. Parameters: 1,698,672,640
+2026-09-13 13:45:30 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:45:30 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-13 13:45:30 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-13 13:45:30 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-09-13 13:45:31 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-09-13 13:45:31 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-09-13 13:45:31 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+2026-09-13 13:45:31 | zassd.models.model_adapter     | INFO     | ModelAdapter initialized for Qwen2ForCausalLM with 36 layers
+2026-09-13 13:45:31 | __main__                       | INFO     | Loaded Qwen/Qwen2.5-3B-Instruct with 36 layers
+2026-09-13 13:45:31 | __main__                       | INFO     | Loaded 40 calibration prompts
+2026-09-13 13:45:31 | __main__                       | INFO     | Loading cached CKA matrix from experiments/03_cka/cka_matrix.npy
+2026-09-13 13:45:32 | __main__                       | INFO     | Saved CKA heatmap to results/figures/cka_heatmap.png
+2026-09-13 13:45:32 | __main__                       | INFO     | Saved adjacent similarity plot to results/figures/cka_adjacent_similarity.png
+2026-09-13 13:45:32 | __main__                       | INFO     | 
+--- Top 10 Most Redundant Layers ---
+2026-09-13 13:45:32 | __main__                       | INFO     |   Rank  1: Layer  5 (score=1.0000)
+2026-09-13 13:45:32 | __main__                       | INFO     |   Rank  2: Layer  4 (score=1.0000)
+2026-09-13 13:45:32 | __main__                       | INFO     |   Rank  3: Layer  6 (score=1.0000)
+2026-09-13 13:45:32 | __main__                       | INFO     |   Rank  4: Layer  7 (score=1.0000)
+2026-09-13 13:45:32 | __main__                       | INFO     |   Rank  5: Layer 13 (score=1.0000)
+2026-09-13 13:45:32 | __main__                       | INFO     |   Rank  6: Layer 12 (score=1.0000)
+2026-09-13 13:45:32 | __main__                       | INFO     |   Rank  7: Layer 11 (score=1.0000)
+2026-09-13 13:45:32 | __main__                       | INFO     |   Rank  8: Layer 10 (score=1.0000)
+2026-09-13 13:45:32 | __main__                       | INFO     |   Rank  9: Layer  3 (score=1.0000)
+2026-09-13 13:45:32 | __main__                       | INFO     |   Rank 10: Layer 16 (score=1.0000)
+2026-09-13 13:45:32 | __main__                       | INFO     | Loading cached correlation analysis from experiments/03_cka/correlation_analysis.json
+2026-09-13 13:45:32 | __main__                       | INFO     | 
+--- Measuring full model speed reference ---
+2026-09-13 13:46:27 | __main__                       | INFO     | 
+Evaluating CKA configuration: cka_75
+2026-09-13 13:46:27 | __main__                       | INFO     |   Kept (27): [0, 1, 2, 4, 6, 8, 10, 12, 14, 15, 17, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]
+2026-09-13 13:46:27 | __main__                       | INFO     |   Skipped (9): [3, 5, 7, 9, 11, 13, 16, 18, 21]
+2026-09-13 13:47:26 | __main__                       | INFO     |   Result: 46.3 tok/s (1.23x), Cosine=0.7343, Top1=40.0%, KL=1.5632
+2026-09-13 13:47:26 | __main__                       | INFO     | 
+Evaluating CKA configuration: cka_50
+2026-09-13 13:47:26 | __main__                       | INFO     |   Kept (18): [0, 2, 8, 10, 14, 15, 17, 19, 20, 22, 24, 26, 27, 29, 30, 32, 34, 35]
+2026-09-13 13:47:26 | __main__                       | INFO     |   Skipped (18): [1, 3, 4, 5, 6, 7, 9, 11, 12, 13, 16, 18, 21, 23, 25, 28, 31, 33]
+2026-09-13 13:48:09 | __main__                       | INFO     |   Result: 64.7 tok/s (1.72x), Cosine=0.1045, Top1=0.0%, KL=13.3470
+2026-09-13 13:48:09 | __main__                       | INFO     | 
+Evaluating CKA configuration: cka_25
+2026-09-13 13:48:09 | __main__                       | INFO     |   Kept (9): [0, 1, 2, 29, 30, 32, 33, 34, 35]
+2026-09-13 13:48:09 | __main__                       | INFO     |   Skipped (27): [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 31]
+2026-09-13 13:48:37 | __main__                       | INFO     |   Result: 98.4 tok/s (2.62x), Cosine=0.3917, Top1=0.0%, KL=7.1488
+2026-09-13 13:48:37 | __main__                       | INFO     | 
+==========================================================================================
+2026-09-13 13:48:37 | __main__                       | INFO     | PHASE 3 SUMMARY — CKA VS BASELINES COMPARISON
+2026-09-13 13:48:37 | __main__                       | INFO     | ==========================================================================================
+2026-09-13 13:48:37 | __main__                       | INFO     | Budget  75% | CKA: Cosine=0.7343, Top1=40.0%, Speedup=1.23x | Static: Cosine=0.3850, Top1=10.0% | Best Baseline: Cosine=0.6981, Top1=30.0%
+2026-09-13 13:48:37 | __main__                       | INFO     | Budget  50% | CKA: Cosine=0.1045, Top1=0.0%, Speedup=1.72x | Static: Cosine=0.3523, Top1=0.0% | Best Baseline: Cosine=0.5018, Top1=0.0%
+2026-09-13 13:48:37 | __main__                       | INFO     | 
+All Phase 3 results saved to experiments/03_cka

@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import logging
 from enum import Enum
-from typing import Optional
+from typing import Any, Optional
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +27,7 @@ class LayerSelector:
         self,
         num_layers: int,
         method: SelectionMethod = SelectionMethod.RANDOM,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         self.num_layers = num_layers
         self.method = method
@@ -56,8 +58,22 @@ class LayerSelector:
                 self.num_layers, **self.kwargs
             )
         elif self.method == SelectionMethod.CKA:
-            # TODO: Implement CKA-based selection
-            raise NotImplementedError("CKA selection not yet implemented")
+            from .cka import select_layers_cka
+            cka_matrix = self.kwargs.get("cka_matrix")
+            if cka_matrix is None:
+                raise ValueError("CKA method requires 'cka_matrix' in kwargs")
+            num_to_skip = self.kwargs.get(
+                "num_to_skip",
+                int(self.num_layers * self.kwargs.get("skip_ratio", 0.5)),
+            )
+            always_keep = self.kwargs.get("always_keep", [0, -1])
+            avoid_consecutive = self.kwargs.get("avoid_consecutive", False)
+            self._kept, self._skipped = select_layers_cka(
+                cka_matrix=cka_matrix,
+                num_to_skip=num_to_skip,
+                always_keep=always_keep,
+                avoid_consecutive=avoid_consecutive,
+            )
         else:
             raise ValueError(f"Unknown method: {self.method}")
 

@@ -71,3 +71,83 @@ class TestLayerSelector:
         kept, skipped = selector.select()
         assert len(kept) + len(skipped) == 32
         assert selector.skip_ratio > 0
+
+    def test_cka_method(self):
+        import numpy as np
+        from zassd.layer_selection.selector import LayerSelector, SelectionMethod
+
+        # Mock CKA matrix with 8 layers
+        cka = np.eye(8, dtype=np.float32)
+        # Middle layers 3 and 4 are very similar (redundant)
+        cka[3, 4] = cka[4, 3] = 0.98
+        cka[2, 3] = cka[3, 2] = 0.95
+
+        selector = LayerSelector(
+            num_layers=8,
+            method=SelectionMethod.CKA,
+            cka_matrix=cka,
+            num_to_skip=2,
+            always_keep=[0, 7],
+        )
+        kept, skipped = selector.select()
+        assert len(kept) + len(skipped) == 8
+        assert len(skipped) == 2
+        assert 0 in kept
+        assert 7 in kept
+
+
+class TestCKA:
+    """Test CKA math and ranking functions."""
+
+    def test_linear_cka_identity(self):
+        import torch
+        from zassd.layer_selection.cka import linear_cka
+
+        X = torch.randn(100, 64)
+        sim = linear_cka(X, X)
+        assert abs(sim - 1.0) < 1e-4
+
+    def test_linear_cka_orthogonal(self):
+        import torch
+        from zassd.layer_selection.cka import linear_cka
+
+        # Two distinct random sets with large N
+        torch.manual_seed(42)
+        X = torch.randn(1000, 10)
+        Y = torch.randn(1000, 10)
+        sim = linear_cka(X, Y)
+        assert sim < 0.1
+
+    def test_compute_cka_matrix(self):
+        import torch
+        from zassd.layer_selection.cka import compute_cka_matrix
+
+        activations = {
+            0: torch.randn(50, 32),
+            1: torch.randn(50, 32),
+            2: torch.randn(50, 32),
+        }
+        matrix = compute_cka_matrix(activations)
+        assert matrix.shape == (3, 3)
+        assert abs(matrix[0, 0] - 1.0) < 1e-4
+        assert abs(matrix[0, 1] - matrix[1, 0]) < 1e-4
+
+    def test_rank_layers(self):
+        import numpy as np
+        from zassd.layer_selection.cka import rank_layers_by_redundancy, select_layers_cka
+
+        cka = np.eye(6, dtype=np.float32)
+        # Layer 2 and 3 are very similar
+        cka[1, 2] = cka[2, 1] = 0.99
+        cka[2, 3] = cka[3, 2] = 0.99
+
+        ranked = rank_layers_by_redundancy(cka, always_keep=[0, 5])
+        # Layer 2 should be highest or near highest redundancy
+        assert ranked[0][0] in [2, 3]
+
+        kept, skipped = select_layers_cka(cka, num_to_skip=2, always_keep=[0, 5])
+        assert len(kept) == 4
+        assert len(skipped) == 2
+        assert 0 in kept
+        assert 5 in kept
+
