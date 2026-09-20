@@ -32,6 +32,7 @@ import numpy as np
 import torch
 
 from zassd.controllers.adaptive_k import AdaptiveKController
+from zassd.profiling.action_profiler import ActionCostDatabase
 from zassd.profiling.gpu import GPUProfiler
 from zassd.profiling.memory import get_vram_usage
 
@@ -77,6 +78,7 @@ class HardwareAwareJointController:
     def __init__(
         self,
         candidate_layer_configs: dict[str, list[int]],
+        action_cost_db: Optional[ActionCostDatabase] = None,
         gpu_profiler: GPUProfiler | None = None,
         max_vram_mb: float = 5500.0,
         temp_threshold_c: float = 82.0,
@@ -86,6 +88,7 @@ class HardwareAwareJointController:
         lambda_energy: float = 0.2,
     ) -> None:
         self.configs = candidate_layer_configs
+        self.action_cost_db = action_cost_db
         self.gpu_profiler = gpu_profiler
         self.max_vram_mb = max_vram_mb
         self.temp_threshold_c = temp_threshold_c
@@ -128,11 +131,22 @@ class HardwareAwareJointController:
         obs: ControllerObservation,
     ) -> float:
         """Evaluate utility U(a | z_t)."""
-        # Estimated speedup term: depends on acceptance and config layer speed
-        # cka_50 is ~1.7x faster in draft than full, cka_75 is ~1.23x
-        draft_speed_mult = 1.7 if "50" in config_name else 1.25
-        expected_accepted = min(k, obs.acceptance_rate * k + 1)
-        expected_speedup = (expected_accepted * draft_speed_mult) / (1.0 + (k * 0.15))
+        # Empirical speedup if action_cost_db is populated, otherwise analytical heuristic
+        if self.action_cost_db:
+            cost = self.action_cost_db.get_action_cost(config_name, k)
+            if cost and "tokens_per_second" in cost:
+                expected_speedup = cost["tokens_per_second"] / 38.5
+            elif cost and "tokens_per_step" in cost and "total_cycle_ms" in cost:
+                eff_tps = cost["tokens_per_step"] / max(1e-3, cost["total_cycle_ms"] / 1000.0)
+                expected_speedup = eff_tps / 38.5
+            else:
+                draft_speed_mult = 1.7 if "50" in config_name else 1.25
+                expected_accepted = min(k, obs.acceptance_rate * k + 1)
+                expected_speedup = (expected_accepted * draft_speed_mult) / (1.0 + (k * 0.15))
+        else:
+            draft_speed_mult = 1.7 if "50" in config_name else 1.25
+            expected_accepted = min(k, obs.acceptance_rate * k + 1)
+            expected_speedup = (expected_accepted * draft_speed_mult) / (1.0 + (k * 0.15))
 
         # Latency penalty
         latency_penalty = (obs.draft_latency_ms + obs.verify_latency_ms) / 100.0

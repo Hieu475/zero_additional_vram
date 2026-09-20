@@ -70,3 +70,72 @@ class TestAdaptiveK:
         controller.update(entropy=1.0, accepted=2, proposed=4)
         controller.reset()
         assert controller.avg_acceptance_rate == 0.0
+
+
+class TestHardwareAwareJointController:
+    """Test hardware-aware joint speculation controller."""
+
+    def test_controller_action_selection(self):
+        from zassd.controllers.hardware_controller import HardwareAwareJointController
+
+        configs = {
+            "cka_75": [3, 5, 7, 9, 11, 13, 16, 18, 21],
+            "cka_50": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21],
+        }
+        controller = HardwareAwareJointController(candidate_layer_configs=configs)
+
+        action = controller.select_action(
+            entropy=1.0,
+            last_accepted=3,
+            last_proposed=4,
+            draft_ms=20.0,
+            verify_ms=25.0,
+        )
+
+        assert action.config_name in configs
+        assert 1 <= action.draft_length <= 8
+        assert action.skip_indices == configs[action.config_name]
+        assert len(controller.action_history) == 1
+
+    def test_controller_with_action_cost_db(self):
+        from zassd.controllers.hardware_controller import HardwareAwareJointController
+        from zassd.profiling.action_profiler import ActionCostDatabase
+
+        mock_db_data = {
+            "cka_75": {
+                "K4": {
+                    "tokens_per_second": 32.0,
+                    "total_cycle_ms": 75.0,
+                    "tokens_per_step": 2.4,
+                }
+            },
+            "cka_50": {
+                "K4": {
+                    "tokens_per_second": 45.0,
+                    "total_cycle_ms": 55.0,
+                    "tokens_per_step": 2.5,
+                }
+            },
+        }
+        db = ActionCostDatabase(mock_db_data)
+
+        configs = {
+            "cka_75": [3, 5, 7, 9],
+            "cka_50": [3, 5, 7, 9, 11, 13],
+        }
+        controller = HardwareAwareJointController(
+            candidate_layer_configs=configs,
+            action_cost_db=db,
+        )
+
+        action = controller.select_action(
+            entropy=0.5,
+            last_accepted=3,
+            last_proposed=3,
+            draft_ms=15.0,
+            verify_ms=25.0,
+        )
+
+        assert action.config_name == "cka_50"
+        assert action.draft_length == 4
+
