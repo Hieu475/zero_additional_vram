@@ -1,0 +1,96 @@
+2026-09-20 23:16:40 | __main__                       | INFO     | ================================================================================
+2026-09-20 23:16:40 | __main__                       | INFO     | PHASE 9 — CONTEXT SCALING BENCHMARK: SELF-SPECULATIVE VS VANILLA
+2026-09-20 23:16:40 | __main__                       | INFO     | ================================================================================
+2026-09-20 23:16:40 | zassd.models.loader            | INFO     | Loading Qwen/Qwen2.5-3B-Instruct with 4-bit quantization
+2026-09-20 23:16:41 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 23:16:41 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 23:16:41 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 23:16:41 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 23:16:44 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 23:16:44 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+2026-09-20 23:16:44 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-09-20 23:16:44 | huggingface_hub.utils._http    | WARNING  | Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-09-20 23:16:44 | zassd.models.loader            | INFO     | Model loaded. Parameters: 1,698,672,640
+2026-09-20 23:16:45 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 23:16:45 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 23:16:45 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 23:16:45 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-09-20 23:16:45 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-09-20 23:16:46 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-09-20 23:16:46 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+2026-09-20 23:16:46 | zassd.models.model_adapter     | INFO     | ModelAdapter initialized for Qwen2ForCausalLM with 36 layers
+2026-09-20 23:16:46 | __main__                       | INFO     | Using Pareto CKA-83% skip layers: [4, 5, 6, 7, 12, 13] (6 skipped)
+2026-09-20 23:16:46 | __main__                       | INFO     | 
+======================================================================
+2026-09-20 23:16:46 | __main__                       | INFO     | BENCHMARKING CONTEXT LENGTH L = 128
+2026-09-20 23:16:46 | __main__                       | INFO     | ======================================================================
+2026-09-20 23:16:46 | __main__                       | INFO     | Running Vanilla Baseline (L=128, 2 runs)...
+2026-09-20 23:16:48 | __main__                       | INFO     |   Vanilla L=128: 27.73 tok/s, VRAM: 2024 MB
+2026-09-20 23:16:48 | __main__                       | INFO     | Running Self-Speculative K=2 (L=128, 2 runs)...
+2026-09-20 23:16:49 | __main__                       | INFO     |   Self-Spec L=128: 29.30 tok/s (1.06x), Accept: 84.3%, Match: 100.0%, VRAM: 2038 MB, Cache: 7.09 ms/cycle
+2026-09-20 23:16:49 | __main__                       | INFO     | 
+======================================================================
+2026-09-20 23:16:49 | __main__                       | INFO     | BENCHMARKING CONTEXT LENGTH L = 512
+2026-09-20 23:16:49 | __main__                       | INFO     | ======================================================================
+2026-09-20 23:16:49 | __main__                       | INFO     | Running Vanilla Baseline (L=512, 2 runs)...
+2026-09-20 23:16:50 | __main__                       | INFO     |   Vanilla L=512: 26.62 tok/s, VRAM: 2159 MB
+2026-09-20 23:16:50 | __main__                       | INFO     | Running Self-Speculative K=2 (L=512, 2 runs)...
+2026-09-20 23:16:51 | __main__                       | INFO     |   Self-Spec L=512: 23.42 tok/s (0.88x), Accept: 84.3%, Match: 100.0%, VRAM: 2200 MB, Cache: 20.58 ms/cycle
+2026-09-20 23:16:52 | __main__                       | INFO     | Saved context scaling figures to results/figures
+2026-09-20 23:16:52 | __main__                       | INFO     | 
+===============================================================================================
+2026-09-20 23:16:52 | __main__                       | INFO     | CONTEXT SCALING BENCHMARK SUMMARY (RTX 4050 Laptop 6GB, Qwen2.5-3B NF4)
+2026-09-20 23:16:52 | __main__                       | INFO     | ===============================================================================================
+2026-09-20 23:16:52 | __main__                       | INFO     |  Context |    Vanilla |  Self-Spec |  Speedup |   Accept |    Match | Vanilla MB |    Spec MB |  Cache ms
+2026-09-20 23:16:52 | __main__                       | INFO     | -----------------------------------------------------------------------------------------------
+2026-09-20 23:16:52 | __main__                       | INFO     |      128 |    27.73 t/s |    29.30 t/s |    1.06x |   84.3% |  100.0% |      2024MB |      2038MB |    7.09ms
+2026-09-20 23:16:52 | __main__                       | INFO     |      512 |    26.62 t/s |    23.42 t/s |    0.88x |   84.3% |  100.0% |      2159MB |      2200MB |   20.58ms
+2026-09-20 23:16:52 | __main__                       | INFO     | ===============================================================================================
+2026-09-20 23:18:51 | __main__                       | INFO     | ================================================================================
+2026-09-20 23:18:51 | __main__                       | INFO     | PHASE 9 — CONTEXT SCALING BENCHMARK: SELF-SPECULATIVE VS VANILLA
+2026-09-20 23:18:51 | __main__                       | INFO     | ================================================================================
+2026-09-20 23:18:51 | zassd.models.loader            | INFO     | Loading Qwen/Qwen2.5-3B-Instruct with 4-bit quantization
+2026-09-20 23:18:52 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 23:18:52 | huggingface_hub.utils._http    | WARNING  | Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-09-20 23:18:52 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 23:18:52 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 23:18:52 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 23:18:55 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 23:18:55 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+2026-09-20 23:18:55 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-09-20 23:18:55 | zassd.models.loader            | INFO     | Model loaded. Parameters: 1,698,672,640
+2026-09-20 23:18:55 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 23:18:55 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 23:18:56 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 23:18:56 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-09-20 23:18:56 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-09-20 23:18:57 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-09-20 23:18:57 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+2026-09-20 23:18:57 | zassd.models.model_adapter     | INFO     | ModelAdapter initialized for Qwen2ForCausalLM with 36 layers
+2026-09-20 23:18:57 | __main__                       | INFO     | Using Pareto CKA-83% skip layers: [4, 5, 6, 7, 12, 13] (6 skipped)
+2026-09-20 23:18:57 | __main__                       | INFO     | 
+======================================================================
+2026-09-20 23:18:57 | __main__                       | INFO     | BENCHMARKING CONTEXT LENGTH L = 128
+2026-09-20 23:18:57 | __main__                       | INFO     | ======================================================================
+2026-09-20 23:18:57 | __main__                       | INFO     | Running Vanilla Baseline (L=128, 2 runs)...
+2026-09-20 23:18:58 | __main__                       | INFO     |   Vanilla L=128: 27.19 tok/s, VRAM: 2024 MB
+2026-09-20 23:18:58 | __main__                       | INFO     | Running Self-Speculative K=2 (L=128, 2 runs)...
+2026-09-20 23:18:59 | __main__                       | INFO     |   Self-Spec L=128: 28.02 tok/s (1.03x), Accept: 84.3%, Match: 100.0%, VRAM: 2038 MB, Cache: 0.22 ms/cycle
+2026-09-20 23:18:59 | __main__                       | INFO     | 
+======================================================================
+2026-09-20 23:18:59 | __main__                       | INFO     | BENCHMARKING CONTEXT LENGTH L = 512
+2026-09-20 23:18:59 | __main__                       | INFO     | ======================================================================
+2026-09-20 23:18:59 | __main__                       | INFO     | Running Vanilla Baseline (L=512, 2 runs)...
+2026-09-20 23:19:01 | __main__                       | INFO     |   Vanilla L=512: 26.24 tok/s, VRAM: 2159 MB
+2026-09-20 23:19:01 | __main__                       | INFO     | Running Self-Speculative K=2 (L=512, 2 runs)...
+2026-09-20 23:19:02 | __main__                       | INFO     |   Self-Spec L=512: 23.47 tok/s (0.89x), Accept: 84.3%, Match: 100.0%, VRAM: 2200 MB, Cache: 0.21 ms/cycle
+2026-09-20 23:19:03 | __main__                       | INFO     | Saved context scaling figures to results/figures
+2026-09-20 23:19:03 | __main__                       | INFO     | 
+===============================================================================================
+2026-09-20 23:19:03 | __main__                       | INFO     | CONTEXT SCALING BENCHMARK SUMMARY (RTX 4050 Laptop 6GB, Qwen2.5-3B NF4)
+2026-09-20 23:19:03 | __main__                       | INFO     | ===============================================================================================
+2026-09-20 23:19:03 | __main__                       | INFO     |  Context |    Vanilla |  Self-Spec |  Speedup |   Accept |    Match | Vanilla MB |    Spec MB |  Cache ms
+2026-09-20 23:19:03 | __main__                       | INFO     | -----------------------------------------------------------------------------------------------
+2026-09-20 23:19:03 | __main__                       | INFO     |      128 |    27.19 t/s |    28.02 t/s |    1.03x |   84.3% |  100.0% |      2024MB |      2038MB |    0.22ms
+2026-09-20 23:19:03 | __main__                       | INFO     |      512 |    26.24 t/s |    23.47 t/s |    0.89x |   84.3% |  100.0% |      2159MB |      2200MB |    0.21ms
+2026-09-20 23:19:03 | __main__                       | INFO     | ===============================================================================================

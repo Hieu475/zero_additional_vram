@@ -47,7 +47,8 @@ class TestEndToEndSpeculative:
 
         # Check latency decomposition
         accounted_time = (
-            metrics.draft_time_s
+            metrics.prefill_time_s
+            + metrics.draft_time_s
             + metrics.verify_time_s
             + metrics.cache_time_s
             + metrics.controller_time_s

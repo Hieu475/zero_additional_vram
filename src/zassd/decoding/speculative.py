@@ -40,7 +40,8 @@ class SpeculativeMetrics:
     total_time_s: float = 0.0
     tokens_per_second: float = 0.0
 
-    # Latency decomposition: T_total = T_draft + T_verify + T_cache + T_controller + T_other
+    # Latency decomposition: T_total = T_prefill + T_draft + T_verify + T_cache + T_controller + T_other
+    prefill_time_s: float = 0.0
     draft_time_s: float = 0.0
     verify_time_s: float = 0.0
     cache_time_s: float = 0.0
@@ -84,8 +85,11 @@ def self_speculative_generate(
     """
     metrics = SpeculativeMetrics(k_value=k)
 
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
-    prompt_ids = inputs["input_ids"]
+    if isinstance(prompt, torch.Tensor):
+        prompt_ids = prompt.to(device)
+    else:
+        inputs = tokenizer(prompt, return_tensors="pt").to(device)
+        prompt_ids = inputs["input_ids"]
     prompt_len = prompt_ids.shape[1]
 
     torch.cuda.reset_peak_memory_stats(device)
@@ -95,13 +99,14 @@ def self_speculative_generate(
     # -----------------------------------------------------------------------
     # Canonical Prefill: Populate Target KV Cache
     # -----------------------------------------------------------------------
-    t_cache_init_start = time.perf_counter()
+    t_prefill_start = time.perf_counter()
     target_kv = TargetKVCache()
     with torch.no_grad():
         prefill_out = model(prompt_ids, past_key_values=target_kv.cache, use_cache=True)
     target_prefix_logit = prefill_out.logits[0, -1, :]
-    t_cache_init_end = time.perf_counter()
-    metrics.cache_time_s += (t_cache_init_end - t_cache_init_start)
+    torch.cuda.synchronize()
+    t_prefill_end = time.perf_counter()
+    metrics.prefill_time_s = (t_prefill_end - t_prefill_start)
 
     generated_token_ids: list[int] = []
     current_prefix_len = prompt_len
@@ -364,7 +369,7 @@ def self_speculative_generate(
     metrics.other_time_s = max(
         0.0,
         metrics.total_time_s
-        - (metrics.draft_time_s + metrics.verify_time_s + metrics.cache_time_s + metrics.controller_time_s),
+        - (metrics.prefill_time_s + metrics.draft_time_s + metrics.verify_time_s + metrics.cache_time_s + metrics.controller_time_s),
     )
     metrics.peak_vram_mb = torch.cuda.max_memory_allocated(device) / (1024**2)
 
