@@ -22,6 +22,7 @@ import torch.nn.functional as F
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from zassd.cache.kv_cache import TargetKVCache
+from zassd.controllers.entropy import compute_entropy
 from zassd.models.layer_manager import LayerManager
 
 logger = logging.getLogger(__name__)
@@ -59,6 +60,7 @@ def self_speculative_generate(
     skip_indices: list[int],
     prompt: str,
     k: int = 4,
+    controller: Optional[Any] = None,
     max_new_tokens: int = 128,
     temperature: float = 0.0,
     device: str = "cuda:0",
@@ -71,7 +73,8 @@ def self_speculative_generate(
         layer_mgr: LayerManager instance wrapping the model.
         skip_indices: Layers to skip during draft phase (e.g. CKA-selected).
         prompt: Input text.
-        k: Number of draft tokens per speculation step.
+        k: Default or maximum number of draft tokens per speculation step.
+        controller: Optional AdaptiveKController or HardwareAwareJointController.
         max_new_tokens: Maximum new tokens to generate.
         temperature: Sampling temperature (0.0 = greedy).
         device: Device to run generation on.
@@ -108,11 +111,74 @@ def self_speculative_generate(
         probs = F.softmax(target_prefix_logit / temperature, dim=-1)
         curr_target_tok = int(torch.multinomial(probs, num_samples=1).item())
 
+    curr_entropy = float(compute_entropy(target_prefix_logit.float()).item())
+    last_accepted = 1
+    last_proposed = k
+    last_draft_ms = 20.0
+    last_verify_ms = 25.0
+
     while len(generated_token_ids) < max_new_tokens:
         rem_tokens = max_new_tokens - len(generated_token_ids)
-        step_k = min(k, rem_tokens)
-        if step_k <= 0:
+
+        if controller is not None:
+            t_ctrl_start = time.perf_counter()
+            if hasattr(controller, "select_action"):
+                action = controller.select_action(
+                    entropy=curr_entropy,
+                    last_accepted=last_accepted,
+                    last_proposed=last_proposed,
+                    draft_ms=last_draft_ms,
+                    verify_ms=last_verify_ms,
+                )
+                step_k = action.draft_length
+                active_skip = action.skip_indices
+            else:
+                step_k = controller.update(
+                    entropy=curr_entropy,
+                    accepted=last_accepted,
+                    proposed=last_proposed,
+                )
+                active_skip = skip_indices
+            t_ctrl_end = time.perf_counter()
+            metrics.controller_time_s += (t_ctrl_end - t_ctrl_start)
+        else:
+            step_k = k
+            active_skip = skip_indices
+
+        step_k = min(step_k, rem_tokens)
+        if step_k <= 0 and rem_tokens <= 0:
             break
+
+        if step_k == 0:
+            # Fallback to single-token vanilla step with Target KV
+            t_v_start = time.perf_counter()
+            curr_tensor = torch.tensor([[curr_target_tok]], device=device)
+            with torch.no_grad():
+                out = model(curr_tensor, past_key_values=target_kv.cache, use_cache=True)
+            torch.cuda.synchronize()
+            t_v_end = time.perf_counter()
+            verify_elapsed = t_v_end - t_v_start
+            metrics.verify_time_s += verify_elapsed
+            metrics.num_verification_cycles += 1
+
+            target_logit = out.logits[0, -1, :].float()
+            curr_entropy = float(compute_entropy(target_logit).item())
+            if temperature == 0.0:
+                next_tok = int(target_logit.argmax(dim=-1).item())
+            else:
+                probs = F.softmax(target_logit / temperature, dim=-1)
+                next_tok = int(torch.multinomial(probs, num_samples=1).item())
+
+            generated_token_ids.append(curr_target_tok)
+            current_prefix_len += 1
+            if curr_target_tok == tokenizer.eos_token_id:
+                break
+            curr_target_tok = next_tok
+            last_accepted = 1
+            last_proposed = 0
+            last_draft_ms = 0.0
+            last_verify_ms = verify_elapsed * 1000
+            continue
 
         # -------------------------------------------------------------------
         # Cache Phase: Fork Ephemeral Draft KV (Zero-copy prefix sharing)
@@ -130,7 +196,7 @@ def self_speculative_generate(
 
         t_draft_start = time.perf_counter()
         with torch.no_grad():
-            with layer_mgr.skip_layers(skip_indices):
+            with layer_mgr.skip_layers(active_skip):
                 curr_d = torch.tensor([[curr_target_tok]], device=device)
                 for d_step in range(step_k):
                     d_out = model(curr_d, past_key_values=draft_kv, use_cache=True)
@@ -237,6 +303,16 @@ def self_speculative_generate(
         cache_cycle_s += commit_elapsed
         metrics.cache_time_s += cache_cycle_s
 
+        if rejected_at is not None:
+            curr_entropy = float(compute_entropy(v_out.logits[0, rejected_at, :].float()).item())
+        else:
+            curr_entropy = float(compute_entropy(v_out.logits[0, actual_k, :].float()).item())
+
+        last_accepted = num_accepted_draft
+        last_proposed = actual_k
+        last_draft_ms = draft_elapsed * 1000
+        last_verify_ms = verify_elapsed * 1000
+
         metrics.total_accepted_tokens += num_accepted_draft
         generated_token_ids.extend(cycle_emitted)
         current_prefix_len += len(cycle_emitted)
@@ -249,6 +325,8 @@ def self_speculative_generate(
             "draft_time_ms": draft_elapsed * 1000,
             "verify_time_ms": verify_elapsed * 1000,
             "cache_time_ms": cache_cycle_s * 1000,
+            "skip_indices": active_skip,
+            "entropy": curr_entropy,
         }
         metrics.per_iteration_stats.append(iter_stat)
 

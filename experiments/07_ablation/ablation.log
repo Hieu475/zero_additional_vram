@@ -93,3 +93,121 @@ Evaluating: Joint HW Controller (CKA=True, AdaptK=True, HW=True)
 2026-09-13 14:05:11 | __main__                       | INFO     | Joint HW Controller    |     ✓ |      ✓ |       ✓ |     10.5 |   0.27x |    3.2% |     60.0% |     2029MB
 2026-09-13 14:05:11 | __main__                       | INFO     | =========================================================================================================
 2026-09-13 14:05:11 | __main__                       | INFO     | All ablation results saved to experiments/07_ablation
+2026-09-20 22:48:02 | __main__                       | INFO     | ===========================================================================
+2026-09-20 22:48:02 | __main__                       | INFO     | PHASE 5 — FULL ABLATION STUDY & CONTROLLER EVALUATION
+2026-09-20 22:48:02 | __main__                       | INFO     | ===========================================================================
+2026-09-20 22:48:02 | zassd.models.loader            | INFO     | Loading Qwen/Qwen2.5-3B-Instruct with 4-bit quantization
+2026-09-20 22:48:02 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:48:02 | huggingface_hub.utils._http    | WARNING  | Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-09-20 22:48:02 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 22:48:03 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:48:03 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 22:48:06 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:48:06 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+2026-09-20 22:48:06 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-09-20 22:48:06 | zassd.models.loader            | INFO     | Model loaded. Parameters: 1,698,672,640
+2026-09-20 22:48:06 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:48:06 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 22:48:06 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:48:06 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-09-20 22:48:07 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-09-20 22:48:07 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-09-20 22:48:08 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+2026-09-20 22:48:08 | zassd.models.model_adapter     | INFO     | ModelAdapter initialized for Qwen2ForCausalLM with 36 layers
+2026-09-20 22:48:08 | zassd.profiling.gpu            | INFO     | GPU Profiler initialized for: NVIDIA GeForce RTX 4050 Laptop GPU
+2026-09-20 22:48:08 | __main__                       | INFO     | 
+Evaluating Method A: Vanilla Baseline
+2026-09-20 22:48:09 | __main__                       | INFO     | Vanilla: 32.64 tok/s, VRAM: 1985MB
+2026-09-20 22:48:09 | __main__                       | INFO     | 
+Evaluating: Random Layer Skip (CKA=False, AdaptK=False, HW=False)
+2026-09-20 22:48:09 | __main__                       | INFO     |   Random Layer Skip: 46.4 tok/s (1.42x), Match: 0.0%, Acc: 0.0%, VRAM: 1988MB
+2026-09-20 22:48:09 | __main__                       | INFO     | 
+Evaluating: Static Layer Skip (CKA=False, AdaptK=False, HW=False)
+2026-09-20 22:48:09 | __main__                       | INFO     |   Static Layer Skip: 47.8 tok/s (1.46x), Match: 0.0%, Acc: 0.0%, VRAM: 1987MB
+2026-09-20 22:48:09 | __main__                       | INFO     | 
+Evaluating: CKA Layer Skip (CKA=True, AdaptK=False, HW=False)
+2026-09-20 22:48:09 | __main__                       | INFO     |   CKA Layer Skip: 46.3 tok/s (1.42x), Match: 0.0%, Acc: 0.0%, VRAM: 1988MB
+2026-09-20 22:48:09 | __main__                       | INFO     | 
+Evaluating: CKA + Fixed K=2 (CKA=True, AdaptK=False, HW=False)
+2026-09-20 22:48:10 | __main__                       | INFO     |   CKA + Fixed K=2: 34.5 tok/s (1.06x), Match: 100.0%, Acc: 87.5%, VRAM: 1991MB
+2026-09-20 22:48:10 | __main__                       | INFO     | 
+Evaluating: CKA + Adaptive K (CKA=True, AdaptK=True, HW=False)
+2026-09-20 22:48:10 | __main__                       | INFO     |   CKA + Adaptive K: 34.0 tok/s (1.04x), Match: 100.0%, Acc: 89.3%, VRAM: 1991MB
+2026-09-20 22:48:10 | __main__                       | INFO     | 
+Evaluating: Joint HW Controller (CKA=True, AdaptK=True, HW=True)
+2026-09-20 22:48:12 | __main__                       | INFO     |   Joint HW Controller: 28.1 tok/s (0.86x), Match: 100.0%, Acc: 71.4%, VRAM: 1991MB
+2026-09-20 22:48:12 | __main__                       | INFO     | Saved ablation figure to results/figures/ablation_comparison.png
+2026-09-20 22:48:12 | __main__                       | INFO     | 
+=========================================================================================================
+2026-09-20 22:48:12 | __main__                       | INFO     | SECTION XVIII — FULL ABLATION MATRIX SUMMARY
+2026-09-20 22:48:12 | __main__                       | INFO     | =========================================================================================================
+2026-09-20 22:48:12 | __main__                       | INFO     | Method                 |   CKA | AdaptK | HW Feed |    tok/s | Speedup |  Accept | ExactMatch |  PeakVRAM
+2026-09-20 22:48:12 | __main__                       | INFO     | ---------------------------------------------------------------------------------------------------------
+2026-09-20 22:48:12 | __main__                       | INFO     | Vanilla                |     ✗ |      ✗ |       ✗ |     32.6 |   1.00x |       - |    100.0% |     1985MB
+2026-09-20 22:48:12 | __main__                       | INFO     | Random Layer Skip      |     ✗ |      ✗ |       ✗ |     46.4 |   1.42x |       - |      0.0% |     1988MB
+2026-09-20 22:48:12 | __main__                       | INFO     | Static Layer Skip      |     ✗ |      ✗ |       ✗ |     47.8 |   1.46x |       - |      0.0% |     1987MB
+2026-09-20 22:48:12 | __main__                       | INFO     | CKA Layer Skip         |     ✓ |      ✗ |       ✗ |     46.3 |   1.42x |       - |      0.0% |     1988MB
+2026-09-20 22:48:12 | __main__                       | INFO     | CKA + Fixed K=2        |     ✓ |      ✗ |       ✗ |     34.5 |   1.06x |   87.5% |    100.0% |     1991MB
+2026-09-20 22:48:12 | __main__                       | INFO     | CKA + Adaptive K       |     ✓ |      ✓ |       ✗ |     34.0 |   1.04x |   89.3% |    100.0% |     1991MB
+2026-09-20 22:48:12 | __main__                       | INFO     | Joint HW Controller    |     ✓ |      ✓ |       ✓ |     28.1 |   0.86x |   71.4% |    100.0% |     1991MB
+2026-09-20 22:48:12 | __main__                       | INFO     | =========================================================================================================
+2026-09-20 22:48:12 | __main__                       | INFO     | All ablation results saved to experiments/07_ablation
+2026-09-20 22:49:38 | __main__                       | INFO     | ===========================================================================
+2026-09-20 22:49:38 | __main__                       | INFO     | PHASE 5 — FULL ABLATION STUDY & CONTROLLER EVALUATION
+2026-09-20 22:49:38 | __main__                       | INFO     | ===========================================================================
+2026-09-20 22:49:38 | zassd.models.loader            | INFO     | Loading Qwen/Qwen2.5-3B-Instruct with 4-bit quantization
+2026-09-20 22:49:38 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:49:38 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 22:49:39 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:49:39 | huggingface_hub.utils._http    | WARNING  | Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-09-20 22:49:39 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 22:49:41 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:49:41 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+2026-09-20 22:49:41 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-09-20 22:49:41 | zassd.models.loader            | INFO     | Model loaded. Parameters: 1,698,672,640
+2026-09-20 22:49:42 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:49:42 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 22:49:42 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:49:42 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-09-20 22:49:42 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-09-20 22:49:43 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-09-20 22:49:43 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+2026-09-20 22:49:43 | zassd.models.model_adapter     | INFO     | ModelAdapter initialized for Qwen2ForCausalLM with 36 layers
+2026-09-20 22:49:43 | zassd.profiling.gpu            | INFO     | GPU Profiler initialized for: NVIDIA GeForce RTX 4050 Laptop GPU
+2026-09-20 22:49:43 | __main__                       | INFO     | 
+Evaluating Method A: Vanilla Baseline
+2026-09-20 22:49:44 | __main__                       | INFO     | Vanilla: 33.62 tok/s, VRAM: 1985MB
+2026-09-20 22:49:44 | __main__                       | INFO     | 
+Evaluating: Random Layer Skip (CKA=False, AdaptK=False, HW=False)
+2026-09-20 22:49:44 | __main__                       | INFO     |   Random Layer Skip: 46.4 tok/s (1.38x), Match: 0.0%, Acc: 0.0%, VRAM: 1988MB
+2026-09-20 22:49:44 | __main__                       | INFO     | 
+Evaluating: Static Layer Skip (CKA=False, AdaptK=False, HW=False)
+2026-09-20 22:49:44 | __main__                       | INFO     |   Static Layer Skip: 47.8 tok/s (1.42x), Match: 0.0%, Acc: 0.0%, VRAM: 1987MB
+2026-09-20 22:49:44 | __main__                       | INFO     | 
+Evaluating: CKA Layer Skip (CKA=True, AdaptK=False, HW=False)
+2026-09-20 22:49:44 | __main__                       | INFO     |   CKA Layer Skip: 46.3 tok/s (1.38x), Match: 0.0%, Acc: 0.0%, VRAM: 1988MB
+2026-09-20 22:49:44 | __main__                       | INFO     | 
+Evaluating: CKA + Fixed K=2 (CKA=True, AdaptK=False, HW=False)
+2026-09-20 22:49:45 | __main__                       | INFO     |   CKA + Fixed K=2: 33.9 tok/s (1.01x), Match: 100.0%, Acc: 87.5%, VRAM: 1991MB
+2026-09-20 22:49:45 | __main__                       | INFO     | 
+Evaluating: CKA + Adaptive K (CKA=True, AdaptK=True, HW=False)
+2026-09-20 22:49:46 | __main__                       | INFO     |   CKA + Adaptive K: 34.8 tok/s (1.04x), Match: 100.0%, Acc: 89.3%, VRAM: 1991MB
+2026-09-20 22:49:46 | __main__                       | INFO     | 
+Evaluating: Joint HW Controller (CKA=True, AdaptK=True, HW=True)
+2026-09-20 22:49:47 | __main__                       | INFO     |   Joint HW Controller: 34.6 tok/s (1.03x), Match: 100.0%, Acc: 89.3%, VRAM: 1991MB
+2026-09-20 22:49:47 | __main__                       | INFO     | Saved ablation figure to results/figures/ablation_comparison.png
+2026-09-20 22:49:47 | __main__                       | INFO     | 
+=========================================================================================================
+2026-09-20 22:49:47 | __main__                       | INFO     | SECTION XVIII — FULL ABLATION MATRIX SUMMARY
+2026-09-20 22:49:47 | __main__                       | INFO     | =========================================================================================================
+2026-09-20 22:49:47 | __main__                       | INFO     | Method                 |   CKA | AdaptK | HW Feed |    tok/s | Speedup |  Accept | ExactMatch |  PeakVRAM
+2026-09-20 22:49:47 | __main__                       | INFO     | ---------------------------------------------------------------------------------------------------------
+2026-09-20 22:49:47 | __main__                       | INFO     | Vanilla                |     ✗ |      ✗ |       ✗ |     33.6 |   1.00x |       - |    100.0% |     1985MB
+2026-09-20 22:49:47 | __main__                       | INFO     | Random Layer Skip      |     ✗ |      ✗ |       ✗ |     46.4 |   1.38x |       - |      0.0% |     1988MB
+2026-09-20 22:49:47 | __main__                       | INFO     | Static Layer Skip      |     ✗ |      ✗ |       ✗ |     47.8 |   1.42x |       - |      0.0% |     1987MB
+2026-09-20 22:49:47 | __main__                       | INFO     | CKA Layer Skip         |     ✓ |      ✗ |       ✗ |     46.3 |   1.38x |       - |      0.0% |     1988MB
+2026-09-20 22:49:47 | __main__                       | INFO     | CKA + Fixed K=2        |     ✓ |      ✗ |       ✗ |     33.9 |   1.01x |   87.5% |    100.0% |     1991MB
+2026-09-20 22:49:47 | __main__                       | INFO     | CKA + Adaptive K       |     ✓ |      ✓ |       ✗ |     34.8 |   1.04x |   89.3% |    100.0% |     1991MB
+2026-09-20 22:49:47 | __main__                       | INFO     | Joint HW Controller    |     ✓ |      ✓ |       ✓ |     34.6 |   1.03x |   89.3% |    100.0% |     1991MB
+2026-09-20 22:49:47 | __main__                       | INFO     | =========================================================================================================
+2026-09-20 22:49:47 | __main__                       | INFO     | All ablation results saved to experiments/07_ablation

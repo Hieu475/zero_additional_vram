@@ -1,0 +1,171 @@
+2026-09-20 22:22:05 | __main__                       | INFO     | ===========================================================================
+2026-09-20 22:22:05 | __main__                       | INFO     | PHASE 7.7 — PARETO SPECULATIVE DECODING BENCHMARK
+2026-09-20 22:22:05 | __main__                       | INFO     | ===========================================================================
+2026-09-20 22:22:05 | __main__                       | INFO     | Configuration: cka_83
+2026-09-20 22:22:05 | __main__                       | INFO     | Draft lengths K: [1, 2, 3, 4, 6]
+2026-09-20 22:22:05 | __main__                       | INFO     | Runs per K: 10
+2026-09-20 22:22:05 | __main__                       | INFO     | Max new tokens: 64
+2026-09-20 22:22:05 | zassd.models.loader            | INFO     | Loading Qwen/Qwen2.5-3B-Instruct with 4-bit quantization
+2026-09-20 22:22:05 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:22:05 | huggingface_hub.utils._http    | WARNING  | Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-09-20 22:22:05 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 22:22:05 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:22:05 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 22:22:08 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:22:08 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+2026-09-20 22:22:08 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-09-20 22:22:08 | zassd.models.loader            | INFO     | Model loaded. Parameters: 1,698,672,640
+2026-09-20 22:22:09 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:22:09 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+2026-09-20 22:22:09 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-09-20 22:22:09 | httpx                          | INFO     | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-09-20 22:22:09 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-09-20 22:22:09 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-09-20 22:22:10 | httpx                          | INFO     | HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+2026-09-20 22:22:10 | zassd.models.model_adapter     | INFO     | ModelAdapter initialized for Qwen2ForCausalLM with 36 layers
+2026-09-20 22:22:10 | __main__                       | INFO     | Using skip layers for cka_83: [4, 5, 6, 7, 12, 13] (6 skipped, 30 kept)
+2026-09-20 22:22:10 | __main__                       | INFO     | Loaded 10 prompts for evaluation
+2026-09-20 22:22:10 | __main__                       | INFO     | 
+--- Establishing Vanilla Baseline on Benchmark Prompts ---
+2026-09-20 22:22:25 | __main__                       | INFO     | Vanilla Baseline Speed: 42.29 tok/s (19.8 ms/tok), Peak VRAM: 1985 MB
+2026-09-20 22:22:25 | __main__                       | INFO     | 
+=================================================================
+2026-09-20 22:22:25 | __main__                       | INFO     | Evaluating Self-Speculative Decoding with K = 1
+2026-09-20 22:22:25 | __main__                       | INFO     | =================================================================
+2026-09-20 22:22:27 | __main__                       | INFO     |   Run  1/10: 40.6 tok/s (0.96x) | Accept: 88.2% | Tok/Step: 1.88 | Draft: 668ms, Verify: 864ms, Cache: 25ms | Match: ✓
+2026-09-20 22:22:29 | __main__                       | INFO     |   Run  2/10: 35.1 tok/s (0.83x) | Accept: 75.7% | Tok/Step: 1.73 | Draft: 770ms, Verify: 1011ms, Cache: 26ms | Match: ✗
+2026-09-20 22:22:30 | __main__                       | INFO     |   Run  3/10: 37.2 tok/s (0.88x) | Accept: 77.8% | Tok/Step: 1.78 | Draft: 739ms, Verify: 938ms, Cache: 32ms | Match: ✓
+2026-09-20 22:22:32 | __main__                       | INFO     |   Run  4/10: 37.3 tok/s (0.88x) | Accept: 82.9% | Tok/Step: 1.83 | Draft: 737ms, Verify: 935ms, Cache: 28ms | Match: ✗
+2026-09-20 22:22:34 | __main__                       | INFO     |   Run  5/10: 40.4 tok/s (0.96x) | Accept: 97.0% | Tok/Step: 1.94 | Draft: 677ms, Verify: 863ms, Cache: 25ms | Match: ✗
+2026-09-20 22:22:35 | __main__                       | INFO     |   Run  6/10: 36.8 tok/s (0.87x) | Accept: 80.6% | Tok/Step: 1.78 | Draft: 747ms, Verify: 947ms, Cache: 28ms | Match: ✗
+2026-09-20 22:22:37 | __main__                       | INFO     |   Run  7/10: 36.2 tok/s (0.86x) | Accept: 80.6% | Tok/Step: 1.78 | Draft: 763ms, Verify: 960ms, Cache: 28ms | Match: ✓
+2026-09-20 22:22:39 | __main__                       | INFO     |   Run  8/10: 37.8 tok/s (0.89x) | Accept: 91.2% | Tok/Step: 1.88 | Draft: 731ms, Verify: 918ms, Cache: 29ms | Match: ✗
+2026-09-20 22:22:40 | __main__                       | INFO     |   Run  9/10: 39.7 tok/s (0.94x) | Accept: 97.0% | Tok/Step: 1.94 | Draft: 690ms, Verify: 878ms, Cache: 27ms | Match: ✓
+2026-09-20 22:22:42 | __main__                       | INFO     |   Run 10/10: 35.1 tok/s (0.83x) | Accept: 75.7% | Tok/Step: 1.73 | Draft: 785ms, Verify: 992ms, Cache: 31ms | Match: ✗
+2026-09-20 22:22:42 | __main__                       | INFO     | 
+--- Summary for K = 1 ---
+2026-09-20 22:22:42 | __main__                       | INFO     |   Throughput:      37.61 ± 1.92 tok/s
+2026-09-20 22:22:42 | __main__                       | INFO     |   Speedup:         0.89x vs Vanilla
+2026-09-20 22:22:42 | __main__                       | INFO     |   Acceptance Rate: 84.6%
+2026-09-20 22:22:42 | __main__                       | INFO     |   Tokens / Step:   1.83 tokens/cycle
+2026-09-20 22:22:42 | __main__                       | INFO     |   Greedy Match:    40.0%
+2026-09-20 22:22:42 | __main__                       | INFO     |   Latency / Cycle: 48.6ms [Draft: 20.8ms (42.8%), Verify: 26.5ms (54.5%), Cache: 0.8ms (1.6%), Other: 0.5ms (1.0%)]
+2026-09-20 22:22:42 | __main__                       | INFO     |   Peak VRAM:       1993 MB
+2026-09-20 22:22:42 | __main__                       | INFO     | 
+=================================================================
+2026-09-20 22:22:42 | __main__                       | INFO     | Evaluating Self-Speculative Decoding with K = 2
+2026-09-20 22:22:42 | __main__                       | INFO     | =================================================================
+2026-09-20 22:22:44 | __main__                       | INFO     |   Run  1/10: 34.9 tok/s (0.82x) | Accept: 76.5% | Tok/Step: 2.46 | Draft: 1079ms, Verify: 710ms, Cache: 28ms | Match: ✓
+2026-09-20 22:22:46 | __main__                       | INFO     |   Run  2/10: 33.5 tok/s (0.79x) | Accept: 76.5% | Tok/Step: 2.46 | Draft: 1130ms, Verify: 736ms, Cache: 35ms | Match: ✗
+2026-09-20 22:22:48 | __main__                       | INFO     |   Run  3/10: 34.0 tok/s (0.80x) | Accept: 74.5% | Tok/Step: 2.46 | Draft: 1107ms, Verify: 732ms, Cache: 27ms | Match: ✓
+2026-09-20 22:22:50 | __main__                       | INFO     |   Run  4/10: 36.0 tok/s (0.85x) | Accept: 74.5% | Tok/Step: 2.46 | Draft: 1040ms, Verify: 694ms, Cache: 28ms | Match: ✗
+2026-09-20 22:22:52 | __main__                       | INFO     |   Run  5/10: 36.1 tok/s (0.85x) | Accept: 85.4% | Tok/Step: 2.67 | Draft: 1055ms, Verify: 670ms, Cache: 27ms | Match: ✗
+2026-09-20 22:22:54 | __main__                       | INFO     |   Run  6/10: 31.5 tok/s (0.75x) | Accept: 64.3% | Tok/Step: 2.29 | Draft: 1199ms, Verify: 785ms, Cache: 29ms | Match: ✗
+2026-09-20 22:22:56 | __main__                       | INFO     |   Run  7/10: 32.0 tok/s (0.76x) | Accept: 66.1% | Tok/Step: 2.29 | Draft: 1192ms, Verify: 764ms, Cache: 29ms | Match: ✓
+2026-09-20 22:22:57 | __main__                       | INFO     |   Run  8/10: 34.7 tok/s (0.82x) | Accept: 80.0% | Tok/Step: 2.56 | Draft: 1095ms, Verify: 703ms, Cache: 29ms | Match: ✗
+2026-09-20 22:22:59 | __main__                       | INFO     |   Run  9/10: 38.4 tok/s (0.91x) | Accept: 87.2% | Tok/Step: 2.67 | Draft: 984ms, Verify: 638ms, Cache: 30ms | Match: ✓
+2026-09-20 22:23:01 | __main__                       | INFO     |   Run 10/10: 33.8 tok/s (0.80x) | Accept: 76.5% | Tok/Step: 2.46 | Draft: 1120ms, Verify: 731ms, Cache: 27ms | Match: ✗
+2026-09-20 22:23:01 | __main__                       | INFO     | 
+--- Summary for K = 2 ---
+2026-09-20 22:23:01 | __main__                       | INFO     |   Throughput:      34.48 ± 1.93 tok/s
+2026-09-20 22:23:01 | __main__                       | INFO     |   Speedup:         0.82x vs Vanilla
+2026-09-20 22:23:01 | __main__                       | INFO     |   Acceptance Rate: 76.1%
+2026-09-20 22:23:01 | __main__                       | INFO     |   Tokens / Step:   2.48 tokens/cycle
+2026-09-20 22:23:01 | __main__                       | INFO     |   Greedy Match:    40.0%
+2026-09-20 22:23:01 | __main__                       | INFO     |   Latency / Cycle: 71.9ms [Draft: 42.5ms (59.1%), Verify: 27.7ms (38.5%), Cache: 1.1ms (1.5%), Other: 0.6ms (0.9%)]
+2026-09-20 22:23:01 | __main__                       | INFO     |   Peak VRAM:       1993 MB
+2026-09-20 22:23:01 | __main__                       | INFO     | 
+=================================================================
+2026-09-20 22:23:01 | __main__                       | INFO     | Evaluating Self-Speculative Decoding with K = 3
+2026-09-20 22:23:01 | __main__                       | INFO     | =================================================================
+2026-09-20 22:23:03 | __main__                       | INFO     |   Run  1/10: 29.6 tok/s (0.70x) | Accept: 71.0% | Tok/Step: 3.05 | Draft: 1329ms, Verify: 785ms, Cache: 38ms | Match: ✓
+2026-09-20 22:23:06 | __main__                       | INFO     |   Run  2/10: 28.0 tok/s (0.66x) | Accept: 67.2% | Tok/Step: 2.91 | Draft: 1416ms, Verify: 826ms, Cache: 28ms | Match: ✓
+2026-09-20 22:23:08 | __main__                       | INFO     |   Run  3/10: 30.8 tok/s (0.73x) | Accept: 71.7% | Tok/Step: 3.05 | Draft: 1277ms, Verify: 760ms, Cache: 29ms | Match: ✓
+2026-09-20 22:23:10 | __main__                       | INFO     |   Run  4/10: 30.9 tok/s (0.73x) | Accept: 73.3% | Tok/Step: 3.05 | Draft: 1247ms, Verify: 783ms, Cache: 27ms | Match: ✗
+2026-09-20 22:23:12 | __main__                       | INFO     |   Run  5/10: 33.9 tok/s (0.80x) | Accept: 85.2% | Tok/Step: 3.56 | Draft: 1148ms, Verify: 693ms, Cache: 27ms | Match: ✓
+2026-09-20 22:23:14 | __main__                       | INFO     |   Run  6/10: 27.8 tok/s (0.66x) | Accept: 62.7% | Tok/Step: 2.78 | Draft: 1412ms, Verify: 844ms, Cache: 30ms | Match: ✗
+2026-09-20 22:23:16 | __main__                       | INFO     |   Run  7/10: 26.2 tok/s (0.62x) | Accept: 58.6% | Tok/Step: 2.67 | Draft: 1511ms, Verify: 890ms, Cache: 29ms | Match: ✓
+2026-09-20 22:23:18 | __main__                       | INFO     |   Run  8/10: 31.0 tok/s (0.73x) | Accept: 71.7% | Tok/Step: 3.05 | Draft: 1254ms, Verify: 764ms, Cache: 29ms | Match: ✓
+2026-09-20 22:23:20 | __main__                       | INFO     |   Run  9/10: 32.4 tok/s (0.77x) | Accept: 78.9% | Tok/Step: 3.37 | Draft: 1211ms, Verify: 719ms, Cache: 27ms | Match: ✗
+2026-09-20 22:23:23 | __main__                       | INFO     |   Run 10/10: 29.3 tok/s (0.69x) | Accept: 67.2% | Tok/Step: 2.91 | Draft: 1314ms, Verify: 823ms, Cache: 28ms | Match: ✗
+2026-09-20 22:23:23 | __main__                       | INFO     | 
+--- Summary for K = 3 ---
+2026-09-20 22:23:23 | __main__                       | INFO     |   Throughput:      29.99 ± 2.19 tok/s
+2026-09-20 22:23:23 | __main__                       | INFO     |   Speedup:         0.71x vs Vanilla
+2026-09-20 22:23:23 | __main__                       | INFO     |   Acceptance Rate: 70.7%
+2026-09-20 22:23:23 | __main__                       | INFO     |   Tokens / Step:   3.04 tokens/cycle
+2026-09-20 22:23:23 | __main__                       | INFO     |   Greedy Match:    60.0%
+2026-09-20 22:23:23 | __main__                       | INFO     |   Latency / Cycle: 101.2ms [Draft: 61.9ms (61.1%), Verify: 37.2ms (36.7%), Cache: 1.4ms (1.4%), Other: 0.8ms (0.8%)]
+2026-09-20 22:23:23 | __main__                       | INFO     |   Peak VRAM:       1993 MB
+2026-09-20 22:23:23 | __main__                       | INFO     | 
+=================================================================
+2026-09-20 22:23:23 | __main__                       | INFO     | Evaluating Self-Speculative Decoding with K = 4
+2026-09-20 22:23:23 | __main__                       | INFO     | =================================================================
+2026-09-20 22:23:25 | __main__                       | INFO     |   Run  1/10: 28.5 tok/s (0.67x) | Accept: 62.2% | Tok/Step: 3.37 | Draft: 1499ms, Verify: 701ms, Cache: 28ms | Match: ✓
+2026-09-20 22:23:27 | __main__                       | INFO     |   Run  2/10: 26.7 tok/s (0.63x) | Accept: 59.2% | Tok/Step: 3.37 | Draft: 1633ms, Verify: 717ms, Cache: 27ms | Match: ✓
+2026-09-20 22:23:30 | __main__                       | INFO     |   Run  3/10: 26.4 tok/s (0.63x) | Accept: 64.3% | Tok/Step: 3.37 | Draft: 1667ms, Verify: 708ms, Cache: 31ms | Match: ✓
+2026-09-20 22:23:32 | __main__                       | INFO     |   Run  4/10: 31.8 tok/s (0.75x) | Accept: 80.3% | Tok/Step: 4.00 | Draft: 1369ms, Verify: 603ms, Cache: 30ms | Match: ✗
+2026-09-20 22:23:34 | __main__                       | INFO     |   Run  5/10: 32.0 tok/s (0.76x) | Accept: 76.6% | Tok/Step: 4.00 | Draft: 1348ms, Verify: 605ms, Cache: 28ms | Match: ✓
+2026-09-20 22:23:36 | __main__                       | INFO     |   Run  6/10: 26.4 tok/s (0.63x) | Accept: 56.2% | Tok/Step: 3.20 | Draft: 1617ms, Verify: 758ms, Cache: 27ms | Match: ✗
+2026-09-20 22:23:39 | __main__                       | INFO     |   Run  7/10: 24.6 tok/s (0.58x) | Accept: 51.2% | Tok/Step: 3.05 | Draft: 1760ms, Verify: 795ms, Cache: 29ms | Match: ✓
+2026-09-20 22:23:41 | __main__                       | INFO     |   Run  8/10: 27.7 tok/s (0.66x) | Accept: 63.4% | Tok/Step: 3.37 | Draft: 1558ms, Verify: 706ms, Cache: 31ms | Match: ✓
+2026-09-20 22:23:43 | __main__                       | INFO     |   Run  9/10: 29.4 tok/s (0.69x) | Accept: 71.6% | Tok/Step: 3.76 | Draft: 1492ms, Verify: 643ms, Cache: 27ms | Match: ✗
+2026-09-20 22:23:45 | __main__                       | INFO     |   Run 10/10: 30.0 tok/s (0.71x) | Accept: 69.1% | Tok/Step: 3.76 | Draft: 1459ms, Verify: 634ms, Cache: 30ms | Match: ✗
+2026-09-20 22:23:45 | __main__                       | INFO     | 
+--- Summary for K = 4 ---
+2026-09-20 22:23:45 | __main__                       | INFO     |   Throughput:      28.36 ± 2.31 tok/s
+2026-09-20 22:23:45 | __main__                       | INFO     |   Speedup:         0.67x vs Vanilla
+2026-09-20 22:23:45 | __main__                       | INFO     |   Acceptance Rate: 65.4%
+2026-09-20 22:23:45 | __main__                       | INFO     |   Tokens / Step:   3.53 tokens/cycle
+2026-09-20 22:23:45 | __main__                       | INFO     |   Greedy Match:    60.0%
+2026-09-20 22:23:45 | __main__                       | INFO     |   Latency / Cycle: 124.1ms [Draft: 84.2ms (67.8%), Verify: 37.5ms (30.2%), Cache: 1.6ms (1.3%), Other: 0.9ms (0.7%)]
+2026-09-20 22:23:45 | __main__                       | INFO     |   Peak VRAM:       1994 MB
+2026-09-20 22:23:46 | __main__                       | INFO     | 
+=================================================================
+2026-09-20 22:23:46 | __main__                       | INFO     | Evaluating Self-Speculative Decoding with K = 6
+2026-09-20 22:23:46 | __main__                       | INFO     | =================================================================
+2026-09-20 22:23:48 | __main__                       | INFO     |   Run  1/10: 26.2 tok/s (0.62x) | Accept: 58.8% | Tok/Step: 4.27 | Draft: 1843ms, Verify: 556ms, Cache: 28ms | Match: ✓
+2026-09-20 22:23:51 | __main__                       | INFO     |   Run  2/10: 24.4 tok/s (0.58x) | Accept: 51.6% | Tok/Step: 4.00 | Draft: 1981ms, Verify: 599ms, Cache: 28ms | Match: ✓
+2026-09-20 22:23:53 | __main__                       | INFO     |   Run  3/10: 28.0 tok/s (0.66x) | Accept: 63.3% | Tok/Step: 4.57 | Draft: 1726ms, Verify: 516ms, Cache: 34ms | Match: ✓
+2026-09-20 22:23:55 | __main__                       | INFO     |   Run  4/10: 28.3 tok/s (0.67x) | Accept: 64.6% | Tok/Step: 4.57 | Draft: 1698ms, Verify: 520ms, Cache: 29ms | Match: ✗
+2026-09-20 22:23:57 | __main__                       | INFO     |   Run  5/10: 28.4 tok/s (0.67x) | Accept: 62.2% | Tok/Step: 4.57 | Draft: 1686ms, Verify: 525ms, Cache: 26ms | Match: ✓
+2026-09-20 22:24:00 | __main__                       | INFO     |   Run  6/10: 22.9 tok/s (0.54x) | Accept: 45.2% | Tok/Step: 3.56 | Draft: 2089ms, Verify: 665ms, Cache: 26ms | Match: ✗
+2026-09-20 22:24:03 | __main__                       | INFO     |   Run  7/10: 22.2 tok/s (0.52x) | Accept: 47.5% | Tok/Step: 3.76 | Draft: 2199ms, Verify: 643ms, Cache: 27ms | Match: ✓
+2026-09-20 22:24:06 | __main__                       | INFO     |   Run  8/10: 23.3 tok/s (0.55x) | Accept: 50.5% | Tok/Step: 3.76 | Draft: 2079ms, Verify: 625ms, Cache: 29ms | Match: ✓
+2026-09-20 22:24:08 | __main__                       | INFO     |   Run  9/10: 25.1 tok/s (0.59x) | Accept: 52.7% | Tok/Step: 4.00 | Draft: 1894ms, Verify: 609ms, Cache: 26ms | Match: ✗
+2026-09-20 22:24:11 | __main__                       | INFO     |   Run 10/10: 22.1 tok/s (0.52x) | Accept: 47.5% | Tok/Step: 3.76 | Draft: 2209ms, Verify: 644ms, Cache: 27ms | Match: ✗
+2026-09-20 22:24:11 | __main__                       | INFO     | 
+--- Summary for K = 6 ---
+2026-09-20 22:24:11 | __main__                       | INFO     |   Throughput:      25.08 ± 2.38 tok/s
+2026-09-20 22:24:11 | __main__                       | INFO     |   Speedup:         0.59x vs Vanilla
+2026-09-20 22:24:11 | __main__                       | INFO     |   Acceptance Rate: 54.4%
+2026-09-20 22:24:11 | __main__                       | INFO     |   Tokens / Step:   4.08 tokens/cycle
+2026-09-20 22:24:11 | __main__                       | INFO     |   Greedy Match:    60.0%
+2026-09-20 22:24:11 | __main__                       | INFO     |   Latency / Cycle: 163.0ms [Draft: 122.8ms (75.4%), Verify: 37.4ms (22.9%), Cache: 1.8ms (1.1%), Other: 1.0ms (0.6%)]
+2026-09-20 22:24:11 | __main__                       | INFO     |   Peak VRAM:       1994 MB
+2026-09-20 22:24:12 | __main__                       | INFO     | Saved Phase 6 figures to results/figures/
+2026-09-20 22:24:12 | __main__                       | INFO     | 
+=========================================================================================================
+2026-09-20 22:24:12 | __main__                       | INFO     | PHASE 6 — SELF-SPECULATIVE DECODING BENCHMARK (CKA-75)
+2026-09-20 22:24:12 | __main__                       | INFO     | =========================================================================================================
+2026-09-20 22:24:12 | __main__                       | INFO     |    K |      tok/s |   Speedup |  Accept Rate |   Tok/Step |  Exact Match |  Peak VRAM
+2026-09-20 22:24:12 | __main__                       | INFO     | ---------------------------------------------------------------------------------------------------------
+2026-09-20 22:24:12 | __main__                       | INFO     | Base |       42.3 |     1.00x |          N/A |       1.00 |       100.0% |      1985MB
+2026-09-20 22:24:12 | __main__                       | INFO     |    1 |       37.6 |     0.89x |       84.6% |       1.83 |       40.0% |      1993MB
+2026-09-20 22:24:12 | __main__                       | INFO     |    2 |       34.5 |     0.82x |       76.1% |       2.48 |       40.0% |      1993MB
+2026-09-20 22:24:12 | __main__                       | INFO     |    3 |       30.0 |     0.71x |       70.7% |       3.04 |       60.0% |      1993MB
+2026-09-20 22:24:12 | __main__                       | INFO     |    4 |       28.4 |     0.67x |       65.4% |       3.53 |       60.0% |      1994MB
+2026-09-20 22:24:12 | __main__                       | INFO     |    6 |       25.1 |     0.59x |       54.4% |       4.08 |       60.0% |      1994MB
+2026-09-20 22:24:12 | __main__                       | INFO     | 
+=========================================================================================================
+2026-09-20 22:24:12 | __main__                       | INFO     | LATENCY COST DECOMPOSITION (T_total = T_draft + T_verify + T_cache + T_other)
+2026-09-20 22:24:12 | __main__                       | INFO     | =========================================================================================================
+2026-09-20 22:24:12 | __main__                       | INFO     | Config |  Cycle(ms) |  Draft(ms) |  Verify(ms) |  Cache(ms) |  Other(ms) |   % Draft |  % Verify |  % Cache
+2026-09-20 22:24:12 | __main__                       | INFO     | ---------------------------------------------------------------------------------------------------------
+2026-09-20 22:24:12 | __main__                       | INFO     | K=1    |       48.6 |       20.8 |        26.5 |        0.8 |        0.5 |     42.8% |     54.5% |     1.6%
+2026-09-20 22:24:12 | __main__                       | INFO     | K=2    |       71.9 |       42.5 |        27.7 |        1.1 |        0.6 |     59.1% |     38.5% |     1.5%
+2026-09-20 22:24:12 | __main__                       | INFO     | K=3    |      101.2 |       61.9 |        37.2 |        1.4 |        0.8 |     61.1% |     36.7% |     1.4%
+2026-09-20 22:24:12 | __main__                       | INFO     | K=4    |      124.1 |       84.2 |        37.5 |        1.6 |        0.9 |     67.8% |     30.2% |     1.3%
+2026-09-20 22:24:12 | __main__                       | INFO     | K=6    |      163.0 |      122.8 |        37.4 |        1.8 |        1.0 |     75.4% |     22.9% |     1.1%
+2026-09-20 22:24:12 | __main__                       | INFO     | =========================================================================================================
+2026-09-20 22:24:12 | __main__                       | INFO     | Results and figures saved to experiments/07_k_sweep_cka83 and results/figures

@@ -167,8 +167,10 @@ def main() -> None:
     parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-3B-Instruct")
     parser.add_argument("--k-values", type=int, nargs="+", default=[1, 2, 4, 6, 8])
     parser.add_argument("--runs", type=int, default=15)
+    parser.add_argument("--config", type=str, default="cka_83", help="Layer config name (e.g. cka_83, cka_75, cka_90)")
+    parser.add_argument("--skip-indices", type=int, nargs="*", default=None, help="Explicit list of layer indices to skip")
     parser.add_argument("--max-new-tokens", type=int, default=128)
-    parser.add_argument("--output-dir", type=str, default="experiments/06_efficient_core")
+    parser.add_argument("--output-dir", type=str, default="experiments/07_k_sweep_cka83")
     parser.add_argument("--figures-dir", type=str, default="results/figures")
     parser.add_argument("--bits", type=int, default=4)
     args = parser.parse_args()
@@ -182,8 +184,9 @@ def main() -> None:
     set_seed(42)
 
     logger.info("=" * 75)
-    logger.info("PHASE 6 — CORRECTNESS + EFFICIENT CORE BENCHMARK")
+    logger.info("PHASE 7.7 — PARETO SPECULATIVE DECODING BENCHMARK")
     logger.info("=" * 75)
+    logger.info(f"Configuration: {args.config}")
     logger.info(f"Draft lengths K: {args.k_values}")
     logger.info(f"Runs per K: {args.runs}")
     logger.info(f"Max new tokens: {args.max_new_tokens}")
@@ -194,16 +197,29 @@ def main() -> None:
     adapter = ModelAdapter(model)
     layer_mgr = LayerManager(adapter)
 
-    # 2. Load CKA Selected Layers (from Phase 3 cka_75)
-    cka_file = Path("experiments/03_cka/benchmark_results.json")
-    if cka_file.exists():
-        with open(cka_file) as f:
-            cka_data = json.load(f)
-        skip_indices = cka_data.get("cka_75", {}).get("skipped_indices", [3, 5, 7, 9, 11, 13, 16, 18, 21])
-        logger.info(f"Loaded CKA-selected skip layers: {skip_indices} ({len(skip_indices)} skipped)")
+    # 2. Determine skip indices
+    CONFIG_MAP = {
+        "cka_50": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22],
+        "cka_60": [3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 21],
+        "cka_67": [3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 16],
+        "cka_75": [3, 4, 5, 6, 7, 10, 11, 12, 13],
+        "cka_83": [4, 5, 6, 7, 12, 13],
+        "cka_90": [4, 5, 6, 7],
+    }
+    if args.skip_indices is not None and len(args.skip_indices) > 0:
+        skip_indices = sorted(args.skip_indices)
+        config_name = "custom"
     else:
-        skip_indices = [3, 5, 7, 9, 11, 13, 16, 18, 21]
-        logger.warning(f"Using default skip indices: {skip_indices}")
+        config_name = args.config
+        pareto_file = Path("experiments/07_pareto/pareto_results.json")
+        if pareto_file.exists():
+            with open(pareto_file) as f:
+                p_data = json.load(f)
+            skip_indices = p_data.get(config_name, {}).get("skip_indices", CONFIG_MAP.get(config_name, [4, 5, 6, 7, 12, 13]))
+        else:
+            skip_indices = CONFIG_MAP.get(config_name, [4, 5, 6, 7, 12, 13])
+
+    logger.info(f"Using skip layers for {config_name}: {skip_indices} ({len(skip_indices)} skipped, {adapter.num_layers - len(skip_indices)} kept)")
 
     # 3. Load fixed benchmark prompts
     prompts_path = Path("data/benchmarks/prompts.jsonl")

@@ -55,3 +55,36 @@ class TestEndToEndSpeculative:
         )
         assert accounted_time >= metrics.total_time_s * 0.95, "Latency decomposition does not account for total time"
         assert len(metrics.per_iteration_stats) == metrics.num_verification_cycles
+
+    def test_speculative_generation_with_hardware_controller(self, session_pipeline):
+        """Test self-speculative generation dynamically driven by HardwareAwareJointController."""
+        from zassd.controllers.hardware_controller import HardwareAwareJointController
+
+        model, tok, _, layer_mgr = session_pipeline
+        configs = {
+            "cka_83": [4, 5, 6, 7, 12, 13],
+            "cka_75": [3, 4, 5, 6, 7, 10, 11, 12, 13],
+        }
+        controller = HardwareAwareJointController(candidate_layer_configs=configs)
+        prompt = "Define what a gradient in multivariable calculus represents geometrically."
+
+        text, metrics = self_speculative_generate(
+            model=model,
+            tokenizer=tok,
+            layer_mgr=layer_mgr,
+            skip_indices=configs["cka_83"],
+            prompt=prompt,
+            controller=controller,
+            max_new_tokens=32,
+            temperature=0.0,
+        )
+
+        assert len(text) > 0, "Generated text should not be empty"
+        assert metrics.total_tokens > 0, "Generated tokens should be positive"
+        assert metrics.tokens_per_second > 0, "Throughput should be positive"
+        assert metrics.num_verification_cycles > 0, "Should run at least 1 verification cycle"
+        assert metrics.controller_time_s > 0, "Controller selection time should be tracked"
+        assert metrics.peak_vram_mb < 5500.0, f"VRAM exceeded budget: {metrics.peak_vram_mb} MB"
+        assert len(controller.action_history) > 0, "Controller should have recorded actions"
+        assert "entropy" in metrics.per_iteration_stats[0], "Entropy should be recorded in cycle stats"
+        assert "skip_indices" in metrics.per_iteration_stats[0], "Skip indices should be recorded in cycle stats"

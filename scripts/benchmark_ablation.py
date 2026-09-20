@@ -52,131 +52,7 @@ from zassd.utils.logging import setup_logging
 logger = logging.getLogger(__name__)
 
 
-def generate_adaptive_speculative(
-    model,
-    tokenizer,
-    layer_mgr: LayerManager,
-    controller: AdaptiveKController | HardwareAwareJointController,
-    default_skip_indices: list[int],
-    prompt: str,
-    max_new_tokens: int = 64,
-    device: str = "cuda:0",
-) -> tuple[str, dict]:
-    """Run speculative decoding with dynamic adaptive controller."""
-    from zassd.decoding.verification import verify_tokens_greedy
-
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
-    current_ids = inputs["input_ids"].clone()
-    prompt_len = current_ids.shape[1]
-
-    torch.cuda.reset_peak_memory_stats(device)
-    t_start = time.perf_counter()
-
-    total_draft = 0
-    total_accepted = 0
-    num_cycles = 0
-    last_accepted = 1
-    last_k = 3
-    last_draft_ms = 20.0
-    last_verify_ms = 25.0
-
-    while (current_ids.shape[1] - prompt_len) < max_new_tokens:
-        # Determine current token entropy from last logits
-        with torch.no_grad():
-            last_logits = model(input_ids=current_ids[:, -1:]).logits[0, -1, :].float()
-            current_entropy = float(compute_entropy(last_logits).item())
-
-        # Controller action
-        if isinstance(controller, HardwareAwareJointController):
-            action = controller.select_action(
-                entropy=current_entropy,
-                last_accepted=last_accepted,
-                last_proposed=last_k,
-                draft_ms=last_draft_ms,
-                verify_ms=last_verify_ms,
-            )
-            k = action.draft_length
-            active_skip = action.skip_indices
-        else:
-            k = controller.update(
-                entropy=current_entropy,
-                accepted=last_accepted,
-                proposed=last_k,
-            )
-            active_skip = default_skip_indices
-
-        tokens_needed = max_new_tokens - (current_ids.shape[1] - prompt_len)
-        step_k = min(k, tokens_needed)
-        if step_k <= 0:
-            break
-
-        # Draft phase
-        draft_tokens = []
-        draft_input = current_ids.clone()
-        pkv = None
-
-        t_d0 = time.perf_counter()
-        with torch.no_grad():
-            with layer_mgr.skip_layers(active_skip):
-                for _ in range(step_k):
-                    if pkv is None:
-                        out = model(input_ids=draft_input, use_cache=True)
-                    else:
-                        out = model(input_ids=draft_input[:, -1:], past_key_values=pkv, use_cache=True)
-                    pkv = out.past_key_values
-                    nxt = int(out.logits[0, -1, :].argmax(dim=-1).item())
-                    draft_tokens.append(nxt)
-                    draft_input = torch.cat([draft_input, torch.tensor([[nxt]], device=device)], dim=-1)
-                    if nxt == tokenizer.eos_token_id:
-                        break
-        last_draft_ms = (time.perf_counter() - t_d0) * 1000
-
-        if not draft_tokens:
-            break
-
-        actual_k = len(draft_tokens)
-        total_draft += actual_k
-        last_k = actual_k
-
-        # Verify phase
-        candidate_ids = torch.cat([current_ids, torch.tensor([draft_tokens], device=device)], dim=-1)
-        t_v0 = time.perf_counter()
-        with torch.no_grad():
-            verify_out = model(input_ids=candidate_ids, use_cache=False)
-            start_pos = current_ids.shape[1] - 1
-            target_logits = verify_out.logits[0, start_pos : start_pos + actual_k + 1, :].float()
-        last_verify_ms = (time.perf_counter() - t_v0) * 1000
-        num_cycles += 1
-
-        accepted, next_tok, _ = verify_tokens_greedy(target_logits, draft_tokens)
-        last_accepted = len(accepted)
-        total_accepted += last_accepted
-
-        emitted = accepted + [next_tok]
-        current_ids = torch.cat([current_ids, torch.tensor([emitted], device=device)], dim=-1)
-
-        if next_tok == tokenizer.eos_token_id or tokenizer.eos_token_id in accepted:
-            break
-
-    t_total = time.perf_counter() - t_start
-
-    if (current_ids.shape[1] - prompt_len) > max_new_tokens:
-        current_ids = current_ids[:, : prompt_len + max_new_tokens]
-
-    new_tokens = current_ids.shape[1] - prompt_len
-    text = tokenizer.decode(current_ids[0, prompt_len:], skip_special_tokens=True)
-
-    metrics = {
-        "total_tokens": new_tokens,
-        "total_time_s": t_total,
-        "tokens_per_second": new_tokens / t_total if t_total > 0 else 0.0,
-        "total_draft_tokens": total_draft,
-        "total_accepted_tokens": total_accepted,
-        "acceptance_rate": total_accepted / max(total_draft, 1),
-        "tokens_per_step": new_tokens / max(num_cycles, 1),
-        "peak_vram_mb": torch.cuda.max_memory_allocated(device) / (1024**2),
-    }
-    return text, metrics
+# Legacy generate_adaptive_speculative removed: self_speculative_generate natively supports controllers.
 
 
 def plot_ablation_results(ablation_table: list[dict], figures_dir: Path) -> None:
@@ -256,22 +132,25 @@ def main() -> None:
     except Exception:
         gpu_profiler = None
 
-    # Load layer configurations from Phase 2 & Phase 3
-    cka_summary_path = Path("experiments/03_cka/benchmark_results.json")
-    if cka_summary_path.exists():
-        with open(cka_summary_path) as f:
-            cka_bench = json.load(f)
-        cka_75_skip = cka_bench.get("cka_75", {}).get("skipped_indices", [3, 5, 7, 9, 11, 13, 16, 18, 21])
-        cka_50_skip = cka_bench.get("cka_50", {}).get("skipped_indices", [1, 3, 4, 5, 6, 7, 9, 11, 12, 13, 16, 18, 21, 23, 25, 28, 31, 33])
+    # Load Pareto layer configurations
+    pareto_path = Path("experiments/07_pareto/pareto_results.json")
+    if pareto_path.exists():
+        with open(pareto_path) as f:
+            p_data = json.load(f)
+        cka_83_skip = p_data.get("cka_83", {}).get("skip_indices", [4, 5, 6, 7, 12, 13])
+        cka_75_skip = p_data.get("cka_75", {}).get("skip_indices", [3, 4, 5, 6, 7, 10, 11, 12, 13])
+        cka_50_skip = p_data.get("cka_50", {}).get("skip_indices", [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22])
     else:
-        cka_75_skip = [3, 5, 7, 9, 11, 13, 16, 18, 21]
-        cka_50_skip = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35]
+        cka_83_skip = [4, 5, 6, 7, 12, 13]
+        cka_75_skip = [3, 4, 5, 6, 7, 10, 11, 12, 13]
+        cka_50_skip = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22]
 
     # Random and static 75% skips from Phase 2
     random_75_skip = [1, 4, 10, 12, 16, 18, 22, 25, 32]
     static_75_skip = [1, 5, 9, 13, 17, 21, 25, 29, 33]
 
     candidate_layer_configs = {
+        "cka_83": cka_83_skip,
         "cka_75": cka_75_skip,
         "cka_50": cka_50_skip,
     }
@@ -400,23 +279,24 @@ def main() -> None:
         is_cka=True, is_adaptive_k=False, is_hw_feedback=False,
         run_fn=lambda p: self_speculative_generate(
             model=model, tokenizer=tokenizer, layer_mgr=layer_mgr,
-            skip_indices=cka_75_skip, prompt=p, k=2,
+            skip_indices=cka_83_skip, prompt=p, k=2,
             max_new_tokens=args.max_new_tokens, temperature=0.0,
         ),
     )
 
     # Row F: CKA + Adaptive K (Entropy-driven)
     adaptive_k_ctrl = AdaptiveKController(
-        k_min=1, k_max=8, initial_k=3,
-        entropy_low=0.7, entropy_high=1.8, acceptance_target=0.35,
+        k_min=1, k_max=4, initial_k=2,
+        entropy_low=0.7, entropy_high=1.8, acceptance_target=0.40,
     )
     eval_method(
         name="CKA + Adaptive K",
         is_cka=True, is_adaptive_k=True, is_hw_feedback=False,
-        run_fn=lambda p: generate_adaptive_speculative(
+        run_fn=lambda p: self_speculative_generate(
             model=model, tokenizer=tokenizer, layer_mgr=layer_mgr,
-            controller=adaptive_k_ctrl, default_skip_indices=cka_75_skip,
-            prompt=p, max_new_tokens=args.max_new_tokens,
+            skip_indices=cka_83_skip, prompt=p,
+            controller=adaptive_k_ctrl,
+            max_new_tokens=args.max_new_tokens, temperature=0.0,
         ),
     )
 
@@ -424,14 +304,17 @@ def main() -> None:
     joint_ctrl = HardwareAwareJointController(
         candidate_layer_configs=candidate_layer_configs,
         gpu_profiler=gpu_profiler,
+        initial_k=2,
+        k_max=4,
     )
     eval_method(
         name="Joint HW Controller",
         is_cka=True, is_adaptive_k=True, is_hw_feedback=True,
-        run_fn=lambda p: generate_adaptive_speculative(
+        run_fn=lambda p: self_speculative_generate(
             model=model, tokenizer=tokenizer, layer_mgr=layer_mgr,
-            controller=joint_ctrl, default_skip_indices=cka_75_skip,
-            prompt=p, max_new_tokens=args.max_new_tokens,
+            skip_indices=cka_83_skip, prompt=p,
+            controller=joint_ctrl,
+            max_new_tokens=args.max_new_tokens, temperature=0.0,
         ),
     )
 

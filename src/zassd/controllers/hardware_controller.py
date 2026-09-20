@@ -32,6 +32,7 @@ import numpy as np
 import torch
 
 from zassd.controllers.adaptive_k import AdaptiveKController
+from zassd.profiling.action_cost_model import MeasuredActionCostModel
 from zassd.profiling.action_profiler import ActionCostDatabase
 from zassd.profiling.gpu import GPUProfiler
 from zassd.profiling.memory import get_vram_usage
@@ -78,6 +79,7 @@ class HardwareAwareJointController:
     def __init__(
         self,
         candidate_layer_configs: dict[str, list[int]],
+        cost_model: Optional[MeasuredActionCostModel] = None,
         action_cost_db: Optional[ActionCostDatabase] = None,
         gpu_profiler: GPUProfiler | None = None,
         max_vram_mb: float = 5500.0,
@@ -86,8 +88,12 @@ class HardwareAwareJointController:
         lambda_latency: float = 0.3,
         lambda_vram: float = 0.5,
         lambda_energy: float = 0.2,
+        k_min: int = 1,
+        k_max: int = 8,
+        initial_k: int = 3,
     ) -> None:
         self.configs = candidate_layer_configs
+        self.cost_model = cost_model or MeasuredActionCostModel.from_files()
         self.action_cost_db = action_cost_db
         self.gpu_profiler = gpu_profiler
         self.max_vram_mb = max_vram_mb
@@ -100,7 +106,7 @@ class HardwareAwareJointController:
 
         # Adaptive K inner controller
         self.k_controller = AdaptiveKController(
-            k_min=1, k_max=8, initial_k=3,
+            k_min=k_min, k_max=k_max, initial_k=initial_k,
             entropy_low=0.7, entropy_high=1.8, acceptance_target=0.35,
         )
 
@@ -130,43 +136,47 @@ class HardwareAwareJointController:
         k: int,
         obs: ControllerObservation,
     ) -> float:
-        """Evaluate utility U(a | z_t)."""
-        # Empirical speedup if action_cost_db is populated, otherwise analytical heuristic
-        if self.action_cost_db:
+        """Evaluate data-driven utility U(a | z_t) using MeasuredActionCostModel or ActionCostDatabase."""
+        if self.action_cost_db is not None:
             cost = self.action_cost_db.get_action_cost(config_name, k)
-            if cost and "tokens_per_second" in cost:
-                expected_speedup = cost["tokens_per_second"] / 38.5
-            elif cost and "tokens_per_step" in cost and "total_cycle_ms" in cost:
-                eff_tps = cost["tokens_per_step"] / max(1e-3, cost["total_cycle_ms"] / 1000.0)
-                expected_speedup = eff_tps / 38.5
-            else:
-                draft_speed_mult = 1.7 if "50" in config_name else 1.25
-                expected_accepted = min(k, obs.acceptance_rate * k + 1)
-                expected_speedup = (expected_accepted * draft_speed_mult) / (1.0 + (k * 0.15))
-        else:
-            draft_speed_mult = 1.7 if "50" in config_name else 1.25
-            expected_accepted = min(k, obs.acceptance_rate * k + 1)
-            expected_speedup = (expected_accepted * draft_speed_mult) / (1.0 + (k * 0.15))
+            if cost:
+                tps = cost.get("tokens_per_second")
+                if tps is None and "tokens_per_step" in cost and "total_cycle_ms" in cost:
+                    tps = cost["tokens_per_step"] / max(1e-3, cost["total_cycle_ms"] / 1000.0)
+                if tps is not None:
+                    baseline_tps = self.cost_model.baseline_tps if self.cost_model else 38.5
+                    expected_speedup = tps / baseline_tps
+                    latency_ms = cost.get("total_cycle_ms", obs.draft_latency_ms + obs.verify_latency_ms)
+                    latency_penalty = latency_ms / 100.0
 
-        # Latency penalty
-        latency_penalty = (obs.draft_latency_ms + obs.verify_latency_ms) / 100.0
+                    vram_headroom = max(0.0, self.max_vram_mb - obs.vram_used_mb)
+                    vram_penalty = 1.0 / max(vram_headroom, 100.0)
+                    temp_margin = self.temp_threshold_c - obs.gpu_temperature_c
+                    thermal_penalty = 1.5 if temp_margin < 5.0 else 0.0
+                    power_penalty = obs.gpu_power_w / 80.0
 
-        # VRAM constraint penalty
-        vram_headroom = max(0.0, self.max_vram_mb - obs.vram_used_mb)
-        vram_penalty = 1.0 / max(vram_headroom, 100.0)
+                    return float(
+                        self.lambda_s * expected_speedup
+                        - self.lambda_l * latency_penalty
+                        - self.lambda_v * vram_penalty
+                        - self.lambda_e * (power_penalty + thermal_penalty)
+                    )
 
-        # Thermal / energy penalty
-        temp_margin = self.temp_threshold_c - obs.gpu_temperature_c
-        thermal_penalty = 1.5 if temp_margin < 5.0 else 0.0
-        power_penalty = (obs.gpu_power_w / 80.0)
-
-        utility = (
-            self.lambda_s * expected_speedup
-            - self.lambda_l * latency_penalty
-            - self.lambda_v * vram_penalty
-            - self.lambda_e * (power_penalty + thermal_penalty)
+        pred = self.cost_model.evaluate_action(
+            config_name=config_name,
+            k=k,
+            entropy=obs.entropy,
+            vram_used_mb=obs.vram_used_mb,
+            gpu_power_w=obs.gpu_power_w,
+            gpu_temp_c=obs.gpu_temperature_c,
+            lambda_speed=self.lambda_s,
+            lambda_latency=self.lambda_l,
+            lambda_vram=self.lambda_v,
+            lambda_energy=self.lambda_e,
+            max_vram_mb=self.max_vram_mb,
+            temp_threshold_c=self.temp_threshold_c,
         )
-        return float(utility)
+        return float(pred.utility)
 
     def select_action(
         self,
