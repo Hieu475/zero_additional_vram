@@ -120,6 +120,8 @@ class ActionProfiler:
         skip_indices = self.candidate_configs[config_name]
         logger.info(f"Profiling action ({config_name}, K={k}) across {len(eval_prompts)} prompts...")
 
+        e_start_mj = self.gpu_profiler.get_total_energy_mj() if self.gpu_profiler else None
+
         runs = []
         for p in eval_prompts:
             _, s_metrics = self_speculative_generate(
@@ -135,6 +137,8 @@ class ActionProfiler:
             )
             runs.append(s_metrics)
 
+        e_end_mj = self.gpu_profiler.get_total_energy_mj() if self.gpu_profiler else None
+
         tot_cycles = max(1, sum(m.num_verification_cycles for m in runs))
         draft_time_sum = sum(m.draft_time_s for m in runs)
         verify_time_sum = sum(m.verify_time_s for m in runs)
@@ -143,12 +147,15 @@ class ActionProfiler:
         total_time_sum = sum(m.total_time_s for m in runs)
         total_tok_sum = max(1, sum(m.total_tokens for m in runs))
 
-        # Query GPU power usage if available
-        try:
-            gpu_power_w = self.gpu_profiler.get_power_usage() if self.gpu_profiler else 60.0
-        except Exception:
-            gpu_power_w = 60.0
-        energy_j_token = (gpu_power_w * total_time_sum) / total_tok_sum
+        # Hardware-integrated energy measurement (Joules per token)
+        if e_start_mj is not None and e_end_mj is not None and e_end_mj >= e_start_mj:
+            energy_j_token = ((e_end_mj - e_start_mj) / 1000.0) / total_tok_sum
+        else:
+            try:
+                gpu_power_w = self.gpu_profiler.get_power_usage() if self.gpu_profiler else 60.0
+            except Exception:
+                gpu_power_w = 60.0
+            energy_j_token = (gpu_power_w * total_time_sum) / total_tok_sum
 
         record = ActionCostRecord(
             config_name=config_name,

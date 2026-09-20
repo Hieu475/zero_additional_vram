@@ -69,13 +69,16 @@ class LayerManager:
                 layer = layers[idx]
                 self._original_forwards[idx] = layer.forward
 
-                # Identity forward: returns hidden_states unchanged
-                def make_identity_forward(orig_fn: Callable[..., Any]) -> Callable[..., Any]:
+                # Identity forward: returns hidden_states unchanged, preserving tuple/tensor signature
+                def make_identity_forward(orig_fn: Callable[..., Any], layer_index: int) -> Callable[..., Any]:
                     def identity_forward(hidden_states: Any, *args: Any, **kwargs: Any) -> Any:
+                        if isinstance(hidden_states, tuple):
+                            # Transformer layers returning (hidden_states, attention_weights, ...)
+                            return (hidden_states[0],) + (None,) * (len(hidden_states) - 1)
                         return hidden_states
                     return identity_forward
 
-                layer.forward = make_identity_forward(layer.forward)
+                layer.forward = make_identity_forward(layer.forward, idx)
                 self._active_skips.add(idx)
 
         logger.debug(

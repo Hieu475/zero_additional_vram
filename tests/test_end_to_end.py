@@ -17,23 +17,14 @@ from zassd.models.loader import load_model, load_tokenizer
 from zassd.models.model_adapter import ModelAdapter
 
 
-@pytest.fixture(scope="module")
-def pipeline():
-    model = load_model("Qwen/Qwen2.5-3B-Instruct", quantize=True, bits=4)
-    tok = load_tokenizer("Qwen/Qwen2.5-3B-Instruct")
-    adapter = ModelAdapter(model)
-    layer_mgr = LayerManager(adapter)
-    skip_indices = [3, 5, 7, 9, 11, 13, 16, 18, 21]
-    return model, tok, layer_mgr, skip_indices
-
-
 class TestEndToEndSpeculative:
     """End-to-end pipeline validation."""
 
     @pytest.mark.parametrize("k", [1, 2, 4])
-    def test_speculative_generation_k(self, pipeline, k):
+    def test_speculative_generation_k(self, session_pipeline, k):
         """Test self-speculative generation with different draft lengths K."""
-        model, tok, layer_mgr, skip_indices = pipeline
+        model, tok, _, layer_mgr = session_pipeline
+        skip_indices = [3, 5, 7, 9, 11, 13, 16, 18, 21]
         prompt = "Explain why deep neural networks require regularization during training."
 
         text, metrics = self_speculative_generate(

@@ -19,19 +19,12 @@ from zassd.cache.kv_cache import TargetKVCache, EphemeralDraftKV
 from zassd.models.loader import load_model, load_tokenizer
 
 
-@pytest.fixture(scope="module")
-def model_and_tok():
-    model = load_model("Qwen/Qwen2.5-3B-Instruct", quantize=True, bits=4)
-    tok = load_tokenizer("Qwen/Qwen2.5-3B-Instruct")
-    return model, tok
-
-
 class TestCacheEquivalence:
     """Validate cache equivalence and canonical state preservation."""
 
-    def test_full_vs_cached_decode_equivalence(self, model_and_tok):
+    def test_full_vs_cached_decode_equivalence(self, session_model_and_tok):
         """Test equivalence between full forward and prefill + cached decode."""
-        model, tok = model_and_tok
+        model, tok = session_model_and_tok
         device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
         prompt = "The fundamental law of mechanics states that force equals mass times"
@@ -60,9 +53,9 @@ class TestCacheEquivalence:
         # Logit differences in 4-bit quantized models are bounded within quantization grid
         assert max_abs_diff < 1.0, f"Max logit diff too large: {max_abs_diff}"
 
-    def test_target_kv_rollback_integrity(self, model_and_tok):
+    def test_target_kv_rollback_integrity(self, session_model_and_tok):
         """Verify that TargetKVCache rolls back cleanly to exact prefix length."""
-        model, tok = model_and_tok
+        model, tok = session_model_and_tok
         device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
         prompt = "In quantum physics, entanglement occurs when pairs of particles"
@@ -88,9 +81,28 @@ class TestCacheEquivalence:
         target_kv.rollback(prefix_len=prompt_len, accepted_count=1)
         assert target_kv.get_seq_length(0) == prompt_len + 1
 
-    def test_ephemeral_draft_kv_independence(self, model_and_tok):
+        # Mathematical Invariant: running next forward pass on rolled-back cache
+        # MUST yield predictions identical to full recomputation on (prefix + accepted_candidate)
+        eval_tok = torch.tensor([[500]], device=device)
+        with torch.no_grad():
+            out_cached_after_rollback = model(eval_tok, past_key_values=target_kv.cache, use_cache=True)
+            # Ground truth: full recompute over prefix + accepted candidate (dummy_candidates[:, :1]) + eval_tok
+            full_seq = torch.cat([prompt_ids, dummy_candidates[:, :1], eval_tok], dim=1)
+            out_full_recompute = model(full_seq, use_cache=False)
+
+        logits_cached = out_cached_after_rollback.logits[0, -1, :].float()
+        logits_ground_truth = out_full_recompute.logits[0, -1, :].float()
+
+        pred_cached = int(logits_cached.argmax(dim=-1).item())
+        pred_ground_truth = int(logits_ground_truth.argmax(dim=-1).item())
+
+        max_diff = float((logits_cached - logits_ground_truth).abs().max().item())
+        assert pred_cached == pred_ground_truth, f"Prediction mismatch after rollback: {pred_cached} vs {pred_ground_truth}"
+        assert max_diff < 1.0, f"Logit difference after rollback exceeds bound: {max_diff}"
+
+    def test_ephemeral_draft_kv_independence(self, session_model_and_tok):
         """Verify updating ephemeral draft KV does not mutate canonical TargetKVCache."""
-        model, tok = model_and_tok
+        model, tok = session_model_and_tok
         device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
         prompt = "Artificial intelligence is revolutionizing modern computing"

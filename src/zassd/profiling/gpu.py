@@ -43,6 +43,13 @@ class GPUProfiler:
         power_mw = pynvml.nvmlDeviceGetPowerUsage(self.handle)
         return power_mw / 1000.0
 
+    def get_total_energy_mj(self) -> float | None:
+        """Get cumulative GPU energy consumption in millijoules (mJ) from hardware counter."""
+        try:
+            return float(pynvml.nvmlDeviceGetTotalEnergyConsumption(self.handle))
+        except Exception:
+            return None
+
     def get_utilization(self) -> dict:
         """Get GPU utilization rates."""
         util = pynvml.nvmlDeviceGetUtilizationRates(self.handle)

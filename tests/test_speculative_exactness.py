@@ -33,11 +33,8 @@ from zassd.models.model_adapter import ModelAdapter
 
 
 @pytest.fixture(scope="module")
-def setup_pipeline():
-    model = load_model("Qwen/Qwen2.5-3B-Instruct", quantize=True, bits=4)
-    tok = load_tokenizer("Qwen/Qwen2.5-3B-Instruct")
-    adapter = ModelAdapter(model)
-    layer_mgr = LayerManager(adapter)
+def setup_pipeline(session_pipeline):
+    model, tok, adapter, layer_mgr = session_pipeline
 
     cka_file = Path("experiments/03_cka/benchmark_results.json")
     if cka_file.exists():
