@@ -1,0 +1,136 @@
+{
+  "status": "PASS",
+  "policy_adaptation_confirmed": true,
+  "matrix_results": [
+    {
+      "regime_name": "High VRAM / Normal Power / Cool",
+      "short_name": "high_norm_cool",
+      "hardware_state": {
+        "vram_headroom_mb": 3500.0,
+        "gpu_power_w": 50.0,
+        "power_budget_w": 80.0,
+        "gpu_temperature_c": 55.0
+      },
+      "selected_action": {
+        "dominant_config": "cka_75",
+        "mean_k": 2.1,
+        "predicted_utility": 1.033
+      },
+      "config_distribution": {
+        "cka_75": 41,
+        "cka_83": 26
+      },
+      "mean_selected_k": 2.1,
+      "mean_tps": 31.17,
+      "actual_cycle_ms": 71.95,
+      "mean_energy_j_token": 1.638,
+      "peak_vram_mb": 1991.2,
+      "tokens_per_step": 2.391,
+      "action_trace_length": 67
+    },
+    {
+      "regime_name": "Low VRAM / Normal Power / Cool",
+      "short_name": "low_norm_cool",
+      "hardware_state": {
+        "vram_headroom_mb": 250.0,
+        "gpu_power_w": 50.0,
+        "power_budget_w": 80.0,
+        "gpu_temperature_c": 55.0
+      },
+      "selected_action": {
+        "dominant_config": "cka_75",
+        "mean_k": 1.0,
+        "predicted_utility": -1.172
+      },
+      "config_distribution": {
+        "cka_75": 91
+      },
+      "mean_selected_k": 1.0,
+      "mean_tps": 37.18,
+      "actual_cycle_ms": 44.93,
+      "mean_energy_j_token": 1.349,
+      "peak_vram_mb": 1990.5,
+      "tokens_per_step": 1.761,
+      "action_trace_length": 91
+    },
+    {
+      "regime_name": "High VRAM / Limited Power / Cool",
+      "short_name": "high_limit_cool",
+      "hardware_state": {
+        "vram_headroom_mb": 3500.0,
+        "gpu_power_w": 45.0,
+        "power_budget_w": 40.0,
+        "gpu_temperature_c": 55.0
+      },
+      "selected_action": {
+        "dominant_config": "cka_75",
+        "mean_k": 1.74,
+        "predicted_utility": -0.023
+      },
+      "config_distribution": {
+        "cka_75": 58,
+        "cka_83": 19
+      },
+      "mean_selected_k": 1.74,
+      "mean_tps": 33.17,
+      "actual_cycle_ms": 60.29,
+      "mean_energy_j_token": 1.368,
+      "peak_vram_mb": 1991.2,
+      "tokens_per_step": 2.08,
+      "action_trace_length": 77
+    },
+    {
+      "regime_name": "High VRAM / Normal Power / Hot",
+      "short_name": "high_norm_hot",
+      "hardware_state": {
+        "vram_headroom_mb": 3500.0,
+        "gpu_power_w": 50.0,
+        "power_budget_w": 80.0,
+        "gpu_temperature_c": 81.0
+      },
+      "selected_action": {
+        "dominant_config": "cka_50",
+        "mean_k": 1.0,
+        "predicted_utility": -4.431
+      },
+      "config_distribution": {
+        "cka_50": 69,
+        "cka_60": 35
+      },
+      "mean_selected_k": 1.0,
+      "mean_tps": 36.49,
+      "actual_cycle_ms": 40.08,
+      "mean_energy_j_token": 1.373,
+      "peak_vram_mb": 1990.5,
+      "tokens_per_step": 1.543,
+      "action_trace_length": 104
+    },
+    {
+      "regime_name": "Low VRAM / Limited Power / Hot",
+      "short_name": "low_limit_hot",
+      "hardware_state": {
+        "vram_headroom_mb": 250.0,
+        "gpu_power_w": 45.0,
+        "power_budget_w": 40.0,
+        "gpu_temperature_c": 81.0
+      },
+      "selected_action": {
+        "dominant_config": "cka_75",
+        "mean_k": 1.0,
+        "predicted_utility": -7.858
+      },
+      "config_distribution": {
+        "cka_50": 12,
+        "cka_60": 25,
+        "cka_75": 59
+      },
+      "mean_selected_k": 1.0,
+      "mean_tps": 36.6,
+      "actual_cycle_ms": 43.29,
+      "mean_energy_j_token": 1.232,
+      "peak_vram_mb": 1990.4,
+      "tokens_per_step": 1.671,
+      "action_trace_length": 96
+    }
+  ]
+}
