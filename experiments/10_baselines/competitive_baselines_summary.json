@@ -1,0 +1,94 @@
+{
+  "status": "PASS",
+  "hardware": "NVIDIA GeForce RTX 4050 Laptop GPU (6GB)",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "quantization": "4-bit (bitsandbytes NF4)",
+  "num_prompts": 5,
+  "max_new_tokens": 32,
+  "results": [
+    {
+      "method_name": "Vanilla",
+      "method_type": "vanilla",
+      "tokens_per_second": 42.64,
+      "speedup_vs_vanilla": 1.0,
+      "acceptance_rate_pct": "N/A",
+      "exact_match_pct": 100.0,
+      "peak_vram_mb": 1984.1,
+      "energy_j_token": 1.338,
+      "total_tokens": 160,
+      "elapsed_s": 3.752
+    },
+    {
+      "method_name": "Static Skip",
+      "method_type": "static",
+      "tokens_per_second": 21.8,
+      "speedup_vs_vanilla": 0.511,
+      "acceptance_rate_pct": 25.0,
+      "exact_match_pct": 92.5,
+      "peak_vram_mb": 1990.8,
+      "energy_j_token": 2.713,
+      "total_tokens": 160,
+      "elapsed_s": 7.341
+    },
+    {
+      "method_name": "CKA Fixed",
+      "method_type": "cka_fixed",
+      "tokens_per_second": 35.84,
+      "speedup_vs_vanilla": 0.841,
+      "acceptance_rate_pct": 70.1,
+      "exact_match_pct": 92.5,
+      "peak_vram_mb": 1990.7,
+      "energy_j_token": 1.693,
+      "total_tokens": 160,
+      "elapsed_s": 4.464
+    },
+    {
+      "method_name": "Adaptive K",
+      "method_type": "adaptive_k",
+      "tokens_per_second": 27.35,
+      "speedup_vs_vanilla": 0.641,
+      "acceptance_rate_pct": 55.2,
+      "exact_match_pct": 96.9,
+      "peak_vram_mb": 1991.6,
+      "energy_j_token": 2.098,
+      "total_tokens": 160,
+      "elapsed_s": 5.851
+    },
+    {
+      "method_name": "KnapSpec (ICML'26)",
+      "method_type": "knapspec",
+      "tokens_per_second": 35.28,
+      "speedup_vs_vanilla": 0.827,
+      "acceptance_rate_pct": 70.1,
+      "exact_match_pct": 92.5,
+      "peak_vram_mb": 1990.7,
+      "energy_j_token": 1.792,
+      "total_tokens": 160,
+      "elapsed_s": 4.536
+    },
+    {
+      "method_name": "SpecBound (ACL'26)",
+      "method_type": "specbound",
+      "tokens_per_second": 34.58,
+      "speedup_vs_vanilla": 0.811,
+      "acceptance_rate_pct": 74.9,
+      "exact_match_pct": 91.2,
+      "peak_vram_mb": 1990.8,
+      "energy_j_token": 1.694,
+      "total_tokens": 160,
+      "elapsed_s": 4.628
+    },
+    {
+      "method_name": "HW Controller (ZASSD)",
+      "method_type": "hw_controller",
+      "tokens_per_second": 31.91,
+      "speedup_vs_vanilla": 0.748,
+      "acceptance_rate_pct": 72.0,
+      "exact_match_pct": 92.5,
+      "peak_vram_mb": 1991.2,
+      "energy_j_token": 1.794,
+      "total_tokens": 160,
+      "elapsed_s": 5.014
+    }
+  ]
+}
