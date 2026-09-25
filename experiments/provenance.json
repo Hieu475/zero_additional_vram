@@ -1,0 +1,54 @@
+{
+  "gate_a_status": "PASS",
+  "checkpoint": "phase8-frozen",
+  "timestamp": "2026-09-25T14:50:00+07:00",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "vram_total_mb": 6141.0,
+    "power_cap_w": 80.0,
+    "driver_version": "595.84",
+    "cuda_driver_version": "13.2"
+  },
+  "software_environment": {
+    "os": "Linux x86_64",
+    "python_version": "3.12.13",
+    "pytorch_version": "2.11.0+cu128",
+    "cuda_runtime_version": "12.8"
+  },
+  "model": {
+    "name": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "quantization": "4-bit (NF4, bitsandbytes)",
+    "total_layers": 36,
+    "hidden_size": 2048
+  },
+  "dataset": {
+    "prompt_file": "data/benchmarks/prompts.jsonl",
+    "num_prompts": 40,
+    "sha256": "4b68d9fac789cb780c602735dbdc392f00db1900490acc8b6b978179fe312d09"
+  },
+  "generation_protocol": {
+    "temperature": 0.0,
+    "decoding": "greedy",
+    "fixed_seed": 42
+  },
+  "config_hashes": {
+    "configs/baseline.yaml": "72173eaef21a7b8fb8cd5d1829de8e428c068f64ad84926f69d1d8406007ca98",
+    "configs/qwen25_3b.yaml": "086c8d9648b79347c61a91f6e90a90df8682b39a398de94feaa51238763635ba",
+    "configs/llama32_3b.yaml": "74572fbd92e04ce0b39c1b08c3e8a90ef89d414441137fd187d579d9249b70be",
+    "configs/experiments/layer_skip.yaml": "b88fb789c95ef65133b629e5f2a8cb5f15274e3594113308d4622afd4bc04266",
+    "configs/experiments/adaptive_k.yaml": "849c879761fc7c80dcca05773dc498ff7e7c8eca5a6b206861950a9ac9275d08",
+    "configs/experiments/controller.yaml": "bb551238ba4e6049edc06b098738a08e565b6337a1c5cd36d5eb6f80f8e127db",
+    "configs/experiments/cka.yaml": "81ee0b344f9f1b6dcad155549624a25170b4e73992124669411da5caad14c65a"
+  },
+  "metrics_protocol": [
+    "tok/s (throughput)",
+    "TTFT (time to first token / prompt prefill latency)",
+    "TPOT (time per output token / generation cycle latency)",
+    "acceptance_rate (speculative token acceptance probability)",
+    "exact_match (100% token equivalence with vanilla greedy)",
+    "peak_vram_mb (peak GPU memory footprint)",
+    "power_w (GPU average active power draw)",
+    "energy_j_token (hardware energy in Joules per emitted token)"
+  ]
+}
