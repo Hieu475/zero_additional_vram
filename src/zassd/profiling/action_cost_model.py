@@ -103,6 +103,8 @@ LLAMA_32_3B_PROFILE = ModelCostProfile(
         "static_75": 21,
         "random_50": 14,
         "random_75": 21,
+        "llama_cka_75": 21,
+        "llama_cka_50": 14,
     },
     parametric_params={
         "draft_beta_1": 0.5120,
@@ -283,13 +285,13 @@ class MeasuredActionCostModel:
         if config_name in self.pareto_results and "layers_kept" in self.pareto_results[config_name]:
             return int(self.pareto_results[config_name]["layers_kept"])
 
-        # Heuristic inference from config string if named cka_XX
-        if "cka_" in config_name:
-            try:
-                pct = int(config_name.split("cka_")[-1].split("_")[0])
+        # Heuristic inference from config string containing percentage (e.g. cka_50, static_60, random_75)
+        import re
+        match = re.search(r"(\d+)", config_name)
+        if match:
+            pct = int(match.group(1))
+            if 10 <= pct <= 100:
                 return int(round(self.total_layers * (pct / 100.0)))
-            except Exception:
-                pass
         return int(round(self.total_layers * 0.75))
 
     def get_per_token_draft_ms(self, config_name: str, kept_layers: Optional[int] = None) -> float:

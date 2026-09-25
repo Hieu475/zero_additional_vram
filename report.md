@@ -300,3 +300,53 @@ Lưu ý quan trọng: với một đề tài quy mô cá nhân/luận văn trên
   - Vanilla: 54.1 tok/s ($1.00\times$), 2158.5 MB, 1.300 J/tok
   - **ZASSD HW Controller:** **45.8 tok/s ($0.85\times$)**, **77.2% Acceptance**, **2170.8 MB** (chỉ +12.3 MB bộ đệm động), **1.631 J/tok**.
 - Vượt qua toàn diện 5 phương pháp so sánh (Vanilla, CKA Fixed, Adaptive K, KnapSpec, SpecBound) về tỷ lệ chấp nhận và khả năng tự thích ứng phần cứng.
+
+---
+
+# Phần 8 — Nghiệm thu Phase 14 (Audit Toàn diện, Sửa lỗi Thuật toán & Khóa Benchmark Chuẩn)
+
+Đợt kiểm toán độc lập sâu (Deep Codebase Audit) trên 4 trục hệ thống đã phát hiện và khắc phục triệt để các lỗi nghiêm trọng về baseline, vòng lặp suy đoán và đánh giá định lượng:
+
+### 1. Các lỗi nghiêm trọng đã được phát hiện và sửa dứt điểm
+1. **KnapSpec Inverted Layer Valuation (`knapspec.py`):**
+   - *Nguyên nhân:* Mảng `layer_ranks` được xếp từ layer dư thừa nhất đến layer quan trọng nhất. Vòng lặp cũ duyệt `reversed(layer_ranks)` đã gán giá trị cao nhất cho các layer dư thừa và giá trị thấp nhất cho các layer sống còn. Bộ giải Knapsack vô tình giữ các layer vô dụng và loại bỏ các layer quan trọng nhất.
+   - *Hậu quả cũ:* KnapSpec trên Llama-3.2-3B chỉ đạt $10.7\%$ acceptance rate và $22.0\text{ tok/s}$ ($0.41\times$).
+   - *Khắc phục:* Bỏ `reversed()`, gán đúng mức độ ưu tiên theo tầm quan trọng thực tế. Kết quả sau sửa: KnapSpec trên Llama đạt **$41.0\text{ tok/s}$ ($0.76\times$)** và **$68.2\%$ acceptance rate**, phản ánh đúng bản chất học thuật của KnapSpec.
+2. **SpecBound Double-Update (`specbound.py`):**
+   - *Nguyên nhân:* Hàm `update()` gọi lại `select_action()`, trong khi chính `select_action()` đã append vào hàng đợi lịch sử chấp nhận `acceptance_history` và `k_history`. Mỗi chu kỳ suy đoán bị cập nhật kép, làm méo mó các cửa sổ trung bình động.
+   - *Khắc phục:* Tách rời việc ghi nhận phản hồi và suy luận action, bảo đảm mỗi cycle chỉ ghi nhận một điểm dữ liệu duy nhất.
+3. **EOS Token Early Exit (`speculative.py`):**
+   - *Nguyên nhân:* Vòng lặp `while` không kiểm tra `curr_target_tok == tokenizer.eos_token_id` ngay đầu bước suy đoán mới. Khi mô hình mục tiêu phát ra EOS, hệ thống vẫn fork cache draft và suy đoán thêm 1 chu kỳ trên tiền tố EOS rồi mới ngắt, gây lãng phí tính toán và tiềm ẩn nguy cơ nối token rác sau EOS.
+   - *Khắc phục:* Đặt chốt chặn ngắt tức thì ngay đầu vòng lặp `while len(generated_token_ids) < max_new_tokens`.
+4. **Chuẩn hóa Hàm Utility Bộ điều khiển (`hardware_controller.py`):**
+   - Đồng bộ hóa công thức tối ưu hóa có trọng số theo đúng tài liệu:
+     $$U(S, K \mid z_t) = \lambda_s \cdot \text{Speedup} - \lambda_l \cdot \text{LatencyPenalty} - \lambda_e \cdot E_{\text{tok}} - \text{Barriers}(VRAM, P, T)$$
+   - Thay thế giả định kích thước KV cứng $45\text{ MB/token}$ bằng tham số phụ thuộc kiến trúc mô hình.
+5. **Warmup Công bằng cho Cả Hai Chế độ (`run_final_unified_benchmark.py`):**
+   - Bổ sung bước chạy khởi động cho cả `self_speculative_generate` trước khi tính giờ, loại bỏ hoàn toàn chi phí cấp phát bộ nhớ ban đầu của CUDA đè nặng lên phương pháp speculative đầu tiên.
+6. **Thắt chặt Tiêu chí Đánh giá Tính ổn định Số học (`test_speculative_exactness.py`):**
+   - Siết chặt ngưỡng logit margin tối đa từ $0.75 \rightarrow 0.40$ (thực tế kiểm định đạt tối đa $\le 0.125$).
+   - Bổ sung ràng buộc ngưỡng khớp toàn chuỗi $\ge 50\%$ (đạt $60.0\%$).
+
+### 2. Kết quả Benchmark Hợp nhất Chuẩn hóa (Sau Sửa Lỗi)
+
+Thực thi cố định trên RTX 4050 Laptop GPU (6GB, 80W), $N=10$ prompts chuẩn hóa, greedy decoding ($T=0.0$):
+
+| Mô hình | Phương pháp | Thông lượng (tok/s) | Tốc độ tương đối | Tỷ lệ chấp nhận | Khớp tuyệt đối | Bộ nhớ VRAM | Năng lượng (J/tok) | $T_{\text{draft}}$ | $T_{\text{verify}}$ |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Qwen2.5-3B** | **Vanilla** | **41.7** | **1.00×** | 100.0% | 100.0% | **1983.8 MB** | **1.384** | 0.0 ms | 24.0 ms |
+| | CKA Fixed ($K=2$) | 36.4 | 0.88× | 73.2% | 60.0% | 1991.2 MB | 1.755 | 37.6 ms | 26.3 ms |
+| | Adaptive $K$ | 27.7 | 0.66× | 56.4% | 70.0% | 1992.2 MB | 2.155 | 66.7 ms | 36.0 ms |
+| | KnapSpec (ICML'26) | 35.9 | 0.86× | 73.2% | 60.0% | 1991.4 MB | 1.775 | 38.3 ms | 26.6 ms |
+| | SpecBound (ACL'26) | 34.4 | 0.83× | 74.1% | 50.0% | 1991.6 MB | 1.830 | 37.2 ms | 29.6 ms |
+| | **ZASSD HW Controller** | **38.6** | **0.93×** | **89.0%** | **60.0%** | **1991.2 MB** | **1.625** | **19.4 ms** | **25.8 ms** |
+| **Llama-3.2-3B** | **Vanilla** | **54.2** | **1.00×** | 100.0% | 100.0% | **2158.5 MB** | **1.321** | 0.0 ms | 18.5 ms |
+| | CKA Fixed ($K=2$) | 42.1 | 0.78× | 68.2% | 60.0% | 2171.0 MB | 1.810 | 28.9 ms | 22.5 ms |
+| | Adaptive $K$ | 34.2 | 0.63× | 62.5% | 50.0% | 2173.2 MB | 2.092 | 40.4 ms | 33.4 ms |
+| | KnapSpec (ICML'26) | 41.0 | 0.76× | 68.2% | 60.0% | 2171.0 MB | 1.857 | 30.2 ms | 22.5 ms |
+| | SpecBound (ACL'26) | 43.3 | 0.80× | 76.4% | 50.0% | 2171.6 MB | 1.675 | 22.1 ms | 23.4 ms |
+| | **ZASSD HW Controller** | **44.5** | **0.83×** | **76.2%** | **60.0%** | **2170.8 MB** | **1.619** | **15.3 ms** | **20.8 ms** |
+
+### 3. Trạng thái Kiểm thử Toàn bộ Hệ thống
+- **55/55 unit/integration tests PASS 100%** (bao gồm 4 bài kiểm tra bất biến KV cache, kiểm tra tương đương verification, kiểm soát dung lượng bộ đệm, và tính ổn định số học).
+- Đã đồng bộ hóa dữ liệu trên `README.md`, `paper/tables/`, `paper/figures/`, và `experiments/final_validation/`.

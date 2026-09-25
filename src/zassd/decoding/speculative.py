@@ -123,6 +123,12 @@ def self_speculative_generate(
     last_verify_ms = 25.0
 
     while len(generated_token_ids) < max_new_tokens:
+        # Early exit: if the pending token is EOS, emit it and stop immediately
+        # (avoids wasting a draft+verify cycle on hallucinated post-EOS tokens)
+        if curr_target_tok == tokenizer.eos_token_id:
+            generated_token_ids.append(curr_target_tok)
+            break
+
         rem_tokens = max_new_tokens - len(generated_token_ids)
 
         if controller is not None:

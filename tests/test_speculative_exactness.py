@@ -170,19 +170,21 @@ class TestSpeculativeExactness:
             )
 
         # Scientific Verification Criterion:
-        # 1. Any observed divergence must be strictly bounded by quantization noise envelope (margin <= 0.50)
-        # 2. When top1 logit margin > 0.50, greedy argmax must not flip
+        # 1. Any observed divergence must be strictly bounded by quantization noise envelope (margin <= 0.40)
+        # 2. When top1 logit margin > 0.40, greedy argmax must NEVER flip
+        total_tokens_evaluated = 0
+        total_matching_tokens = 0
         for r in stability_records:
             if not r["match"]:
                 assert r["margin"] is not None
-                assert r["margin"] <= 0.75, (
+                assert r["margin"] <= 0.40, (
                     f"Unexplained divergence with large logit margin {r['margin']} "
                     f"at prompt #{r['prompt_id']}, position {r['first_divergence']}"
                 )
 
-        # 3. Overall exact match rate documentation
+        # 3. Overall exact match rate and token-level agreement
         match_rate = exact_matches / len(eval_prompts)
-        print(f"\nExactness Match Rate: {exact_matches}/{len(eval_prompts)} ({match_rate:.1%})")
+        print(f"\nExactness Full-Sequence Match Rate: {exact_matches}/{len(eval_prompts)} ({match_rate:.1%})")
         print(f"Detailed stability analysis saved to {out_path}")
-        assert exact_matches > 0, "Exact match should be non-zero"
+        assert match_rate >= 0.50, f"Full sequence exact match rate {match_rate:.1%} must be >= 50%"
 

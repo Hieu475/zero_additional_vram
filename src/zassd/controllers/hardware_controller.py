@@ -225,17 +225,25 @@ class HardwareAwareJointController:
         tps: Optional[float] = None,
         config_name: str = "cka_75",
     ) -> float:
-        """Evaluate constrained objective: max TPS(S, K) s.t. VRAM < B_v, Power < B_p, Temp < B_T."""
-        # 1. Primary Objective: Expected Throughput (tok/s)
-        eff_tps = tps if tps is not None else (tokens_per_step / max(1e-3, cycle_ms / 1000.0))
-        u_primary = eff_tps
+        """Evaluate constrained utility: U = λ_s·Speedup - λ_l·LatencyPenalty - λ_v·VRAM - λ_e·(Power+Thermal).
 
-        # 2. Secondary Objective: Energy Regularization
-        # Saving 1.0 J/token is weighted as lambda_e trade-off against throughput
+        This formulation matches the documented objective in the module docstring and
+        ensures all lambda parameters are properly weighted.
+        """
+        # 1. Primary Objective: Speedup relative to baseline (dimensionless, typically 0.5-1.1)
+        u_speedup = self.lambda_s * speedup
+
+        # 2. Latency Penalty: penalize long cycle times (normalize to ~30ms baseline)
+        latency_penalty = max(0.0, (cycle_ms - 30.0) / 30.0)
+        u_latency = -self.lambda_l * latency_penalty
+
+        # 3. Energy Regularization: penalize high energy per token
         u_energy = -self.lambda_e * energy_j_tok
 
-        # 3. Physical Constraint 1: VRAM Headroom Barrier (B_v)
-        candidate_vram_mb = obs.vram_used_mb + k * 45.0
+        # 4. Physical Constraint 1: VRAM Headroom Barrier (B_v)
+        # Use model-aware KV cache size per draft token
+        kv_mb_per_token = getattr(self.cost_model, 'kv_cache_mb_per_token', 45.0) if hasattr(self, 'cost_model') else 45.0
+        candidate_vram_mb = obs.vram_used_mb + k * kv_mb_per_token
         vram_headroom = self.max_vram_mb - candidate_vram_mb
         if vram_headroom < 100.0:
             vram_barrier = 1000.0 + (100.0 - vram_headroom) * 10.0
@@ -245,7 +253,7 @@ class HardwareAwareJointController:
             vram_barrier = 0.0
         u_vram = -self.lambda_v * vram_barrier
 
-        # 4. Physical Constraint 2: Power Envelope Barrier (B_p)
+        # 5. Physical Constraint 2: Power Envelope Barrier (B_p)
         p_ratio = max(0.5, obs.gpu_power_w / max(10.0, obs.power_budget_w))
         if obs.gpu_power_w >= obs.power_budget_w * 0.95:
             power_barrier = energy_j_tok * (p_ratio ** 4) * 8.0
@@ -253,7 +261,7 @@ class HardwareAwareJointController:
             power_barrier = energy_j_tok * 0.1
         u_power = -self.lambda_e * power_barrier
 
-        # 5. Physical Constraint 3: Thermal Throttling Barrier (B_T)
+        # 6. Physical Constraint 3: Thermal Throttling Barrier (B_T)
         temp_margin = self.temp_threshold_c - obs.gpu_temperature_c
         kept_layers = self.cost_model.resolve_kept_layers(config_name) if hasattr(self, "cost_model") else 27
         kept_ratio = kept_layers / float(self.cost_model.total_layers if hasattr(self, "cost_model") else 36)
@@ -266,7 +274,7 @@ class HardwareAwareJointController:
             thermal_barrier = 0.0
         u_thermal = -self.lambda_e * thermal_barrier
 
-        return float(u_primary + u_energy + u_vram + u_power + u_thermal)
+        return float(u_speedup + u_latency + u_energy + u_vram + u_power + u_thermal)
 
     def select_action(
         self,

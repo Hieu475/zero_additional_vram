@@ -13,20 +13,20 @@
  & (tok/s) & ($\times$) & Rate (\%) & (\%) & Match (\%) & (MB) & (J/tok) & $T_{\text{draft}} / T_{\text{verify}}$ (ms) \\
 \midrule
 \multicolumn{9}{l}{\textit{\textbf{Model A: Qwen2.5-3B-Instruct (36 Layers, NF4 4-bit)}}} \\
-Vanilla Autoregressive & \textbf{41.50} & 1.00$\times$ & 100.0\% & 100.0\% & 100.0\% & \textbf{1983.8} & \textbf{1.335} & 0.00 / 24.10 \\
-CKA Fixed ($K=2$) & 36.80 & 0.89$\times$ & 73.2\% & 60.0\% & 82.8\% & 1991.2 & 1.708 & 37.10 / 26.00 \\
-Adaptive $K$ & 27.90 & 0.68$\times$ & 56.4\% & 70.0\% & 85.0\% & 1992.2 & 2.088 & 66.00 / 35.90 \\
-KnapSpec \cite{knapspec2024} & 37.20 & 0.90$\times$ & 73.2\% & 60.0\% & 82.8\% & 1991.4 & 1.718 & 36.80 / 25.70 \\
-SpecBound \cite{specbound2024} & 34.40 & 0.83$\times$ & 74.1\% & 50.0\% & 79.4\% & 1991.6 & 1.817 & 37.40 / 29.50 \\
-\textbf{ZASSD (HW Controller)} & \textbf{38.30} & \textbf{0.93$\times$} & \textbf{91.4\%} & 60.0\% & \textbf{82.8\%} & 1991.1 & \textbf{1.628} & \textbf{19.80 / 26.30} \\
+Vanilla Autoregressive & \textbf{41.70} & 1.00$\times$ & 100.0\% & 100.0\% & 100.0\% & \textbf{1983.8} & \textbf{1.384} & 0.00 / 24.00 \\
+CKA Fixed ($K=2$) & 36.40 & 0.88$\times$ & 73.2\% & 60.0\% & 82.8\% & 1991.2 & 1.755 & 37.60 / 26.30 \\
+Adaptive $K$ & 27.70 & 0.66$\times$ & 56.4\% & 70.0\% & 85.0\% & 1992.2 & 2.155 & 66.70 / 36.00 \\
+KnapSpec \cite{knapspec2024} & 35.90 & 0.86$\times$ & 73.2\% & 60.0\% & 82.8\% & 1991.4 & 1.775 & 38.30 / 26.60 \\
+SpecBound \cite{specbound2024} & 34.40 & 0.83$\times$ & 74.1\% & 50.0\% & 79.4\% & 1991.6 & 1.830 & 37.20 / 29.60 \\
+\textbf{ZASSD (HW Controller)} & \textbf{38.60} & \textbf{0.93$\times$} & \textbf{89.0\%} & 60.0\% & \textbf{82.8\%} & 1991.2 & \textbf{1.625} & \textbf{19.40 / 25.80} \\
 \midrule
 \multicolumn{9}{l}{\textit{\textbf{Model B: Llama-3.2-3B-Instruct (28 Layers, NF4 4-bit)}}} \\
-Vanilla Autoregressive & \textbf{54.10} & 1.00$\times$ & 100.0\% & 100.0\% & 100.0\% & \textbf{2158.5} & \textbf{1.300} & 0.00 / 18.50 \\
-CKA Fixed ($K=2$) & 41.70 & 0.77$\times$ & 68.2\% & 60.0\% & 72.8\% & 2171.0 & 1.772 & 29.40 / 22.40 \\
-Adaptive $K$ & 34.30 & 0.64$\times$ & 62.5\% & 50.0\% & 71.6\% & 2173.2 & 2.054 & 40.70 / 33.30 \\
-KnapSpec \cite{knapspec2024} & 22.00 & 0.41$\times$ & 10.7\% & 60.0\% & 72.8\% & 2171.4 & 3.368 & 30.00 / 22.70 \\
-SpecBound \cite{specbound2024} & 44.60 & 0.83$\times$ & 76.4\% & 50.0\% & 70.9\% & 2171.6 & 1.680 & 21.50 / 22.80 \\
-\textbf{ZASSD (HW Controller)} & \textbf{45.80} & \textbf{0.85$\times$} & \textbf{77.2\%} & 60.0\% & \textbf{72.8\%} & 2170.8 & \textbf{1.631} & \textbf{15.00 / 20.20} \\
+Vanilla Autoregressive & \textbf{54.20} & 1.00$\times$ & 100.0\% & 100.0\% & 100.0\% & \textbf{2158.5} & \textbf{1.321} & 0.00 / 18.50 \\
+CKA Fixed ($K=2$) & 42.10 & 0.78$\times$ & 68.2\% & 60.0\% & 72.8\% & 2171.0 & 1.810 & 28.90 / 22.50 \\
+Adaptive $K$ & 34.20 & 0.63$\times$ & 62.5\% & 50.0\% & 71.6\% & 2173.2 & 2.092 & 40.40 / 33.40 \\
+KnapSpec \cite{knapspec2024} & 41.00 & 0.76$\times$ & 68.2\% & 60.0\% & 72.8\% & 2171.0 & 1.857 & 30.20 / 22.50 \\
+SpecBound \cite{specbound2024} & 43.30 & 0.80$\times$ & 76.4\% & 50.0\% & 70.9\% & 2171.6 & 1.675 & 22.10 / 23.40 \\
+\textbf{ZASSD (HW Controller)} & \textbf{44.50} & \textbf{0.83$\times$} & \textbf{76.2\%} & 60.0\% & \textbf{72.8\%} & 2170.8 & \textbf{1.619} & \textbf{15.30 / 20.80} \\
 \bottomrule
 \end{tabular}
 \end{table*}

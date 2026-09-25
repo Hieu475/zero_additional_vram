@@ -82,7 +82,7 @@ class KnapSpecController:
         if layer_ranks is not None and len(layer_ranks) == total_layers:
             # layer_ranks is sorted most redundant to least redundant.
             # Least redundant layers have highest value.
-            for rank_pos, l_idx in enumerate(reversed(layer_ranks)):
+            for rank_pos, l_idx in enumerate(layer_ranks):
                 if 0 <= l_idx < total_layers:
                     layer_values[l_idx] = max(0.01, (rank_pos + 1) / float(total_layers))
         else:

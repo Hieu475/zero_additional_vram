@@ -284,9 +284,14 @@ def run_benchmark_for_model(
     cost_model = MeasuredActionCostModel.from_files()
     gpu_profiler = GPUProfiler()
 
-    # 2. Warmup Run
-    logger.info("Performing 1 warmup run...")
+    # 2. Warmup Run (both vanilla and speculative to pre-allocate CUDA buffers)
+    logger.info("Performing warmup runs (vanilla + speculative)...")
     _ = vanilla_generate(model, tokenizer, eval_prompts[0]["prompt"], max_new_tokens=8, temperature=0.0, device=device)
+    _ = self_speculative_generate(
+        model=model, tokenizer=tokenizer, layer_mgr=layer_mgr,
+        skip_indices=spec["cka_75_skips"], prompt=eval_prompts[0]["prompt"],
+        k=2, max_new_tokens=8, temperature=0.0, device=device,
+    )
     torch.cuda.synchronize()
 
     # 3. Vanilla Autoregressive Baseline

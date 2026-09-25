@@ -92,6 +92,8 @@ class SpecBoundController:
         )
 
     def update(self, entropy: float, accepted: int, proposed: int) -> int:
-        """Direct update method."""
-        action = self.select_action(entropy, accepted, proposed)
-        return int(action.draft_length)
+        """Update acceptance history without re-selecting action (avoids double mutation)."""
+        if proposed > 0:
+            acc = float(accepted) / float(proposed)
+            self.acceptance_history.append(acc)
+        return self.current_k
