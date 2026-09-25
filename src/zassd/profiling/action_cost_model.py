@@ -49,6 +49,77 @@ KNOWN_CONFIG_KEPT_LAYERS: dict[str, int] = {
 
 
 @dataclass
+class ModelCostProfile:
+    """Model-specific cost, architectural, and performance profile."""
+    model_name: str
+    total_layers: int
+    baseline_tps: float
+    known_kept_layers: dict[str, int]
+    parametric_params: dict[str, float]
+
+
+QWEN_25_3B_PROFILE = ModelCostProfile(
+    model_name="qwen25_3b",
+    total_layers=36,
+    baseline_tps=42.94,
+    known_kept_layers={
+        "cka_50": 18,
+        "cka_60": 22,
+        "cka_67": 24,
+        "cka_75": 27,
+        "cka_83": 30,
+        "cka_90": 32,
+        "static_50": 18,
+        "static_75": 27,
+        "random_50": 18,
+        "random_75": 27,
+    },
+    parametric_params={
+        "draft_beta_1": 0.5237,
+        "draft_beta_0": 4.6415,
+        "verify_gamma_1": 3.5743,
+        "verify_gamma_0": 23.30,
+        "acc_w_r": 1.2529,
+        "acc_w_k": 0.0989,
+        "acc_w_0": -0.1393,
+        "cache_ms": 0.40,
+        "energy_e_1": 0.0530,
+        "energy_e_0": 0.3155,
+    },
+)
+
+LLAMA_32_3B_PROFILE = ModelCostProfile(
+    model_name="llama32_3b",
+    total_layers=28,
+    baseline_tps=52.58,
+    known_kept_layers={
+        "cka_50": 14,
+        "cka_60": 17,
+        "cka_67": 19,
+        "cka_75": 21,
+        "cka_83": 23,
+        "cka_90": 25,
+        "static_50": 14,
+        "static_75": 21,
+        "random_50": 14,
+        "random_75": 21,
+    },
+    parametric_params={
+        "draft_beta_1": 0.5120,
+        "draft_beta_0": 4.1000,
+        "verify_gamma_1": 3.2000,
+        "verify_gamma_0": 19.04,
+        "acc_w_r": 1.1500,
+        "acc_w_k": 0.0950,
+        "acc_w_0": -0.1100,
+        "cache_ms": 0.35,
+        "energy_e_1": 0.0480,
+        "energy_e_0": 0.2900,
+    },
+)
+
+
+@dataclass
 class CostModelPrediction:
     """Predicted metrics for a candidate action (S, K) under observation z_t."""
     config_name: str
@@ -71,22 +142,35 @@ class MeasuredActionCostModel:
         self,
         action_costs: Optional[dict[str, dict[str, Any]]] = None,
         pareto_results: Optional[dict[str, dict[str, Any]]] = None,
-        baseline_tps: float = 36.0,
-        total_layers: int = 36,
+        baseline_tps: Optional[float] = None,
+        total_layers: Optional[int] = None,
         parametric_params: Optional[dict[str, float]] = None,
+        profile: Optional[ModelCostProfile] = None,
+        known_kept_layers: Optional[dict[str, int]] = None,
     ) -> None:
+        if profile is not None:
+            self.profile = profile
+            self.total_layers = profile.total_layers if total_layers is None else total_layers
+            self.baseline_tps = max(1.0, profile.baseline_tps if baseline_tps is None else baseline_tps)
+            self.known_kept_layers = dict(profile.known_kept_layers)
+            params = dict(profile.parametric_params)
+            if parametric_params:
+                params.update(parametric_params)
+        else:
+            self.profile = QWEN_25_3B_PROFILE
+            self.total_layers = total_layers if total_layers is not None else 36
+            self.baseline_tps = max(1.0, baseline_tps if baseline_tps is not None else 36.0)
+            self.known_kept_layers = known_kept_layers or dict(KNOWN_CONFIG_KEPT_LAYERS)
+            params = parametric_params or {}
+
         self.action_costs = action_costs or {}
         self.pareto_results = pareto_results or {}
-        self.baseline_tps = max(1.0, baseline_tps)
-        self.total_layers = total_layers
 
-        # Default parametric parameters empirically fitted on RTX 4050 Laptop GPU (Gate B)
-        # Calibration split: CKA-50, CKA-60, CKA-75 across K in {1, 2, 4}
-        params = parametric_params or {}
+        # Parametric parameters empirically fitted on RTX 4050 Laptop GPU (Gate B)
         self.draft_beta_1: float = params.get("draft_beta_1", 0.5237)
         self.draft_beta_0: float = params.get("draft_beta_0", 4.6415)
         self.verify_gamma_1: float = params.get("verify_gamma_1", 3.5743)
-        self.verify_gamma_0: float = params.get("verify_gamma_0", 25.1165)
+        self.verify_gamma_0: float = params.get("verify_gamma_0", 23.30)
         self.acc_w_r: float = params.get("acc_w_r", 1.2529)
         self.acc_w_k: float = params.get("acc_w_k", 0.0989)
         self.acc_w_0: float = params.get("acc_w_0", -0.1393)
@@ -174,10 +258,26 @@ class MeasuredActionCostModel:
             parametric_params=parametric_params,
         )
 
+    @classmethod
+    def from_model_name(
+        cls,
+        model_name: str,
+        baseline_tps: Optional[float] = None,
+        **kwargs: Any,
+    ) -> MeasuredActionCostModel:
+        """Create a model-specific cost model tailored to Qwen or Llama architecture."""
+        if "llama" in model_name.lower():
+            profile = LLAMA_32_3B_PROFILE
+        else:
+            profile = QWEN_25_3B_PROFILE
+        return cls(profile=profile, baseline_tps=baseline_tps, **kwargs)
+
     def resolve_kept_layers(self, config_name: str, explicit_kept_layers: Optional[int] = None) -> int:
         """Resolve the number of kept layers for a configuration."""
         if explicit_kept_layers is not None:
             return explicit_kept_layers
+        if hasattr(self, "known_kept_layers") and config_name in self.known_kept_layers:
+            return self.known_kept_layers[config_name]
         if config_name in KNOWN_CONFIG_KEPT_LAYERS:
             return KNOWN_CONFIG_KEPT_LAYERS[config_name]
         if config_name in self.pareto_results and "layers_kept" in self.pareto_results[config_name]:

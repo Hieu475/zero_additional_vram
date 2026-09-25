@@ -1,5 +1,5 @@
 % Hardware-Aware Joint Adaptation Matrix (Gate C Verification)
-% Demonstrating runtime response: z_t -> a_t under measured cost model
+% Demonstrating runtime response: z_t -> a_t under constrained TPS maximization
 \begin{table*}[t]
 \centering
 \small
@@ -10,11 +10,11 @@
 \textbf{Hardware Regime} & \textbf{VRAM} & \textbf{Power} & \textbf{Temp} & \textbf{Config} & \textbf{Draft} & \textbf{Utility} & \textbf{Exp Cycle} & \textbf{Exp TPS} & \textbf{Energy} & \textbf{System Adaptation} \\
  & (MB) & (W) & ($^\circ$C) & ($S_t$) & ($K_t$) & ($U_{\text{pred}}$) & (ms) & (tok/s) & (J/tok) & \textbf{Mechanism} \\
 \midrule
-\textbf{1. Nominal State} & 2000 & 50.0 & 50.0 & \texttt{cka\_90} & 2 & +1.019 & 76.57 & 37.22 & 1.775 & Optimal balanced speculation \\
-\textbf{2. Low VRAM Headroom} & 5250 & 50.0 & 50.0 & \texttt{cka\_90} & 1 & -1.165 & 49.26 & 40.20 & 1.775 & Throttles $K\to 1$ to preserve buffer \\
-\textbf{3. Power Constrained} & 2000 & 79.0 & 50.0 & \texttt{cka\_75} & 1 & +0.348 & 45.98 & 40.24 & 1.591 & Cubic power penalty sheds high energy \\
-\textbf{4. Thermal Throttling} & 2000 & 50.0 & 82.0 & \texttt{cka\_50} & 1 & -36.363 & 40.44 & 29.96 & 2.042 & Sheds 7 extra layers to reduce TDP \\
-\textbf{5. Combined Stress} & 5100 & 76.0 & 81.0 & \texttt{cka\_50} & 1 & -19.728 & 40.44 & 29.96 & 2.042 & Minimal cycle dissipation mode \\
+\textbf{1. Nominal State} & 2000 & 50.0 & 50.0 & \texttt{cka\_90} & 1 & +42.711 & 45.10 & 43.78 & 1.526 & Optimal high-throughput sweet spot \\
+\textbf{2. Low VRAM Headroom} & 5250 & 50.0 & 50.0 & \texttt{cka\_90} & 1 & +39.114 & 45.10 & 43.78 & 1.526 & Clamps $K=1$ to protect VRAM buffer \\
+\textbf{3. Power Constrained} & 2000 & 79.0 & 50.0 & \texttt{cka\_90} & 1 & +39.239 & 45.10 & 43.78 & 1.526 & Preserves power envelope \\
+\textbf{4. Thermal Throttling} & 2000 & 50.0 & 82.0 & \texttt{cka\_50} & 1 & +8.154 & 34.00 & 39.38 & 1.661 & Sheds 14 layers to mitigate TDP \\
+\textbf{5. Combined Stress} & 5100 & 76.0 & 81.0 & \texttt{cka\_50} & 1 & +3.891 & 34.00 & 39.38 & 1.661 & Emergency thermal layer pruning \\
 \bottomrule
 \end{tabular}
 \end{table*}

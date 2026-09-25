@@ -88,6 +88,7 @@ class HardwareAwareJointController:
         cost_model: Optional[MeasuredActionCostModel] = None,
         action_cost_db: Optional[ActionCostDatabase] = None,
         gpu_profiler: GPUProfiler | None = None,
+        model_name: Optional[str] = None,
         max_vram_mb: float = 5500.0,
         temp_threshold_c: float = 82.0,
         power_budget_w: float = 80.0,
@@ -102,9 +103,15 @@ class HardwareAwareJointController:
         hardware_override: Optional[HardwareState] = None,
     ) -> None:
         self.configs = candidate_layer_configs
-        self.cost_model = cost_model or MeasuredActionCostModel.from_files()
+        if cost_model is not None:
+            self.cost_model = cost_model
+        elif model_name is not None:
+            self.cost_model = MeasuredActionCostModel.from_model_name(model_name)
+        else:
+            self.cost_model = MeasuredActionCostModel.from_files()
         self.action_cost_db = action_cost_db
         self.gpu_profiler = gpu_profiler
+        self.model_name = model_name
         self.max_vram_mb = max_vram_mb
         self.temp_threshold_c = temp_threshold_c
         self.power_budget_w = power_budget_w
@@ -176,6 +183,8 @@ class HardwareAwareJointController:
                         tokens_per_step=float(cost.get("tokens_per_step", 1.8)),
                         k=k,
                         obs=obs,
+                        tps=float(tps),
+                        config_name=config_name,
                     )
 
         # 2. Parametric / Empirical Cost Model evaluation
@@ -201,6 +210,8 @@ class HardwareAwareJointController:
             tokens_per_step=pred.expected_tokens_per_step,
             k=k,
             obs=obs,
+            tps=pred.expected_tps,
+            config_name=config_name,
         )
 
     def _calculate_joint_utility(
@@ -211,41 +222,51 @@ class HardwareAwareJointController:
         tokens_per_step: float,
         k: int,
         obs: ControllerObservation,
+        tps: Optional[float] = None,
+        config_name: str = "cka_75",
     ) -> float:
-        """Core joint utility calculation coupling action features with hardware state."""
-        # 1. Speedup term + parallelism commitment reward
-        parallelism_reward = 0.22 * (tokens_per_step - 1.0)
-        u_speed = self.lambda_s * speedup + parallelism_reward
+        """Evaluate constrained objective: max TPS(S, K) s.t. VRAM < B_v, Power < B_p, Temp < B_T."""
+        # 1. Primary Objective: Expected Throughput (tok/s)
+        eff_tps = tps if tps is not None else (tokens_per_step / max(1e-3, cycle_ms / 1000.0))
+        u_primary = eff_tps
 
-        # 2. Cycle latency penalty
-        u_latency = -self.lambda_l * (cycle_ms / 100.0)
+        # 2. Secondary Objective: Energy Regularization
+        # Saving 1.0 J/token is weighted as lambda_e trade-off against throughput
+        u_energy = -self.lambda_e * energy_j_tok
 
-        # 3. Dynamic Candidate-Aware VRAM Penalty:
-        # Each candidate speculation step requires ephemeral activation and KV buffers
+        # 3. Physical Constraint 1: VRAM Headroom Barrier (B_v)
         candidate_vram_mb = obs.vram_used_mb + k * 45.0
-        vram_headroom = max(0.0, self.max_vram_mb - candidate_vram_mb)
-        if vram_headroom < 500.0:
-            vram_penalty = (500.0 - vram_headroom) / max(10.0, vram_headroom) * 3.0
+        vram_headroom = self.max_vram_mb - candidate_vram_mb
+        if vram_headroom < 100.0:
+            vram_barrier = 1000.0 + (100.0 - vram_headroom) * 10.0
+        elif vram_headroom < 500.0:
+            vram_barrier = ((500.0 - vram_headroom) / max(10.0, vram_headroom)) * 5.0
         else:
-            vram_penalty = 0.0
-        u_vram = -self.lambda_v * vram_penalty
+            vram_barrier = 0.0
+        u_vram = -self.lambda_v * vram_barrier
 
-        # 4. Dynamic Power & Energy Penalty:
-        # Penalizes high energy consumption actions cubically when exceeding operating power budget
+        # 4. Physical Constraint 2: Power Envelope Barrier (B_p)
         p_ratio = max(0.5, obs.gpu_power_w / max(10.0, obs.power_budget_w))
-        power_penalty = energy_j_tok * (p_ratio ** 3)
-        u_energy = -(self.lambda_e + 0.25) * power_penalty
-
-        # 5. Dynamic Thermal Penalty:
-        # When nearing thermal throttle ceiling (82 C), prolonged cycles dissipate excessive heat
-        temp_margin = self.temp_threshold_c - obs.gpu_temperature_c
-        if temp_margin < 5.0:
-            thermal_penalty = (cycle_ms / 35.0) * np.exp((5.0 - temp_margin) / 1.5)
+        if obs.gpu_power_w >= obs.power_budget_w * 0.95:
+            power_barrier = energy_j_tok * (p_ratio ** 4) * 8.0
         else:
-            thermal_penalty = 0.0
-        u_thermal = -self.lambda_e * thermal_penalty
+            power_barrier = energy_j_tok * 0.1
+        u_power = -self.lambda_e * power_barrier
 
-        return float(u_speed + u_latency + u_vram + u_energy + u_thermal)
+        # 5. Physical Constraint 3: Thermal Throttling Barrier (B_T)
+        temp_margin = self.temp_threshold_c - obs.gpu_temperature_c
+        kept_layers = self.cost_model.resolve_kept_layers(config_name) if hasattr(self, "cost_model") else 27
+        kept_ratio = kept_layers / float(self.cost_model.total_layers if hasattr(self, "cost_model") else 36)
+        if temp_margin <= 0.0:
+            # Overheating emergency: higher kept layers generate significantly more heat
+            thermal_barrier = 40.0 + kept_ratio * 70.0 + k * 25.0
+        elif temp_margin < 5.0:
+            thermal_barrier = (cycle_ms / 30.0) * np.exp((5.0 - temp_margin) / 1.5) * (1.0 + kept_ratio * 2.0)
+        else:
+            thermal_barrier = 0.0
+        u_thermal = -self.lambda_e * thermal_barrier
+
+        return float(u_primary + u_energy + u_vram + u_power + u_thermal)
 
     def select_action(
         self,

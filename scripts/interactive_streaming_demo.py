@@ -229,13 +229,13 @@ def build_dashboard(
     )
 
     header_text = Text()
-    header_text.append("🚀 ZASSD: Zero-Additional-VRAM Self-Speculative Decoding Interactive Demo\n", style="bold cyan")
+    header_text.append(" ZASSD: Zero-Additional-VRAM Self-Speculative Decoding Interactive Demo\n", style="bold cyan")
     header_text.append("Hardware: NVIDIA GeForce RTX 4050 Laptop (6GB, 80W) | Execution: 4-bit NF4 Quantization", style="dim white")
     layout["header"].update(Panel(header_text, style="cyan"))
 
     # Telemetry Table
     table = Table(title="Live Systems Telemetry (HardwareAwareJointController)", expand=True)
-    table.add_column("Current Mode", justify="center", style="bold green")
+    table.add_column("Current Mode", justify="center")
     table.add_column("K (Draft)", justify="center", style="bold yellow")
     table.add_column("Tokens/s", justify="center", style="bold magenta")
     table.add_column("Acceptance", justify="center", style="bold blue")
@@ -265,7 +265,7 @@ def build_dashboard(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="ZASSD Interactive Streaming Generation Demo (Việc 8)")
+    parser = argparse.ArgumentParser(description="ZASSD Interactive Streaming Generation Demo")
     parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-3B-Instruct")
     parser.add_argument("--prompt", type=str, default="Explain the concept of speculative decoding in large language models and why it can accelerate inference without changing output quality.")
     parser.add_argument("--max-new-tokens", type=int, default=64)
@@ -276,7 +276,7 @@ def main() -> None:
     set_seed(args.seed)
     console = Console()
 
-    console.print("\n[bold cyan]Loading model & initializing runtime controller...[/bold cyan]")
+    console.print("\nLoading model & initializing runtime controller...")
     model = load_model(args.model, quantize=True, bits=4)
     tokenizer = load_tokenizer(args.model)
     adapter = ModelAdapter(model)
@@ -291,7 +291,7 @@ def main() -> None:
         temp_threshold_c=80.0,
     )
 
-    console.print("[bold green]System initialized. Starting live streaming demonstration...[/bold green]\n")
+    console.print("System initialized. Starting live streaming demonstration...\n")
 
     full_generated_text = ""
     latest_telemetry = {
@@ -318,9 +318,9 @@ def main() -> None:
             live.update(build_dashboard(args.prompt, full_generated_text, latest_telemetry))
             time.sleep(0.02)
 
-    console.print("\n[bold green]✓ Streaming Generation Complete.[/bold green]")
+    console.print("\nStreaming Generation Complete.")
     console.print(
-        f"[cyan]Final Telemetry:[/cyan] Mode={latest_telemetry['mode']} | "
+        f"Final Telemetry: Mode={latest_telemetry['mode']} | "
         f"K={latest_telemetry['k']} | TPS={latest_telemetry['tokens_per_second']} tok/s | "
         f"Acceptance={latest_telemetry['acceptance_rate_pct']}% | "
         f"VRAM={latest_telemetry['vram_gb']} GB | Power={latest_telemetry['power_w']} W | "

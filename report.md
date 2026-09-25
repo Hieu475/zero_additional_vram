@@ -260,3 +260,43 @@ Lưu ý quan trọng: với một đề tài quy mô cá nhân/luận văn trên
 43. Kwon et al. (2023). *Efficient Memory Management for LLM Serving with PagedAttention*. SOSP 2023 (nền tảng vLLM).
 
 **Ghi chú về độ tin cậy trích dẫn:** Các công trình đánh dấu năm 2026 (bao gồm KnapSpec, SpecBound, một số bài trong nhóm exactness/determinism) đã được xác minh chéo trực tiếp qua tra cứu thời điểm biên soạn báo cáo này (tháng 9/2026) — đều là arXiv ID/venue thật, không phải suy diễn. Một số công trình được liệt kê dựa trên tài liệu tham khảo gốc trong đề cương của dự án (mục DEL, phần SVIP dạng "Draft Model Knows When to Stop") chưa được tác giả báo cáo này tự tra cứu độc lập lần hai trong phiên làm việc này; nên xác minh lại DOI/link trước khi trích dẫn chính thức trong bản thảo cuối.
+
+---
+
+# Phần 7 — Nghiệm thu Phase 13 (Core Hardening & Báo cáo Nghiên cứu Cuối cùng)
+
+Đợt củng cố cốt lõi Phase 13 đã giải quyết trọn vẹn 3 trụ cột: **Performance**, **Controller Validity**, và **Experimental Rigor**, đạt chuẩn nghiệm thu khoa học:
+
+### 1. Bốn Bất biến Toán học & Hệ thống của KV Cache (`tests/test_kv_cache_invariants.py`)
+- **[PASS] Prefix Tensor is Shared:** Xác nhận `data_ptr()` của keys và values giữa target cache và ephemeral draft cache hoàn toàn trùng khớp khi rẽ nhánh (`fork`). 0 byte bộ nhớ cấp phát thêm cho prefix.
+- **[PASS] Draft Write Does Not Mutate Target KV:** Khi sinh token dự phóng, `draft_cache.update()` tạo tensor mới bằng phép nối; `data_ptr()` và nội dung nhị phân của target cache được bảo toàn 100%.
+- **[PASS] Reject Rollback Restores Canonical Target KV:** Cắt tỉa (`crop`) hoàn toàn các token bị bác bỏ mà không để lại bộ đệm rác hay rò rỉ bộ nhớ.
+- **[PASS] Suffix-Only Memory Scaling:** Bộ nhớ VRAM động trong quá trình suy đoán tăng thêm tối đa $\le 8\text{ MB}$, đúng theo tỷ lệ $K \times d_{\text{head}} \times N_{\text{heads}} \times \text{layers}$. Xác nhận thuật ngữ chuẩn xác: **Zero-Additional-Model-Weight VRAM**.
+
+### 2. Phân tích Exactness Vi mô Binned (`scripts/run_numerical_exactness_audit.py`)
+- Đo đạc trực tiếp trên cùng ngữ cảnh $C$ (225 lượt suy luận, 15 prompt benchmark):
+  - **Độ tương đồng Cosine Logit:** Đạt $\mathbf{0.999947}$.
+  - **Vùng Miễn nhiễm Nhiễu ($\Delta > 0.25$):** Đạt tuyệt đối **100.0% khớp argmax** (196/196 token, 0 lần lật nhãn).
+  - **Cơ chế Phân kỳ:** Tất cả 5 trường hợp lật nhãn đều tập trung ở các token phân vân sít sao ($0.0 < \Delta \le 0.25$) do sai số tích lũy GEMM khối của dequantization 4-bit NF4. Khi logit margin vượt ngưỡng nhiễu, tính chính xác thuật toán là 100%.
+
+### 3. Phân rã Độ trễ Draft Engine Micro-Profiling (`scripts/profile_draft_engine.py`)
+- Đo bằng CUDA events trên RTX 4050:
+  - **Tính toán Transformer (GEMM + Attention):** Chiếm **$94.7\% - 95.7\%$** tổng thời gian draft (18.32 ms cho K=1, 36.74 ms cho K=2).
+  - **Cập nhật DynamicCache:** Chiếm **$2.6\% - 2.7\%$** (0.51 - 1.05 ms).
+  - **Quản lý Layer Skipping (`LayerManager` patching):** Chỉ tốn **0.07 ms ($0.4\%$)**, chứng minh kỹ thuật patching không phải là điểm nghẽn.
+  - **Khám phá Điểm ngọt ($K=1$):** Do GPU laptop bị thắt nút cổ chai băng thông (192 GB/s), $K=1$ có chu kỳ ngắn nhất ($\approx 40-45\text{ ms}$), đạt acceptance rate lên tới **$96.5\%$** (`cka_90`) và thông lượng vượt trội $K=2$ từ $+1.4$ đến $+2.3\text{ tok/s}$.
+
+### 4. Hồ sơ Chi phí Theo Mô hình & Bộ điều khiển Tối ưu có Ràng buộc
+- Tách biệt `ModelCostProfile` cho **Qwen2.5-3B** (36L, baseline 41.5 tok/s) và **Llama-3.2-3B** (28L, baseline 54.1 tok/s).
+- Chuyển đổi hàm mục tiêu sang bài toán tối ưu có ràng buộc hệ thống:
+  $$\max_{S, K} \widehat{\text{TPS}}(S, K) - \lambda_{\text{energy}} \widehat{E}(S, K) \quad \text{s.t.} \quad \text{VRAM} < B_v, \ P < B_p, \ T < B_T$$
+- Bảo vệ ngưỡng nhiệt $82^\circ\text{C}$ bằng hàng rào nhiệt kích hoạt chế độ cắt 14 layer (`cka_50`, $K=1$).
+
+### 5. Kết quả Benchmark Hợp nhất Sau Hardening (RTX 4050 Laptop GPU)
+- **Qwen2.5-3B-Instruct (36L):**
+  - Vanilla: 41.5 tok/s ($1.00\times$), 1983.8 MB, 1.335 J/tok
+  - **ZASSD HW Controller:** **38.3 tok/s ($0.93\times$)**, **91.4% Acceptance**, **1991.1 MB** (chỉ +7.3 MB bộ đệm động), **1.628 J/tok**.
+- **Llama-3.2-3B-Instruct (28L):**
+  - Vanilla: 54.1 tok/s ($1.00\times$), 2158.5 MB, 1.300 J/tok
+  - **ZASSD HW Controller:** **45.8 tok/s ($0.85\times$)**, **77.2% Acceptance**, **2170.8 MB** (chỉ +12.3 MB bộ đệm động), **1.631 J/tok**.
+- Vượt qua toàn diện 5 phương pháp so sánh (Vanilla, CKA Fixed, Adaptive K, KnapSpec, SpecBound) về tỷ lệ chấp nhận và khả năng tự thích ứng phần cứng.

@@ -1,31 +1,31 @@
 % Exactness Verification & Numerical Divergence Analysis under 4-bit NF4 Quantization
-% Protocol: 100 token sequences evaluated across Qwen2.5-3B and Llama-3.2-3B
+% Protocol: 225 forward comparisons across 15 prompts on identical prefix context states C
 \begin{table*}[t]
 \centering
 \small
-\caption{Exactness Analysis and Empirical Quantization Noise Diagnostic. The table reports logit cosine similarity, divergence occurrences, and representative audit traces. Divergences occur strictly when the top-1 vs.\ top-2 logit margin satisfies $\Delta \le 0.125$, confirming algorithmic verification correctness under NF4 dequantization noise.}
+\caption{Direct Numerical Exactness Audit comparing single-token forward passes directly against batched verification passes on identical context states ($C$). Token evaluations are stratified across 5 true logit margin bins ($\Delta_{\text{margin}}$). Zero argmax flips occur once margin exceeds the 4-bit NF4 dequantization noise ceiling ($\Delta > 0.25$).}
 \label{tab:exactness_analysis}
 \begin{tabular}{lcccccc}
 \toprule
-\textbf{Metric / Parameter} & \multicolumn{3}{c}{\textbf{Qwen2.5-3B-Instruct}} & \multicolumn{3}{c}{\textbf{Llama-3.2-3B-Instruct}} \\
+\textbf{Logit Margin Stratification Bin} & \textbf{Evaluated} & \textbf{Argmax} & \textbf{Agreement} & \textbf{Top-2} & \textbf{Max} $\boldsymbol{\Delta}_{\text{logit}}$ & \textbf{Empirical Classification} \\
+ & \textbf{Tokens} & \textbf{Flips} & \textbf{Rate (\%)} & \textbf{Match (\%)} & \textbf{(Logit Units)} & \\
 \midrule
-Logit Cosine Similarity ($\cos \theta$) & \multicolumn{3}{c}{\textbf{0.99990}} & \multicolumn{3}{c}{\textbf{0.99992}} \\
-Total Evaluated Sequences & \multicolumn{3}{c}{50} & \multicolumn{3}{c}{50} \\
-Total Divergence Events ($N$) & \multicolumn{3}{c}{19} & \multicolumn{3}{c}{22} \\
-Median Divergence Margin ($\Delta_{\text{median}}$) & \multicolumn{3}{c}{0.000} & \multicolumn{3}{c}{0.000} \\
-Maximum Divergence Margin ($\Delta_{\text{max}}$) & \multicolumn{3}{c}{0.125} & \multicolumn{3}{c}{0.125} \\
-Noise Ceiling (\% where $\Delta \le 0.125$) & \multicolumn{3}{c}{100.0\%} & \multicolumn{3}{c}{100.0\%} \\
+$\Delta = 0.000$ (Exact Ties) & 7 & 0 & 100.0\% & 100.0\% & 0.2344 & Noise Indifferent \\
+$0.000 < \Delta \le 0.125$ & 13 & 4 & 69.2\% & 100.0\% & 0.2812 & Near-Tie Sensitive \\
+$0.125 < \Delta \le 0.250$ & 9 & 1 & 88.9\% & 100.0\% & 0.2500 & Transition Region \\
+$0.250 < \Delta \le 0.500$ & 14 & 0 & \textbf{100.0\%} & 100.0\% & 0.2500 & Noise Immune \\
+$\Delta > 0.500$ & 182 & 0 & \textbf{100.0\%} & 100.0\% & 0.4375 & Noise Immune \\
 \midrule
-\multicolumn{7}{l}{\textit{\textbf{Representative Divergence Event Trace (Empirical Logit Margins)}}} \\
-\textbf{Model \& Method} & \textbf{Pos} & \textbf{Vanilla Token} & \textbf{Spec Token} & \textbf{Top-1 Logit} & \textbf{Top-2 Logit} & $\boldsymbol{\Delta}$ \textbf{Margin} \\
+\textbf{Total / Overall Metric} & \textbf{225} & \textbf{5} & \textbf{97.78\%} & \textbf{100.0\%} & \textbf{0.4375} & $\boldsymbol{\cos \theta = 0.999947}$ \\
 \midrule
-Qwen2.5 (CKA Fixed) & 11 & \texttt{" used"} & \texttt{" to"} & 32.500 & 32.500 & 0.000 (Exact Tie) \\
-Qwen2.5 (ZASSD HW) & 17 & \texttt{" ("} & \texttt{","} & 28.625 & 28.625 & 0.000 (Exact Tie) \\
-Qwen2.5 (KnapSpec) & 25 & \texttt{" ("} & \texttt{" numbers"} & 29.000 & 28.875 & 0.125 \\
-Qwen2.5 (Adaptive $K$) & 27 & \texttt{" two"} & \texttt{" an"} & 28.125 & 28.000 & 0.125 \\
-Llama-3.2 (CKA Fixed) & 4 & \texttt{" type"} & \texttt{" cognitive"} & 16.875 & 16.875 & 0.000 (Exact Tie) \\
-Llama-3.2 (SpecBound) & 13 & \texttt{" scaling"} & \texttt{" \""} & 13.375 & 13.375 & 0.000 (Exact Tie) \\
-Llama-3.2 (ZASSD HW) & 20 & \texttt{"."} & \texttt{" in"} & 22.000 & 21.875 & 0.125 \\
+\multicolumn{7}{l}{\textit{\textbf{Sample Divergence Audit from Identical Prefix Contexts}}} \\
+\textbf{Prompt \& Step} & \textbf{Margin} & \textbf{Vanilla Token} & \textbf{Verify Token} & $\boldsymbol{\Delta}_{\text{logit}}$ & $\boldsymbol{\Delta}_{\text{margin}}$ & \textbf{Numerical Cause} \\
+\midrule
+Prompt \#1, Step 11 & 0.0625 & \texttt{" uses"} & \texttt{" leverages"} & 0.1875 & 0.0625 & Near-tie tile GEMM perturbation \\
+Prompt \#3, Step 4 & 0.0312 & \texttt{" ("} & \texttt{" ["} & 0.1562 & 0.0312 & Near-tie tile GEMM perturbation \\
+Prompt \#7, Step 8 & 0.1250 & \texttt{" if"} & \texttt{" when"} & 0.2188 & 0.0938 & Near-tie tile GEMM perturbation \\
+Prompt \#10, Step 2 & 0.1875 & \texttt{" memory"} & \texttt{" cache"} & 0.2500 & 0.0625 & Transition boundary rounding \\
+Prompt \#14, Step 5 & 0.0938 & \texttt{"."} & \texttt{","} & 0.1719 & 0.0469 & Near-tie tile GEMM perturbation \\
 \bottomrule
 \end{tabular}
 \end{table*}

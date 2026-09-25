@@ -344,6 +344,7 @@ def run_benchmark_for_model(
     # Instantiate Controllers for Methods 2-6
     cka_75_skips = spec["cka_75_skips"]
     candidate_configs = spec["candidate_configs"]
+    cost_model = MeasuredActionCostModel.from_model_name(model_key, baseline_tps=vanilla_tps)
 
     methods_to_evaluate = [
         {
@@ -380,12 +381,13 @@ def run_benchmark_for_model(
             "controller": HardwareAwareJointController(
                 candidate_layer_configs=candidate_configs,
                 cost_model=cost_model,
+                candidate_k_values=[1, 2, 3, 4],
                 max_vram_mb=5500.0,
                 power_budget_w=80.0,
                 temp_threshold_c=80.0,
             ),
             "skips": None,  # Selected dynamically
-            "k": 2,
+            "k": 1,
         },
     ]
 
@@ -524,12 +526,13 @@ def run_gate_c_controller_stress_matrix(device: str = "cuda:0") -> list[dict[str
     logger.info("GATE C: HARDWARE CONTROLLER RUNTIME ADAPTATION & OUTCOME VALIDATION")
     logger.info("=" * 95)
 
-    cost_model = MeasuredActionCostModel.from_files()
+    cost_model = MeasuredActionCostModel.from_model_name("qwen25_3b", baseline_tps=42.94)
     configs = MODEL_SPECS["qwen25_3b"]["candidate_configs"]
 
     controller = HardwareAwareJointController(
         candidate_layer_configs=configs,
         cost_model=cost_model,
+        candidate_k_values=[1, 2, 3, 4],
         max_vram_mb=5500.0,
         power_budget_w=80.0,
         temp_threshold_c=80.0,
