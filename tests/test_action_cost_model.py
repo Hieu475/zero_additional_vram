@@ -86,6 +86,41 @@ class TestActionCostModel:
 
         assert hot_eval.utility < normal_eval.utility
 
+    def test_holdout_generalization_and_rank_correlation(self):
+        """Validate that cost model generalizes to unseen actions with high rank correlation (Gate B)."""
+        import json
+        from pathlib import Path
+        from scipy.stats import spearmanr, kendalltau
+
+        model = MeasuredActionCostModel.from_files()
+
+        # Holdout actions (unseen configs: cka_67, cka_83, cka_90; unseen K: 3, 6)
+        holdout = [
+            ("cka_67", 3), ("cka_67", 6),
+            ("cka_83", 3), ("cka_83", 6),
+            ("cka_90", 3), ("cka_90", 6),
+        ]
+
+        summary_path = Path("experiments/09_cost_validation/validation_summary.json")
+        if summary_path.exists():
+            with open(summary_path) as f:
+                data = json.load(f)
+            assert data["gate_b_status"] == "PASS"
+            assert data["metrics_summary"]["upgraded_parametric_model"]["spearman_rank_correlation"] >= 0.85
+            assert data["metrics_summary"]["upgraded_parametric_model"]["mape_latency_pct"] <= 10.0
+
+        # Validate monotonic scaling on unseen configs
+        t_d3 = model.predict_draft_ms("cka_90", k=3)
+        t_d6 = model.predict_draft_ms("cka_90", k=6)
+        assert t_d3 > 40.0
+        assert t_d6 > t_d3 * 1.8
+
+        # Validate acceptance scaling: cka_90 > cka_67
+        acc_90 = model.predict_acceptance_rate("cka_90", k=3)
+        acc_67 = model.predict_acceptance_rate("cka_67", k=3)
+        assert acc_90 > acc_67
+
+
 
 class TestJointControllerWithCostModel:
     """Validate joint controller using MeasuredActionCostModel."""

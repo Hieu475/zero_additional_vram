@@ -1,0 +1,61 @@
+{
+  "gate_b_status": "PASS",
+  "vanilla_baseline_tps": 36.066894051869596,
+  "calibration_set": {
+    "actions": [
+      "cka_50_K1",
+      "cka_50_K2",
+      "cka_50_K4",
+      "cka_60_K1",
+      "cka_60_K2",
+      "cka_60_K4",
+      "cka_75_K1",
+      "cka_75_K2",
+      "cka_75_K4"
+    ],
+    "num_actions": 9
+  },
+  "holdout_set": {
+    "actions": [
+      "cka_67_K3",
+      "cka_67_K6",
+      "cka_83_K3",
+      "cka_83_K6",
+      "cka_90_K3",
+      "cka_90_K6"
+    ],
+    "num_actions": 6
+  },
+  "parametric_model_parameters": {
+    "draft_beta_1": 0.523681597415923,
+    "draft_beta_0": 4.641466102492778,
+    "verify_gamma_1": 3.574345488938928,
+    "verify_gamma_0": 25.11646521334939,
+    "acc_w_r": 1.2529365270793948,
+    "acc_w_k": 0.0989259457812603,
+    "acc_w_0": -0.13933988594469332,
+    "cache_ms": 0.39879745211853085,
+    "energy_e_1": 0.05297939251901416,
+    "energy_e_0": 0.31547669058064354
+  },
+  "metrics_summary": {
+    "baseline_model": {
+      "mae_draft_ms": 27.861187655501926,
+      "mae_verify_ms": 4.212412578127217,
+      "mae_cycle_ms": 31.922500524195218,
+      "mape_latency_pct": 25.775199429138286,
+      "mae_energy_j_token": 0.3779989583333334,
+      "spearman_rank_correlation": 0.44136741475237473,
+      "kendall_tau_correlation": 0.3580574370197165
+    },
+    "upgraded_parametric_model": {
+      "mae_draft_ms": 2.3376317337787995,
+      "mae_verify_ms": 5.220234039259103,
+      "mae_cycle_ms": 6.950155786306742,
+      "mape_latency_pct": 5.681952376845135,
+      "mae_energy_j_token": 0.3914093439172999,
+      "spearman_rank_correlation": 1.0,
+      "kendall_tau_correlation": 0.9999999999999999
+    }
+  }
+}
