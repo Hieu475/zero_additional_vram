@@ -1,0 +1,31 @@
+% Exactness Verification & Numerical Divergence Analysis under 4-bit NF4 Quantization
+% Protocol: 100 token sequences evaluated across Qwen2.5-3B and Llama-3.2-3B
+\begin{table*}[t]
+\centering
+\small
+\caption{Exactness Analysis and Empirical Quantization Noise Diagnostic. The table reports logit cosine similarity, divergence occurrences, and representative audit traces. Divergences occur strictly when the top-1 vs.\ top-2 logit margin satisfies $\Delta \le 0.125$, confirming algorithmic verification correctness under NF4 dequantization noise.}
+\label{tab:exactness_analysis}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Metric / Parameter} & \multicolumn{3}{c}{\textbf{Qwen2.5-3B-Instruct}} & \multicolumn{3}{c}{\textbf{Llama-3.2-3B-Instruct}} \\
+\midrule
+Logit Cosine Similarity ($\cos \theta$) & \multicolumn{3}{c}{\textbf{0.99990}} & \multicolumn{3}{c}{\textbf{0.99992}} \\
+Total Evaluated Sequences & \multicolumn{3}{c}{50} & \multicolumn{3}{c}{50} \\
+Total Divergence Events ($N$) & \multicolumn{3}{c}{19} & \multicolumn{3}{c}{22} \\
+Median Divergence Margin ($\Delta_{\text{median}}$) & \multicolumn{3}{c}{0.000} & \multicolumn{3}{c}{0.000} \\
+Maximum Divergence Margin ($\Delta_{\text{max}}$) & \multicolumn{3}{c}{0.125} & \multicolumn{3}{c}{0.125} \\
+Noise Ceiling (\% where $\Delta \le 0.125$) & \multicolumn{3}{c}{100.0\%} & \multicolumn{3}{c}{100.0\%} \\
+\midrule
+\multicolumn{7}{l}{\textit{\textbf{Representative Divergence Event Trace (Empirical Logit Margins)}}} \\
+\textbf{Model \& Method} & \textbf{Pos} & \textbf{Vanilla Token} & \textbf{Spec Token} & \textbf{Top-1 Logit} & \textbf{Top-2 Logit} & $\boldsymbol{\Delta}$ \textbf{Margin} \\
+\midrule
+Qwen2.5 (CKA Fixed) & 11 & \texttt{" used"} & \texttt{" to"} & 32.500 & 32.500 & 0.000 (Exact Tie) \\
+Qwen2.5 (ZASSD HW) & 17 & \texttt{" ("} & \texttt{","} & 28.625 & 28.625 & 0.000 (Exact Tie) \\
+Qwen2.5 (KnapSpec) & 25 & \texttt{" ("} & \texttt{" numbers"} & 29.000 & 28.875 & 0.125 \\
+Qwen2.5 (Adaptive $K$) & 27 & \texttt{" two"} & \texttt{" an"} & 28.125 & 28.000 & 0.125 \\
+Llama-3.2 (CKA Fixed) & 4 & \texttt{" type"} & \texttt{" cognitive"} & 16.875 & 16.875 & 0.000 (Exact Tie) \\
+Llama-3.2 (SpecBound) & 13 & \texttt{" scaling"} & \texttt{" \""} & 13.375 & 13.375 & 0.000 (Exact Tie) \\
+Llama-3.2 (ZASSD HW) & 20 & \texttt{"."} & \texttt{" in"} & 22.000 & 21.875 & 0.125 \\
+\bottomrule
+\end{tabular}
+\end{table*}

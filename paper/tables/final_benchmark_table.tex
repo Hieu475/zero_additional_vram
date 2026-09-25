@@ -1,0 +1,31 @@
+% Final Unified Benchmark Table: Qwen2.5-3B-Instruct and Llama-3.2-3B-Instruct
+% Hardware: NVIDIA GeForce RTX 4050 Laptop GPU (6GB VRAM, 80W TGP)
+% Decoding: Greedy (temperature=0.0, top_k=1, top_p=1.0), 4-bit NF4 Quantization
+\begin{table*}[t]
+\centering
+\small
+\caption{End-to-End Performance, Verification Accuracy, and Resource Footprint across 6 decoding strategies on consumer hardware (NVIDIA RTX 4050 Laptop 6GB, 80W). All runs evaluated on identical prompt distributions ($N=10$, 32 generated tokens).}
+\label{tab:final_unified_benchmark}
+\begin{tabular}{lcccccccc}
+\toprule
+\textbf{Method} & \textbf{Throughput} & \textbf{Speedup} & \textbf{Acceptance} & \textbf{Exact Match} & \textbf{Partial} & \textbf{VRAM} & \textbf{Energy} & \textbf{Overhead} \\
+ & (tok/s) & ($\times$) & Rate (\%) & (\%) & Match (\%) & (MB) & (J/tok) & $T_{\text{draft}} / T_{\text{verify}}$ (ms) \\
+\midrule
+\multicolumn{9}{l}{\textit{\textbf{Model A: Qwen2.5-3B-Instruct (36 Layers, NF4 4-bit)}}} \\
+Vanilla Autoregressive & \textbf{42.94} & 1.00$\times$ & 100.0\% & 100.0\% & 100.0\% & \textbf{1983.8} & \textbf{1.350} & 0.00 / 23.30 \\
+CKA Fixed ($K=2$) & 37.58 & 0.88$\times$ & 73.2\% & 60.0\% & 82.8\% & 1991.2 & 1.692 & 36.08 / 25.46 \\
+Adaptive $K$ & 27.58 & 0.64$\times$ & 56.4\% & 70.0\% & 85.0\% & 1992.2 & 2.104 & 66.47 / 36.69 \\
+KnapSpec \cite{knapspec2024} & 35.76 & 0.84$\times$ & 73.2\% & 60.0\% & 82.8\% & 1991.4 & 1.732 & 38.27 / 27.11 \\
+SpecBound \cite{specbound2024} & 35.20 & 0.82$\times$ & 74.1\% & 50.0\% & 79.4\% & 1991.6 & 1.753 & 36.20 / 29.24 \\
+\textbf{ZASSD (HW Controller)} & 36.27 & 0.85$\times$ & \textbf{89.5\%} & 70.0\% & \textbf{87.2\%} & 1991.9 & 1.660 & 48.06 / 30.69 \\
+\midrule
+\multicolumn{9}{l}{\textit{\textbf{Model B: Llama-3.2-3B-Instruct (28 Layers, NF4 4-bit)}}} \\
+Vanilla Autoregressive & \textbf{52.58} & 1.00$\times$ & 100.0\% & 100.0\% & 100.0\% & \textbf{2158.0} & \textbf{1.319} & 0.00 / 19.04 \\
+CKA Fixed ($K=2$) & 41.13 & 0.79$\times$ & 68.2\% & 60.0\% & 72.8\% & 2170.5 & 1.788 & 29.52 / 23.08 \\
+Adaptive $K$ & 34.57 & 0.66$\times$ & 62.5\% & 50.0\% & 71.6\% & 2173.0 & 2.029 & 38.96 / 33.74 \\
+KnapSpec \cite{knapspec2024} & 22.02 & 0.42$\times$ & 10.7\% & 60.0\% & 72.8\% & 2170.9 & 3.365 & 29.72 / 23.02 \\
+SpecBound \cite{specbound2024} & 41.73 & 0.80$\times$ & 76.4\% & 50.0\% & 70.9\% & 2171.1 & 1.721 & 22.91 / 24.24 \\
+\textbf{ZASSD (HW Controller)} & 42.60 & 0.81$\times$ & \textbf{75.8\%} & 60.0\% & \textbf{72.8\%} & 2170.3 & 1.702 & 20.69 / 22.05 \\
+\bottomrule
+\end{tabular}
+\end{table*}

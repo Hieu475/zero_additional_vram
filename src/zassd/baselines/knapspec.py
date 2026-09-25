@@ -70,6 +70,7 @@ class KnapSpecController:
         budget_ratio: float = 0.75,
         fixed_k: int = 2,
         ranking_file: str | Path = "experiments/03_cka/layer_redundancy_ranking.json",
+        layer_ranks: Optional[list[int]] = None,
     ) -> None:
         self.total_layers = total_layers
         self.budget_ratio = budget_ratio
@@ -78,19 +79,25 @@ class KnapSpecController:
 
         # 1. Load layer redundancy / similarity scores
         layer_values = [1.0] * total_layers
-        p = Path(ranking_file)
-        if p.exists():
-            try:
-                with open(p) as f:
-                    ranking_data = json.load(f)
-                # Higher rank in ranking_data means higher uniqueness (lower redundancy)
-                # Therefore, keeping higher-ranked layers yields higher value
-                for item in ranking_data:
-                    idx = item["layer_idx"]
-                    if 0 <= idx < total_layers:
-                        layer_values[idx] = max(0.01, item["rank"] / float(total_layers))
-            except Exception as e:
-                logger.warning(f"Failed to load ranking data from {p}: {e}")
+        if layer_ranks is not None and len(layer_ranks) == total_layers:
+            # layer_ranks is sorted most redundant to least redundant.
+            # Least redundant layers have highest value.
+            for rank_pos, l_idx in enumerate(reversed(layer_ranks)):
+                if 0 <= l_idx < total_layers:
+                    layer_values[l_idx] = max(0.01, (rank_pos + 1) / float(total_layers))
+        else:
+            p = Path(ranking_file)
+            if p.exists():
+                try:
+                    with open(p) as f:
+                        ranking_data = json.load(f)
+                    for item in ranking_data:
+                        idx = item["layer_idx"]
+                        if 0 <= idx < total_layers:
+                            layer_values[idx] = max(0.01, item["rank"] / float(total_layers))
+                except Exception as e:
+                    logger.warning(f"Failed to load ranking data from {p}: {e}")
+
 
         # Uniform latency cost per layer: c_l = 1
         costs = [1] * total_layers
