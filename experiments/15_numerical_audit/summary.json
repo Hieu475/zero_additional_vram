@@ -1,0 +1,193 @@
+{
+  "status": "PASS",
+  "timestamp": "2026-09-26T14:16:53Z",
+  "total_evaluations": 450,
+  "models": {
+    "qwen25_3b": {
+      "model_key": "qwen25_3b",
+      "model_name": "Qwen2.5-3B-Instruct (36L, NF4)",
+      "total_evaluated_tokens": 225,
+      "total_argmax_flips": 0,
+      "overall_agreement_rate_pct": 100.0,
+      "mean_logit_cosine_similarity": 0.9999421,
+      "max_linf_norm": 0.5,
+      "mean_linf_norm": 0.21048,
+      "mean_per_vocab_abs_err": 0.0341166,
+      "theoretical_bound_violations": 0,
+      "scientific_verdict": "PASS: All argmax flips are mathematically bounded within the NF4 GEMM dequantization noise envelope. Zero theoretical bound violations observed (max Linf = 0.5000). For tokens with margin Delta > 2*Linf, argmax agreement is strictly 100.0%.",
+      "stratification_by_margin_bins": {
+        "margin == 0.0": {
+          "total_tokens": 2,
+          "argmax_flips": 0,
+          "flip_rate_pct": 0.0,
+          "agreement_rate_pct": 100.0,
+          "top2_agreement_pct": 100.0,
+          "max_linf": 0.1875,
+          "mean_linf": 0.1875,
+          "mean_abs_err": 0.0299915,
+          "mean_cosine_sim": 0.999951,
+          "mean_delta_margin": 0.0,
+          "bound_violations": 0
+        },
+        "0.0 < margin <= 0.05": {
+          "total_tokens": 0,
+          "argmax_flips": 0,
+          "flip_rate_pct": 0.0,
+          "agreement_rate_pct": 100.0,
+          "top2_agreement_pct": 100.0,
+          "max_linf": 0.0,
+          "mean_linf": 0.0,
+          "mean_abs_err": 0.0,
+          "mean_cosine_sim": 1.0,
+          "mean_delta_margin": 0.0,
+          "bound_violations": 0
+        },
+        "0.05 < margin <= 0.15": {
+          "total_tokens": 2,
+          "argmax_flips": 0,
+          "flip_rate_pct": 0.0,
+          "agreement_rate_pct": 100.0,
+          "top2_agreement_pct": 100.0,
+          "max_linf": 0.26562,
+          "mean_linf": 0.24219,
+          "mean_abs_err": 0.0429659,
+          "mean_cosine_sim": 0.9999122,
+          "mean_delta_margin": 0.0625,
+          "bound_violations": 0
+        },
+        "0.15 < margin <= 0.30": {
+          "total_tokens": 11,
+          "argmax_flips": 0,
+          "flip_rate_pct": 0.0,
+          "agreement_rate_pct": 100.0,
+          "top2_agreement_pct": 100.0,
+          "max_linf": 0.26807,
+          "mean_linf": 0.18772,
+          "mean_abs_err": 0.030939,
+          "mean_cosine_sim": 0.9999371,
+          "mean_delta_margin": 0.03409,
+          "bound_violations": 0
+        },
+        "0.30 < margin <= 0.50": {
+          "total_tokens": 13,
+          "argmax_flips": 0,
+          "flip_rate_pct": 0.0,
+          "agreement_rate_pct": 100.0,
+          "top2_agreement_pct": 100.0,
+          "max_linf": 0.28125,
+          "mean_linf": 0.22356,
+          "mean_abs_err": 0.0364031,
+          "mean_cosine_sim": 0.9999407,
+          "mean_delta_margin": 0.05769,
+          "bound_violations": 0
+        },
+        "margin > 0.50": {
+          "total_tokens": 197,
+          "argmax_flips": 0,
+          "flip_rate_pct": 0.0,
+          "agreement_rate_pct": 100.0,
+          "top2_agreement_pct": 96.45,
+          "max_linf": 0.5,
+          "mean_linf": 0.21079,
+          "mean_abs_err": 0.0340952,
+          "mean_cosine_sim": 0.9999427,
+          "mean_delta_margin": 0.06091,
+          "bound_violations": 0
+        }
+      }
+    },
+    "llama32_3b": {
+      "model_key": "llama32_3b",
+      "model_name": "Llama-3.2-3B-Instruct (28L, NF4)",
+      "total_evaluated_tokens": 225,
+      "total_argmax_flips": 1,
+      "overall_agreement_rate_pct": 99.56,
+      "mean_logit_cosine_similarity": 0.9999539,
+      "max_linf_norm": 0.23511,
+      "mean_linf_norm": 0.10328,
+      "mean_per_vocab_abs_err": 0.0144684,
+      "theoretical_bound_violations": 0,
+      "scientific_verdict": "PASS: All argmax flips are mathematically bounded within the NF4 GEMM dequantization noise envelope. Zero theoretical bound violations observed (max Linf = 0.2351). For tokens with margin Delta > 2*Linf, argmax agreement is strictly 100.0%.",
+      "stratification_by_margin_bins": {
+        "margin == 0.0": {
+          "total_tokens": 4,
+          "argmax_flips": 1,
+          "flip_rate_pct": 25.0,
+          "agreement_rate_pct": 75.0,
+          "top2_agreement_pct": 100.0,
+          "max_linf": 0.125,
+          "mean_linf": 0.10938,
+          "mean_abs_err": 0.0145007,
+          "mean_cosine_sim": 0.9999722,
+          "mean_delta_margin": 0.01562,
+          "bound_violations": 0
+        },
+        "0.0 < margin <= 0.05": {
+          "total_tokens": 0,
+          "argmax_flips": 0,
+          "flip_rate_pct": 0.0,
+          "agreement_rate_pct": 100.0,
+          "top2_agreement_pct": 100.0,
+          "max_linf": 0.0,
+          "mean_linf": 0.0,
+          "mean_abs_err": 0.0,
+          "mean_cosine_sim": 1.0,
+          "mean_delta_margin": 0.0,
+          "bound_violations": 0
+        },
+        "0.05 < margin <= 0.15": {
+          "total_tokens": 10,
+          "argmax_flips": 0,
+          "flip_rate_pct": 0.0,
+          "agreement_rate_pct": 100.0,
+          "top2_agreement_pct": 100.0,
+          "max_linf": 0.125,
+          "mean_linf": 0.09531,
+          "mean_abs_err": 0.0115242,
+          "mean_cosine_sim": 0.9999671,
+          "mean_delta_margin": 0.03125,
+          "bound_violations": 0
+        },
+        "0.15 < margin <= 0.30": {
+          "total_tokens": 11,
+          "argmax_flips": 0,
+          "flip_rate_pct": 0.0,
+          "agreement_rate_pct": 100.0,
+          "top2_agreement_pct": 100.0,
+          "max_linf": 0.1875,
+          "mean_linf": 0.10653,
+          "mean_abs_err": 0.0144194,
+          "mean_cosine_sim": 0.9999654,
+          "mean_delta_margin": 0.03409,
+          "bound_violations": 0
+        },
+        "0.30 < margin <= 0.50": {
+          "total_tokens": 20,
+          "argmax_flips": 0,
+          "flip_rate_pct": 0.0,
+          "agreement_rate_pct": 100.0,
+          "top2_agreement_pct": 100.0,
+          "max_linf": 0.16406,
+          "mean_linf": 0.08906,
+          "mean_abs_err": 0.0118332,
+          "mean_cosine_sim": 0.9999714,
+          "mean_delta_margin": 0.0125,
+          "bound_violations": 0
+        },
+        "margin > 0.50": {
+          "total_tokens": 180,
+          "argmax_flips": 0,
+          "flip_rate_pct": 0.0,
+          "agreement_rate_pct": 100.0,
+          "top2_agreement_pct": 100.0,
+          "max_linf": 0.23511,
+          "mean_linf": 0.10496,
+          "mean_abs_err": 0.0149271,
+          "mean_cosine_sim": 0.9999501,
+          "mean_delta_margin": 0.02917,
+          "bound_violations": 0
+        }
+      }
+    }
+  }
+}

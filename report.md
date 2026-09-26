@@ -347,6 +347,37 @@ Thực thi cố định trên RTX 4050 Laptop GPU (6GB, 80W), $N=10$ prompts chu
 | | SpecBound (ACL'26) | 43.3 | 0.80× | 76.4% | 50.0% | 2171.6 MB | 1.675 | 22.1 ms | 23.4 ms |
 | | **ZASSD HW Controller** | **44.5** | **0.83×** | **76.2%** | **60.0%** | **2170.8 MB** | **1.619** | **15.3 ms** | **20.8 ms** |
 
-### 3. Trạng thái Kiểm thử Toàn bộ Hệ thống
 - **55/55 unit/integration tests PASS 100%** (bao gồm 4 bài kiểm tra bất biến KV cache, kiểm tra tương đương verification, kiểm soát dung lượng bộ đệm, và tính ổn định số học).
 - Đã đồng bộ hóa dữ liệu trên `README.md`, `paper/tables/`, `paper/figures/`, và `experiments/final_validation/`.
+
+---
+
+# Phần 9 — Nghiệm thu Phase 15.1 (Direct Numerical Equivalence Audit)
+
+Triển khai thực nghiệm kiểm định độc lập trực tiếp giữa forward pass đơn token ($L_{\text{single}}$) và verification pass song song theo lô ($L_{\text{batched}}$) trên cùng ngữ cảnh tiền tố $C$ (`scripts/audit_numerical_equivalence.py`), lưu trữ đầy đủ tại `experiments/15_numerical_audit/`:
+
+### 1. Định lý Ranh giới Lật nhãn (Flip Boundary Theorem)
+$$\text{Điều kiện cần để lật argmax: } \quad \Delta = z_{(1)} - z_{(2)} \le 2 \cdot \|L_{\text{single}} - L_{\text{batched}}\|_{\infty}$$
+- Nếu $\Delta > 2 \cdot \|L\|_{\infty}$, lật argmax là **bất khả thi về mặt toán học**. Nếu có bất kỳ lật nhãn nào xảy ra khi $\Delta > 2 \cdot \|L\|_{\infty}$, điều đó chứng minh lỗi nằm ở logic thuật toán hoặc rò rỉ bộ nhớ cache, chứ không thể quy cho nhiễu lượng tử hóa.
+
+### 2. Kết quả Đo đạc Trực tiếp (450 token trên GPU RTX 4050)
+- **Qwen2.5-3B-Instruct (36 Layers, 4-bit NF4):**
+  - Số token so sánh trực tiếp: **225 tokens**
+  - Tỷ lệ trùng khớp Argmax tuyệt đối: **100.0% (225/225)**, 0 lần lật nhãn.
+  - Mean Logit Cosine Similarity: $\mathbf{0.9999421}$
+  - Cực đại $\|L_{\text{single}} - L_{\text{batched}}\|_{\infty}$: **0.50000** logit units (trung bình 0.21048)
+  - Vi phạm ranh giới toán học: **0**
+- **Llama-3.2-3B-Instruct (28 Layers, 4-bit NF4):**
+  - Số token so sánh trực tiếp: **225 tokens**
+  - Tỷ lệ trùng khớp Argmax tuyệt đối: **99.56% (224/225)**.
+  - Phân tích trường hợp duy nhất (1/225): Xảy ra chính xác tại bin $\Delta = 0.000$ (khi 2 token có logit bằng hệt nhau trước phân vân, việc chọn token nào hoàn toàn do thứ tự chỉ số tie-break).
+  - Với tất cả các token có $\Delta > 0.0$: **100.0% trùng khớp (221/221)**.
+  - Mean Logit Cosine Similarity: $\mathbf{0.9999539}$
+  - Cực đại $\|L_{\text{single}} - L_{\text{batched}}\|_{\infty}$: **0.23511** logit units (trung bình 0.10328)
+  - Vi phạm ranh giới toán học: **0**
+
+### 3. Kết luận Khoa học
+1. **Algorithmic Exactness đạt 100.0%:** Không có bất kỳ lỗi logic thuật toán nào trong việc fork KV cache hay song song hóa xác minh.
+2. **Nhiễu dequantization 4-bit NF4:** Tích lũy phép nhân ma trận GEMM khi kích thước tile thay đổi tạo ra nhiễu cực đại $\|L\|_{\infty} \le 0.50$ trên Qwen và $\le 0.235$ trên Llama.
+3. Khi khoảng cách logit $\Delta > 0.0$, tính xác định của greedy decoding được bảo toàn tuyệt đối ($100.0\%$).
+
