@@ -1,0 +1,195 @@
+{
+  "status": "PASS",
+  "timestamp": "2026-09-26T15:51:57Z",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "torch_version": "2.11.0+cu128",
+    "cuda_version": "12.8",
+    "platform": "Linux-6.8.0-94-generic-x86_64-with-glibc2.39"
+  },
+  "formula": "T_draft = T_transformer + T_KV + T_layer-management + T_sampling + T_sync",
+  "models": {
+    "qwen25_3b": {
+      "model_name": "Qwen2.5-3B-Instruct (36L, NF4)",
+      "skip_config": "cka_75",
+      "skip_ratio": 0.25,
+      "profile": {
+        "K1": {
+          "k": 1,
+          "total_draft_latency_ms": 19.72,
+          "total_draft_latency_std_ms": 1.08,
+          "decomposition_ms": {
+            "t_transformer_ms": 19.03,
+            "t_kv_ms": 0.56,
+            "t_layer_mgmt_ms": 0.06,
+            "t_sampling_ms": 0.06,
+            "t_sync_ms": 0.0
+          },
+          "fractions_pct": {
+            "t_transformer_pct": 96.53,
+            "t_kv_pct": 2.84,
+            "t_layer_mgmt_pct": 0.28,
+            "t_sampling_pct": 0.33,
+            "t_sync_pct": 0.02
+          },
+          "validation": {
+            "cuda_event_forward_ms": 19.78,
+            "residual_model_alignment_pct": 0.63
+          },
+          "scientific_conclusion": {
+            "primary_bottleneck": "Transformer Computation (MHA + MLP 4-bit GEMMs on Kept Layers)",
+            "bottleneck_fraction_pct": 96.53,
+            "non_compute_overhead_pct": 3.47
+          }
+        },
+        "K2": {
+          "k": 2,
+          "total_draft_latency_ms": 38.44,
+          "total_draft_latency_std_ms": 1.34,
+          "decomposition_ms": {
+            "t_transformer_ms": 37.19,
+            "t_kv_ms": 1.1,
+            "t_layer_mgmt_ms": 0.06,
+            "t_sampling_ms": 0.1,
+            "t_sync_ms": 0.0
+          },
+          "fractions_pct": {
+            "t_transformer_pct": 96.74,
+            "t_kv_pct": 2.85,
+            "t_layer_mgmt_pct": 0.14,
+            "t_sampling_pct": 0.26,
+            "t_sync_pct": 0.01
+          },
+          "validation": {
+            "cuda_event_forward_ms": 38.54,
+            "residual_model_alignment_pct": 0.42
+          },
+          "scientific_conclusion": {
+            "primary_bottleneck": "Transformer Computation (MHA + MLP 4-bit GEMMs on Kept Layers)",
+            "bottleneck_fraction_pct": 96.74,
+            "non_compute_overhead_pct": 3.26
+          }
+        },
+        "K4": {
+          "k": 4,
+          "total_draft_latency_ms": 76.81,
+          "total_draft_latency_std_ms": 5.27,
+          "decomposition_ms": {
+            "t_transformer_ms": 74.5,
+            "t_kv_ms": 2.09,
+            "t_layer_mgmt_ms": 0.06,
+            "t_sampling_ms": 0.16,
+            "t_sync_ms": 0.0
+          },
+          "fractions_pct": {
+            "t_transformer_pct": 96.98,
+            "t_kv_pct": 2.73,
+            "t_layer_mgmt_pct": 0.07,
+            "t_sampling_pct": 0.21,
+            "t_sync_pct": 0.01
+          },
+          "validation": {
+            "cuda_event_forward_ms": 76.08,
+            "residual_model_alignment_pct": 0.87
+          },
+          "scientific_conclusion": {
+            "primary_bottleneck": "Transformer Computation (MHA + MLP 4-bit GEMMs on Kept Layers)",
+            "bottleneck_fraction_pct": 96.98,
+            "non_compute_overhead_pct": 3.02
+          }
+        }
+      }
+    },
+    "llama32_3b": {
+      "model_name": "Llama-3.2-3B-Instruct (28L, NF4)",
+      "skip_config": "cka_75",
+      "skip_ratio": 0.25,
+      "profile": {
+        "K1": {
+          "k": 1,
+          "total_draft_latency_ms": 15.33,
+          "total_draft_latency_std_ms": 1.03,
+          "decomposition_ms": {
+            "t_transformer_ms": 14.74,
+            "t_kv_ms": 0.45,
+            "t_layer_mgmt_ms": 0.06,
+            "t_sampling_ms": 0.07,
+            "t_sync_ms": 0.0
+          },
+          "fractions_pct": {
+            "t_transformer_pct": 96.17,
+            "t_kv_pct": 2.94,
+            "t_layer_mgmt_pct": 0.38,
+            "t_sampling_pct": 0.49,
+            "t_sync_pct": 0.02
+          },
+          "validation": {
+            "cuda_event_forward_ms": 15.28,
+            "residual_model_alignment_pct": 0.12
+          },
+          "scientific_conclusion": {
+            "primary_bottleneck": "Transformer Computation (MHA + MLP 4-bit GEMMs on Kept Layers)",
+            "bottleneck_fraction_pct": 96.17,
+            "non_compute_overhead_pct": 3.83
+          }
+        },
+        "K2": {
+          "k": 2,
+          "total_draft_latency_ms": 30.72,
+          "total_draft_latency_std_ms": 1.64,
+          "decomposition_ms": {
+            "t_transformer_ms": 29.68,
+            "t_kv_ms": 0.85,
+            "t_layer_mgmt_ms": 0.06,
+            "t_sampling_ms": 0.12,
+            "t_sync_ms": 0.0
+          },
+          "fractions_pct": {
+            "t_transformer_pct": 96.63,
+            "t_kv_pct": 2.77,
+            "t_layer_mgmt_pct": 0.2,
+            "t_sampling_pct": 0.39,
+            "t_sync_pct": 0.01
+          },
+          "validation": {
+            "cuda_event_forward_ms": 30.32,
+            "residual_model_alignment_pct": 1.1
+          },
+          "scientific_conclusion": {
+            "primary_bottleneck": "Transformer Computation (MHA + MLP 4-bit GEMMs on Kept Layers)",
+            "bottleneck_fraction_pct": 96.63,
+            "non_compute_overhead_pct": 3.37
+          }
+        },
+        "K4": {
+          "k": 4,
+          "total_draft_latency_ms": 61.35,
+          "total_draft_latency_std_ms": 2.96,
+          "decomposition_ms": {
+            "t_transformer_ms": 59.43,
+            "t_kv_ms": 1.63,
+            "t_layer_mgmt_ms": 0.06,
+            "t_sampling_ms": 0.23,
+            "t_sync_ms": 0.0
+          },
+          "fractions_pct": {
+            "t_transformer_pct": 96.87,
+            "t_kv_pct": 2.65,
+            "t_layer_mgmt_pct": 0.1,
+            "t_sampling_pct": 0.37,
+            "t_sync_pct": 0.01
+          },
+          "validation": {
+            "cuda_event_forward_ms": 61.47,
+            "residual_model_alignment_pct": 0.3
+          },
+          "scientific_conclusion": {
+            "primary_bottleneck": "Transformer Computation (MHA + MLP 4-bit GEMMs on Kept Layers)",
+            "bottleneck_fraction_pct": 96.87,
+            "non_compute_overhead_pct": 3.13
+          }
+        }
+      }
+    }
+  }
+}

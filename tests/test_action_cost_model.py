@@ -144,3 +144,36 @@ class TestJointControllerWithCostModel:
         # Due to empirical quality dominance, CKA-83 should be preferred over CKA-50
         assert action.config_name == "cka_83"
         assert 1 <= action.draft_length <= 8
+
+    def test_model_cost_profiles_isolation(self):
+        """Phase 15.3: Ensure strict model-specific profile isolation for Qwen and Llama."""
+        from zassd.profiling.action_cost_model import Qwen25_3B_CostProfile, Llama32_3B_CostProfile
+
+        # Qwen isolation
+        qwen_model = MeasuredActionCostModel.for_model("qwen25_3b")
+        assert qwen_model.total_layers == 36
+        assert qwen_model.profile == Qwen25_3B_CostProfile
+        assert qwen_model.predict_draft_ms("cka_75", k=1) == 19.72
+        assert qwen_model.predict_draft_ms("cka_75", k=2) == 38.44
+
+        # Llama isolation
+        llama_model = MeasuredActionCostModel.for_model("llama32_3b")
+        assert llama_model.total_layers == 28
+        assert llama_model.profile == Llama32_3B_CostProfile
+        assert llama_model.predict_draft_ms("cka_75", k=1) == 15.33
+        assert llama_model.predict_draft_ms("cka_75", k=2) == 30.72
+
+        # Controller model-binding verification
+        qwen_ctrl = HardwareAwareJointController(
+            candidate_layer_configs={"cka_75": [3, 5, 7, 9]},
+            model_name="qwen25_3b",
+        )
+        assert qwen_ctrl.cost_model.total_layers == 36
+        assert qwen_ctrl.cost_model.model_name == "qwen25_3b"
+
+        llama_ctrl = HardwareAwareJointController(
+            candidate_layer_configs={"cka_75": [2, 4, 6]},
+            model_name="llama32_3b",
+        )
+        assert llama_ctrl.cost_model.total_layers == 28
+        assert llama_ctrl.cost_model.model_name == "llama32_3b"

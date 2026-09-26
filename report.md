@@ -381,3 +381,64 @@ $$\text{Điều kiện cần để lật argmax: } \quad \Delta = z_{(1)} - z_{(
 2. **Nhiễu dequantization 4-bit NF4:** Tích lũy phép nhân ma trận GEMM khi kích thước tile thay đổi tạo ra nhiễu cực đại $\|L\|_{\infty} \le 0.50$ trên Qwen và $\le 0.235$ trên Llama.
 3. Khi khoảng cách logit $\Delta > 0.0$, tính xác định của greedy decoding được bảo toàn tuyệt đối ($100.0\%$).
 
+---
+
+# Phần 10 — Nghiệm thu Phase 15.2 (Draft Latency Decomposition)
+
+Thực thi micro-profiling phần cứng độc lập trực tiếp trên NVIDIA RTX 4050 (`scripts/profile_draft_engine.py`), phân rã độ trễ draft theo công thức chính xác:
+$$T_{\text{draft}} = T_{\text{transformer}} + T_{\text{KV}} + T_{\text{layer-management}} + T_{\text{sampling}} + T_{\text{sync}}$$
+
+### 1. Bảng số liệu phân rã thực tế (CKA 75%, 30 trials, RTX 4050)
+- **Qwen2.5-3B-Instruct (36 Layers, 27 Active, 9 Skipped):**
+  - $K=1$: Tổng $19.72\text{ ms}$ | $T_{\text{trans}} = 19.03\text{ ms}$ (**$96.53\%$**) | $T_{\text{KV}} = 0.56\text{ ms}$ ($2.84\%$) | $T_{\text{layer}} = 0.06\text{ ms}$ ($0.28\%$) | $T_{\text{samp}} = 0.06\text{ ms}$ ($0.33\%$) | $T_{\text{sync}} = 0.00\text{ ms}$ ($0.02\%$)
+  - $K=2$: Tổng $38.44\text{ ms}$ | $T_{\text{trans}} = 37.19\text{ ms}$ (**$96.74\%$**) | $T_{\text{KV}} = 1.10\text{ ms}$ ($2.85\%$) | $T_{\text{layer}} = 0.06\text{ ms}$ ($0.14\%$) | $T_{\text{samp}} = 0.10\text{ ms}$ ($0.26\%$) | $T_{\text{sync}} = 0.00\text{ ms}$ ($0.01\%$)
+  - $K=4$: Tổng $76.81\text{ ms}$ | $T_{\text{trans}} = 74.50\text{ ms}$ (**$96.98\%$**) | $T_{\text{KV}} = 2.09\text{ ms}$ ($2.73\%$) | $T_{\text{layer}} = 0.06\text{ ms}$ ($0.07\%$) | $T_{\text{samp}} = 0.16\text{ ms}$ ($0.21\%$) | $T_{\text{sync}} = 0.00\text{ ms}$ ($0.01\%$)
+- **Llama-3.2-3B-Instruct (28 Layers, 21 Active, 7 Skipped):**
+  - $K=1$: Tổng $15.33\text{ ms}$ | $T_{\text{trans}} = 14.74\text{ ms}$ (**$96.17\%$**) | $T_{\text{KV}} = 0.45\text{ ms}$ ($2.94\%$) | $T_{\text{layer}} = 0.06\text{ ms}$ ($0.38\%$) | $T_{\text{samp}} = 0.07\text{ ms}$ ($0.49\%$) | $T_{\text{sync}} = 0.00\text{ ms}$ ($0.02\%$)
+  - $K=2$: Tổng $30.72\text{ ms}$ | $T_{\text{trans}} = 29.68\text{ ms}$ (**$96.63\%$**) | $T_{\text{KV}} = 0.85\text{ ms}$ ($2.77\%$) | $T_{\text{layer}} = 0.06\text{ ms}$ ($0.20\%$) | $T_{\text{samp}} = 0.12\text{ ms}$ ($0.39\%$) | $T_{\text{sync}} = 0.00\text{ ms}$ ($0.01\%$)
+  - $K=4$: Tổng $61.35\text{ ms}$ | $T_{\text{trans}} = 59.43\text{ ms}$ (**$96.87\%$**) | $T_{\text{KV}} = 1.63\text{ ms}$ ($2.65\%$) | $T_{\text{layer}} = 0.06\text{ ms}$ ($0.10\%$) | $T_{\text{samp}} = 0.23\text{ ms}$ ($0.37\%$) | $T_{\text{sync}} = 0.00\text{ ms}$ ($0.01\%$)
+
+### 2. Định danh Nút thắt Cổ chai (Bottleneck Proof)
+- Điểm nghẽn vật lý duy nhất là **Transformer GEMM computation ($96.2\% - 97.0\%$)**.
+- Toàn bộ chi phí phần mềm (layer context manager, DynamicCache allocation, argmax sampling, cuda stream fence) chỉ chiếm **$<3.8\%$** kết hợp. Kỹ thuật Layer Skipping tấn công trực diện vào điểm nghẽn chính xác của hệ thống.
+
+---
+
+# Phần 11 — Nghiệm thu Phase 15.3 (Cost Model Surface Audit)
+
+- Tách lập hoàn toàn cấu trúc hồ sơ chi phí theo mô hình:
+  - `Qwen25_3B_CostProfile` (36L, baseline $41.5\text{ tok/s}$, $K_1=19.72\text{ ms}$, $\beta_1=0.5237, \gamma_0=23.30$).
+  - `Llama32_3B_CostProfile` (28L, baseline $54.1\text{ tok/s}$, $K_1=15.33\text{ ms}$, $\beta_1=0.5120, \gamma_0=19.04$).
+- Loại bỏ hoàn toàn sự phụ thuộc lẫn lộn giữa dữ liệu thực nghiệm cũ, các hằng số fallback tự do và bộ điều khiển.
+- Bộ điều khiển `HardwareAwareJointController` tự động gắn kết độc quyền với đúng profile của mô hình mục tiêu thông qua `MeasuredActionCostModel.for_model(model_name)`.
+
+---
+
+# Phần 12 — Nghiệm thu Phase 15.4 (Closed-Loop Telemetry & Replay Audit)
+
+- Tái thiết kế [`scripts/run_telemetry_replay_experiment.py`](file:///home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/run_telemetry_replay_experiment.py):
+  1. **Thu thập Telemetry Tự suy đoán Trực tiếp:** Chạy thực tế các chu kỳ self-speculative decoding trên GPU, ghi lại liên tục $T, P, V, H_t$ cùng độ trễ draft/verify thực tế và số lượng token được chấp nhận.
+  2. **Vòng lặp Phản hồi Kín Hoàn toàn (Closed-Loop):** Loại bỏ triệt để các hằng số cố định (`draft_ms=18.0`, `verify_ms=23.0`). Đầu vào của chu kỳ $t+1$ được nuôi dưỡng trực tiếp từ kết quả chu kỳ $t$.
+  3. **Tái hiện Quỹ đạo (Replay):** Quỹ đạo offline khớp chính xác $86.7\%$ trên Qwen và $73.3\%$ trên Llama so với chu kỳ online, kiểm chứng tính ổn định của quyết định phần cứng.
+
+---
+
+# Phần 13 — Nghiệm thu Phase 15.5 & Đóng băng Toàn bộ Hệ thống (Final Unified Benchmark & Narrative Freeze)
+
+- **Kết quả Benchmark Hợp nhất Chuẩn (RTX 4050 Laptop GPU):**
+  - **Qwen2.5-3B-Instruct (36L, NF4):**
+    - Vanilla: $41.0\text{ tok/s}$ ($1.00\times$), $1983.8\text{ MB}$, $1.376\text{ J/tok}$.
+    - ZASSD HW Controller: **$36.5\text{ tok/s}$ ($0.89\times$)**, **$88.1\%$ Acceptance**, **$1991.2\text{ MB}$ (+7.4 MB)**, **$1.643\text{ J/tok}$**.
+  - **Llama-3.2-3B-Instruct (28L, NF4):**
+    - Vanilla: $52.0\text{ tok/s}$ ($1.00\times$), $2158.5\text{ MB}$, $1.355\text{ J/tok}$.
+    - ZASSD HW Controller: **$42.6\text{ tok/s}$ ($0.82\times$)**, **$78.2\%$ Acceptance**, **$2170.8\text{ MB}$ (+12.3 MB)**, **$1.683\text{ J/tok}$**.
+- **Khai thác Toàn bộ Bộ Kiểm thử:** **56/56 unit/integration tests PASS 100%**.
+- **Đóng băng Câu chuyện Nghiên cứu (Research Story Freeze):**
+  - Tập trung trung thực vào 5 trụ cột khoa học:
+    1. **Zero Additional Model-Weight VRAM** (0 MB phụ trội so với 1.5–3 GB của mô hình draft ngoài).
+    2. **Self-Speculative Decoding** không cần huấn luyện lại.
+    3. **Hardware-Aware Adaptive Control** bảo vệ an toàn nhiệt/điện/VRAM.
+    4. **Trade-off Đa mục tiêu** giữa tỷ lệ chấp nhận ($78\%-88\%$), độ trễ chu kỳ, năng lượng và bộ đệm động.
+    5. **Tính ổn định Số học dưới Lượng tử hóa 4-bit NF4** (0 vi phạm biên lý thuyết).
+  - Không xây dựng tuyên bố phóng đại "ZASSD luôn nhanh hơn vanilla", mà nhấn mạnh bản chất tối ưu hóa tài nguyên phần cứng trên thiết bị biên.
+

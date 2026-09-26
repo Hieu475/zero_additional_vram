@@ -386,6 +386,7 @@ def run_benchmark_for_model(
             "controller": HardwareAwareJointController(
                 candidate_layer_configs=candidate_configs,
                 cost_model=cost_model,
+                model_name=model_key,
                 candidate_k_values=[1, 2, 3, 4],
                 max_vram_mb=5500.0,
                 power_budget_w=80.0,

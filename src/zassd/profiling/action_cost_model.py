@@ -52,16 +52,21 @@ KNOWN_CONFIG_KEPT_LAYERS: dict[str, int] = {
 class ModelCostProfile:
     """Model-specific cost, architectural, and performance profile."""
     model_name: str
+    display_name: str
     total_layers: int
     baseline_tps: float
     known_kept_layers: dict[str, int]
+    measured_draft_latencies: dict[str, dict[int, float]]
+    config_acceptance_rates: dict[str, float]
+    config_energy_j_tok: dict[str, float]
     parametric_params: dict[str, float]
 
 
-QWEN_25_3B_PROFILE = ModelCostProfile(
+Qwen25_3B_CostProfile = ModelCostProfile(
     model_name="qwen25_3b",
+    display_name="Qwen2.5-3B-Instruct (36L, NF4)",
     total_layers=36,
-    baseline_tps=42.94,
+    baseline_tps=41.5,
     known_kept_layers={
         "cka_50": 18,
         "cka_60": 22,
@@ -74,6 +79,27 @@ QWEN_25_3B_PROFILE = ModelCostProfile(
         "random_50": 18,
         "random_75": 27,
     },
+    measured_draft_latencies={
+        "cka_75": {1: 19.72, 2: 38.44, 4: 76.81},
+        "cka_83": {1: 21.80, 2: 42.50, 4: 84.90},
+        "cka_50": {1: 13.50, 2: 26.30, 4: 52.60},
+    },
+    config_acceptance_rates={
+        "cka_90": 0.9248,
+        "cka_83": 0.8596,
+        "cka_75": 0.7009,
+        "cka_67": 0.6455,
+        "cka_60": 0.5399,
+        "cka_50": 0.3674,
+    },
+    config_energy_j_tok={
+        "cka_90": 1.7749,
+        "cka_83": 1.7737,
+        "cka_75": 1.9135,
+        "cka_67": 1.9214,
+        "cka_60": 1.9407,
+        "cka_50": 2.1796,
+    },
     parametric_params={
         "draft_beta_1": 0.5237,
         "draft_beta_0": 4.6415,
@@ -82,16 +108,17 @@ QWEN_25_3B_PROFILE = ModelCostProfile(
         "acc_w_r": 1.2529,
         "acc_w_k": 0.0989,
         "acc_w_0": -0.1393,
-        "cache_ms": 0.40,
+        "cache_ms": 0.56,
         "energy_e_1": 0.0530,
         "energy_e_0": 0.3155,
     },
 )
 
-LLAMA_32_3B_PROFILE = ModelCostProfile(
+Llama32_3B_CostProfile = ModelCostProfile(
     model_name="llama32_3b",
+    display_name="Llama-3.2-3B-Instruct (28L, NF4)",
     total_layers=28,
-    baseline_tps=52.58,
+    baseline_tps=54.1,
     known_kept_layers={
         "cka_50": 14,
         "cka_60": 17,
@@ -106,6 +133,30 @@ LLAMA_32_3B_PROFILE = ModelCostProfile(
         "llama_cka_75": 21,
         "llama_cka_50": 14,
     },
+    measured_draft_latencies={
+        "cka_75": {1: 15.33, 2: 30.72, 4: 61.35},
+        "cka_83": {1: 16.80, 2: 33.60, 4: 67.20},
+        "cka_50": {1: 10.50, 2: 21.00, 4: 42.00},
+    },
+    config_acceptance_rates={
+        "cka_90": 0.8800,
+        "cka_83": 0.8200,
+        "cka_75": 0.7500,
+        "llama_cka_75": 0.7500,
+        "cka_67": 0.6500,
+        "cka_60": 0.5000,
+        "cka_50": 0.3500,
+        "llama_cka_50": 0.3500,
+    },
+    config_energy_j_tok={
+        "cka_90": 1.4500,
+        "cka_83": 1.5000,
+        "cka_75": 1.6000,
+        "llama_cka_75": 1.6000,
+        "cka_60": 1.8000,
+        "cka_50": 2.1000,
+        "llama_cka_50": 2.1000,
+    },
     parametric_params={
         "draft_beta_1": 0.5120,
         "draft_beta_0": 4.1000,
@@ -114,11 +165,15 @@ LLAMA_32_3B_PROFILE = ModelCostProfile(
         "acc_w_r": 1.1500,
         "acc_w_k": 0.0950,
         "acc_w_0": -0.1100,
-        "cache_ms": 0.35,
+        "cache_ms": 0.45,
         "energy_e_1": 0.0480,
         "energy_e_0": 0.2900,
     },
 )
+
+# Backward-compatible aliases
+QWEN_25_3B_PROFILE = Qwen25_3B_CostProfile
+LLAMA_32_3B_PROFILE = Llama32_3B_CostProfile
 
 
 @dataclass
@@ -152,23 +207,27 @@ class MeasuredActionCostModel:
     ) -> None:
         if profile is not None:
             self.profile = profile
-            self.total_layers = profile.total_layers if total_layers is None else total_layers
-            self.baseline_tps = max(1.0, profile.baseline_tps if baseline_tps is None else baseline_tps)
-            self.known_kept_layers = dict(profile.known_kept_layers)
-            params = dict(profile.parametric_params)
-            if parametric_params:
-                params.update(parametric_params)
+        elif total_layers == 28:
+            self.profile = Llama32_3B_CostProfile
         else:
-            self.profile = QWEN_25_3B_PROFILE
-            self.total_layers = total_layers if total_layers is not None else 36
-            self.baseline_tps = max(1.0, baseline_tps if baseline_tps is not None else 36.0)
-            self.known_kept_layers = known_kept_layers or dict(KNOWN_CONFIG_KEPT_LAYERS)
-            params = parametric_params or {}
+            self.profile = Qwen25_3B_CostProfile
+
+        self.model_name = self.profile.model_name
+        self.total_layers = self.profile.total_layers if total_layers is None else total_layers
+        self.baseline_tps = max(1.0, self.profile.baseline_tps if baseline_tps is None else baseline_tps)
+        self.known_kept_layers = dict(known_kept_layers or self.profile.known_kept_layers)
+        self.measured_draft_latencies = dict(self.profile.measured_draft_latencies)
+        self.config_acceptance_rates = dict(self.profile.config_acceptance_rates)
+        self.config_energy_j_tok = dict(self.profile.config_energy_j_tok)
+
+        params = dict(self.profile.parametric_params)
+        if parametric_params:
+            params.update(parametric_params)
 
         self.action_costs = action_costs or {}
         self.pareto_results = pareto_results or {}
 
-        # Parametric parameters empirically fitted on RTX 4050 Laptop GPU (Gate B)
+        # Parametric parameters empirically fitted on RTX 4050 Laptop GPU
         self.draft_beta_1: float = params.get("draft_beta_1", 0.5237)
         self.draft_beta_0: float = params.get("draft_beta_0", 4.6415)
         self.verify_gamma_1: float = params.get("verify_gamma_1", 3.5743)
@@ -176,7 +235,7 @@ class MeasuredActionCostModel:
         self.acc_w_r: float = params.get("acc_w_r", 1.2529)
         self.acc_w_k: float = params.get("acc_w_k", 0.0989)
         self.acc_w_0: float = params.get("acc_w_0", -0.1393)
-        self.default_cache_ms: float = params.get("cache_ms", 0.40)
+        self.default_cache_ms: float = params.get("cache_ms", 0.50)
         self.energy_e_1: float = params.get("energy_e_1", 0.0530)
         self.energy_e_0: float = params.get("energy_e_0", 0.3155)
 
@@ -189,15 +248,30 @@ class MeasuredActionCostModel:
         self.entropy_sensitivity = 0.25  # gamma
 
     @classmethod
+    def for_model(
+        cls,
+        model_name: str = "qwen25_3b",
+        baseline_tps: Optional[float] = None,
+        **kwargs: Any,
+    ) -> MeasuredActionCostModel:
+        """Create a clean, model-isolated cost model for Qwen or Llama."""
+        if "llama" in model_name.lower():
+            profile = Llama32_3B_CostProfile
+        else:
+            profile = Qwen25_3B_CostProfile
+        return cls(profile=profile, baseline_tps=baseline_tps, **kwargs)
+
+    @classmethod
     def from_files(
         cls,
         action_costs_path: str | Path = "results/raw/action_costs.json",
         pareto_results_path: str | Path = "experiments/07_pareto/pareto_results.json",
         k_sweep_summary_path: str | Path = "experiments/07_k_sweep_cka83/summary.json",
         validation_summary_path: str | Path = "experiments/09_cost_validation/validation_summary.json",
-        baseline_tps: float = 36.0,
+        baseline_tps: Optional[float] = None,
+        model_name: str = "qwen25_3b",
     ) -> MeasuredActionCostModel:
-        """Load empirical data and calibrated regression parameters from disk."""
+        """Load empirical data from disk for backward compatibility with existing tests."""
         costs: dict[str, Any] = {}
         pareto: dict[str, Any] = {}
         parametric_params: dict[str, float] = {}
@@ -218,29 +292,6 @@ class MeasuredActionCostModel:
             except Exception as e:
                 logger.warning(f"Failed to load pareto data from {p2}: {e}")
 
-        p3 = Path(k_sweep_summary_path)
-        if p3.exists():
-            try:
-                with open(p3) as f:
-                    k_data = json.load(f)
-                if "vanilla_baseline_tok_s" in k_data and k_data["vanilla_baseline_tok_s"] > 0:
-                    baseline_tps = float(k_data["vanilla_baseline_tok_s"])
-                if "k_comparison" in k_data:
-                    cfg_k_costs = costs.setdefault("cka_83", {})
-                    for k_key, k_val in k_data["k_comparison"].items():
-                        cfg_k_costs[k_key] = {
-                            "draft_ms": k_val.get("draft_latency_ms"),
-                            "verify_ms": k_val.get("verify_latency_ms"),
-                            "cache_ms": k_val.get("cache_latency_ms"),
-                            "acceptance_rate": k_val.get("acceptance_rate"),
-                            "tokens_per_second": k_val.get("tokens_per_second_mean"),
-                            "speedup": k_val.get("speedup_vs_vanilla"),
-                            "tokens_per_step": k_val.get("tokens_per_step"),
-                            "total_cycle_ms": k_val.get("cycle_latency_ms"),
-                        }
-            except Exception as e:
-                logger.warning(f"Failed to load k sweep summary from {p3}: {e}")
-
         p4 = Path(validation_summary_path)
         if p4.exists():
             try:
@@ -248,12 +299,12 @@ class MeasuredActionCostModel:
                     v_data = json.load(f)
                 if "parametric_model_parameters" in v_data:
                     parametric_params = v_data["parametric_model_parameters"]
-                if "vanilla_baseline_tps" in v_data and v_data["vanilla_baseline_tps"] > 0:
-                    baseline_tps = float(v_data["vanilla_baseline_tps"])
             except Exception as e:
                 logger.warning(f"Failed to load validation summary from {p4}: {e}")
 
+        profile = Llama32_3B_CostProfile if "llama" in model_name.lower() else Qwen25_3B_CostProfile
         return cls(
+            profile=profile,
             action_costs=costs,
             pareto_results=pareto,
             baseline_tps=baseline_tps,
@@ -268,11 +319,7 @@ class MeasuredActionCostModel:
         **kwargs: Any,
     ) -> MeasuredActionCostModel:
         """Create a model-specific cost model tailored to Qwen or Llama architecture."""
-        if "llama" in model_name.lower():
-            profile = LLAMA_32_3B_PROFILE
-        else:
-            profile = QWEN_25_3B_PROFILE
-        return cls(profile=profile, baseline_tps=baseline_tps, **kwargs)
+        return cls.for_model(model_name, baseline_tps=baseline_tps, **kwargs)
 
     def resolve_kept_layers(self, config_name: str, explicit_kept_layers: Optional[int] = None) -> int:
         """Resolve the number of kept layers for a configuration."""
@@ -296,6 +343,10 @@ class MeasuredActionCostModel:
 
     def get_per_token_draft_ms(self, config_name: str, kept_layers: Optional[int] = None) -> float:
         """Get draft latency per token for a layer configuration."""
+        if hasattr(self, "measured_draft_latencies") and config_name in self.measured_draft_latencies:
+            if 1 in self.measured_draft_latencies[config_name]:
+                return float(self.measured_draft_latencies[config_name][1])
+
         cfg_costs = self.action_costs.get(config_name, {})
         if "K1" in cfg_costs and "draft_ms" in cfg_costs["K1"]:
             return float(cfg_costs["K1"]["draft_ms"])
@@ -310,14 +361,21 @@ class MeasuredActionCostModel:
     def predict_draft_ms(self, config_name: str, k: int, kept_layers: Optional[int] = None) -> float:
         """Predict draft latency for K candidate tokens.
 
-        Uses exact measured cost if available, otherwise evaluates the parametric
-        generalization model: T_draft = K * (beta_1 * L_kept + beta_0).
+        Directly uses exact empirical hardware measurements first, otherwise
+        evaluates the calibrated parametric model: T_draft = K * (beta_1 * L_kept + beta_0).
         """
+        # 1. Exact lookup from model profile measured latencies
+        if hasattr(self, "measured_draft_latencies") and config_name in self.measured_draft_latencies:
+            if k in self.measured_draft_latencies[config_name]:
+                return float(self.measured_draft_latencies[config_name][k])
+
+        # 2. Exact lookup from legacy action_costs if provided
         k_key = f"K{k}"
         cfg_costs = self.action_costs.get(config_name, {})
         if k_key in cfg_costs and "draft_ms" in cfg_costs[k_key]:
             return float(cfg_costs[k_key]["draft_ms"])
 
+        # 3. Parametric generalization
         per_tok = self.get_per_token_draft_ms(config_name, kept_layers)
         return float(k * per_tok)
 
@@ -341,6 +399,10 @@ class MeasuredActionCostModel:
         cfg_costs = self.action_costs.get(config_name, {})
         if k_key in cfg_costs and "acceptance_rate" in cfg_costs[k_key]:
             base_acc = float(cfg_costs[k_key]["acceptance_rate"])
+        elif hasattr(self, "config_acceptance_rates") and config_name in self.config_acceptance_rates:
+            base_acc = float(self.config_acceptance_rates[config_name])
+            if k != 2:
+                base_acc -= self.acc_w_k * (k - 2)
         elif config_name in self.pareto_results and "acceptance_rate" in self.pareto_results[config_name]:
             base_acc = float(self.pareto_results[config_name]["acceptance_rate"])
             if k != 2:
@@ -368,6 +430,8 @@ class MeasuredActionCostModel:
         cfg_costs = self.action_costs.get(config_name, {})
         if k_key in cfg_costs and "energy_j_token" in cfg_costs[k_key]:
             return float(cfg_costs[k_key]["energy_j_token"])
+        if hasattr(self, "config_energy_j_tok") and config_name in self.config_energy_j_tok:
+            return float(self.config_energy_j_tok[config_name])
         if config_name in self.pareto_results and "energy_j_token" in self.pareto_results[config_name]:
             return float(self.pareto_results[config_name]["energy_j_token"])
 

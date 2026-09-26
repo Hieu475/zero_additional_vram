@@ -103,15 +103,13 @@ class HardwareAwareJointController:
         hardware_override: Optional[HardwareState] = None,
     ) -> None:
         self.configs = candidate_layer_configs
+        self.model_name = model_name or "qwen25_3b"
         if cost_model is not None:
             self.cost_model = cost_model
-        elif model_name is not None:
-            self.cost_model = MeasuredActionCostModel.from_model_name(model_name)
         else:
-            self.cost_model = MeasuredActionCostModel.from_files()
+            self.cost_model = MeasuredActionCostModel.for_model(self.model_name)
         self.action_cost_db = action_cost_db
         self.gpu_profiler = gpu_profiler
-        self.model_name = model_name
         self.max_vram_mb = max_vram_mb
         self.temp_threshold_c = temp_threshold_c
         self.power_budget_w = power_budget_w
