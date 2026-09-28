@@ -69,12 +69,37 @@ def stream_self_speculative_generate(
     layer_mgr: LayerManager,
     controller: HardwareAwareJointController,
     prompt: str,
-    max_new_tokens: int = 64,
+    max_new_tokens: int = 256,
     device: str = "cuda:0",
 ) -> Generator[tuple[str, dict], None, None]:
     """Stream tokens token-by-token with real-time systems telemetry."""
     gpu_profiler = GPUProfiler()
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
+
+    # Collect comprehensive stop token IDs across architectures (Qwen, LLaMA)
+    stop_token_ids = set()
+    if tokenizer.eos_token_id is not None:
+        stop_token_ids.add(tokenizer.eos_token_id)
+    for stop_str in ["<|im_end|>", "<|endoftext|>", "</s>", "<|eot_id|>"]:
+        tid = tokenizer.convert_tokens_to_ids(stop_str)
+        if tid is not None and isinstance(tid, int) and tid != tokenizer.unk_token_id:
+            stop_token_ids.add(tid)
+
+    # Format with Chat Template if available and not already formatted
+    if hasattr(tokenizer, "apply_chat_template") and tokenizer.chat_template and "<|im_start|>" not in prompt and "<|start_header_id|>" not in prompt:
+        messages = [
+            {
+                "role": "system",
+                "content": "You are a knowledgeable and precise AI assistant specializing in computer science, machine learning, and systems architecture.",
+            },
+            {"role": "user", "content": prompt},
+        ]
+        formatted_prompt = tokenizer.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True
+        )
+    else:
+        formatted_prompt = prompt
+
+    inputs = tokenizer(formatted_prompt, return_tensors="pt").to(device)
     prompt_ids = inputs["input_ids"]
     prompt_len = prompt_ids.shape[1]
 
@@ -141,7 +166,7 @@ def stream_self_speculative_generate(
                     d_next = int(d_out.logits[0, -1, :].argmax(dim=-1).item())
                     draft_tokens.append(d_next)
                     curr_d = torch.tensor([[d_next]], device=device)
-                    if d_next == tokenizer.eos_token_id:
+                    if d_next in stop_token_ids:
                         break
 
         torch.cuda.synchronize()
@@ -162,21 +187,28 @@ def stream_self_speculative_generate(
         cycle_emitted = [curr_target_tok]
         rejected_at = None
         num_accepted = 0
+        stopped = (curr_target_tok in stop_token_ids)
 
-        for i in range(actual_k):
-            pred = int(v_out.logits[0, i, :].argmax(dim=-1).item())
-            if pred == draft_tokens[i]:
-                cycle_emitted.append(draft_tokens[i])
-                num_accepted += 1
-            else:
-                target_kv.crop(current_prefix_len + len(cycle_emitted))
-                curr_target_tok = pred
-                rejected_at = i
-                break
+        if not stopped:
+            for i in range(actual_k):
+                pred = int(v_out.logits[0, i, :].argmax(dim=-1).item())
+                if pred == draft_tokens[i]:
+                    cycle_emitted.append(draft_tokens[i])
+                    num_accepted += 1
+                    if draft_tokens[i] in stop_token_ids:
+                        stopped = True
+                        break
+                else:
+                    target_kv.crop(current_prefix_len + len(cycle_emitted))
+                    curr_target_tok = pred
+                    rejected_at = i
+                    break
 
-        if rejected_at is None:
-            bonus_tok = int(v_out.logits[0, actual_k, :].argmax(dim=-1).item())
-            curr_target_tok = bonus_tok
+            if rejected_at is None and not stopped:
+                bonus_tok = int(v_out.logits[0, actual_k, :].argmax(dim=-1).item())
+                curr_target_tok = bonus_tok
+                if bonus_tok in stop_token_ids:
+                    stopped = True
 
         total_accepted_tokens += num_accepted
         last_accepted = num_accepted
@@ -198,7 +230,8 @@ def stream_self_speculative_generate(
         else:
             energy_j = (power_w * elapsed_s) / max(1, len(emitted_tokens))
 
-        chunk_text = tokenizer.decode(cycle_emitted, skip_special_tokens=False)
+        clean_cycle = [t for t in cycle_emitted if t not in stop_token_ids]
+        chunk_text = tokenizer.decode(clean_cycle, skip_special_tokens=True)
 
         telemetry = {
             "mode": cfg_name.upper().replace("_", "-"),
@@ -213,7 +246,7 @@ def stream_self_speculative_generate(
 
         yield chunk_text, telemetry
 
-        if any(t == tokenizer.eos_token_id for t in cycle_emitted):
+        if stopped or any(t in stop_token_ids for t in cycle_emitted) or curr_target_tok in stop_token_ids:
             break
 
 
@@ -268,7 +301,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="ZASSD Interactive Streaming Generation Demo")
     parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-3B-Instruct")
     parser.add_argument("--prompt", type=str, default="Explain the concept of speculative decoding in large language models and why it can accelerate inference without changing output quality.")
-    parser.add_argument("--max-new-tokens", type=int, default=64)
+    parser.add_argument("--max-new-tokens", type=int, default=256, help="Maximum new tokens to generate (default: 256)")
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
 
