@@ -1,0 +1,76 @@
+{
+  "hardware": "NVIDIA GeForce RTX 4050 Laptop GPU (6141 MB)",
+  "usable_vram_limit_mb": 5691.0,
+  "configurations": [
+    {
+      "target_model": "Mistral-7B-Instruct-v0.3 (4-bit NF4)",
+      "draft_method": "Standard Speculative (1.5B Draft FP16)",
+      "target_weight_mb": 3946.6,
+      "draft_weight_mb": 3080.0,
+      "total_required_mb": 7526.6,
+      "headroom_mb": -1835.6000000000004,
+      "status": "CUDA OOM",
+      "is_zassd": false
+    },
+    {
+      "target_model": "Mistral-7B-Instruct-v0.3 (4-bit NF4)",
+      "draft_method": "Standard Speculative (0.5B Draft FP16)",
+      "target_weight_mb": 3946.6,
+      "draft_weight_mb": 1120.0,
+      "total_required_mb": 5566.6,
+      "headroom_mb": 124.39999999999964,
+      "status": "SUCCESS",
+      "is_zassd": false
+    },
+    {
+      "target_model": "Mistral-7B-Instruct-v0.3 (4-bit NF4)",
+      "draft_method": "Standard Speculative (0.5B Draft 4-bit NF4)",
+      "target_weight_mb": 3946.6,
+      "draft_weight_mb": 420.0,
+      "total_required_mb": 4866.6,
+      "headroom_mb": 824.3999999999996,
+      "status": "SUCCESS",
+      "is_zassd": false
+    },
+    {
+      "target_model": "Mistral-7B-Instruct-v0.3 (4-bit NF4)",
+      "draft_method": "ZASSD Self-Speculative (Layer-Skip)",
+      "target_weight_mb": 3946.6,
+      "draft_weight_mb": 0.0,
+      "total_required_mb": 4446.6,
+      "headroom_mb": 1244.3999999999996,
+      "status": "SUCCESS",
+      "is_zassd": true
+    },
+    {
+      "target_model": "Mistral-7B-Instruct-v0.3 (4-bit NF4)",
+      "draft_method": "ZASSD Hybrid (PLD + Layer-Skip)",
+      "target_weight_mb": 3946.6,
+      "draft_weight_mb": 0.0,
+      "total_required_mb": 4446.6,
+      "headroom_mb": 1244.3999999999996,
+      "status": "SUCCESS",
+      "is_zassd": true
+    },
+    {
+      "target_model": "Qwen2.5-3B-Instruct (4-bit NF4)",
+      "draft_method": "Standard Speculative (1.5B Draft FP16)",
+      "target_weight_mb": 1980.0,
+      "draft_weight_mb": 3080.0,
+      "total_required_mb": 5560.0,
+      "headroom_mb": 131.0,
+      "status": "SUCCESS",
+      "is_zassd": false
+    },
+    {
+      "target_model": "Qwen2.5-3B-Instruct (4-bit NF4)",
+      "draft_method": "ZASSD Hybrid (PLD + Layer-Skip)",
+      "target_weight_mb": 1980.0,
+      "draft_weight_mb": 0.0,
+      "total_required_mb": 2480.0,
+      "headroom_mb": 3211.0,
+      "status": "SUCCESS",
+      "is_zassd": true
+    }
+  ]
+}

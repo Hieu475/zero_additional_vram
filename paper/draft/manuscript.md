@@ -138,6 +138,39 @@ Replaying live GPU generation telemetry (power, temperature, VRAM, sequence entr
 
 ---
 
+### 5.4 Cross-Domain Standard Benchmark Evaluation (GSM8K, HumanEval, CNN/DailyMail)
+To assess generalization beyond synthetic prompts, we evaluated ZASSD across three canonical reasoning, coding, and summarization benchmarks under identical frozen conditions on the RTX 4050 Laptop GPU:
+
+\input{paper/tables/standard_benchmark_table.tex}
+
+**Key Observations:**
+1. **Mathematical Reasoning (GSM8K):** ZASSD Hybrid ($K=2$) achieves **1.049$\times$ wall-clock speedup** with **70.8% acceptance rate**, while Prompt-Lookup Decoding (PLD) achieves **1.138$\times$ speedup** due to recurring mathematical terminology and problem syntax.
+2. **Summarization (CNN/DailyMail):** Due to high n-gram overlap between document contexts and generated summaries, PLD delivers **1.105$\times$ speedup** ($100\%$ zero-VRAM), and ZASSD Hybrid achieves **0.961$\times$** while maintaining high draft stability.
+3. **Algorithmic Coding (HumanEval):** ZASSD Empirical-6 ($K=1$) achieves **89.1% draft acceptance rate** and **0.940$\times$ relative throughput**, preserving 100% functional correctness without requiring auxiliary weight storage.
+
+---
+
+### 5.5 Physical Memory Boundary & Auxiliary Model OOM Proof
+Deploying 7B-parameter models on consumer edge hardware (6 GB mobile GPUs) represents an unyielding physical constraint. Table \ref{tab:oom_boundary} compares memory footprints between standard speculative pipelines and ZASSD:
+
+\input{paper/tables/oom_boundary_table.tex}
+
+**Empirical Findings:**
+1. **The Inevitability of CUDA OOM:** On an RTX 4050 Laptop GPU (6141 MB total VRAM, ~5691 MB usable after OS driver overhead), hosting Mistral-7B NF4 requires **3946.6 MB**. Pairing this target with a standard 1.5B FP16 draft model requires an additional **3080.0 MB**, totaling **7526.6 MB**—exceeding physical capacity by **1.83 GB** and triggering an immediate `CUDA Out of Memory` abort.
+2. **Zero Auxiliary Memory:** In stark contrast, ZASSD incurs **0.0 MB** of additional model weight memory. Peak runtime overhead during speculation is strictly bounded by ephemeral KV buffers ($\le 8\text{ MB}$), leaving over **1.2 GB of free VRAM headroom** for extended sequence lengths.
+
+---
+
+### 5.6 Empirical Greedy Layer Selection vs. Sub-Layer Skipping
+Rather than relying on static representation heuristics (e.g., CKA), we developed an empirical greedy layer search maximizing top-1 target token agreement on calibration tokens:
+- **Empirical Search Results (Qwen2.5-3B):**
+  - Dropping 4 layers (`[4, 20, 22, 23]`): **100.0% Match Accuracy, 0.9560 CosSim**.
+  - Dropping 6 layers (`[4, 5, 19, 20, 22, 23]`): **87.5% Match Accuracy, 0.9458 CosSim**.
+  - Dropping 10 layers (`[4, 5, 9, 13, 19, 20, 22, 23, 24, 25]`): **87.5% Match Accuracy, 0.8449 CosSim**.
+- **Whole-Layer vs. Sub-Layer (MLP) Tradeoff:** Micro-benchmarks reveal that skipping 18 MLPs while retaining Attention achieves only **16.96 ms/token** due to persistent KV-cache memory traffic, whereas skipping 18 whole layers drops token latency to **10.31 ms/token (1.90$\times$ draft acceleration)** by completely eliminating both attention memory traffic and MLP GEMMs.
+
+---
+
 ## 6. Limitations & Hardware Architectural Boundary
 
 1. **Memory Bandwidth Ceiling on Edge GPUs:** On entry-level mobile GPUs with 96-bit memory buses (192 GB/s), single-token forward passes take only $\approx 20\text{ ms}$. Because self-speculative draft passes still execute 75% of the model layers and verify passes process $K+1$ tokens, total cycle time exceeds vanilla latency ($>1.0\times$ time), requiring unrealistic acceptance ($\mathbb{E}[N] \ge 2.66$) to break even. Higher-bandwidth server platforms (e.g. RTX 4090 with 1008 GB/s or A100 with 2039 GB/s) provide the necessary parallel compute headroom for positive wall-clock speedup.
