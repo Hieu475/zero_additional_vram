@@ -28,7 +28,7 @@ class TestKVCacheInvariants:
         prefix_len = 32
         head_dim = 64
 
-        target = TargetKVCache()
+        target = TargetKVCache(backend="dynamic")
         keys_list = []
         vals_list = []
 
@@ -179,3 +179,134 @@ class TestKVCacheInvariants:
             assert dl.keys.shape[2] == prefix_len + k_tokens
         for tl in target.cache.layers:
             assert tl.keys.shape[2] == prefix_len
+
+
+class TestStaticKVCacheInvariants:
+    """Formal verification of invariants for StaticPreallocatedKVCache."""
+
+    @pytest.fixture
+    def populated_static_kv(self) -> tuple[TargetKVCache, torch.Tensor, torch.Tensor]:
+        """Create a target KV cache populated with static preallocated buffer."""
+        num_layers = 4
+        batch_size = 1
+        num_heads = 4
+        prefix_len = 32
+        head_dim = 64
+        max_capacity = 256
+
+        target = TargetKVCache(backend="static", max_capacity=max_capacity)
+        keys_list = []
+        vals_list = []
+
+        for layer_idx in range(num_layers):
+            k = torch.randn(batch_size, num_heads, prefix_len, head_dim)
+            v = torch.randn(batch_size, num_heads, prefix_len, head_dim)
+            target.cache.update(k, v, layer_idx)
+            keys_list.append(k)
+            vals_list.append(v)
+
+        return target, torch.stack(keys_list), torch.stack(vals_list)
+
+    def test_static_invariant_1_buffer_is_shared(
+        self, populated_static_kv: tuple[TargetKVCache, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Invariant 1: Ephemeral draft shares identical pre-allocated memory buffer pointers."""
+        target, _, _ = populated_static_kv
+        num_layers = len(target.cache.layers)
+
+        draft = target.fork_ephemeral_draft_kv()
+        assert len(draft.layers) == num_layers
+
+        for idx in range(num_layers):
+            t_k_ptr = target.cache.layers[idx].keys.data_ptr()
+            t_v_ptr = target.cache.layers[idx].values.data_ptr()
+            d_k_ptr = draft.layers[idx].keys.data_ptr()
+            d_v_ptr = draft.layers[idx].values.data_ptr()
+
+            # Zero-copy pointer equality
+            assert d_k_ptr == t_k_ptr, f"Layer {idx} static keys pointer must be identical"
+            assert d_v_ptr == t_v_ptr, f"Layer {idx} static values pointer must be identical"
+            assert draft.layers[idx].get_seq_length() == target.get_seq_length(idx)
+
+    def test_static_invariant_2_draft_writes_do_not_mutate_prefix(
+        self, populated_static_kv: tuple[TargetKVCache, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Invariant 2: Draft writes candidate tokens into [P, P+K) without mutating prefix [0, P)."""
+        target, orig_keys, orig_vals = populated_static_kv
+        num_layers = len(target.cache.layers)
+        prefix_len = target.get_seq_length(0)
+
+        # Snapshot prefix content
+        prefix_keys_before = [
+            target.cache.layers[i].keys[:, :, :prefix_len, :].clone()
+            for i in range(num_layers)
+        ]
+        prefix_vals_before = [
+            target.cache.layers[i].values[:, :, :prefix_len, :].clone()
+            for i in range(num_layers)
+        ]
+
+        draft = target.fork_ephemeral_draft_kv()
+
+        # Draft generates K=4 tokens
+        k_draft = 4
+        for step in range(k_draft):
+            for layer_idx in range(num_layers):
+                new_k = torch.randn(1, 4, 1, 64)
+                new_v = torch.randn(1, 4, 1, 64)
+                draft.update(new_k, new_v, layer_idx)
+
+        # Draft seq_len has grown
+        assert draft.get_seq_length(0) == prefix_len + k_draft
+        # Target seq_len remains strictly unchanged
+        assert target.get_seq_length(0) == prefix_len
+
+        # Prefix content [0 : prefix_len] remains bitwise identical
+        for idx in range(num_layers):
+            assert torch.equal(target.cache.layers[idx].keys[:, :, :prefix_len, :], prefix_keys_before[idx])
+            assert torch.equal(target.cache.layers[idx].values[:, :, :prefix_len, :], prefix_vals_before[idx])
+
+    def test_static_invariant_3_target_verification_and_rollback(
+        self, populated_static_kv: tuple[TargetKVCache, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Invariant 3: Target verification writes verified KV and rollback cleanly sets target seq_len."""
+        target, _, _ = populated_static_kv
+        num_layers = len(target.cache.layers)
+        prefix_len = target.get_seq_length(0)
+
+        # Target verifies K=3 candidates in a single batched step
+        cand_k = torch.randn(1, 4, 3, 64)
+        cand_v = torch.randn(1, 4, 3, 64)
+        for layer_idx in range(num_layers):
+            target.cache.update(cand_k, cand_v, layer_idx)
+
+        assert target.get_seq_length(0) == prefix_len + 3
+
+        # Simulate rejection: only 1 accepted candidate
+        target.rollback(prefix_len=prefix_len, accepted_count=1)
+        assert target.get_seq_length(0) == prefix_len + 1
+
+    def test_static_invariant_4_zero_dynamic_allocation(
+        self, populated_static_kv: tuple[TargetKVCache, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Invariant 4: Pre-allocated buffers never reallocate memory during generation (data_ptr is invariant)."""
+        target, _, _ = populated_static_kv
+        num_layers = len(target.cache.layers)
+
+        orig_ptrs = [
+            (target.cache.layers[i].keys.data_ptr(), target.cache.layers[i].values.data_ptr())
+            for i in range(num_layers)
+        ]
+
+        draft = target.fork_ephemeral_draft_kv()
+
+        # Perform 8 draft steps
+        for step in range(8):
+            for layer_idx in range(num_layers):
+                draft.update(torch.randn(1, 4, 1, 64), torch.randn(1, 4, 1, 64), layer_idx)
+
+        # Buffer pointers must NOT have changed (zero dynamic reallocations!)
+        for idx in range(num_layers):
+            assert draft.layers[idx].keys.data_ptr() == orig_ptrs[idx][0]
+            assert draft.layers[idx].values.data_ptr() == orig_ptrs[idx][1]
+

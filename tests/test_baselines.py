@@ -43,3 +43,22 @@ class TestCompetitiveBaselines:
         for _ in range(10):
             action = controller.select_action(entropy=2.5, last_accepted=0, last_proposed=2)
         assert action.draft_length <= 2
+
+    def test_prompt_lookup_candidate_matching(self):
+        from zassd.baselines.prompt_lookup import find_candidate_tokens
+
+        # Exact 3-gram match: [10, 20, 30] appears earlier followed by [40, 50, 60]
+        tokens = [1, 2, 10, 20, 30, 40, 50, 60, 7, 8, 10, 20, 30]
+        cands = find_candidate_tokens(tokens, ngram_size=3, max_candidates=3)
+        assert cands == [40, 50, 60]
+
+        # 2-gram fallback match
+        tokens_2 = [1, 2, 88, 99, 100, 101, 7, 8, 88, 99]
+        cands_2 = find_candidate_tokens(tokens_2, ngram_size=3, max_candidates=2)
+        assert cands_2 == [100, 101]
+
+        # No match found
+        tokens_none = [1, 2, 3, 4, 5, 6, 7]
+        cands_none = find_candidate_tokens(tokens_none, ngram_size=3, max_candidates=3)
+        assert cands_none == []
+

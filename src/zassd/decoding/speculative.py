@@ -65,6 +65,7 @@ def self_speculative_generate(
     max_new_tokens: int = 128,
     temperature: float = 0.0,
     device: str = "cuda:0",
+    kv_cache_backend: str = "static",
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Zero-Additional-VRAM self-speculative decoding.
 
@@ -79,6 +80,7 @@ def self_speculative_generate(
         max_new_tokens: Maximum new tokens to generate.
         temperature: Sampling temperature (0.0 = greedy).
         device: Device to run generation on.
+        kv_cache_backend: KV cache backend ('static' for pre-allocated or 'dynamic').
 
     Returns:
         Tuple of (generated_text, SpeculativeMetrics).
@@ -100,7 +102,7 @@ def self_speculative_generate(
     # Canonical Prefill: Populate Target KV Cache
     # -----------------------------------------------------------------------
     t_prefill_start = time.perf_counter()
-    target_kv = TargetKVCache()
+    target_kv = TargetKVCache(backend=kv_cache_backend)
     with torch.no_grad():
         prefill_out = model(prompt_ids, past_key_values=target_kv.cache, use_cache=True)
     target_prefix_logit = prefill_out.logits[0, -1, :]
@@ -111,10 +113,12 @@ def self_speculative_generate(
     generated_token_ids: list[int] = []
     current_prefix_len = prompt_len
     if temperature == 0.0:
-        curr_target_tok = int(target_prefix_logit.argmax(dim=-1).item())
+        curr_target_tok_tensor = prefill_out.logits[:, -1:, :].argmax(dim=-1)
+        curr_target_tok = int(curr_target_tok_tensor.item())
     else:
         probs = F.softmax(target_prefix_logit / temperature, dim=-1)
         curr_target_tok = int(torch.multinomial(probs, num_samples=1).item())
+        curr_target_tok_tensor = torch.tensor([[curr_target_tok]], device=device)
 
     curr_entropy = float(compute_entropy(target_prefix_logit.float()).item())
     last_accepted = 1
@@ -163,7 +167,7 @@ def self_speculative_generate(
         if step_k == 0:
             # Fallback to single-token vanilla step with Target KV
             t_v_start = time.perf_counter()
-            curr_tensor = torch.tensor([[curr_target_tok]], device=device)
+            curr_tensor = curr_target_tok_tensor
             with torch.no_grad():
                 out = model(curr_tensor, past_key_values=target_kv.cache, use_cache=True)
             torch.cuda.synchronize()
@@ -175,10 +179,13 @@ def self_speculative_generate(
             target_logit = out.logits[0, -1, :].float()
             curr_entropy = float(compute_entropy(target_logit).item())
             if temperature == 0.0:
-                next_tok = int(target_logit.argmax(dim=-1).item())
+                next_tok_tensor = out.logits[:, -1:, :].argmax(dim=-1)
+                next_tok = int(next_tok_tensor.item())
+                curr_target_tok_tensor = next_tok_tensor
             else:
                 probs = F.softmax(target_logit / temperature, dim=-1)
                 next_tok = int(torch.multinomial(probs, num_samples=1).item())
+                curr_target_tok_tensor = torch.tensor([[next_tok]], device=device)
 
             generated_token_ids.append(curr_target_tok)
             current_prefix_len += 1
@@ -201,27 +208,34 @@ def self_speculative_generate(
 
         # -------------------------------------------------------------------
         # Phase 1: Draft generation (using logical layer skipping)
+        # Keeps intermediate candidate tensors directly on GPU to avoid CPU-GPU sync.
         # -------------------------------------------------------------------
         draft_tokens: list[int] = []
+        draft_token_tensors: list[torch.Tensor] = []
         draft_probs_list: list[torch.Tensor] = []
 
         t_draft_start = time.perf_counter()
         with torch.no_grad():
             with layer_mgr.skip_layers(active_skip):
-                curr_d = torch.tensor([[curr_target_tok]], device=device)
+                curr_d = curr_target_tok_tensor
                 for d_step in range(step_k):
                     d_out = model(curr_d, past_key_values=draft_kv, use_cache=True)
-                    d_logits = d_out.logits[0, -1, :].float()
 
                     if temperature == 0.0:
-                        d_next = int(d_logits.argmax(dim=-1).item())
+                        next_d = d_out.logits[:, -1:, :].argmax(dim=-1)
+                        draft_token_tensors.append(next_d)
+                        d_next = int(next_d.item())
+                        draft_tokens.append(d_next)
+                        curr_d = next_d
                     else:
+                        d_logits = d_out.logits[0, -1, :].float()
                         d_probs = F.softmax(d_logits / temperature, dim=-1)
                         d_next = int(torch.multinomial(d_probs, num_samples=1).item())
                         draft_probs_list.append(d_probs)
-
-                    draft_tokens.append(d_next)
-                    curr_d = torch.tensor([[d_next]], device=device)
+                        draft_tokens.append(d_next)
+                        next_d = torch.tensor([[d_next]], device=device)
+                        draft_token_tensors.append(next_d)
+                        curr_d = next_d
 
                     if d_next == tokenizer.eos_token_id:
                         break
@@ -236,11 +250,10 @@ def self_speculative_generate(
 
         # -------------------------------------------------------------------
         # Phase 2: Parallel target verification (using full model)
-        # Verify inputs: [curr_target_tok] + draft_tokens (length actual_k + 1)
+        # Verify inputs: [curr_target_tok] + draft_tokens concatenated on GPU.
         # Directly computes all verification logits and the bonus token in 1 pass.
         # -------------------------------------------------------------------
-        verify_inputs = [curr_target_tok] + draft_tokens
-        cand_tensor = torch.tensor([verify_inputs], device=device)
+        cand_tensor = torch.cat([curr_target_tok_tensor] + draft_token_tensors, dim=-1)
 
         t_verify_start = time.perf_counter()
         with torch.no_grad():
@@ -254,6 +267,7 @@ def self_speculative_generate(
 
         # -------------------------------------------------------------------
         # Phase 3: Accept / Reject & Target KV Crop / Advance
+        # Vectorized GPU decision for greedy decoding eliminates per-token CPU stalls.
         # -------------------------------------------------------------------
         t_commit_start = time.perf_counter()
         cycle_emitted = [curr_target_tok]
@@ -261,17 +275,27 @@ def self_speculative_generate(
         num_accepted_draft = 0
 
         if temperature == 0.0:
-            for i in range(actual_k):
-                pred = int(v_out.logits[0, i, :].argmax(dim=-1).item())
-                if pred == draft_tokens[i]:
-                    cycle_emitted.append(draft_tokens[i])
-                    num_accepted_draft += 1
-                else:
-                    # Mismatch at candidate i
-                    target_kv.crop(current_prefix_len + len(cycle_emitted))
-                    curr_target_tok = pred
-                    rejected_at = i
-                    break
+            v_preds = v_out.logits[0, :actual_k, :].argmax(dim=-1)
+            d_preds = torch.cat(draft_token_tensors, dim=-1).squeeze(0)
+            matches = (v_preds == d_preds)
+
+            if bool(matches.all().item()):
+                num_accepted_draft = actual_k
+                cycle_emitted.extend(draft_tokens)
+                bonus_tok_tensor = v_out.logits[:, actual_k:, :].argmax(dim=-1)
+                curr_target_tok_tensor = bonus_tok_tensor
+                curr_target_tok = int(bonus_tok_tensor.item())
+                rejected_at = None
+            else:
+                mismatch_idx = int((~matches).nonzero()[0].item())
+                num_accepted_draft = mismatch_idx
+                if mismatch_idx > 0:
+                    cycle_emitted.extend(draft_tokens[:mismatch_idx])
+                target_kv.crop(current_prefix_len + len(cycle_emitted))
+                rej_tok_tensor = v_preds[mismatch_idx].view(1, 1)
+                curr_target_tok_tensor = rej_tok_tensor
+                curr_target_tok = int(rej_tok_tensor.item())
+                rejected_at = mismatch_idx
         else:
             target_probs_tensor = F.softmax(v_out.logits[0, :actual_k, :] / temperature, dim=-1)
             for i in range(actual_k):
@@ -294,19 +318,15 @@ def self_speculative_generate(
                         curr_target_tok = int(torch.multinomial(residual_probs, num_samples=1).item())
                     else:
                         curr_target_tok = int(t_prob.argmax().item())
+                    curr_target_tok_tensor = torch.tensor([[curr_target_tok]], device=device)
                     rejected_at = i
                     break
 
-        if rejected_at is None:
-            # All actual_k draft tokens accepted!
-            # The bonus token is already computed at index actual_k of v_out.logits.
-            # Zero additional model forward passes needed!
-            if temperature == 0.0:
-                bonus_tok = int(v_out.logits[0, actual_k, :].argmax(dim=-1).item())
-            else:
+            if rejected_at is None:
                 b_probs = F.softmax(v_out.logits[0, actual_k, :] / temperature, dim=-1)
                 bonus_tok = int(torch.multinomial(b_probs, num_samples=1).item())
-            curr_target_tok = bonus_tok
+                curr_target_tok = bonus_tok
+                curr_target_tok_tensor = torch.tensor([[curr_target_tok]], device=device)
 
         torch.cuda.synchronize()
         t_commit_end = time.perf_counter()
