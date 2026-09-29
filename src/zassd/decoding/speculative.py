@@ -23,6 +23,7 @@ from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from zassd.cache.kv_cache import TargetKVCache
 from zassd.controllers.entropy import compute_entropy
+from zassd.decoding.ngram import find_candidate_tokens
 from zassd.models.layer_manager import LayerManager
 
 logger = logging.getLogger(__name__)
@@ -48,6 +49,9 @@ class SpeculativeMetrics:
     controller_time_s: float = 0.0
     other_time_s: float = 0.0
 
+    pld_cycles: int = 0
+    layer_skip_cycles: int = 0
+
     peak_vram_mb: float = 0.0
     speedup_vs_vanilla: float = 0.0
     k_value: int = 4
@@ -66,6 +70,8 @@ def self_speculative_generate(
     temperature: float = 0.0,
     device: str = "cuda:0",
     kv_cache_backend: str = "static",
+    draft_mode: str = "layer_skip",
+    ngram_size: int = 3,
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Zero-Additional-VRAM self-speculative decoding.
 
@@ -81,6 +87,8 @@ def self_speculative_generate(
         temperature: Sampling temperature (0.0 = greedy).
         device: Device to run generation on.
         kv_cache_backend: KV cache backend ('static' for pre-allocated or 'dynamic').
+        draft_mode: Speculative draft mode ('layer_skip', 'hybrid', or 'prompt_lookup').
+        ngram_size: Context n-gram length used for prompt lookup.
 
     Returns:
         Tuple of (generated_text, SpeculativeMetrics).
@@ -93,6 +101,7 @@ def self_speculative_generate(
         inputs = tokenizer(prompt, return_tensors="pt").to(device)
         prompt_ids = inputs["input_ids"]
     prompt_len = prompt_ids.shape[1]
+    full_history: list[int] = prompt_ids[0].tolist()
 
     torch.cuda.reset_peak_memory_stats(device)
     torch.cuda.synchronize()
@@ -188,6 +197,7 @@ def self_speculative_generate(
                 curr_target_tok_tensor = torch.tensor([[next_tok]], device=device)
 
             generated_token_ids.append(curr_target_tok)
+            full_history.append(curr_target_tok)
             current_prefix_len += 1
             if curr_target_tok == tokenizer.eos_token_id:
                 break
@@ -207,7 +217,7 @@ def self_speculative_generate(
         cache_cycle_s = (t_cache_fork_end - t_cache_fork_start)
 
         # -------------------------------------------------------------------
-        # Phase 1: Draft generation (using logical layer skipping)
+        # Phase 1: Draft generation (Logical Layer-Skip or Hybrid PLD)
         # Keeps intermediate candidate tensors directly on GPU to avoid CPU-GPU sync.
         # -------------------------------------------------------------------
         draft_tokens: list[int] = []
@@ -215,30 +225,43 @@ def self_speculative_generate(
         draft_probs_list: list[torch.Tensor] = []
 
         t_draft_start = time.perf_counter()
-        with torch.no_grad():
-            with layer_mgr.skip_layers(active_skip):
-                curr_d = curr_target_tok_tensor
-                for d_step in range(step_k):
-                    d_out = model(curr_d, past_key_values=draft_kv, use_cache=True)
 
-                    if temperature == 0.0:
-                        next_d = d_out.logits[:, -1:, :].argmax(dim=-1)
-                        draft_token_tensors.append(next_d)
-                        d_next = int(next_d.item())
-                        draft_tokens.append(d_next)
-                        curr_d = next_d
-                    else:
-                        d_logits = d_out.logits[0, -1, :].float()
-                        d_probs = F.softmax(d_logits / temperature, dim=-1)
-                        d_next = int(torch.multinomial(d_probs, num_samples=1).item())
-                        draft_probs_list.append(d_probs)
-                        draft_tokens.append(d_next)
-                        next_d = torch.tensor([[d_next]], device=device)
-                        draft_token_tensors.append(next_d)
-                        curr_d = next_d
+        # Check PLD n-gram lookup if hybrid or prompt_lookup mode
+        used_pld = False
+        if draft_mode in ("hybrid", "prompt_lookup"):
+            cands = find_candidate_tokens(full_history + [curr_target_tok], ngram_size=ngram_size, max_candidates=step_k)
+            if len(cands) > 0:
+                draft_tokens = cands
+                draft_token_tensors = [torch.tensor([[t]], device=device) for t in cands]
+                used_pld = True
+                metrics.pld_cycles += 1
 
-                    if d_next == tokenizer.eos_token_id:
-                        break
+        if not used_pld and draft_mode in ("layer_skip", "hybrid"):
+            metrics.layer_skip_cycles += 1
+            with torch.no_grad():
+                with layer_mgr.skip_layers(active_skip):
+                    curr_d = curr_target_tok_tensor
+                    for d_step in range(step_k):
+                        d_out = model(curr_d, past_key_values=draft_kv, use_cache=True)
+
+                        if temperature == 0.0:
+                            next_d = d_out.logits[:, -1:, :].argmax(dim=-1)
+                            draft_token_tensors.append(next_d)
+                            d_next = int(next_d.item())
+                            draft_tokens.append(d_next)
+                            curr_d = next_d
+                        else:
+                            d_logits = d_out.logits[0, -1, :].float()
+                            d_probs = F.softmax(d_logits / temperature, dim=-1)
+                            d_next = int(torch.multinomial(d_probs, num_samples=1).item())
+                            draft_probs_list.append(d_probs)
+                            draft_tokens.append(d_next)
+                            next_d = torch.tensor([[d_next]], device=device)
+                            draft_token_tensors.append(next_d)
+                            curr_d = next_d
+
+                        if d_next == tokenizer.eos_token_id:
+                            break
 
         torch.cuda.synchronize()
         t_draft_end = time.perf_counter()
@@ -247,6 +270,40 @@ def self_speculative_generate(
         metrics.total_draft_tokens += len(draft_tokens)
 
         actual_k = len(draft_tokens)
+
+        if actual_k == 0:
+            # Fallback to single-token vanilla step with Target KV
+            t_v_start = time.perf_counter()
+            with torch.no_grad():
+                out = model(curr_target_tok_tensor, past_key_values=target_kv.cache, use_cache=True)
+            torch.cuda.synchronize()
+            t_v_end = time.perf_counter()
+            verify_elapsed = t_v_end - t_v_start
+            metrics.verify_time_s += verify_elapsed
+            metrics.num_verification_cycles += 1
+
+            target_logit = out.logits[0, -1, :].float()
+            curr_entropy = float(compute_entropy(target_logit).item())
+            if temperature == 0.0:
+                next_tok_tensor = out.logits[:, -1:, :].argmax(dim=-1)
+                next_tok = int(next_tok_tensor.item())
+                curr_target_tok_tensor = next_tok_tensor
+            else:
+                probs = F.softmax(target_logit / temperature, dim=-1)
+                next_tok = int(torch.multinomial(probs, num_samples=1).item())
+                curr_target_tok_tensor = torch.tensor([[next_tok]], device=device)
+
+            generated_token_ids.append(curr_target_tok)
+            full_history.append(curr_target_tok)
+            current_prefix_len += 1
+            if curr_target_tok == tokenizer.eos_token_id:
+                break
+            curr_target_tok = next_tok
+            last_accepted = 1
+            last_proposed = 0
+            last_draft_ms = 0.0
+            last_verify_ms = verify_elapsed * 1000
+            continue
 
         # -------------------------------------------------------------------
         # Phase 2: Parallel target verification (using full model)
@@ -346,6 +403,7 @@ def self_speculative_generate(
 
         metrics.total_accepted_tokens += num_accepted_draft
         generated_token_ids.extend(cycle_emitted)
+        full_history.extend(cycle_emitted)
         current_prefix_len += len(cycle_emitted)
 
         iter_stat = {

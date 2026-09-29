@@ -152,6 +152,9 @@ def handle_benchmark(args: argparse.Namespace) -> None:
             ctrl = KnapSpecController(total_layers=adapter.num_layers, budget_ratio=0.75, fixed_k=args.k)
             text, m = self_speculative_generate(model, tokenizer, layer_mgr, ctrl.skip_indices, prompt, k=args.k, controller=ctrl, max_new_tokens=args.max_new_tokens, temperature=args.temperature, device=device)
             res = {"prompt_idx": p_idx, "tps": m.tokens_per_second, "tokens": m.total_tokens, "acc_rate": m.acceptance_rate, "speedup": m.tokens_per_second / baseline_tps}
+        elif args.method == "hybrid":
+            text, m = self_speculative_generate(model, tokenizer, layer_mgr, skip_indices, prompt, k=args.k, draft_mode="hybrid", max_new_tokens=args.max_new_tokens, temperature=args.temperature, device=device)
+            res = {"prompt_idx": p_idx, "tps": m.tokens_per_second, "tokens": m.total_tokens, "acc_rate": m.acceptance_rate, "speedup": m.tokens_per_second / baseline_tps, "pld_cycles": m.pld_cycles, "layer_skip_cycles": m.layer_skip_cycles}
         elif args.method == "specbound":
             ctrl = SpecBoundController(skip_indices=skip_indices, k_min=1, k_max=max(2, args.k), initial_k=args.k)
             text, m = self_speculative_generate(model, tokenizer, layer_mgr, skip_indices, prompt, k=args.k, controller=ctrl, max_new_tokens=args.max_new_tokens, temperature=args.temperature, device=device)
@@ -229,7 +232,7 @@ def main() -> None:
         "--method",
         type=str,
         default="zassd",
-        choices=["vanilla", "zassd", "prompt_lookup", "knapspec", "specbound"],
+        choices=["vanilla", "zassd", "prompt_lookup", "hybrid", "knapspec", "specbound"],
         help="Decoding method to benchmark",
     )
     bench_parser.add_argument("--k", type=int, default=2, help="Speculative draft length K")
