@@ -3,7 +3,9 @@
 \centering
 \small
 \caption{Numerical Equivalence Audit under 4-bit NF4 Quantization comparing single-token forward passes ($L_{\text{single}}$) against batched verification slices ($L_{\text{batched}}$) on identical context states ($C$). Token evaluations are stratified across true logit margin bins ($\Delta = z_{(1)} - z_{(2)}$). Across 450 comparisons, zero theoretical bound violations occur.}
+\label{tab:exactness_table}
 \label{tab:exactness_analysis}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccccc}
 \toprule
 \textbf{Logit Margin Stratification Bin} & \textbf{Evaluated} & \textbf{Argmax} & \textbf{Agreement} & \textbf{Mean $\|L\|_{\infty}$} & \textbf{Max $\|L\|_{\infty}$} & \textbf{Empirical Classification} \\
@@ -29,5 +31,6 @@ $\Delta > 0.500$ & 180 & 0 & 100.0\% & 0.1050 & 0.2351 & Noise Immune \\
 \midrule
 \textbf{Combined Benchmark} & \textbf{450} & \textbf{1} & \textbf{99.78\%} & \textbf{0.1569} & \textbf{0.5000} & $\boldsymbol{\cos \theta > 0.99994}$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table*}

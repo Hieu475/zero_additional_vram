@@ -5,6 +5,7 @@
 \small
 \caption{Empirical Hardware Adaptation State-to-Action Matrix. Evaluated across 5 operating regimes on NVIDIA RTX 4050 Laptop GPU (Base VRAM: 2000MB, Thermal Throttling Threshold: 80$^\circ$C, Power Ceiling: 80W). The controller dynamically adapts layer pruning ($S$) and draft length ($K$) to maximize utility while enforcing physical system invariants.}
 \label{tab:hardware_adaptation}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccccccccc}
 \toprule
 \textbf{Hardware Regime} & \textbf{VRAM} & \textbf{Power} & \textbf{Temp} & \textbf{Config} & \textbf{Draft} & \textbf{Utility} & \textbf{Exp Cycle} & \textbf{Exp TPS} & \textbf{Energy} & \textbf{System Adaptation} \\
@@ -16,5 +17,6 @@
 \textbf{4. Thermal Throttling} & 2000 & 50.0 & 82.0 & \texttt{cka\_50} & 1 & -29.706 & 34.00 & 39.38 & 1.661 & Sheds 14 layers to mitigate TDP \\
 \textbf{5. Combined Stress} & 5100 & 76.0 & 81.0 & \texttt{cka\_50} & 1 & -33.969 & 34.00 & 39.38 & 1.661 & Emergency thermal layer pruning \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table*}

@@ -1,6 +1,6 @@
 \documentclass[10pt,twocolumn,letterpaper]{article}
 
-\usepackage[top=0.8in,bottom=0.8in,left=0.75in,right=0.75in]{geometry}
+\usepackage[top=0.75in,bottom=0.75in,left=0.7in,right=0.7in]{geometry}
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage{booktabs,tabularx,multirow}
 \usepackage{graphicx}
@@ -19,7 +19,7 @@
 % Input programmatic macros
 \input{../tables/macros.tex}
 
-\title{\textbf{Zero-Additional-Model-Weight-VRAM Self-Speculative Decoding (ZASSD):\\Hardware-Aware Joint Layer and Horizon Control on Edge GPUs}}
+\title{\LARGE \textbf{Zero-Additional-Model-Weight-VRAM Self-Speculative Decoding (ZASSD):\\Hardware-Aware Joint Layer and Horizon Control on Edge GPUs}}
 
 \author{
   \textbf{Hieu Quoc Nguyen}, et al.\\
@@ -34,11 +34,11 @@
 \maketitle
 
 \begin{abstract}
-Deploying large language models (LLMs) on resource-constrained consumer GPUs (e.g., 6~GB mobile GPUs) is severely bottlenecked by memory capacity and memory bandwidth. Standard speculative decoding pipelines accelerate autoregressive generation by pairing a large target model with a smaller auxiliary draft model; however, hosting this auxiliary model incurs substantial additional VRAM (typically 1.5--3.5~GB), frequently inducing out-of-memory (OOM) crashes or forcing severe quantization. 
+Deploying large language models (LLMs) on resource-constrained consumer GPUs (e.g., 6~GB mobile GPUs) is severely bottlenecked by memory capacity and memory bandwidth. Standard speculative decoding pipelines accelerate generation by pairing a target model with an auxiliary draft model; however, hosting this auxiliary model incurs substantial additional VRAM (typically 1.5--3.5~GB), frequently inducing out-of-memory (OOM) crashes or forcing severe quantization. 
 
-In this work, we propose \textbf{Zero-Additional-Model-Weight-VRAM Self-Speculative Decoding (ZASSD)}, an end-to-end framework enabling high-throughput speculative decoding with \textbf{0.0~MB} of additional weight memory. ZASSD achieves this by deriving an ultra-fast draft model dynamically from the target model itself via empirical and Centered Kernel Alignment (CKA) layer-skipping, coupled with zero-copy sharing of the verified KV prefix. To navigate complex tradeoffs between draft fidelity, verification latency, device power, and operating temperature, we introduce the \textbf{Hardware-Aware Joint Controller} powered by model-specific profiles and a constrained throughput maximization objective ($\max \widehat{\text{TPS}}$ s.t. physical barriers).
+In this work, we propose \textbf{Zero-Additional-Model-Weight-VRAM Self-Speculative Decoding (ZASSD)}, an end-to-end framework enabling speculative decoding with \textbf{0.0~MB} of auxiliary model weight memory. ZASSD achieves this by deriving a fast draft subnetwork dynamically from the target model itself via empirical and Centered Kernel Alignment (CKA) layer-skipping, coupled with zero-copy sharing of the verified KV prefix. To navigate complex tradeoffs between draft fidelity, verification latency, device power, and operating temperature, we introduce the \textbf{Hardware-Aware Joint Controller} driven by model-specific profiles and a constrained throughput maximization objective ($\max \widehat{\text{TPS}}$ s.t. physical barriers).
 
-Evaluated under an identical, frozen protocol on both \textbf{Qwen2.5-3B-Instruct} (36 layers) and \textbf{Llama-3.2-3B-Instruct} (28 layers) in 4-bit NormalFloat (NF4) quantization against five competitive baselines (Vanilla, Fixed CKA-75, Adaptive $K$, adapted KnapSpec, and adapted SpecBound) as well as canonical reasoning (GSM8K), coding (HumanEval), and summarization (CNN/DailyMail) benchmarks, ZASSD achieves up to \textbf{89.1\% token acceptance rate}, retains \textbf{0.89$\times$--1.05$\times$ relative throughput} (up to \textbf{1.14$\times$ on reasoning and 1.39$\times$ on structured contexts}) while eliminating 1.5--2.5~GB of auxiliary weight memory, strictly enforces physical thermal (82$^\circ$C) and memory limits, and mathematically bounds logit divergence within the 4-bit NF4 GEMM dequantization noise envelope ($\Delta \le 2\|L\|_\infty$).
+Evaluated under an identical, frozen protocol on both \textbf{Qwen2.5-3B-Instruct} (36 layers) and \textbf{Llama-3.2-3B-Instruct} (28 layers) in 4-bit NormalFloat (NF4) quantization against five competitive baselines as well as canonical reasoning (GSM8K), coding (HumanEval), and summarization (CNN/DailyMail) benchmarks, ZASSD achieves up to \textbf{89.1\% token acceptance rate}, retains \textbf{0.89$\times$--1.05$\times$ relative throughput} (up to \textbf{1.14$\times$ on reasoning and 1.39$\times$ on structured contexts}) while eliminating 1.5--3.0~GB of auxiliary weight memory, strictly enforces physical thermal (82$^\circ$C) and memory limits, and mathematically bounds logit divergence within the 4-bit NF4 GEMM dequantization noise envelope ($\Delta \le 2\|L\|_\infty$).
 \end{abstract}
 
 \section{Introduction}
@@ -57,22 +57,22 @@ Large language model (LLM) inference on consumer edge hardware---such as laptops
 To overcome these constraints, we introduce \textbf{ZASSD}, featuring four primary contributions:
 \begin{enumerate}
     \item \textbf{Zero-Additional-Weight Architecture \& Static KV Sharing:} We eliminate auxiliary model storage entirely by dynamically skipping redundant transformer layers of the target model during the draft phase. We implement a pre-allocated static KV cache with zero dynamic allocations and $O(1)$ rollback.
-    \item \textbf{Empirical Greedy Layer Selection:} Rather than relying exclusively on representation heuristics (e.g., CKA~\cite{kornblith2019similarity}), we develop an empirical greedy search maximizing target token agreement, identifying layer subsets ($S \in \{\texttt{emp\_4}, \dots, \texttt{emp\_10}\}$) retaining up to 100\% top-1 match accuracy.
-    \item \textbf{Hybrid Zero-VRAM Speculative Engine:} We integrate zero-cost Prompt Lookup Decoding (PLD)~\cite{saxena2024prompt} with layer-skipping into a hybrid engine, realizing $>1.0\times$ speedup across diverse NLP tasks.
+    \item \textbf{Empirical Greedy Layer Selection:} Rather than relying exclusively on representation heuristics (e.g., CKA~\cite{kornblith2019similarity}), we develop an empirical greedy search maximizing target token agreement, identifying layer subsets retaining up to 100\% top-1 match accuracy.
+    \item \textbf{Hybrid Zero-VRAM Speculative Engine:} We integrate zero-cost Prompt Lookup Decoding (PLD)~\cite{saxena2024prompt} with empirical layer-skipping into a hybrid engine, realizing $>1.0\times$ speedup across diverse NLP tasks.
     \item \textbf{Physical Feasibility Proof \& Open Artifacts:} We formally document the OOM boundary where standard 0.5B/1.5B auxiliary draft models crash, while ZASSD operates with 0.0~MB weight overhead.
 \end{enumerate}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=0.95\textwidth]{../figures/final_latency_breakdown.png}
+    \caption{Draft latency micro-profiling decomposition on NVIDIA RTX 4050 Laptop GPU under 4-bit NF4 quantization. Active Transformer GEMMs constitute $>96\%$ of draft latency across both models, identifying memory bandwidth during weight dequantization as the physical bottleneck.}
+    \label{fig:latency_breakdown}
+\end{figure*}
 
 \section{System Architecture \& KV Invariants}
 \label{sec:system}
 
 In ZASSD, model weight memory overhead is strictly \textbf{0.0~MB}. For dynamic key-value storage, we establish the principle of \textbf{zero-copy sharing of the verified prefix} supported by a pre-allocated static circular buffer.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{../figures/final_latency_breakdown.png}
-    \caption{Draft latency micro-profiling decomposition on NVIDIA RTX 4050 Laptop GPU under 4-bit NF4 quantization. Active Transformer GEMMs constitute $>95\%$ of draft latency.}
-    \label{fig:latency_breakdown}
-\end{figure}
 
 Four core systems invariants govern the cache lifecycle:
 \begin{enumerate}
@@ -81,6 +81,17 @@ Four core systems invariants govern the cache lifecycle:
     \item \textbf{Invariant 3 (Canonical Rejection Rollback):} Unaccepted candidate tokens are cleanly rolled back via pointer manipulation ($\texttt{target\_kv.crop(P + accepted)}$) in $O(1)$ time without tensor reallocations.
     \item \textbf{Invariant 4 (Suffix-Bounded Dynamic Memory):} Dynamic memory overhead during speculation is strictly bounded by $K \times d_{\text{head}} \times N_{\text{heads}} \times \text{layers} \le 8\text{~MB}$.
 \end{enumerate}
+
+Table~\ref{tab:draft_latency_decomposition} provides the micro-architectural breakdown of draft latency, confirming that logical layer-skipping overhead ($T_{\text{mgmt}}$) is negligible ($<0.4\%$).
+
+\input{../tables/draft_decomposition_table.tex}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=0.95\textwidth]{../figures/final_throughput_comparison.png}
+    \caption{Throughput comparison across 6 decoding strategies on Qwen2.5-3B and Llama-3.2-3B.}
+    \label{fig:throughput_comparison}
+\end{figure*}
 
 \section{Hardware-Aware Joint Controller}
 \label{sec:controller}
@@ -101,12 +112,9 @@ subject to:
     \item \textbf{Thermal Barrier:} If GPU junction temperature $T_t \ge 82^\circ\text{C}$, the controller forces aggressive layer shedding ($S \to \texttt{cka\_50}, K=1$) to prevent hardware thermal throttling.
 \end{itemize}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{../figures/final_throughput_comparison.png}
-    \caption{Throughput comparison across 6 decoding strategies on Qwen2.5-3B and Llama-3.2-3B.}
-    \label{fig:throughput_comparison}
-\end{figure}
+Table~\ref{tab:hardware_adaptation} details the state-to-action transition matrix across five hardware stress regimes.
+
+\input{../tables/hardware_adaptation_table.tex}
 
 \section{Empirical Evaluation}
 \label{sec:evaluation}
@@ -114,11 +122,9 @@ subject to:
 All experiments were executed on an NVIDIA GeForce RTX 4050 Laptop GPU (6~GB GDDR6, 96-bit bus, 192~GB/s, 80W max TGP, CUDA 12.8, PyTorch 2.11.0, 4-bit NF4 quantization).
 
 \subsection{End-to-End System Benchmark}
-Table~\ref{tab:final_unified_benchmark} summarizes end-to-end performance across 6 methods on Qwen2.5-3B and Llama-3.2-3B.
+Table~\ref{tab:final_unified_benchmark} summarizes end-to-end performance across 6 methods on Qwen2.5-3B and Llama-3.2-3B. ZASSD achieves \textbf{\QwenZassdAcceptance} acceptance rate on Qwen and \textbf{\LlamaZassdAcceptance} on Llama, delivering the highest speculative throughput on edge hardware without consuming auxiliary model memory.
 
 \input{../tables/final_benchmark_table.tex}
-
-ZASSD achieves \textbf{\QwenZassdAcceptance} acceptance rate on Qwen and \textbf{\LlamaZassdAcceptance} on Llama, delivering the highest speculative throughput on edge hardware without consuming auxiliary model memory.
 
 \subsection{Cross-Domain Standard Benchmarks}
 Table~\ref{tab:standard_benchmarks} evaluates ZASSD on canonical NLP benchmarks: GSM8K (Reasoning), HumanEval (Coding), and CNN/DailyMail (Summarization).
@@ -128,18 +134,16 @@ Table~\ref{tab:standard_benchmarks} evaluates ZASSD on canonical NLP benchmarks:
 On reasoning (GSM8K), ZASSD Hybrid delivers \textbf{1.049$\times$ wall-clock speedup} ($70.8\%$ acceptance), while Prompt-Lookup achieves \textbf{1.138$\times$ speedup}. On algorithmic code (HumanEval), ZASSD Empirical-6 maintains \textbf{89.1\% acceptance rate} with 0.0~MB weight footprint.
 
 \subsection{Physical Memory Boundary \& OOM Proof}
-Table~\ref{tab:oom_boundary} evaluates memory feasibility on 6~GB consumer GPUs.
+Table~\ref{tab:oom_boundary} evaluates memory feasibility on 6~GB consumer GPUs. Pairing Mistral-7B NF4 (3946.6~MB) with standard 1.5B or 0.5B auxiliary draft models requires 4.4--7.5~GB of memory, immediately triggering \textbf{CUDA Out of Memory}. ZASSD requires \textbf{0.0~MB} of auxiliary model weights, leaving over 1.2~GB of operational headroom.
 
 \input{../tables/oom_boundary_table.tex}
 
-Pairing Mistral-7B NF4 (3946.6~MB) with standard 1.5B or 0.5B auxiliary draft models requires 4.4--7.5~GB of memory, immediately triggering \textbf{CUDA Out of Memory}. ZASSD requires \textbf{0.0~MB} of auxiliary model weights, leaving over 1.2~GB of operational headroom.
-
-\begin{figure}[t]
+\begin{figure*}[t]
     \centering
-    \includegraphics[width=\linewidth]{../figures/cross_model_numerical_comparison.png}
+    \includegraphics[width=0.95\textwidth]{../figures/cross_model_numerical_comparison.png}
     \caption{Logit cosine similarity distribution between single-token and batched verification passes under 4-bit NF4 quantization ($\cos \theta > 0.9999$).}
     \label{fig:numerical_cos}
-\end{figure}
+\end{figure*}
 
 \subsection{Numerical Equivalence Audit}
 Under 4-bit NF4 dequantization, GEMM accumulation variations bounded by $\Delta \le 2\|L\|_\infty$ govern argmax fidelity. Table~\ref{tab:exactness_table} confirms \textbf{zero theoretical bound violations} across 450 tokens.

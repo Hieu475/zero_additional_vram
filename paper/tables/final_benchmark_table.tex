@@ -4,6 +4,7 @@
 \small
 \caption{End-to-End Performance, Verification Fidelity, and Resource Footprint across 6 decoding strategies on consumer hardware (NVIDIA RTX 4050 Laptop 6GB, 80W). Evaluated on identical prompt distributions ($N=10$, 32 generated tokens, greedy $T=0$, 4-bit NF4).}
 \label{tab:final_unified_benchmark}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccccccc}
 \toprule
 \textbf{Method} & \textbf{Throughput} & \textbf{Relative} & \textbf{Acceptance} & \textbf{Exact Match} & \textbf{Partial} & \textbf{VRAM} & \textbf{Energy} & \textbf{Latency} \\
@@ -25,5 +26,6 @@ KnapSpec (adapted) \cite{knapspec2026} & 39.54 & 0.76$\times$ & 68.2\% & 60.0\% 
 SpecBound (adapted) \cite{specbound2026} & 41.36 & 0.80$\times$ & 76.4\% & 50.0\% & 70.9\% & 2171.6 & 1.741 & 23.14 / 24.54 \\
 \textbf{ZASSD (HW Controller)} & \textbf{42.58} & \textbf{0.82$\times$} & \textbf{78.2\%} & 60.0\% & \textbf{72.8\%} & 2170.8 & \textbf{1.683} & \textbf{16.28 / 21.79} \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table*}

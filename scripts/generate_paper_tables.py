@@ -32,6 +32,7 @@ def generate_final_benchmark_table(summary_data: dict) -> str:
     tex.append(r"\small")
     tex.append(r"\caption{End-to-End Performance, Verification Fidelity, and Resource Footprint across 6 decoding strategies on consumer hardware (NVIDIA RTX 4050 Laptop 6GB, 80W). Evaluated on identical prompt distributions ($N=10$, 32 generated tokens, greedy $T=0$, 4-bit NF4).}")
     tex.append(r"\label{tab:final_unified_benchmark}")
+    tex.append(r"\resizebox{\textwidth}{!}{%")
     tex.append(r"\begin{tabular}{lcccccccc}")
     tex.append(r"\toprule")
     tex.append(r"\textbf{Method} & \textbf{Throughput} & \textbf{Relative} & \textbf{Acceptance} & \textbf{Exact Match} & \textbf{Partial} & \textbf{VRAM} & \textbf{Energy} & \textbf{Latency} \\")
@@ -83,7 +84,8 @@ def generate_final_benchmark_table(summary_data: dict) -> str:
             tex.append(r"\midrule")
 
     tex.append(r"\bottomrule")
-    tex.append(r"\end{tabular}")
+    tex.append(r"\end{tabular}%")
+    tex.append(r"}")
     tex.append(r"\end{table*}")
     tex.append("")
     return "\n".join(tex)
@@ -99,7 +101,9 @@ def generate_exactness_table(exactness_data: dict) -> str:
     tex.append(r"\centering")
     tex.append(r"\small")
     tex.append(r"\caption{Numerical Equivalence Audit under 4-bit NF4 Quantization comparing single-token forward passes ($L_{\text{single}}$) against batched verification slices ($L_{\text{batched}}$) on identical context states ($C$). Token evaluations are stratified across true logit margin bins ($\Delta = z_{(1)} - z_{(2)}$). Across 450 comparisons, zero theoretical bound violations occur.}")
+    tex.append(r"\label{tab:exactness_table}")
     tex.append(r"\label{tab:exactness_analysis}")
+    tex.append(r"\resizebox{\textwidth}{!}{%")
     tex.append(r"\begin{tabular}{lcccccc}")
     tex.append(r"\toprule")
     tex.append(r"\textbf{Logit Margin Stratification Bin} & \textbf{Evaluated} & \textbf{Argmax} & \textbf{Agreement} & \textbf{Mean $\|L\|_{\infty}$} & \textbf{Max $\|L\|_{\infty}$} & \textbf{Empirical Classification} \\")
@@ -161,7 +165,8 @@ def generate_exactness_table(exactness_data: dict) -> str:
     tex.append(r"\midrule")
     tex.append(f"\\textbf{{Combined Benchmark}} & \\textbf{{{tot_tokens_all}}} & \\textbf{{{tot_flips_all}}} & \\textbf{{{comb_agr}}} & \\textbf{{{comb_linf}}} & \\textbf{{0.5000}} & $\\boldsymbol{{\\cos \\theta > 0.99994}}$ \\\\")
     tex.append(r"\bottomrule")
-    tex.append(r"\end{tabular}")
+    tex.append(r"\end{tabular}%")
+    tex.append(r"}")
     tex.append(r"\end{table*}")
     tex.append("")
     return "\n".join(tex)
@@ -178,6 +183,7 @@ def generate_draft_decomposition_table(decomp_data: dict) -> str:
     tex.append(r"\small")
     tex.append(r"\caption{Draft Latency Micro-Profiling Decomposition ($T_{\text{draft}} = T_{\text{transformer}} + T_{\text{KV}} + T_{\text{mgmt}} + T_{\text{sampling}} + T_{\text{sync}}$) on RTX 4050 Laptop GPU under 4-bit NF4 quantization. Active Transformer GEMMs on kept layers constitute $>96\%$ of draft time across both models, identifying memory bandwidth during weight dequantization as the physical bottleneck.}")
     tex.append(r"\label{tab:draft_latency_decomposition}")
+    tex.append(r"\resizebox{\textwidth}{!}{%")
     tex.append(r"\begin{tabular}{lcccccc}")
     tex.append(r"\toprule")
     tex.append(r"\textbf{Model / Horizon} & \textbf{Total Draft} & \textbf{Transformer GEMMs} & \textbf{KV Cache Update} & \textbf{Layer Management} & \textbf{Sampling/Control} & \textbf{CUDA Sync} \\")
@@ -204,14 +210,15 @@ def generate_draft_decomposition_table(decomp_data: dict) -> str:
             kv_str = f"{decomp.get('t_kv_ms', 0.0):.2f} ({frac.get('t_kv_pct', 0.0):.1f}\\%)"
             mgmt_str = f"{decomp.get('t_layer_mgmt_ms', 0.0):.2f} ({frac.get('t_layer_mgmt_pct', 0.0):.1f}\\%)"
             samp_str = f"{decomp.get('t_sampling_ms', 0.0):.2f} ({frac.get('t_sampling_pct', 0.0):.1f}\\%)"
-            sync_str = f"{decomp.get('t_sync_ms', 0.0):.2f} ({frac.get('t_sync_pct', 0.0):.2f}\\%)"
+            sync_str = f"{decomp.get('t_sync_ms', 0.0):.2f} ({frac.get('t_sync_pct', 0.0):.1f}\\%)"
 
             tex.append(f"$K={k_val}$ & {tot_ms} & {gemm_str} & {kv_str} & {mgmt_str} & {samp_str} & {sync_str} \\\\")
         if m_key == "qwen25_3b":
             tex.append(r"\midrule")
 
     tex.append(r"\bottomrule")
-    tex.append(r"\end{tabular}")
+    tex.append(r"\end{tabular}%")
+    tex.append(r"}")
     tex.append(r"\end{table*}")
     tex.append("")
     return "\n".join(tex)
@@ -228,6 +235,7 @@ def generate_standard_benchmark_table(standard_bench_data: dict) -> str:
     tex.append(r"\small")
     tex.append(r"\caption{Cross-Domain Standard Benchmark Evaluation on Consumer Edge Hardware (NVIDIA GeForce RTX 4050 Laptop, 6 GB GDDR6). Evaluated across canonical NLP tasks: GSM8K (Multi-step Reasoning), HumanEval (Algorithmic Code Generation), and CNN/DailyMail (Summarization) on Qwen2.5-3B-Instruct in 4-bit NF4.}")
     tex.append(r"\label{tab:standard_benchmarks}")
+    tex.append(r"\resizebox{\textwidth}{!}{%")
     tex.append(r"\begin{tabular}{lcccccc}")
     tex.append(r"\toprule")
     tex.append(r"\textbf{Decoding Strategy} & \textbf{Aux. Weight VRAM} & \textbf{GSM8K (Reasoning)} & \textbf{HumanEval (Code)} & \textbf{CNN/DM (Summary)} & \textbf{Overall Speedup} & \textbf{Mean Acceptance} \\")
@@ -251,7 +259,8 @@ def generate_standard_benchmark_table(standard_bench_data: dict) -> str:
             tex.append(f"{method} & {vram} & {gsm} & {he} & {cnn} & {overall} & {acc} \\\\")
             
     tex.append(r"\bottomrule")
-    tex.append(r"\end{tabular}")
+    tex.append(r"\end{tabular}%")
+    tex.append(r"}")
     tex.append(r"\end{table*}")
     tex.append("")
     return "\n".join(tex)
