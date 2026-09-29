@@ -89,19 +89,27 @@ def handle_benchmark(args: argparse.Namespace) -> None:
     print(f"\n[ZASSD Benchmark] Loading model: {args.model} ...")
 
     tokenizer = AutoTokenizer.from_pretrained(args.model)
-    bnb_config = None
-    if args.quantize:
+    is_prequantized = "bnb-4bit" in args.model.lower() or "4bit" in args.model.lower()
+
+    if is_prequantized:
+        model = AutoModelForCausalLM.from_pretrained(args.model, device_map=device)
+    elif args.quantize:
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_quant_type="nf4",
             bnb_4bit_compute_dtype=torch.float16,
         )
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model,
-        quantization_config=bnb_config,
-        device_map=device,
-        torch_dtype=torch.float16 if not args.quantize else None,
-    )
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model,
+            quantization_config=bnb_config,
+            device_map=device,
+        )
+    else:
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model,
+            device_map=device,
+            torch_dtype=torch.float16,
+        )
     model.eval()
 
     adapter = ModelAdapter(model)
