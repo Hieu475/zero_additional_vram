@@ -18,6 +18,12 @@ Formulation:
 
 KnapSpec uses fixed draft length K (typically K=2) and static/offline knapsack
 layer selection without runtime hardware-state monitoring.
+
+Note on Baseline Adaptation:
+  The original KnapSpec (Cha et al., ICML 2026) decouples Attention and MLP submodules
+  with length-dependent Tokens-Per-Time (TPT) dynamic optimization.
+  This implementation provides a standardized whole-layer 0/1 Knapsack adaptation
+  under identical layer-skipping infrastructure for fair baseline comparison.
 """
 
 from __future__ import annotations

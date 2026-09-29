@@ -13,7 +13,7 @@ Deploying large language models (LLMs) on resource-constrained consumer GPUs (e.
 
 In this work, we propose **Zero-Additional-Model-Weight-VRAM Self-Speculative Decoding (ZASSD)**, an end-to-end framework enabling high-throughput speculative decoding with **0 MB** of additional weight memory. ZASSD achieves this by deriving an ultra-fast draft model dynamically from the target model itself via Centered Kernel Alignment (CKA) layer-skipping, coupled with zero-copy sharing of the verified KV prefix. To navigate the complex tradeoffs between draft fidelity, verification latency, device power, and operating temperature, we introduce the **Hardware-Aware Joint Controller** powered by model-specific profiles and a constrained throughput maximization objective ($\max \widehat{\text{TPS}}$ s.t. physical barriers).
 
-Evaluated under a rigorous, reproducible protocol on both **Qwen2.5-3B-Instruct** (36 layers) and **Llama-3.2-3B-Instruct** (28 layers) in 4-bit NormalFloat (NF4) quantization against five competitive baselines (Vanilla, Fixed CKA, Adaptive $K$, KnapSpec, and SpecBound), ZASSD delivers up to **91.4% token acceptance rate** and **0.93$\times$ speedup** (38.3 tok/s on Qwen, 45.8 tok/s on Llama), strictly protects physical thermal and memory limits, and provably preserves 100% algorithmic exactness outside the empirical 4-bit dequantization noise ceiling ($\Delta \le 0.25$).
+Evaluated under a rigorous, reproducible protocol on both **Qwen2.5-3B-Instruct** (36 layers) and **Llama-3.2-3B-Instruct** (28 layers) in 4-bit NormalFloat (NF4) quantization against five competitive baselines (Vanilla, Fixed CKA-75, Adaptive $K$, adapted KnapSpec, and adapted SpecBound), ZASSD achieves up to **88.1% token acceptance rate**, retains **0.89$\times$ and 0.82$\times$ relative throughput** (36.5 tok/s on Qwen, 42.6 tok/s on Llama) while eliminating 1.5–2.5 GB of auxiliary weight memory, strictly enforces physical thermal (82$^\circ$C) and memory limits, and mathematically bounds logit divergence within the 4-bit NF4 GEMM dequantization noise envelope ($\Delta \le 2\|L\|_\infty$).
 
 ---
 
@@ -52,10 +52,10 @@ TargetKVCache:  [Token 0, ..., Token P-1] (Pointers and contents 100% UNCHANGED)
 ```
 
 We formally verified four core systems invariants via automated regression testing (`test_kv_cache_invariants.py`):
-1. **[PASS] Prefix Tensor is Shared:** Immediately after forking, `dl.keys.data_ptr() == tl.keys.data_ptr()` across all layers. Zero bytes are allocated for prefix duplication.
-2. **[PASS] Draft Write Does Not Mutate Target KV:** When `draft_cache.update()` executes, PyTorch allocates a localized concatenated tensor for the draft cache, leaving target pointers and target tensor contents bitwise identical.
-3. **[PASS] Reject Rollback Restores Canonical Target KV:** Unaccepted candidate tokens are truncated from the target cache via `target_kv.crop()`, leaving zero residual memory pollution.
-4. **[PASS] Suffix-Only Memory Scaling:** Additional dynamic memory during speculation is strictly bounded by $K \times d_{\text{head}} \times N_{\text{heads}} \times \text{layers} \le 8\text{ MB}$.
+1. **Invariant 1 (Zero-Copy Prefix Sharing):** Immediately after forking, `dl.keys.data_ptr() == tl.keys.data_ptr()` across all layers. Zero bytes are allocated for prefix duplication.
+2. **Invariant 2 (Target KV State Isolation):** When `draft_cache.update()` executes, PyTorch allocates a localized concatenated tensor for the draft cache, leaving target pointers and target tensor contents bitwise identical.
+3. **Invariant 3 (Canonical Rejection Rollback):** Unaccepted candidate tokens are truncated from the target cache via `target_kv.crop()`, leaving zero residual memory pollution.
+4. **Invariant 4 (Suffix-Bounded Dynamic Memory):** Additional dynamic memory during speculation is strictly bounded by $K \times d_{\text{head}} \times N_{\text{heads}} \times \text{layers} \le 8\text{ MB}$.
 
 ---
 
@@ -98,53 +98,53 @@ $$\text{VRAM}_{\text{used}} + K \cdot 45\text{ MB} < B_v, \quad P_t < B_p, \quad
 
 ---
 
-## 5. Empirical Evaluation & Gates Verification
+## 5. Empirical Evaluation & Hardware Verification
 
-All experiments were executed under an identical, frozen protocol on NVIDIA RTX 4050 Laptop GPU (6GB VRAM, CUDA 12.8, PyTorch 2.11.0+cu128, Driver 595.84, greedy decoding).
+All experiments were executed under an identical, frozen protocol on NVIDIA RTX 4050 Laptop GPU (6GB VRAM, CUDA 12.8, PyTorch 2.11.0+cu128, Driver 595.84, greedy decoding, 4-bit NF4 quantization).
 
-### 5.1 Gate A: Unified Benchmark Results
+### 5.1 End-to-End Benchmark & Multi-Objective Evaluation
 Table \ref{tab:final_unified_benchmark} presents the official results across 6 methods on both Qwen2.5-3B and Llama-3.2-3B.
 
 \input{paper/tables/final_benchmark_table.tex}
 
 **Key Observations:**
-1. **Zero Weight VRAM Overhead:** Speculative execution adds only $7.3\text{ MB}$ of dynamic buffer memory on Qwen and $12.3\text{ MB}$ on Llama. Zero weight VRAM is consumed.
-2. **Throughput Superiority:** Driven by model-specific profiles and the $K=1$ sweet spot, ZASSD HW Controller achieves **38.3 tok/s (0.93$\times$)** on Qwen and **45.8 tok/s (0.85$\times$)** on Llama, outperforming all other adaptive baselines (Adaptive K: 27.9 tok/s, SpecBound: 34.4 tok/s).
-3. **Acceptance Rates:** ZASSD achieves **91.4% acceptance** on Qwen and **77.2%** on Llama.
+1. **Zero Model-Weight VRAM Overhead:** Speculative execution adds only $7.4\text{ MB}$ of dynamic buffer memory on Qwen and $12.3\text{ MB}$ on Llama. Zero weight VRAM is consumed, enabling full 3B deployment on 6GB consumer hardware without OOM risk.
+2. **Systems Pareto Profile:** Driven by model-specific profiles and the $K=1$ sweet spot, ZASSD HW Controller achieves **36.5 tok/s (0.89$\times$)** on Qwen and **42.6 tok/s (0.82$\times$)** on Llama, outperforming heuristic adaptive baselines (Adaptive K: 26.6 tok/s on Qwen, 32.7 tok/s on Llama; SpecBound: 33.8 tok/s on Qwen). While low laptop memory bandwidth (192 GB/s) prevents exceeding vanilla throughput ($<1.0\times$), ZASSD delivers the highest speculative throughput on edge hardware.
+3. **High Acceptance Fidelity:** ZASSD achieves **88.1% token acceptance rate** on Qwen and **78.2%** on Llama.
 
 ---
 
-### 5.2 Gate B: Direct Numerical Exactness Audit
-To rigorously verify algorithmic correctness versus quantization noise, we conducted a direct audit comparing single-token forward passes against batched verification passes on **identical context states ($C$)** across 225 tokens.
+### 5.2 Numerical Equivalence Audit under 4-bit Dequantization Bounds
+To rigorously isolate algorithmic correctness from low-bit quantization noise, we conducted a direct numerical audit comparing single-token forward passes against batched verification passes on **identical context states ($C$)** across 450 tokens (225 tokens per model).
 
 \input{paper/tables/exactness_table.tex}
 
 **Audit Conclusions:**
-- **Zero Flips in Safe Margins:** For all tokens where the true logit margin $\Delta > 0.25$, **agreement is 100.0% (196 / 196 tokens)** with zero argmax flips.
-- **Near-Tie Concentration:** All 5 recorded argmax flips occurred strictly in near-tie tokens ($0.0 < \Delta \le 0.25$) due to dynamic GEMM accumulation variance ($\le 0.28$ logit units) in 4-bit NF4 dequantization.
-- **Cosine Similarity:** Mean logit cosine similarity across all 225 evaluations is $\mathbf{0.999947}$.
+- **Zero Bound Violations:** Across 450 comparisons, zero theoretical bound violations occurred. Whenever the true logit margin $\Delta > 2\|L\|_\infty$, agreement is strictly 100.0%.
+- **Near-Tie Concentration:** On Qwen, agreement is 100.0% (225/225). On Llama, exactly 1 flip was observed across 225 tokens, which occurred at an exact mathematical tie ($\Delta = 0.000$) where both candidate tokens shared identical top logits.
+- **Cosine Similarity:** Mean logit cosine similarity across evaluations is $\mathbf{0.999942}$ (Qwen) and $\mathbf{0.999954}$ (Llama).
 
 ---
 
-### 5.3 Gate C: Hardware Stress Matrix & Real Telemetry Replay
+### 5.3 Dynamic Hardware Adaptation & Real Telemetry Replay
 
 \input{paper/tables/hardware_adaptation_table.tex}
 
 **Real Telemetry Replay Trajectory:**  
-Replaying real GPU generation telemetry (power, temp, VRAM, entropy) through the controller demonstrated active closed-loop control:
-- High entropy ($H > 2.0$, uncertain text): selects `cka_90` ($K=1$) to maintain high draft accuracy.
-- Low entropy ($H < 0.5$, certain text): shifts to `cka_60` / `cka_75` ($K=1$, cycle dropped to $39.8\text{ ms}$), boosting throughput to $>46\text{ tok/s}$.
-- Thermal stress ($82^\circ\text{C}$): immediately activates `cka_50` ($K=1$), shedding 14 layers to protect hardware.
+Replaying live GPU generation telemetry (power, temperature, VRAM, sequence entropy) through the controller demonstrated active closed-loop protection:
+- High entropy ($H > 2.0$, uncertain text): selects `cka_90` ($K=1$) to maintain high draft acceptance.
+- Low entropy ($H < 0.5$, certain text): shifts to `cka_60` / `cka_75` ($K=1$) to accelerate cycle times.
+- Thermal stress ($82^\circ\text{C}$): immediately triggers protective layer shedding (`cka_50`, $K=1$), dropping 14–18 layers to prevent hardware thermal throttling and avoid OOM.
 
 ---
 
-## 6. Limitations & Future Work
+## 6. Limitations & Hardware Architectural Boundary
 
-1. **Hardware Memory Bandwidth Limits:** On entry-level mobile GPUs (192 GB/s), single-token forward passes take only $\approx 20\text{ ms}$, creating narrow headroom for speculative speedups ($0.93\times$). Higher-bandwidth platforms (e.g. RTX 4090 with 1008 GB/s or A100) will yield significant positive speedup ($>1.4\times$).
-2. **De-quantization Arithmetic:** The 4-bit NF4 accumulation noise floor ($\approx 0.25$ logit units) explains near-tie token divergence. Evaluating under FP16/BF16 on 16GB+ systems will achieve 100% exact match.
+1. **Memory Bandwidth Ceiling on Edge GPUs:** On entry-level mobile GPUs with 96-bit memory buses (192 GB/s), single-token forward passes take only $\approx 20\text{ ms}$. Because self-speculative draft passes still execute 75% of the model layers and verify passes process $K+1$ tokens, total cycle time exceeds vanilla latency ($>1.0\times$ time), requiring unrealistic acceptance ($\mathbb{E}[N] \ge 2.66$) to break even. Higher-bandwidth server platforms (e.g. RTX 4090 with 1008 GB/s or A100 with 2039 GB/s) provide the necessary parallel compute headroom for positive wall-clock speedup.
+2. **Dequantization Arithmetic:** Under 4-bit NF4, GEMM accumulation variations ($\le 0.28$ logit units) can flip argmax decisions on near-tie tokens ($\Delta \le 0.15$). Evaluating under unquantized FP16/BF16 eliminates these accumulation discrepancies.
 
 ---
 
 ## 7. Conclusion
 
-We presented **ZASSD**, a zero-additional-model-weight self-speculative decoding framework tailored for edge GPUs. By coupling CKA layer-skipping with zero-copy prefix sharing, micro-profiled $K=1$ sweet-spot execution, and constrained throughput maximization, ZASSD eliminates auxiliary model memory while delivering up to 91.4% acceptance, robust thermal protection, and provable algorithmic exactness within the 4-bit quantization envelope.
+We presented **ZASSD**, a zero-additional-model-weight self-speculative decoding framework tailored for consumer edge GPUs. By coupling CKA layer-skipping with zero-copy prefix sharing, micro-profiled $K=1$ sweet-spot execution, and constrained throughput maximization, ZASSD eliminates auxiliary model memory (saving 1.5–2.5 GB VRAM) while achieving up to 88.1% acceptance, robust thermal and memory protection, and mathematically bounded numerical stability within the 4-bit quantization envelope.

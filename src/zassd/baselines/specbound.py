@@ -16,6 +16,12 @@ Formulation:
 
 SpecBound operates with a fixed layer-skip subnetwork (e.g. CKA-75) and adapts
 speculation length purely from linguistic uncertainty, without hardware constraints.
+
+Note on Baseline Adaptation:
+  The original SpecBound (Wen & Feng, ACL 2026) integrates layer-wise temperature
+  annealing with early-exit heads for confidence calibration.
+  This implementation adapts the bounded lookahead policy using sequence entropy
+  thresholds on a fixed draft subnetwork (CKA-75) without architectural mutation.
 """
 
 from __future__ import annotations
