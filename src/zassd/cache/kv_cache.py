@@ -140,9 +140,19 @@ class StaticPreallocatedKVCache(Cache):
         super().__init__(layer_class_to_replicate=lambda: StaticPreallocatedLayer(max_capacity=max_capacity))
         self.max_capacity = max_capacity
 
-    def get_seq_length(self, layer_idx: int = 0) -> int:
-        """Get sequence length of the specified layer."""
-        if not self.layers or layer_idx >= len(self.layers):
+    def get_seq_length(self, layer_idx: Optional[int] = 0) -> int:
+        """Get sequence length of the specified layer or maximum length across active layers.
+
+        HuggingFace model decoders query `get_seq_length()` without arguments (defaulting to layer 0)
+        to construct RoPE position_ids. If layer 0 is skipped during draft speculation,
+        layer 0's cache is not updated; returning the maximum length across active layers
+        prevents positional regression and maintains strictly monotonic RoPE coordinates.
+        """
+        if not self.layers:
+            return 0
+        if layer_idx is None or layer_idx == 0:
+            return max((layer.get_seq_length() for layer in self.layers), default=0)
+        if layer_idx >= len(self.layers):
             return 0
         return self.layers[layer_idx].get_seq_length()
 
@@ -212,9 +222,13 @@ class TargetKVCache:
             raise ValueError(f"Unknown KV cache backend: {backend}. Expected 'static' or 'dynamic'.")
         self.max_capacity = max_capacity
 
-    def get_seq_length(self, layer_idx: int = 0) -> int:
+    def get_seq_length(self, layer_idx: Optional[int] = 0) -> int:
         """Get sequence length stored in the cache."""
-        if not self.cache.layers or layer_idx >= len(self.cache.layers):
+        if not hasattr(self.cache, "layers") or not self.cache.layers:
+            return 0
+        if layer_idx is None or layer_idx == 0:
+            return max((layer.get_seq_length() for layer in self.cache.layers), default=0)
+        if layer_idx >= len(self.cache.layers):
             return 0
         return self.cache.get_seq_length(layer_idx)
 

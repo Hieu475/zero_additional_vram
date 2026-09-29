@@ -310,3 +310,48 @@ class TestStaticKVCacheInvariants:
             assert draft.layers[idx].keys.data_ptr() == orig_ptrs[idx][0]
             assert draft.layers[idx].values.data_ptr() == orig_ptrs[idx][1]
 
+    def test_layer_0_skipped_monotonic_sequence_length(
+        self, populated_static_kv: tuple[TargetKVCache, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Verify that skipping layer 0 does not stall get_seq_length(0) or corrupt RoPE coordinates."""
+        target, _, _ = populated_static_kv
+        num_layers = len(target.cache.layers)
+        prefix_len = target.get_seq_length(0)
+
+        draft = target.fork_ephemeral_draft_kv()
+
+        # Simulate draft forward pass where layer 0 is skipped (only layers 1..N-1 are updated)
+        cand_k = torch.randn(1, 4, 2, 64)
+        cand_v = torch.randn(1, 4, 2, 64)
+        for layer_idx in range(1, num_layers):
+            draft.update(cand_k, cand_v, layer_idx)
+
+        # Layer 0 cache was not updated, but get_seq_length(0) must return the max length across active layers
+        assert draft.layers[0].get_seq_length() == prefix_len  # layer 0 specifically lags
+        assert draft.get_seq_length(0) == prefix_len + 2       # cache-level call returns max active
+        assert draft.get_seq_length() == prefix_len + 2        # default layer_idx=0 call returns max active
+
+    def test_last_layer_skipped_clean_rollback(
+        self, populated_static_kv: tuple[TargetKVCache, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Verify that skipping the final layer still enables clean rollback across all layers."""
+        target, _, _ = populated_static_kv
+        num_layers = len(target.cache.layers)
+        prefix_len = target.get_seq_length()
+
+        # Update all layers except the last layer
+        cand_k = torch.randn(1, 4, 3, 64)
+        cand_v = torch.randn(1, 4, 3, 64)
+        for layer_idx in range(num_layers - 1):
+            target.cache.update(cand_k, cand_v, layer_idx)
+
+        assert target.get_seq_length() == prefix_len + 3
+
+        # Rollback to prefix_len + 1
+        target.rollback(prefix_len=prefix_len, accepted_count=1)
+        for layer_idx in range(num_layers - 1):
+            assert target.cache.layers[layer_idx].get_seq_length() == prefix_len + 1
+        # The skipped final layer was not updated, so its sequence length cleanly remains at prefix_len
+        assert target.cache.layers[num_layers - 1].get_seq_length() == prefix_len
+        assert target.get_seq_length() == prefix_len + 1
+
