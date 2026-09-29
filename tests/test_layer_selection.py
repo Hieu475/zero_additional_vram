@@ -151,3 +151,39 @@ class TestCKA:
         assert 0 in kept
         assert 5 in kept
 
+
+class TestEmpiricalSelection:
+    """Test empirical layer selection."""
+
+    def test_precalibrated_qwen(self):
+        from zassd.layer_selection.empirical import select_empirical_layers
+
+        kept, skipped = select_empirical_layers(num_layers=36, num_to_skip=6, model_name="Qwen2.5-3B")
+        assert len(skipped) == 6
+        assert len(kept) == 30
+        assert 0 in kept
+        assert 35 in kept
+        assert skipped == [4, 5, 19, 20, 22, 23]
+
+    def test_selector_empirical_method(self):
+        from zassd.layer_selection.selector import LayerSelector, SelectionMethod
+
+        selector = LayerSelector(
+            num_layers=36,
+            method=SelectionMethod.EMPIRICAL,
+            num_to_skip=6,
+            model_name="Qwen2.5-3B",
+        )
+        kept, skipped = selector.select()
+        assert len(skipped) == 6
+        assert 0 in kept
+        assert 35 in kept
+
+    def test_fallback_middle(self):
+        from zassd.layer_selection.empirical import select_empirical_layers
+
+        kept, skipped = select_empirical_layers(num_layers=20, num_to_skip=4, model_name="UnknownArchitecture")
+        assert len(skipped) == 4
+        assert 0 in kept
+        assert 19 in kept
+

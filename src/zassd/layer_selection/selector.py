@@ -18,6 +18,7 @@ class SelectionMethod(Enum):
     ODD = "odd"
     MIDDLE = "middle"
     CKA = "cka"
+    EMPIRICAL = "empirical"
 
 
 class LayerSelector:
@@ -73,6 +74,20 @@ class LayerSelector:
                 num_to_skip=num_to_skip,
                 always_keep=always_keep,
                 avoid_consecutive=avoid_consecutive,
+            )
+        elif self.method == SelectionMethod.EMPIRICAL:
+            from .empirical import select_empirical_layers
+            num_to_skip = self.kwargs.get(
+                "num_to_skip",
+                int(self.num_layers * self.kwargs.get("skip_ratio", 0.2)),
+            )
+            model_name = self.kwargs.get("model_name")
+            custom_profile_path = self.kwargs.get("custom_profile_path")
+            self._kept, self._skipped = select_empirical_layers(
+                num_layers=self.num_layers,
+                num_to_skip=num_to_skip,
+                model_name=model_name,
+                custom_profile_path=custom_profile_path,
             )
         else:
             raise ValueError(f"Unknown method: {self.method}")

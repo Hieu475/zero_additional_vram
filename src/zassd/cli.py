@@ -36,6 +36,9 @@ SKIP_STRATEGIES = {
     "mid_12": [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
     "mid_10": [13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
     "mid_8": [14, 15, 16, 17, 18, 19, 20, 21],
+    "empirical_6": [4, 5, 19, 20, 22, 23],
+    "empirical_8": [4, 5, 19, 20, 22, 23, 24, 25],
+    "empirical_10": [4, 5, 9, 13, 19, 20, 22, 23, 24, 25],
     "cka_75": [4, 8, 12, 16, 20, 24, 28, 32],
     "cka_50": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22],
 }
@@ -248,7 +251,7 @@ def main() -> None:
         "--skip-strategy",
         type=str,
         default="mid_12",
-        choices=["mid_12", "mid_10", "mid_8", "cka_75", "cka_50"],
+        choices=["mid_12", "mid_10", "mid_8", "empirical_6", "empirical_8", "empirical_10", "cka_75", "cka_50"],
         help="Predefined layer skipping strategy",
     )
     bench_parser.add_argument("--skip-indices", type=str, default=None, help="Comma-separated custom layer indices to skip")
