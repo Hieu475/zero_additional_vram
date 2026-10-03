@@ -1,0 +1,6648 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "slice": "gsm8k test[50:200] (non-overlapping with N50 test[:50])",
+  "summary": {
+    "Vanilla": {
+      "mean_tps": 39.86631979509666,
+      "mean_speedup": 1.0,
+      "mean_acceptance": 0.0,
+      "exact_match_pct": 100.0
+    },
+    "Prompt-Lookup (PLD)": {
+      "mean_tps": 43.78394062107787,
+      "mean_speedup": 1.099397074944522,
+      "mean_acceptance": 0.4417562000109674,
+      "exact_match_pct": 78.66666666666667
+    },
+    "ZASSD Empirical-6 (k=1)": {
+      "mean_tps": 37.44677146944425,
+      "mean_speedup": 0.9407569163511179,
+      "mean_acceptance": 0.9277407407407406,
+      "exact_match_pct": 82.66666666666667
+    },
+    "ZASSD Hybrid (k=2)": {
+      "mean_tps": 40.556322878335585,
+      "mean_speedup": 1.0188573965125316,
+      "mean_acceptance": 0.7783247304963408,
+      "exact_match_pct": 82.66666666666667
+    },
+    "ZASSD Routed (k=2+PLD4)": {
+      "mean_tps": 40.37297278100992,
+      "mean_speedup": 1.0138992818515469,
+      "mean_acceptance": 0.43037614550522735,
+      "exact_match_pct": 82.0
+    }
+  },
+  "raw_samples": {
+    "Vanilla": [
+      {
+        "id": "gsm8k_050",
+        "tps": 32.70654586069706,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_051",
+        "tps": 44.292074663210066,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_052",
+        "tps": 44.75644535472463,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_053",
+        "tps": 42.233531728499656,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_054",
+        "tps": 39.98224998011472,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_055",
+        "tps": 41.12581359517184,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_056",
+        "tps": 41.366272088099976,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_057",
+        "tps": 40.42782441983977,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_058",
+        "tps": 39.647201885016656,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_059",
+        "tps": 40.06863142180771,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_060",
+        "tps": 40.380187405858194,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_061",
+        "tps": 41.215453158855325,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_062",
+        "tps": 40.21317634789685,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_063",
+        "tps": 41.662959892896154,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_064",
+        "tps": 38.790767328662575,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_065",
+        "tps": 40.07118663005862,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_066",
+        "tps": 42.95998041991188,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_067",
+        "tps": 42.6398576047849,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_068",
+        "tps": 39.82835099237074,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_069",
+        "tps": 39.11081949503998,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_070",
+        "tps": 39.14084402413007,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_071",
+        "tps": 42.20192322024633,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_072",
+        "tps": 39.906225391840536,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_073",
+        "tps": 38.30881160493717,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_074",
+        "tps": 33.98158733177669,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_075",
+        "tps": 36.63132406564277,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_076",
+        "tps": 38.07445986529294,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_077",
+        "tps": 37.08762326742962,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_078",
+        "tps": 40.81199216514758,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_079",
+        "tps": 37.926176234926196,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_080",
+        "tps": 39.629827556150204,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_081",
+        "tps": 39.90925841891677,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_082",
+        "tps": 38.93020810059242,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_083",
+        "tps": 43.0225937318792,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_084",
+        "tps": 39.524547036990356,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_085",
+        "tps": 41.65865417421029,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_086",
+        "tps": 38.8653934989364,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_087",
+        "tps": 39.78794108307443,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_088",
+        "tps": 41.340796545993584,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_089",
+        "tps": 44.10611270224196,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_090",
+        "tps": 38.78603254140883,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_091",
+        "tps": 34.29183219354446,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_092",
+        "tps": 42.00114368587579,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_093",
+        "tps": 38.697069976392314,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_094",
+        "tps": 40.2990853711058,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_095",
+        "tps": 40.03206621881416,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_096",
+        "tps": 40.43911497086425,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_097",
+        "tps": 39.6903324540738,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_098",
+        "tps": 37.85928422276598,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_099",
+        "tps": 39.58718091866011,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_100",
+        "tps": 39.645191886297106,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_101",
+        "tps": 40.48851840259519,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_102",
+        "tps": 41.066030203417576,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_103",
+        "tps": 39.353880899675744,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_104",
+        "tps": 39.01328623794433,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_105",
+        "tps": 40.211700697633766,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_106",
+        "tps": 39.8847322927456,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_107",
+        "tps": 40.85983109768779,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_108",
+        "tps": 40.33919284254884,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_109",
+        "tps": 40.35199672200003,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_110",
+        "tps": 38.82901746513665,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_111",
+        "tps": 40.50248216422049,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_112",
+        "tps": 39.32327575287669,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_113",
+        "tps": 40.11555754362243,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_114",
+        "tps": 41.4346024643269,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_115",
+        "tps": 38.96044127250294,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_116",
+        "tps": 41.64689642939565,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_117",
+        "tps": 40.09145211023301,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_118",
+        "tps": 37.12019546902485,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_119",
+        "tps": 37.14129480092275,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_120",
+        "tps": 39.98427918104211,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_121",
+        "tps": 42.520236797992126,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_122",
+        "tps": 38.722094814418654,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_123",
+        "tps": 42.91717494164298,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_124",
+        "tps": 41.34357224814344,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_125",
+        "tps": 41.04087494239657,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_126",
+        "tps": 42.115116469630266,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_127",
+        "tps": 38.59487127889461,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_128",
+        "tps": 36.980647199917975,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_129",
+        "tps": 40.05996556213581,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_130",
+        "tps": 39.8224897915565,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_131",
+        "tps": 41.06386766082187,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_132",
+        "tps": 39.81874048095943,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_133",
+        "tps": 41.855615997152604,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_134",
+        "tps": 41.607919174200035,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_135",
+        "tps": 40.91509107232272,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_136",
+        "tps": 40.90487455783199,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_137",
+        "tps": 38.875776336978994,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_138",
+        "tps": 39.65281623181305,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_139",
+        "tps": 39.374173628382984,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_140",
+        "tps": 40.13711265810571,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_141",
+        "tps": 41.56506051541676,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_142",
+        "tps": 39.884541464915785,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_143",
+        "tps": 42.359006687193386,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_144",
+        "tps": 36.5047395438063,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_145",
+        "tps": 41.54101666645539,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_146",
+        "tps": 39.92828464159755,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_147",
+        "tps": 38.71696457656829,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_148",
+        "tps": 39.18591205659188,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_149",
+        "tps": 41.57130559199728,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_150",
+        "tps": 38.99972976357695,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_151",
+        "tps": 39.002782860754735,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_152",
+        "tps": 40.053801166946215,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_153",
+        "tps": 38.10696064317494,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_154",
+        "tps": 38.71909771335722,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_155",
+        "tps": 38.544453944303434,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_156",
+        "tps": 39.89812127775301,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_157",
+        "tps": 41.621982541866885,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_158",
+        "tps": 42.60597511792365,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_159",
+        "tps": 39.73469153083004,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_160",
+        "tps": 39.249191712621204,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_161",
+        "tps": 39.75204328421106,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_162",
+        "tps": 42.0513262455901,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_163",
+        "tps": 39.53969439715552,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_164",
+        "tps": 38.17888190471612,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_165",
+        "tps": 37.781886047100606,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_166",
+        "tps": 40.15176295681957,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_167",
+        "tps": 41.43873173571138,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_168",
+        "tps": 39.20359670525365,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_169",
+        "tps": 39.58057245784071,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_170",
+        "tps": 39.46522537826886,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_171",
+        "tps": 39.771978431522385,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_172",
+        "tps": 39.25053083707411,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_173",
+        "tps": 38.15178782572456,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_174",
+        "tps": 38.66947108629381,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_175",
+        "tps": 37.460877439983385,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_176",
+        "tps": 40.246833933156125,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_177",
+        "tps": 38.92058215320594,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_178",
+        "tps": 39.623461645001605,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_179",
+        "tps": 41.47292496165212,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_180",
+        "tps": 40.097282925142856,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_181",
+        "tps": 40.76236762372723,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_182",
+        "tps": 39.031725955302285,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_183",
+        "tps": 36.8167108964295,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_184",
+        "tps": 39.02086859462817,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_185",
+        "tps": 39.261900610869496,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_186",
+        "tps": 36.791885070202575,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_187",
+        "tps": 39.01391548332953,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_188",
+        "tps": 34.80533284521634,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_189",
+        "tps": 38.63236722957063,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_190",
+        "tps": 40.15027303666696,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_191",
+        "tps": 39.014631574398,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_192",
+        "tps": 41.93192492985131,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_193",
+        "tps": 40.47926416551707,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_194",
+        "tps": 41.2233002674909,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_195",
+        "tps": 40.82951856192877,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_196",
+        "tps": 41.67054191857219,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_197",
+        "tps": 41.387419032187104,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_198",
+        "tps": 40.39895833070616,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_199",
+        "tps": 39.426330140301154,
+        "speedup": 1.0,
+        "acceptance_rate": 0.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      }
+    ],
+    "Prompt-Lookup (PLD)": [
+      {
+        "id": "gsm8k_050",
+        "tps": 45.47410603789572,
+        "speedup": 1.3903671219693436,
+        "acceptance_rate": 0.6666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_051",
+        "tps": 47.25645353912797,
+        "speedup": 1.0669279752293965,
+        "acceptance_rate": 0.4166666666666667,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_052",
+        "tps": 46.68623673956144,
+        "speedup": 1.0431176195862277,
+        "acceptance_rate": 0.38461538461538464,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_053",
+        "tps": 44.46526925923152,
+        "speedup": 1.05284278722127,
+        "acceptance_rate": 0.4166666666666667,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_054",
+        "tps": 46.439148680658846,
+        "speedup": 1.1614941306143471,
+        "acceptance_rate": 0.42857142857142855,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_055",
+        "tps": 49.38260128051497,
+        "speedup": 1.2007689809281359,
+        "acceptance_rate": 0.4583333333333333,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_056",
+        "tps": 44.60415673125196,
+        "speedup": 1.0782735421808398,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_057",
+        "tps": 48.00444333920227,
+        "speedup": 1.187410997947352,
+        "acceptance_rate": 0.5,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_058",
+        "tps": 42.67525171348676,
+        "speedup": 1.0763748684523045,
+        "acceptance_rate": 0.6,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_059",
+        "tps": 41.64629060445755,
+        "speedup": 1.039373922359404,
+        "acceptance_rate": 0.2857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_060",
+        "tps": 39.30869755761509,
+        "speedup": 0.9734649609851078,
+        "acceptance_rate": 0.2,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_061",
+        "tps": 39.20665525849512,
+        "speedup": 0.9512610502517644,
+        "acceptance_rate": 0.21428571428571427,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_062",
+        "tps": 41.01872481288319,
+        "speedup": 1.0200319531592652,
+        "acceptance_rate": 0.3125,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_063",
+        "tps": 47.74242508113329,
+        "speedup": 1.1459201459489614,
+        "acceptance_rate": 0.5652173913043478,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_064",
+        "tps": 43.081442502473244,
+        "speedup": 1.1106107321223389,
+        "acceptance_rate": 0.36363636363636365,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_065",
+        "tps": 44.69260405978748,
+        "speedup": 1.1153301865600904,
+        "acceptance_rate": 0.6153846153846154,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_066",
+        "tps": 41.07653812144333,
+        "speedup": 0.9561582132938874,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_067",
+        "tps": 44.50634382622568,
+        "speedup": 1.0437732752004156,
+        "acceptance_rate": 0.2857142857142857,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_068",
+        "tps": 44.40758450456847,
+        "speedup": 1.1149742180657918,
+        "acceptance_rate": 0.6666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_069",
+        "tps": 43.53087352932165,
+        "speedup": 1.1130135878344922,
+        "acceptance_rate": 0.5833333333333334,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_070",
+        "tps": 44.41969728514583,
+        "speedup": 1.1348681509719458,
+        "acceptance_rate": 0.5,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_071",
+        "tps": 48.08275889055284,
+        "speedup": 1.1393499447789428,
+        "acceptance_rate": 0.5625,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_072",
+        "tps": 44.297450205611376,
+        "speedup": 1.1100385909880792,
+        "acceptance_rate": 0.5,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_073",
+        "tps": 42.05646647865482,
+        "speedup": 1.0978274897265323,
+        "acceptance_rate": 0.7272727272727273,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_074",
+        "tps": 38.42752474445916,
+        "speedup": 1.1308337179565775,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_075",
+        "tps": 41.98071080797651,
+        "speedup": 1.1460331254406124,
+        "acceptance_rate": 0.4090909090909091,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_076",
+        "tps": 47.15755049659885,
+        "speedup": 1.2385612471835923,
+        "acceptance_rate": 0.45454545454545453,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_077",
+        "tps": 44.41013391511986,
+        "speedup": 1.1974381209302476,
+        "acceptance_rate": 0.4375,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_078",
+        "tps": 49.393742745108526,
+        "speedup": 1.2102752187453751,
+        "acceptance_rate": 0.4583333333333333,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_079",
+        "tps": 37.98994170547954,
+        "speedup": 1.001681305021586,
+        "acceptance_rate": 0.25,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_080",
+        "tps": 43.378724849139644,
+        "speedup": 1.094597870446894,
+        "acceptance_rate": 0.6,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_081",
+        "tps": 43.22978226800655,
+        "speedup": 1.0832018428965813,
+        "acceptance_rate": 0.4375,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_082",
+        "tps": 40.67117629006047,
+        "speedup": 1.0447202384577432,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_083",
+        "tps": 46.84510038265752,
+        "speedup": 1.088848819171632,
+        "acceptance_rate": 0.4444444444444444,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_084",
+        "tps": 43.67948056493752,
+        "speedup": 1.1051228626113951,
+        "acceptance_rate": 0.5,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_085",
+        "tps": 44.91808960370419,
+        "speedup": 1.0782414961333946,
+        "acceptance_rate": 0.5625,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_086",
+        "tps": 44.95124450360628,
+        "speedup": 1.1565879168272524,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_087",
+        "tps": 41.973833328691,
+        "speedup": 1.0549385614363052,
+        "acceptance_rate": 0.3888888888888889,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_088",
+        "tps": 55.29994105073642,
+        "speedup": 1.3376602695405888,
+        "acceptance_rate": 0.8125,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_089",
+        "tps": 49.70759208643215,
+        "speedup": 1.127000069627661,
+        "acceptance_rate": 0.5555555555555556,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_090",
+        "tps": 43.08361681274905,
+        "speedup": 1.1108023685266604,
+        "acceptance_rate": 0.4,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_091",
+        "tps": 40.45454391793822,
+        "speedup": 1.1797136907007817,
+        "acceptance_rate": 0.4166666666666667,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_092",
+        "tps": 39.369378764746116,
+        "speedup": 0.9373406367023599,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_093",
+        "tps": 47.09572995964445,
+        "speedup": 1.2170360698723666,
+        "acceptance_rate": 0.631578947368421,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_094",
+        "tps": 45.546272196297885,
+        "speedup": 1.1302061021204786,
+        "acceptance_rate": 0.34615384615384615,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_095",
+        "tps": 43.496422714231784,
+        "speedup": 1.0865395374918085,
+        "acceptance_rate": 0.3888888888888889,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_096",
+        "tps": 41.16895900391472,
+        "speedup": 1.0180479724538065,
+        "acceptance_rate": 0.3125,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_097",
+        "tps": 41.29044284686934,
+        "speedup": 1.0403148649522413,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_098",
+        "tps": 50.351704875222886,
+        "speedup": 1.3299698055290972,
+        "acceptance_rate": 0.7142857142857143,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_099",
+        "tps": 44.60157600321865,
+        "speedup": 1.1266671424485022,
+        "acceptance_rate": 0.5833333333333334,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_100",
+        "tps": 45.8125748046378,
+        "speedup": 1.1555644612852127,
+        "acceptance_rate": 0.3888888888888889,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_101",
+        "tps": 44.3826863883774,
+        "speedup": 1.0961795624888218,
+        "acceptance_rate": 0.38095238095238093,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_102",
+        "tps": 41.95743863648184,
+        "speedup": 1.0217067105987294,
+        "acceptance_rate": 0.5,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_103",
+        "tps": 45.56546763849447,
+        "speedup": 1.157839242199615,
+        "acceptance_rate": 0.625,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_104",
+        "tps": 49.974674292657134,
+        "speedup": 1.2809655148725143,
+        "acceptance_rate": 0.5652173913043478,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_105",
+        "tps": 44.539341532660195,
+        "speedup": 1.1076214325667924,
+        "acceptance_rate": 0.35,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_106",
+        "tps": 46.221463354829325,
+        "speedup": 1.1588761086716952,
+        "acceptance_rate": 0.5625,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_107",
+        "tps": 41.62900293469411,
+        "speedup": 1.018824645534324,
+        "acceptance_rate": 0.42857142857142855,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_108",
+        "tps": 44.41416114214582,
+        "speedup": 1.1010175963486013,
+        "acceptance_rate": 0.4444444444444444,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_109",
+        "tps": 45.76901800605414,
+        "speedup": 1.1342441941937593,
+        "acceptance_rate": 0.6428571428571429,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_110",
+        "tps": 43.7820031963814,
+        "speedup": 1.1275588736102293,
+        "acceptance_rate": 0.47368421052631576,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_111",
+        "tps": 40.91845349299765,
+        "speedup": 1.0102702675626292,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_112",
+        "tps": 46.36401799223181,
+        "speedup": 1.1790477040519711,
+        "acceptance_rate": 0.625,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_113",
+        "tps": 51.22364406917464,
+        "speedup": 1.2769022096595084,
+        "acceptance_rate": 0.6875,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_114",
+        "tps": 50.10086975104155,
+        "speedup": 1.2091553139474638,
+        "acceptance_rate": 0.625,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_115",
+        "tps": 35.95806642208615,
+        "speedup": 0.9229378633209738,
+        "acceptance_rate": 0.0,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_116",
+        "tps": 45.092606869938855,
+        "speedup": 1.0827363077674885,
+        "acceptance_rate": 0.36363636363636365,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_117",
+        "tps": 39.45154183796064,
+        "speedup": 0.9840387354762579,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_118",
+        "tps": 49.83842056984508,
+        "speedup": 1.3426227944147822,
+        "acceptance_rate": 0.5416666666666666,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_119",
+        "tps": 44.36641054219076,
+        "speedup": 1.194530529428083,
+        "acceptance_rate": 0.32142857142857145,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_120",
+        "tps": 42.167308394377315,
+        "speedup": 1.0545971881461416,
+        "acceptance_rate": 0.4166666666666667,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_121",
+        "tps": 44.233893853872196,
+        "speedup": 1.0403021522203986,
+        "acceptance_rate": 0.4090909090909091,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_122",
+        "tps": 42.00245213465886,
+        "speedup": 1.084715388874538,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_123",
+        "tps": 47.7889066979128,
+        "speedup": 1.1135147353686303,
+        "acceptance_rate": 0.47058823529411764,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_124",
+        "tps": 47.02858387337529,
+        "speedup": 1.1375065413097472,
+        "acceptance_rate": 0.45454545454545453,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_125",
+        "tps": 42.86036649240962,
+        "speedup": 1.044333644264817,
+        "acceptance_rate": 0.25,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_126",
+        "tps": 48.64495717015786,
+        "speedup": 1.1550474330336078,
+        "acceptance_rate": 0.6428571428571429,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_127",
+        "tps": 41.41224596812695,
+        "speedup": 1.0729986808058876,
+        "acceptance_rate": 0.35714285714285715,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_128",
+        "tps": 42.240649144167016,
+        "speedup": 1.142236611377118,
+        "acceptance_rate": 0.42857142857142855,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_129",
+        "tps": 39.02488801741195,
+        "speedup": 0.9741617964419271,
+        "acceptance_rate": 0.0,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_130",
+        "tps": 51.6434794419785,
+        "speedup": 1.2968420536309204,
+        "acceptance_rate": 0.8571428571428571,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_131",
+        "tps": 43.21124290423946,
+        "speedup": 1.0522935457798184,
+        "acceptance_rate": 0.4,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_132",
+        "tps": 40.63082391278073,
+        "speedup": 1.0203945032417492,
+        "acceptance_rate": 0.6666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_133",
+        "tps": 42.00826717442349,
+        "speedup": 1.003647089491677,
+        "acceptance_rate": 0.16666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_134",
+        "tps": 47.39721501666251,
+        "speedup": 1.1391392782278875,
+        "acceptance_rate": 0.5882352941176471,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_135",
+        "tps": 42.5413922118424,
+        "speedup": 1.039748197960625,
+        "acceptance_rate": 0.25,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_136",
+        "tps": 43.849206809213605,
+        "speedup": 1.071979984860212,
+        "acceptance_rate": 0.4375,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_137",
+        "tps": 41.497789933603734,
+        "speedup": 1.067445948188838,
+        "acceptance_rate": 0.42857142857142855,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_138",
+        "tps": 41.886999337065184,
+        "speedup": 1.0563436173660643,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_139",
+        "tps": 47.92526223087453,
+        "speedup": 1.2171750620901278,
+        "acceptance_rate": 0.9,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_140",
+        "tps": 40.98880004693385,
+        "speedup": 1.021219448346545,
+        "acceptance_rate": 0.17647058823529413,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_141",
+        "tps": 44.67047331691327,
+        "speedup": 1.0747120962411372,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_142",
+        "tps": 46.27064161761378,
+        "speedup": 1.1601146689454984,
+        "acceptance_rate": 0.6428571428571429,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_143",
+        "tps": 44.469935970544554,
+        "speedup": 1.0498342489223047,
+        "acceptance_rate": 0.5833333333333334,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_144",
+        "tps": 36.24482604355987,
+        "speedup": 0.9928800067198251,
+        "acceptance_rate": 0.13043478260869565,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_145",
+        "tps": 50.38588185072892,
+        "speedup": 1.2129188424850423,
+        "acceptance_rate": 0.7857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_146",
+        "tps": 40.10011397796813,
+        "speedup": 1.0043034489939386,
+        "acceptance_rate": 0.26666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_147",
+        "tps": 46.78971623796458,
+        "speedup": 1.2085068328492354,
+        "acceptance_rate": 0.75,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_148",
+        "tps": 39.589601913777884,
+        "speedup": 1.010301913009017,
+        "acceptance_rate": 0.3,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_149",
+        "tps": 44.66167099636612,
+        "speedup": 1.0743389066174471,
+        "acceptance_rate": 0.3684210526315789,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_150",
+        "tps": 41.33586289641949,
+        "speedup": 1.0599012646242572,
+        "acceptance_rate": 0.5,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_151",
+        "tps": 39.09713688795513,
+        "speedup": 1.0024191614105398,
+        "acceptance_rate": 0.2,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_152",
+        "tps": 39.643622924914524,
+        "speedup": 0.9897593179653025,
+        "acceptance_rate": 0.125,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_153",
+        "tps": 39.97496524492673,
+        "speedup": 1.0490200365031304,
+        "acceptance_rate": 0.2857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_154",
+        "tps": 38.816020606684475,
+        "speedup": 1.0025032322303786,
+        "acceptance_rate": 0.25,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_155",
+        "tps": 43.90179849982984,
+        "speedup": 1.1389913206000464,
+        "acceptance_rate": 0.8,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_156",
+        "tps": 42.43460880265727,
+        "speedup": 1.0635741093483164,
+        "acceptance_rate": 0.2962962962962963,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_157",
+        "tps": 44.38393385483663,
+        "speedup": 1.0663579950856867,
+        "acceptance_rate": 0.3157894736842105,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_158",
+        "tps": 41.13879274767061,
+        "speedup": 0.9655639293269966,
+        "acceptance_rate": 0.2857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_159",
+        "tps": 51.91335090680674,
+        "speedup": 1.3064994066086384,
+        "acceptance_rate": 0.625,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_160",
+        "tps": 41.25294109939212,
+        "speedup": 1.0510519911197707,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_161",
+        "tps": 44.37326012096034,
+        "speedup": 1.1162510516430424,
+        "acceptance_rate": 0.6923076923076923,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_162",
+        "tps": 48.00686243702348,
+        "speedup": 1.1416254069289415,
+        "acceptance_rate": 0.4583333333333333,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_163",
+        "tps": 39.8559542045753,
+        "speedup": 1.007998539499145,
+        "acceptance_rate": 0.3,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_164",
+        "tps": 41.82161418616812,
+        "speedup": 1.095412230524279,
+        "acceptance_rate": 0.16666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_165",
+        "tps": 38.56437360838947,
+        "speedup": 1.0207106537856097,
+        "acceptance_rate": 0.3,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_166",
+        "tps": 49.051519683824516,
+        "speedup": 1.2216529504962463,
+        "acceptance_rate": 0.6470588235294118,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_167",
+        "tps": 46.40895807060682,
+        "speedup": 1.119941564973432,
+        "acceptance_rate": 0.5,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_168",
+        "tps": 44.79506253286595,
+        "speedup": 1.1426263480274754,
+        "acceptance_rate": 0.4444444444444444,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_169",
+        "tps": 40.73747983124097,
+        "speedup": 1.0292291723327787,
+        "acceptance_rate": 0.375,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_170",
+        "tps": 38.39617979513243,
+        "speedup": 0.9729117071322976,
+        "acceptance_rate": 0.09090909090909091,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_171",
+        "tps": 41.285534133456274,
+        "speedup": 1.0380558313069554,
+        "acceptance_rate": 0.38461538461538464,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_172",
+        "tps": 45.835262214086434,
+        "speedup": 1.167761587845653,
+        "acceptance_rate": 0.6666666666666666,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_173",
+        "tps": 42.83182890212544,
+        "speedup": 1.1226689846824234,
+        "acceptance_rate": 0.5,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_174",
+        "tps": 45.74815124069715,
+        "speedup": 1.1830560376325483,
+        "acceptance_rate": 0.6,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_175",
+        "tps": 47.59601945600526,
+        "speedup": 1.2705527128204492,
+        "acceptance_rate": 0.6875,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_176",
+        "tps": 43.9149457198051,
+        "speedup": 1.0911403811972178,
+        "acceptance_rate": 0.5714285714285714,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_177",
+        "tps": 39.94006955953287,
+        "speedup": 1.0261940430981698,
+        "acceptance_rate": 0.16666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_178",
+        "tps": 39.84617533435366,
+        "speedup": 1.0056207529606427,
+        "acceptance_rate": 0.25,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_179",
+        "tps": 43.79886251292342,
+        "speedup": 1.05608327730494,
+        "acceptance_rate": 0.5833333333333334,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_180",
+        "tps": 44.32989464215823,
+        "speedup": 1.1055585667716485,
+        "acceptance_rate": 0.34782608695652173,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_181",
+        "tps": 37.50441646734564,
+        "speedup": 0.9200745357469085,
+        "acceptance_rate": 0.4,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_182",
+        "tps": 39.624059504078495,
+        "speedup": 1.0151756944966905,
+        "acceptance_rate": 0.3,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_183",
+        "tps": 41.4523593004263,
+        "speedup": 1.1259115301482938,
+        "acceptance_rate": 0.4444444444444444,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_184",
+        "tps": 46.35075391686018,
+        "speedup": 1.1878452629637537,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_185",
+        "tps": 44.38168397639658,
+        "speedup": 1.1304008029634127,
+        "acceptance_rate": 0.5333333333333333,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_186",
+        "tps": 40.94772468018856,
+        "speedup": 1.11295533246139,
+        "acceptance_rate": 0.5,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_187",
+        "tps": 42.21227022612049,
+        "speedup": 1.0819798449647435,
+        "acceptance_rate": 0.375,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_188",
+        "tps": 38.17749204724597,
+        "speedup": 1.0968862793821292,
+        "acceptance_rate": 0.11764705882352941,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_189",
+        "tps": 40.78889170007317,
+        "speedup": 1.0558217014682925,
+        "acceptance_rate": 0.4166666666666667,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_190",
+        "tps": 43.71480647864314,
+        "speedup": 1.0887798057741946,
+        "acceptance_rate": 0.5,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_191",
+        "tps": 42.85097392384273,
+        "speedup": 1.0983308619005951,
+        "acceptance_rate": 0.7,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_192",
+        "tps": 44.198146589454296,
+        "speedup": 1.054045257006307,
+        "acceptance_rate": 0.4,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_193",
+        "tps": 44.357753212301695,
+        "speedup": 1.0958142181371118,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_194",
+        "tps": 39.768821125258775,
+        "speedup": 0.9647170621276254,
+        "acceptance_rate": 0.1,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_195",
+        "tps": 51.12573119081897,
+        "speedup": 1.2521757050177622,
+        "acceptance_rate": 0.5909090909090909,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_196",
+        "tps": 46.918486564208386,
+        "speedup": 1.1259389584107433,
+        "acceptance_rate": 0.5625,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_197",
+        "tps": 44.95268011172169,
+        "speedup": 1.0861435953945782,
+        "acceptance_rate": 0.32142857142857145,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_198",
+        "tps": 40.9507494899779,
+        "speedup": 1.0136585491822532,
+        "acceptance_rate": 0.2727272727272727,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_199",
+        "tps": 40.21735735543977,
+        "speedup": 1.02006342493262,
+        "acceptance_rate": 0.3,
+        "exact_match": 100.0,
+        "tokens": 48
+      }
+    ],
+    "ZASSD Empirical-6 (k=1)": [
+      {
+        "id": "gsm8k_050",
+        "tps": 42.19757635266354,
+        "speedup": 1.2901874912866202,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_051",
+        "tps": 40.10468020019287,
+        "speedup": 0.9054595095204394,
+        "acceptance_rate": 0.8461538461538461,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_052",
+        "tps": 42.00674944492402,
+        "speedup": 0.9385631301143904,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_053",
+        "tps": 39.790691116551265,
+        "speedup": 0.9421587418345141,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_054",
+        "tps": 40.60225054313996,
+        "speedup": 1.0155068952681152,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_055",
+        "tps": 38.67279495648188,
+        "speedup": 0.9403533103846499,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_056",
+        "tps": 38.93707745648721,
+        "speedup": 0.9412759596407629,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_057",
+        "tps": 38.48935772424537,
+        "speedup": 0.9520511745706726,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_058",
+        "tps": 34.68815190280511,
+        "speedup": 0.8749205556398759,
+        "acceptance_rate": 0.8148148148148148,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_059",
+        "tps": 38.72707777649564,
+        "speedup": 0.9665186057594691,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_060",
+        "tps": 37.95168389304427,
+        "speedup": 0.9398590331341155,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_061",
+        "tps": 37.850716429044475,
+        "speedup": 0.9183622531859044,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_062",
+        "tps": 37.811418386624226,
+        "speedup": 0.9402743533489059,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_063",
+        "tps": 39.76409938100807,
+        "speedup": 0.9544232930936851,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_064",
+        "tps": 37.18861476043801,
+        "speedup": 0.9586975798996187,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_065",
+        "tps": 34.98812924573492,
+        "speedup": 0.873149317207623,
+        "acceptance_rate": 0.8148148148148148,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_066",
+        "tps": 38.88850779049881,
+        "speedup": 0.905226385356406,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_067",
+        "tps": 40.08113075527525,
+        "speedup": 0.9399921342790197,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_068",
+        "tps": 39.1946075810351,
+        "speedup": 0.9840881333134522,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_069",
+        "tps": 36.0112977884776,
+        "speedup": 0.9207502745639102,
+        "acceptance_rate": 0.8461538461538461,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_070",
+        "tps": 39.38215544996174,
+        "speedup": 1.0061652075178273,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_071",
+        "tps": 41.19057261988803,
+        "speedup": 0.9760354381225663,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_072",
+        "tps": 34.56537938785018,
+        "speedup": 0.8661650919988444,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_073",
+        "tps": 35.99411470130867,
+        "speedup": 0.9395779506945032,
+        "acceptance_rate": 0.96,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_074",
+        "tps": 37.326971000867054,
+        "speedup": 1.0984469511805897,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_075",
+        "tps": 37.090698606252616,
+        "speedup": 1.0125404841983503,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_076",
+        "tps": 35.075722426829834,
+        "speedup": 0.9212401843894147,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_077",
+        "tps": 39.12830056773801,
+        "speedup": 1.0550231349578152,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_078",
+        "tps": 39.73452220040478,
+        "speedup": 0.9735991823093868,
+        "acceptance_rate": 1.0,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_079",
+        "tps": 36.44983043743521,
+        "speedup": 0.9610731704576266,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_080",
+        "tps": 37.90799989356858,
+        "speedup": 0.9565522292484866,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_081",
+        "tps": 38.29292223676393,
+        "speedup": 0.9594997189577767,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_082",
+        "tps": 34.68027850260876,
+        "speedup": 0.8908320863068033,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_083",
+        "tps": 37.67810357140159,
+        "speedup": 0.8757748034954619,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_084",
+        "tps": 35.93391818025701,
+        "speedup": 0.9091544590410375,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_085",
+        "tps": 35.22805527799015,
+        "speedup": 0.8456359423103701,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_086",
+        "tps": 38.47137353871662,
+        "speedup": 0.9898619330785738,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_087",
+        "tps": 34.42016902981324,
+        "speedup": 0.8650904794984576,
+        "acceptance_rate": 0.8461538461538461,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_088",
+        "tps": 39.02413709463539,
+        "speedup": 0.9439619057949017,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_089",
+        "tps": 35.918864573965806,
+        "speedup": 0.8143738446516964,
+        "acceptance_rate": 0.8461538461538461,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_090",
+        "tps": 35.85427065750321,
+        "speedup": 0.9244119160479843,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_091",
+        "tps": 36.682730684034745,
+        "speedup": 1.0697220981659994,
+        "acceptance_rate": 0.96,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_092",
+        "tps": 37.203988788436696,
+        "speedup": 0.8857851363925529,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_093",
+        "tps": 35.85864801549175,
+        "speedup": 0.926650209883276,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_094",
+        "tps": 36.23146961680065,
+        "speedup": 0.8990643158064922,
+        "acceptance_rate": 0.8461538461538461,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_095",
+        "tps": 40.4542127198315,
+        "speedup": 1.010545208901032,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_096",
+        "tps": 36.06736796435051,
+        "speedup": 0.8918931086977665,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_097",
+        "tps": 37.94567737615238,
+        "speedup": 0.9560433241535535,
+        "acceptance_rate": 0.96,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_098",
+        "tps": 36.84611310212625,
+        "speedup": 0.9732385030134703,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_099",
+        "tps": 39.08501663379558,
+        "speedup": 0.9873149773939113,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_100",
+        "tps": 39.317538937313984,
+        "speedup": 0.9917353673070158,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_101",
+        "tps": 36.80397236067892,
+        "speedup": 0.9089977557272112,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_102",
+        "tps": 34.697705045717406,
+        "speedup": 0.8449247437321032,
+        "acceptance_rate": 0.8148148148148148,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_103",
+        "tps": 37.179297508463044,
+        "speedup": 0.9447428476811135,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_104",
+        "tps": 36.42827961529863,
+        "speedup": 0.9337403517642786,
+        "acceptance_rate": 0.8461538461538461,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_105",
+        "tps": 37.62763891870475,
+        "speedup": 0.9357385603170701,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_106",
+        "tps": 36.23331052575254,
+        "speedup": 0.9084506387007343,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_107",
+        "tps": 37.958855662458575,
+        "speedup": 0.9290017761381941,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_108",
+        "tps": 35.16567367936985,
+        "speedup": 0.8717495616887485,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_109",
+        "tps": 37.21320203835319,
+        "speedup": 0.9222146377223618,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_110",
+        "tps": 39.91515226100042,
+        "speedup": 1.0279722451601814,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_111",
+        "tps": 38.66089376295692,
+        "speedup": 0.9545314681259113,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_112",
+        "tps": 37.555895524914035,
+        "speedup": 0.9550551119121005,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_113",
+        "tps": 37.474945071492236,
+        "speedup": 0.9341748530041308,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_114",
+        "tps": 37.49562877135252,
+        "speedup": 0.9049351638798602,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_115",
+        "tps": 34.23209726087209,
+        "speedup": 0.8786373085828478,
+        "acceptance_rate": 0.92,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_116",
+        "tps": 40.433389973979736,
+        "speedup": 0.9708620195151112,
+        "acceptance_rate": 1.0,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_117",
+        "tps": 33.514927614758385,
+        "speedup": 0.8359619283085029,
+        "acceptance_rate": 0.75,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_118",
+        "tps": 39.15174440681105,
+        "speedup": 1.0547289396544648,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_119",
+        "tps": 37.414389300557886,
+        "speedup": 1.0073528535044058,
+        "acceptance_rate": 0.92,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_120",
+        "tps": 37.85286759596726,
+        "speedup": 0.9466937599293919,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_121",
+        "tps": 38.663730003863314,
+        "speedup": 0.9093018504941411,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_122",
+        "tps": 37.01174576307435,
+        "speedup": 0.9558301517637049,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_123",
+        "tps": 39.33441772857391,
+        "speedup": 0.916519267217827,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_124",
+        "tps": 37.439013368182714,
+        "speedup": 0.9055582605072047,
+        "acceptance_rate": 0.8461538461538461,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_125",
+        "tps": 36.01134587869451,
+        "speedup": 0.8774507348890267,
+        "acceptance_rate": 0.8148148148148148,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_126",
+        "tps": 37.894610254175205,
+        "speedup": 0.8997864289773835,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_127",
+        "tps": 36.58042197619423,
+        "speedup": 0.9478052591976912,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_128",
+        "tps": 36.697669168525096,
+        "speedup": 0.9923479426992422,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_129",
+        "tps": 37.693747244872974,
+        "speedup": 0.9409330915776084,
+        "acceptance_rate": 0.8148148148148148,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_130",
+        "tps": 38.65773800490536,
+        "speedup": 0.9707514072387785,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_131",
+        "tps": 35.750310669260394,
+        "speedup": 0.8706026174774807,
+        "acceptance_rate": 0.8461538461538461,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_132",
+        "tps": 37.67307984136605,
+        "speedup": 0.9461143016158586,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_133",
+        "tps": 39.12567223143281,
+        "speedup": 0.934777121285098,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_134",
+        "tps": 36.099572693263866,
+        "speedup": 0.8676130267924634,
+        "acceptance_rate": 0.8148148148148148,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_135",
+        "tps": 38.12399187553245,
+        "speedup": 0.9317831361573499,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_136",
+        "tps": 39.01725427356602,
+        "speedup": 0.953853414668288,
+        "acceptance_rate": 1.0,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_137",
+        "tps": 37.17303446889999,
+        "speedup": 0.9562004407752666,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_138",
+        "tps": 34.78291281933046,
+        "speedup": 0.8771864428490325,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_139",
+        "tps": 39.758547665352864,
+        "speedup": 1.009762085182984,
+        "acceptance_rate": 0.92,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_140",
+        "tps": 38.86611588658968,
+        "speedup": 0.9683336272256907,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_141",
+        "tps": 38.86329440032574,
+        "speedup": 0.9349991054604885,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_142",
+        "tps": 39.18247870763478,
+        "speedup": 0.9823976224498263,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_143",
+        "tps": 38.69955018401298,
+        "speedup": 0.913608538316202,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_144",
+        "tps": 35.437019381986325,
+        "speedup": 0.9707511907997948,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_145",
+        "tps": 37.366854627933776,
+        "speedup": 0.8995170948261294,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_146",
+        "tps": 36.762152917539645,
+        "speedup": 0.9207045393390276,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_147",
+        "tps": 36.99421392231467,
+        "speedup": 0.9555039845428318,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_148",
+        "tps": 39.12189201787038,
+        "speedup": 0.9983662485990107,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_149",
+        "tps": 38.85060211962276,
+        "speedup": 0.9345533311107199,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_150",
+        "tps": 35.65412431377216,
+        "speedup": 0.9142146504581845,
+        "acceptance_rate": 0.8461538461538461,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_151",
+        "tps": 36.93020905550995,
+        "speedup": 0.9468608736806253,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_152",
+        "tps": 37.558665285376655,
+        "speedup": 0.9377053910271909,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_153",
+        "tps": 36.08527035086966,
+        "speedup": 0.9469469551446011,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_154",
+        "tps": 37.683846267127706,
+        "speedup": 0.9732625110767399,
+        "acceptance_rate": 1.0,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_155",
+        "tps": 35.57570025627098,
+        "speedup": 0.9229784473708644,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_156",
+        "tps": 36.61659174071365,
+        "speedup": 0.9177522792565893,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_157",
+        "tps": 38.57598143619429,
+        "speedup": 0.9268174911512523,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_158",
+        "tps": 35.36953068788852,
+        "speedup": 0.8301542351746135,
+        "acceptance_rate": 0.7777777777777778,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_159",
+        "tps": 35.39664567097852,
+        "speedup": 0.8908247253791906,
+        "acceptance_rate": 0.8461538461538461,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_160",
+        "tps": 38.29845388612171,
+        "speedup": 0.9757768813824065,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_161",
+        "tps": 38.839744802480475,
+        "speedup": 0.9770502744926085,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_162",
+        "tps": 42.107632746499036,
+        "speedup": 1.0013389946509677,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_163",
+        "tps": 39.186550689882765,
+        "speedup": 0.9910686283074013,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_164",
+        "tps": 35.94829326908312,
+        "speedup": 0.9415753284446641,
+        "acceptance_rate": 0.8148148148148148,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_165",
+        "tps": 35.41953065238483,
+        "speedup": 0.9374738626925411,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_166",
+        "tps": 40.60109518798329,
+        "speedup": 1.011190846878802,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_167",
+        "tps": 38.67606526746558,
+        "speedup": 0.933331297736968,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_168",
+        "tps": 34.169835538046335,
+        "speedup": 0.871599506416391,
+        "acceptance_rate": 0.8148148148148148,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_169",
+        "tps": 38.849411861172236,
+        "speedup": 0.9815272859570874,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_170",
+        "tps": 35.954258991689734,
+        "speedup": 0.9110364541713118,
+        "acceptance_rate": 0.92,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_171",
+        "tps": 36.017975130670095,
+        "speedup": 0.9056118541521447,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_172",
+        "tps": 34.23664507880402,
+        "speedup": 0.8722594153163854,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_173",
+        "tps": 37.19471965997696,
+        "speedup": 0.9749141987757051,
+        "acceptance_rate": 0.92,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_174",
+        "tps": 38.31372864005917,
+        "speedup": 0.9908004315486815,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_175",
+        "tps": 36.81479156599338,
+        "speedup": 0.9827530501647991,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_176",
+        "tps": 37.69162824271379,
+        "speedup": 0.936511634811172,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_177",
+        "tps": 37.18301577816962,
+        "speedup": 0.9553561052042692,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_178",
+        "tps": 37.5790138694582,
+        "speedup": 0.9484031003181848,
+        "acceptance_rate": 0.96,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_179",
+        "tps": 37.60186000166194,
+        "speedup": 0.9066604305442755,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_180",
+        "tps": 36.389755468987246,
+        "speedup": 0.9075366911250035,
+        "acceptance_rate": 0.8461538461538461,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_181",
+        "tps": 35.44202728618132,
+        "speedup": 0.869479114003942,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_182",
+        "tps": 37.645780225200554,
+        "speedup": 0.9644918154096269,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_183",
+        "tps": 33.773566780632876,
+        "speedup": 0.9173434008171614,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_184",
+        "tps": 36.055536803077466,
+        "speedup": 0.9240065150174815,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_185",
+        "tps": 36.81073607818692,
+        "speedup": 0.9375688773455868,
+        "acceptance_rate": 0.92,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_186",
+        "tps": 35.62535985928512,
+        "speedup": 0.9682939537158368,
+        "acceptance_rate": 0.96,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_187",
+        "tps": 36.60110184462088,
+        "speedup": 0.9381550503501851,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_188",
+        "tps": 33.448054912177895,
+        "speedup": 0.9610037364367573,
+        "acceptance_rate": 0.8148148148148148,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_189",
+        "tps": 35.93516486818198,
+        "speedup": 0.9301828348917713,
+        "acceptance_rate": 0.8461538461538461,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_190",
+        "tps": 35.227677470256765,
+        "speedup": 0.877395713799638,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_191",
+        "tps": 38.01127598323747,
+        "speedup": 0.9742825819270596,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_192",
+        "tps": 39.322719568770104,
+        "speedup": 0.9377752067083446,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_193",
+        "tps": 34.80847542867461,
+        "speedup": 0.8599087988937997,
+        "acceptance_rate": 0.8846153846153846,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_194",
+        "tps": 39.159761144630835,
+        "speedup": 0.949942408553655,
+        "acceptance_rate": 1.0,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_195",
+        "tps": 37.879453429669574,
+        "speedup": 0.9277467568522846,
+        "acceptance_rate": 0.96,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_196",
+        "tps": 40.48250732768412,
+        "speedup": 0.9714898214376575,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_197",
+        "tps": 35.95319146144225,
+        "speedup": 0.8686985635292058,
+        "acceptance_rate": 0.92,
+        "exact_match": 100.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_198",
+        "tps": 37.132529611674045,
+        "speedup": 0.9191457192461968,
+        "acceptance_rate": 0.96,
+        "exact_match": 0.0,
+        "tokens": 48
+      },
+      {
+        "id": "gsm8k_199",
+        "tps": 39.549634665428705,
+        "speedup": 1.003127466459312,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48
+      }
+    ],
+    "ZASSD Hybrid (k=2)": [
+      {
+        "id": "gsm8k_050",
+        "tps": 46.31994126817079,
+        "speedup": 1.4162284658690518,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_051",
+        "tps": 44.91403969317659,
+        "speedup": 1.0140423548613573,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_052",
+        "tps": 48.32505514903412,
+        "speedup": 1.0797339861560917,
+        "acceptance_rate": 0.8857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_053",
+        "tps": 37.19327712638803,
+        "speedup": 0.8806575155846982,
+        "acceptance_rate": 0.6666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_054",
+        "tps": 43.96597434774851,
+        "speedup": 1.0996373233025931,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_055",
+        "tps": 44.18460069901335,
+        "speedup": 1.0743763304952734,
+        "acceptance_rate": 0.627906976744186,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 11,
+        "layer_cycles": 11
+      },
+      {
+        "id": "gsm8k_056",
+        "tps": 40.964653969210055,
+        "speedup": 0.9902911696264393,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_057",
+        "tps": 45.51888562342117,
+        "speedup": 1.1259296357555906,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 11
+      },
+      {
+        "id": "gsm8k_058",
+        "tps": 42.13924801788664,
+        "speedup": 1.0628555361888419,
+        "acceptance_rate": 0.8857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_059",
+        "tps": 39.15762808474158,
+        "speedup": 0.9772639267990993,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_060",
+        "tps": 36.496223327451304,
+        "speedup": 0.9038151051809279,
+        "acceptance_rate": 0.725,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_061",
+        "tps": 36.78765167290804,
+        "speedup": 0.8925693848644255,
+        "acceptance_rate": 0.7,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_062",
+        "tps": 44.70911203840434,
+        "speedup": 1.1118025507761868,
+        "acceptance_rate": 0.9117647058823529,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_063",
+        "tps": 47.198233599793156,
+        "speedup": 1.1328583883892707,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 10
+      },
+      {
+        "id": "gsm8k_064",
+        "tps": 41.23610542016995,
+        "speedup": 1.0630391781319704,
+        "acceptance_rate": 0.9117647058823529,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_065",
+        "tps": 37.267951854792585,
+        "speedup": 0.9300436295748915,
+        "acceptance_rate": 0.717948717948718,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_066",
+        "tps": 39.89555364004666,
+        "speedup": 0.9286678729852291,
+        "acceptance_rate": 0.8857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 1,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_067",
+        "tps": 42.17128407879815,
+        "speedup": 0.9890109031242598,
+        "acceptance_rate": 0.9117647058823529,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_068",
+        "tps": 39.88572497157009,
+        "speedup": 1.0014405311234287,
+        "acceptance_rate": 0.7435897435897436,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_069",
+        "tps": 35.606057842866846,
+        "speedup": 0.910388948699538,
+        "acceptance_rate": 0.6829268292682927,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_070",
+        "tps": 41.225808711493144,
+        "speedup": 1.0532682607988144,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_071",
+        "tps": 41.690797676759956,
+        "speedup": 0.9878885722620063,
+        "acceptance_rate": 0.725,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_072",
+        "tps": 37.631601916038036,
+        "speedup": 0.9430007861312891,
+        "acceptance_rate": 0.7435897435897436,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_073",
+        "tps": 37.49636589908153,
+        "speedup": 0.9787921976219452,
+        "acceptance_rate": 0.6829268292682927,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_074",
+        "tps": 35.03014004193034,
+        "speedup": 1.0308564958992699,
+        "acceptance_rate": 0.725,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_075",
+        "tps": 43.20368602615621,
+        "speedup": 1.1794191754776833,
+        "acceptance_rate": 0.725,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_076",
+        "tps": 41.7716360322713,
+        "speedup": 1.0971038375871631,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_077",
+        "tps": 38.745050212932235,
+        "speedup": 1.0446894893628347,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_078",
+        "tps": 43.12509865535341,
+        "speedup": 1.0566771276649702,
+        "acceptance_rate": 0.6585365853658537,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 10,
+        "layer_cycles": 11
+      },
+      {
+        "id": "gsm8k_079",
+        "tps": 31.309779848273006,
+        "speedup": 0.8255453872895271,
+        "acceptance_rate": 0.6666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_080",
+        "tps": 45.340859989201114,
+        "speedup": 1.1441094444571867,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_081",
+        "tps": 39.263446439824214,
+        "speedup": 0.983817990995632,
+        "acceptance_rate": 0.725,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_082",
+        "tps": 37.09345260075095,
+        "speedup": 0.9528192735293004,
+        "acceptance_rate": 0.725,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_083",
+        "tps": 42.20650293389734,
+        "speedup": 0.9810311111629436,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_084",
+        "tps": 35.44646156071526,
+        "speedup": 0.8968214494031143,
+        "acceptance_rate": 0.627906976744186,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_085",
+        "tps": 38.624904071706425,
+        "speedup": 0.9271759934966411,
+        "acceptance_rate": 0.7435897435897436,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_086",
+        "tps": 39.26516426308938,
+        "speedup": 1.0102860341337834,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_087",
+        "tps": 38.81882452745492,
+        "speedup": 0.9756429579103865,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_088",
+        "tps": 50.88749627570475,
+        "speedup": 1.2309268453279563,
+        "acceptance_rate": 0.8611111111111112,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 10
+      },
+      {
+        "id": "gsm8k_089",
+        "tps": 41.346675983779896,
+        "speedup": 0.9374364107512517,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_090",
+        "tps": 39.20520541622162,
+        "speedup": 1.0108073150912062,
+        "acceptance_rate": 0.7,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_091",
+        "tps": 39.615491641979204,
+        "speedup": 1.1552456986954736,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_092",
+        "tps": 36.994618710369366,
+        "speedup": 0.8808002702747825,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_093",
+        "tps": 43.494342429926235,
+        "speedup": 1.1239699144266107,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_094",
+        "tps": 40.328665517120285,
+        "speedup": 1.0007340153192583,
+        "acceptance_rate": 0.627906976744186,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 10,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_095",
+        "tps": 42.35124860879608,
+        "speedup": 1.0579331173491104,
+        "acceptance_rate": 0.8571428571428571,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_096",
+        "tps": 36.08981834596351,
+        "speedup": 0.8924482737064264,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_097",
+        "tps": 39.084238126560635,
+        "speedup": 0.9847294217498812,
+        "acceptance_rate": 0.8857142857142857,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_098",
+        "tps": 53.56351868642952,
+        "speedup": 1.4148053716826503,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 11,
+        "layer_cycles": 8
+      },
+      {
+        "id": "gsm8k_099",
+        "tps": 43.03071724440034,
+        "speedup": 1.0869861466724715,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_100",
+        "tps": 42.69486356899142,
+        "speedup": 1.0769241246565489,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_101",
+        "tps": 42.13559942193613,
+        "speedup": 1.0406801998275976,
+        "acceptance_rate": 0.7435897435897436,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_102",
+        "tps": 32.34489111575285,
+        "speedup": 0.7876313087857483,
+        "acceptance_rate": 0.627906976744186,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 19
+      },
+      {
+        "id": "gsm8k_103",
+        "tps": 47.06190562278782,
+        "speedup": 1.195864411511587,
+        "acceptance_rate": 0.8857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 11
+      },
+      {
+        "id": "gsm8k_104",
+        "tps": 40.65185975300086,
+        "speedup": 1.0420003971227334,
+        "acceptance_rate": 0.6585365853658537,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_105",
+        "tps": 41.983838090565385,
+        "speedup": 1.0440701925605425,
+        "acceptance_rate": 0.6428571428571429,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_106",
+        "tps": 43.60658244157998,
+        "speedup": 1.093315159332568,
+        "acceptance_rate": 0.7,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_107",
+        "tps": 42.618070171469256,
+        "speedup": 1.0430309922128131,
+        "acceptance_rate": 0.8611111111111112,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_108",
+        "tps": 40.8339717717456,
+        "speedup": 1.0122654642874975,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_109",
+        "tps": 43.186251475431135,
+        "speedup": 1.0702382777476254,
+        "acceptance_rate": 0.8611111111111112,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_110",
+        "tps": 41.05114490907657,
+        "speedup": 1.0572285262158667,
+        "acceptance_rate": 0.8611111111111112,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_111",
+        "tps": 40.34691369124249,
+        "speedup": 0.9961590385412126,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_112",
+        "tps": 41.51749962440022,
+        "speedup": 1.0557996206957152,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_113",
+        "tps": 46.61934108143188,
+        "speedup": 1.162126215763974,
+        "acceptance_rate": 0.9411764705882353,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_114",
+        "tps": 39.2583988351184,
+        "speedup": 0.9474785927756372,
+        "acceptance_rate": 0.7,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_115",
+        "tps": 36.08561688800924,
+        "speedup": 0.9262117088359916,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_116",
+        "tps": 45.36089072216802,
+        "speedup": 1.0891781767956883,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_117",
+        "tps": 32.41217777783955,
+        "speedup": 0.8084560691072253,
+        "acceptance_rate": 0.6666666666666666,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 19
+      },
+      {
+        "id": "gsm8k_118",
+        "tps": 47.7953047541043,
+        "speedup": 1.287582248697676,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 10
+      },
+      {
+        "id": "gsm8k_119",
+        "tps": 42.74403603144778,
+        "speedup": 1.1508493783147762,
+        "acceptance_rate": 0.6585365853658537,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_120",
+        "tps": 41.709798037438,
+        "speedup": 1.0431549321817963,
+        "acceptance_rate": 0.725,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_121",
+        "tps": 45.984964823005946,
+        "speedup": 1.0814842128343327,
+        "acceptance_rate": 0.8857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_122",
+        "tps": 37.53130081165064,
+        "speedup": 0.9692476864055245,
+        "acceptance_rate": 0.7837837837837838,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_123",
+        "tps": 43.34105474990927,
+        "speedup": 1.0098766940937436,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_124",
+        "tps": 41.60069100410996,
+        "speedup": 1.0062190745014317,
+        "acceptance_rate": 0.725,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_125",
+        "tps": 35.530101448710575,
+        "speedup": 0.8657247560774298,
+        "acceptance_rate": 0.5434782608695652,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_126",
+        "tps": 43.84155498716215,
+        "speedup": 1.0409933216919116,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_127",
+        "tps": 38.035866914377124,
+        "speedup": 0.9855160971913081,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_128",
+        "tps": 40.61796472782772,
+        "speedup": 1.0983573247987346,
+        "acceptance_rate": 0.7837837837837838,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_129",
+        "tps": 35.641261039960014,
+        "speedup": 0.8896977453632087,
+        "acceptance_rate": 0.7,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_130",
+        "tps": 43.9013171449496,
+        "speedup": 1.102425221897048,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 11
+      },
+      {
+        "id": "gsm8k_131",
+        "tps": 37.175547706358785,
+        "speedup": 0.905310430410995,
+        "acceptance_rate": 0.725,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_132",
+        "tps": 40.61410300616101,
+        "speedup": 1.0199745776886617,
+        "acceptance_rate": 0.8611111111111112,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_133",
+        "tps": 38.90113093524085,
+        "speedup": 0.9294124577664143,
+        "acceptance_rate": 0.6666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_134",
+        "tps": 38.497813581637395,
+        "speedup": 0.9252520757036287,
+        "acceptance_rate": 0.6829268292682927,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_135",
+        "tps": 37.01257169859068,
+        "speedup": 0.9046190715588577,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_136",
+        "tps": 37.55201620206642,
+        "speedup": 0.9180327921303061,
+        "acceptance_rate": 0.6829268292682927,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_137",
+        "tps": 39.417185865929106,
+        "speedup": 1.0139266551041224,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_138",
+        "tps": 38.071591557784345,
+        "speedup": 0.9601232693086726,
+        "acceptance_rate": 0.7435897435897436,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_139",
+        "tps": 49.35884414213199,
+        "speedup": 1.2535842557099797,
+        "acceptance_rate": 0.9696969696969697,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_140",
+        "tps": 38.275996488639755,
+        "speedup": 0.9536310400471695,
+        "acceptance_rate": 0.627906976744186,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_141",
+        "tps": 42.78037858615518,
+        "speedup": 1.029238934231496,
+        "acceptance_rate": 0.7435897435897436,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_142",
+        "tps": 45.32744493816251,
+        "speedup": 1.1364664923635777,
+        "acceptance_rate": 0.9696969696969697,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_143",
+        "tps": 43.37541873396568,
+        "speedup": 1.0239951813383668,
+        "acceptance_rate": 1.0,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_144",
+        "tps": 36.79841716145058,
+        "speedup": 1.0080449174905592,
+        "acceptance_rate": 0.6666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_145",
+        "tps": 41.802127076366105,
+        "speedup": 1.0062856047074449,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_146",
+        "tps": 38.40181259623267,
+        "speedup": 0.9617696562958633,
+        "acceptance_rate": 0.717948717948718,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_147",
+        "tps": 40.88615591286505,
+        "speedup": 1.0560268957037393,
+        "acceptance_rate": 0.8611111111111112,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_148",
+        "tps": 41.82896413678809,
+        "speedup": 1.0674490382252464,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_149",
+        "tps": 41.99966560915097,
+        "speedup": 1.0103042233351496,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_150",
+        "tps": 35.37366180211488,
+        "speedup": 0.907023254175249,
+        "acceptance_rate": 0.6829268292682927,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_151",
+        "tps": 35.86584208715045,
+        "speedup": 0.9195713602077166,
+        "acceptance_rate": 0.7435897435897436,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_152",
+        "tps": 36.714572521658795,
+        "speedup": 0.9166314170440566,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_153",
+        "tps": 38.78946475192864,
+        "speedup": 1.0179102215772209,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_154",
+        "tps": 35.99426601445478,
+        "speedup": 0.9296256405798827,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 1,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_155",
+        "tps": 39.3593289493862,
+        "speedup": 1.0211411739354321,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_156",
+        "tps": 39.63945618815692,
+        "speedup": 0.9935168604106599,
+        "acceptance_rate": 0.6666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_157",
+        "tps": 39.430053462046374,
+        "speedup": 0.9473372255246206,
+        "acceptance_rate": 0.717948717948718,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_158",
+        "tps": 32.72489582137472,
+        "speedup": 0.7680823107744783,
+        "acceptance_rate": 0.5909090909090909,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 18
+      },
+      {
+        "id": "gsm8k_159",
+        "tps": 46.395074623110936,
+        "speedup": 1.167621361477366,
+        "acceptance_rate": 0.6829268292682927,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 12,
+        "layer_cycles": 9
+      },
+      {
+        "id": "gsm8k_160",
+        "tps": 42.2610351834559,
+        "speedup": 1.0767364457563133,
+        "acceptance_rate": 0.627906976744186,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 10,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_161",
+        "tps": 41.92218566346198,
+        "speedup": 1.0545919706248879,
+        "acceptance_rate": 0.8857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_162",
+        "tps": 42.11184498069584,
+        "speedup": 1.0014391635296422,
+        "acceptance_rate": 0.7,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 11
+      },
+      {
+        "id": "gsm8k_163",
+        "tps": 39.614861673828756,
+        "speedup": 1.0019010586151278,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_164",
+        "tps": 37.542279058795174,
+        "speedup": 0.9833257860324529,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_165",
+        "tps": 38.873110005571135,
+        "speedup": 1.0288821991869375,
+        "acceptance_rate": 0.8857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_166",
+        "tps": 47.09869844192501,
+        "speedup": 1.1730169480372852,
+        "acceptance_rate": 0.8611111111111112,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_167",
+        "tps": 42.343766913655045,
+        "speedup": 1.0218403203967683,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_168",
+        "tps": 41.17094857514061,
+        "speedup": 1.0501829432814087,
+        "acceptance_rate": 0.6829268292682927,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_169",
+        "tps": 39.679350343219106,
+        "speedup": 1.002495615380086,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_170",
+        "tps": 37.109994054070924,
+        "speedup": 0.9403213512244422,
+        "acceptance_rate": 0.8611111111111112,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 1,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_171",
+        "tps": 40.94016901010663,
+        "speedup": 1.0293722018530103,
+        "acceptance_rate": 0.8857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_172",
+        "tps": 39.64827264023226,
+        "speedup": 1.0101334120756007,
+        "acceptance_rate": 0.7837837837837838,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_173",
+        "tps": 40.55600697112248,
+        "speedup": 1.063017207905964,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_174",
+        "tps": 44.52347765736063,
+        "speedup": 1.1513857419462286,
+        "acceptance_rate": 0.8857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_175",
+        "tps": 42.93633478634072,
+        "speedup": 1.1461646848803702,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_176",
+        "tps": 41.00585226723525,
+        "speedup": 1.018859081818454,
+        "acceptance_rate": 0.7,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_177",
+        "tps": 40.27764636961145,
+        "speedup": 1.0348675210217464,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_178",
+        "tps": 45.688370574293195,
+        "speedup": 1.1530635809568814,
+        "acceptance_rate": 0.8611111111111112,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_179",
+        "tps": 41.65384689979667,
+        "speedup": 1.0043624108574893,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_180",
+        "tps": 40.121515364923575,
+        "speedup": 1.0006043411925432,
+        "acceptance_rate": 0.725,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_181",
+        "tps": 39.50944848173766,
+        "speedup": 0.9692628467130485,
+        "acceptance_rate": 0.8571428571428571,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_182",
+        "tps": 36.23394740734989,
+        "speedup": 0.9283203988684408,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_183",
+        "tps": 36.80897075595571,
+        "speedup": 0.9997897655633726,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_184",
+        "tps": 41.581209772914214,
+        "speedup": 1.0656146639093143,
+        "acceptance_rate": 0.8857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_185",
+        "tps": 35.640741230390134,
+        "speedup": 0.9077691267071044,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_186",
+        "tps": 39.571339801267364,
+        "speedup": 1.0755453200009,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_187",
+        "tps": 35.024392891640304,
+        "speedup": 0.8977410356724147,
+        "acceptance_rate": 0.7435897435897436,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_188",
+        "tps": 34.265688291588845,
+        "speedup": 0.9844953485712272,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 1,
+        "layer_cycles": 18
+      },
+      {
+        "id": "gsm8k_189",
+        "tps": 39.20235126163905,
+        "speedup": 1.0147540539952242,
+        "acceptance_rate": 0.725,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_190",
+        "tps": 34.5923509160299,
+        "speedup": 0.8615719968937365,
+        "acceptance_rate": 0.5909090909090909,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 17
+      },
+      {
+        "id": "gsm8k_191",
+        "tps": 39.10352770897262,
+        "speedup": 1.0022785332319517,
+        "acceptance_rate": 0.7,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_192",
+        "tps": 41.21420906570322,
+        "speedup": 0.9828837844828547,
+        "acceptance_rate": 0.7435897435897436,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_193",
+        "tps": 39.998264408633176,
+        "speedup": 0.9881173789395696,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_194",
+        "tps": 39.17047554522261,
+        "speedup": 0.9502023198300994,
+        "acceptance_rate": 0.8571428571428571,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_195",
+        "tps": 42.68265441283526,
+        "speedup": 1.0453871590010477,
+        "acceptance_rate": 0.7894736842105263,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_196",
+        "tps": 44.624772986779135,
+        "speedup": 1.0708949519778208,
+        "acceptance_rate": 0.8611111111111112,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_197",
+        "tps": 45.071830257555526,
+        "speedup": 1.0890224931035937,
+        "acceptance_rate": 0.8108108108108109,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_198",
+        "tps": 38.29283153730797,
+        "speedup": 0.9478668044815062,
+        "acceptance_rate": 0.8571428571428571,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_199",
+        "tps": 40.152201167941634,
+        "speedup": 1.0184108189896808,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 15
+      }
+    ],
+    "ZASSD Routed (k=2+PLD4)": [
+      {
+        "id": "gsm8k_050",
+        "tps": 44.679027333628916,
+        "speedup": 1.3660576547558632,
+        "acceptance_rate": 0.375,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_051",
+        "tps": 43.46434428728766,
+        "speedup": 0.9813119980895829,
+        "acceptance_rate": 0.20833333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_052",
+        "tps": 43.53326238636098,
+        "speedup": 0.9726702386959216,
+        "acceptance_rate": 0.25,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_053",
+        "tps": 42.72596761324968,
+        "speedup": 1.0116598320006878,
+        "acceptance_rate": 0.25,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_054",
+        "tps": 44.02026634005854,
+        "speedup": 1.100995225680199,
+        "acceptance_rate": 0.375,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_055",
+        "tps": 43.494374077487024,
+        "speedup": 1.0575930364717028,
+        "acceptance_rate": 0.2727272727272727,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 11,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_056",
+        "tps": 38.55330988921936,
+        "speedup": 0.9319986535675805,
+        "acceptance_rate": 0.16666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_057",
+        "tps": 46.0391421103017,
+        "speedup": 1.1387984085462732,
+        "acceptance_rate": 0.4827586206896552,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_058",
+        "tps": 39.43692128113158,
+        "speedup": 0.9946962056869758,
+        "acceptance_rate": 0.35,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_059",
+        "tps": 38.73649878974317,
+        "speedup": 0.9667537276718787,
+        "acceptance_rate": 0.24,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_060",
+        "tps": 37.936354770382025,
+        "speedup": 0.9394794132351741,
+        "acceptance_rate": 0.14285714285714285,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_061",
+        "tps": 39.212710241257746,
+        "speedup": 0.9514079607500984,
+        "acceptance_rate": 0.15,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_062",
+        "tps": 41.843054245737314,
+        "speedup": 1.0405309414938995,
+        "acceptance_rate": 0.32,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_063",
+        "tps": 46.0268640106514,
+        "speedup": 1.1047430170341623,
+        "acceptance_rate": 0.7352941176470589,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 7
+      },
+      {
+        "id": "gsm8k_064",
+        "tps": 39.53952551951651,
+        "speedup": 1.0193024846482135,
+        "acceptance_rate": 0.65,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 10
+      },
+      {
+        "id": "gsm8k_065",
+        "tps": 44.55120778379467,
+        "speedup": 1.1118015594371107,
+        "acceptance_rate": 0.375,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_066",
+        "tps": 38.63516476817523,
+        "speedup": 0.899329198722537,
+        "acceptance_rate": 0.20833333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_067",
+        "tps": 39.74873953890739,
+        "speedup": 0.9321968170561367,
+        "acceptance_rate": 0.14285714285714285,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_068",
+        "tps": 40.6438753967769,
+        "speedup": 1.020475977139058,
+        "acceptance_rate": 0.375,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_069",
+        "tps": 38.08141115795624,
+        "speedup": 0.9736797042257247,
+        "acceptance_rate": 0.25,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_070",
+        "tps": 41.0927550830043,
+        "speedup": 1.049868905679982,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_071",
+        "tps": 40.67843897127,
+        "speedup": 0.9639001227260315,
+        "acceptance_rate": 0.21875,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_072",
+        "tps": 36.8346054144249,
+        "speedup": 0.923029052553698,
+        "acceptance_rate": 0.27586206896551724,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_073",
+        "tps": 37.294075575499555,
+        "speedup": 0.9735116808137468,
+        "acceptance_rate": 0.6052631578947368,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 11
+      },
+      {
+        "id": "gsm8k_074",
+        "tps": 35.17752270509276,
+        "speedup": 1.035193628880242,
+        "acceptance_rate": 0.2608695652173913,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 2
+      },
+      {
+        "id": "gsm8k_075",
+        "tps": 36.18361318428334,
+        "speedup": 0.9877779225081479,
+        "acceptance_rate": 0.3409090909090909,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 4
+      },
+      {
+        "id": "gsm8k_076",
+        "tps": 43.00789493683064,
+        "speedup": 1.1295733436269917,
+        "acceptance_rate": 0.40625,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_077",
+        "tps": 39.735574322578856,
+        "speedup": 1.071397162229985,
+        "acceptance_rate": 0.4,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_078",
+        "tps": 47.51613878727521,
+        "speedup": 1.1642690362920536,
+        "acceptance_rate": 0.47619047619047616,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 3
+      },
+      {
+        "id": "gsm8k_079",
+        "tps": 35.29643039378185,
+        "speedup": 0.9306614559597333,
+        "acceptance_rate": 0.16,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_080",
+        "tps": 43.82603538662458,
+        "speedup": 1.1058850893188699,
+        "acceptance_rate": 0.5,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_081",
+        "tps": 40.177798274993506,
+        "speedup": 1.0067287608619018,
+        "acceptance_rate": 0.35714285714285715,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_082",
+        "tps": 38.46026566707072,
+        "speedup": 0.9879285917941306,
+        "acceptance_rate": 0.2,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_083",
+        "tps": 40.8038935565236,
+        "speedup": 0.9484294185240726,
+        "acceptance_rate": 0.6190476190476191,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 11
+      },
+      {
+        "id": "gsm8k_084",
+        "tps": 40.51775300040457,
+        "speedup": 1.0251288386046444,
+        "acceptance_rate": 0.3103448275862069,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 3
+      },
+      {
+        "id": "gsm8k_085",
+        "tps": 43.504019426115136,
+        "speedup": 1.0442972844054876,
+        "acceptance_rate": 0.6333333333333333,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 5
+      },
+      {
+        "id": "gsm8k_086",
+        "tps": 36.5834300269812,
+        "speedup": 0.9412854658986625,
+        "acceptance_rate": 0.1891891891891892,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_087",
+        "tps": 35.84472672843609,
+        "speedup": 0.9008942346022585,
+        "acceptance_rate": 0.4878048780487805,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 9
+      },
+      {
+        "id": "gsm8k_088",
+        "tps": 54.654092970293995,
+        "speedup": 1.3220377335857267,
+        "acceptance_rate": 0.8095238095238095,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_089",
+        "tps": 45.36538618891835,
+        "speedup": 1.0285509968919202,
+        "acceptance_rate": 0.6486486486486487,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 7
+      },
+      {
+        "id": "gsm8k_090",
+        "tps": 38.55205950041974,
+        "speedup": 0.9939675954033376,
+        "acceptance_rate": 0.6904761904761905,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 11
+      },
+      {
+        "id": "gsm8k_091",
+        "tps": 40.8433454455371,
+        "speedup": 1.191051712110792,
+        "acceptance_rate": 0.8571428571428571,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_092",
+        "tps": 40.487124379564655,
+        "speedup": 0.9639529028629696,
+        "acceptance_rate": 0.8055555555555556,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_093",
+        "tps": 42.636482727738056,
+        "speedup": 1.1018013186463222,
+        "acceptance_rate": 0.7272727272727273,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 10
+      },
+      {
+        "id": "gsm8k_094",
+        "tps": 40.048669379075086,
+        "speedup": 0.9937860626432417,
+        "acceptance_rate": 0.2916666666666667,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 12,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_095",
+        "tps": 40.14391902739657,
+        "speedup": 1.0027940803247832,
+        "acceptance_rate": 0.24242424242424243,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_096",
+        "tps": 37.99421022378627,
+        "speedup": 0.939541091617868,
+        "acceptance_rate": 0.15625,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_097",
+        "tps": 37.33770716365834,
+        "speedup": 0.9407254828833265,
+        "acceptance_rate": 0.2,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_098",
+        "tps": 49.40190584364974,
+        "speedup": 1.3048821935714998,
+        "acceptance_rate": 0.5625,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_099",
+        "tps": 41.63685875996885,
+        "speedup": 1.051776302170145,
+        "acceptance_rate": 0.42857142857142855,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_100",
+        "tps": 41.62295504865346,
+        "speedup": 1.0498865831707562,
+        "acceptance_rate": 0.2222222222222222,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_101",
+        "tps": 40.44702790027498,
+        "speedup": 0.9989752526405721,
+        "acceptance_rate": 0.225,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 10,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_102",
+        "tps": 38.329347177049655,
+        "speedup": 0.9333589584186258,
+        "acceptance_rate": 0.4117647058823529,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_103",
+        "tps": 42.3841635204405,
+        "speedup": 1.0770008586571123,
+        "acceptance_rate": 0.5882352941176471,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 5
+      },
+      {
+        "id": "gsm8k_104",
+        "tps": 48.26678475803069,
+        "speedup": 1.2371883891976885,
+        "acceptance_rate": 0.4444444444444444,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_105",
+        "tps": 38.424719851867536,
+        "speedup": 0.9555606747597377,
+        "acceptance_rate": 0.175,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 10,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_106",
+        "tps": 46.828950495487796,
+        "speedup": 1.1741071784504677,
+        "acceptance_rate": 0.5833333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_107",
+        "tps": 40.12360440797587,
+        "speedup": 0.9819816511734533,
+        "acceptance_rate": 0.2916666666666667,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_108",
+        "tps": 37.870966621672764,
+        "speedup": 0.9388131976137943,
+        "acceptance_rate": 0.25,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 10,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_109",
+        "tps": 44.30910265957153,
+        "speedup": 1.0980646872280815,
+        "acceptance_rate": 0.5714285714285714,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_110",
+        "tps": 43.91622280036759,
+        "speedup": 1.1310155565949764,
+        "acceptance_rate": 0.34375,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_111",
+        "tps": 37.891857848710266,
+        "speedup": 0.9355440907318904,
+        "acceptance_rate": 0.2,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_112",
+        "tps": 38.06365601523733,
+        "speedup": 0.9679675786535353,
+        "acceptance_rate": 0.5192307692307693,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_113",
+        "tps": 47.26270166494815,
+        "speedup": 1.1781638984714042,
+        "acceptance_rate": 0.7096774193548387,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 6
+      },
+      {
+        "id": "gsm8k_114",
+        "tps": 39.765742496280225,
+        "speedup": 0.9597230365735141,
+        "acceptance_rate": 0.55,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 8
+      },
+      {
+        "id": "gsm8k_115",
+        "tps": 35.76778284723552,
+        "speedup": 0.9180538433089901,
+        "acceptance_rate": 0.08,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_116",
+        "tps": 39.54826377996549,
+        "speedup": 0.9496089065607086,
+        "acceptance_rate": 0.2972972972972973,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_117",
+        "tps": 37.093000156507884,
+        "speedup": 0.925209694438586,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 2
+      },
+      {
+        "id": "gsm8k_118",
+        "tps": 45.01163915186555,
+        "speedup": 1.2125916521486466,
+        "acceptance_rate": 0.6136363636363636,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 8
+      },
+      {
+        "id": "gsm8k_119",
+        "tps": 36.73589586293542,
+        "speedup": 0.9890849540878888,
+        "acceptance_rate": 0.4444444444444444,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 11
+      },
+      {
+        "id": "gsm8k_120",
+        "tps": 43.64293812760006,
+        "speedup": 1.0915024359947108,
+        "acceptance_rate": 0.7837837837837838,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_121",
+        "tps": 39.99406807984538,
+        "speedup": 0.9405890251705739,
+        "acceptance_rate": 0.6363636363636364,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_122",
+        "tps": 37.42542507467545,
+        "speedup": 0.9665134402991966,
+        "acceptance_rate": 0.5853658536585366,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_123",
+        "tps": 43.68432465639852,
+        "speedup": 1.017875121458919,
+        "acceptance_rate": 0.39285714285714285,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_124",
+        "tps": 43.45824944789096,
+        "speedup": 1.0511488747768398,
+        "acceptance_rate": 0.3055555555555556,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_125",
+        "tps": 38.355082945398685,
+        "speedup": 0.9345581203917421,
+        "acceptance_rate": 0.2,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_126",
+        "tps": 40.909510289707185,
+        "speedup": 0.9713735522780174,
+        "acceptance_rate": 0.6444444444444445,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_127",
+        "tps": 35.15189743812745,
+        "speedup": 0.9107919335735697,
+        "acceptance_rate": 0.5909090909090909,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_128",
+        "tps": 37.74240264502114,
+        "speedup": 1.0205987591559742,
+        "acceptance_rate": 0.6176470588235294,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 9
+      },
+      {
+        "id": "gsm8k_129",
+        "tps": 35.54203102293672,
+        "speedup": 0.8872207083605338,
+        "acceptance_rate": 0.058823529411764705,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_130",
+        "tps": 50.04327111334021,
+        "speedup": 1.2566585207324432,
+        "acceptance_rate": 0.8823529411764706,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 9
+      },
+      {
+        "id": "gsm8k_131",
+        "tps": 37.76648334548681,
+        "speedup": 0.9197010777803324,
+        "acceptance_rate": 0.7631578947368421,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_132",
+        "tps": 40.50036889505792,
+        "speedup": 1.0171182816398834,
+        "acceptance_rate": 0.8235294117647058,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 1,
+        "layer_cycles": 15
+      },
+      {
+        "id": "gsm8k_133",
+        "tps": 38.13819296037023,
+        "speedup": 0.9111846057399976,
+        "acceptance_rate": 0.7,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_134",
+        "tps": 42.24719118847552,
+        "speedup": 1.0153641909271895,
+        "acceptance_rate": 0.525,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 6
+      },
+      {
+        "id": "gsm8k_135",
+        "tps": 37.909885652357545,
+        "speedup": 0.9265501959985111,
+        "acceptance_rate": 0.6341463414634146,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_136",
+        "tps": 37.67420366343473,
+        "speedup": 0.9210199046123542,
+        "acceptance_rate": 0.6046511627906976,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_137",
+        "tps": 43.3935036092138,
+        "speedup": 1.116209313302832,
+        "acceptance_rate": 0.8333333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_138",
+        "tps": 36.297356373495255,
+        "speedup": 0.9153790278425232,
+        "acceptance_rate": 0.5813953488372093,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_139",
+        "tps": 40.43115548361434,
+        "speedup": 1.0268445470172212,
+        "acceptance_rate": 0.6857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 10
+      },
+      {
+        "id": "gsm8k_140",
+        "tps": 36.16781856054367,
+        "speedup": 0.9011066358615999,
+        "acceptance_rate": 0.16666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 2
+      },
+      {
+        "id": "gsm8k_141",
+        "tps": 40.81606001147002,
+        "speedup": 0.9819800453876657,
+        "acceptance_rate": 0.3333333333333333,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_142",
+        "tps": 43.48044335938665,
+        "speedup": 1.090157784504906,
+        "acceptance_rate": 0.44,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_143",
+        "tps": 41.81686934033263,
+        "speedup": 0.9872013678020296,
+        "acceptance_rate": 0.42857142857142855,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_144",
+        "tps": 32.95271555533539,
+        "speedup": 0.9026969091449502,
+        "acceptance_rate": 0.2894736842105263,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 7
+      },
+      {
+        "id": "gsm8k_145",
+        "tps": 44.84237501602751,
+        "speedup": 1.0794722569281263,
+        "acceptance_rate": 0.5357142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_146",
+        "tps": 36.198849520146915,
+        "speedup": 0.9065966606147341,
+        "acceptance_rate": 0.125,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_147",
+        "tps": 42.691147212465204,
+        "speedup": 1.1026470612911146,
+        "acceptance_rate": 0.5238095238095238,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_148",
+        "tps": 38.80120288575036,
+        "speedup": 0.9901824622510781,
+        "acceptance_rate": 0.16666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_149",
+        "tps": 38.96528083157531,
+        "speedup": 0.9373119337170002,
+        "acceptance_rate": 0.2777777777777778,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 9,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_150",
+        "tps": 38.0664922138941,
+        "speedup": 0.9760706662497332,
+        "acceptance_rate": 0.2857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_151",
+        "tps": 36.62777976174488,
+        "speedup": 0.9391068296975388,
+        "acceptance_rate": 0.7272727272727273,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_152",
+        "tps": 38.06559360789431,
+        "speedup": 0.9503615761519123,
+        "acceptance_rate": 0.8571428571428571,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 1,
+        "layer_cycles": 16
+      },
+      {
+        "id": "gsm8k_153",
+        "tps": 38.56372482352966,
+        "speedup": 1.0119863713254844,
+        "acceptance_rate": 0.8055555555555556,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_154",
+        "tps": 35.19092262119886,
+        "speedup": 0.90887765210135,
+        "acceptance_rate": 0.5925925925925926,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 2,
+        "layer_cycles": 10
+      },
+      {
+        "id": "gsm8k_155",
+        "tps": 40.06285340883473,
+        "speedup": 1.0393934615528702,
+        "acceptance_rate": 0.6451612903225806,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 8
+      },
+      {
+        "id": "gsm8k_156",
+        "tps": 39.935339128285854,
+        "speedup": 1.000932822131492,
+        "acceptance_rate": 0.42592592592592593,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 10,
+        "layer_cycles": 7
+      },
+      {
+        "id": "gsm8k_157",
+        "tps": 41.05552011028931,
+        "speedup": 0.9863903063481472,
+        "acceptance_rate": 0.6136363636363636,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_158",
+        "tps": 35.92453372721293,
+        "speedup": 0.8431806484367977,
+        "acceptance_rate": 0.46808510638297873,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_159",
+        "tps": 49.46407600680307,
+        "speedup": 1.2448586889978503,
+        "acceptance_rate": 0.65625,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_160",
+        "tps": 38.96955497915373,
+        "speedup": 0.992875350516389,
+        "acceptance_rate": 0.1836734693877551,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 12,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_161",
+        "tps": 41.55538801092014,
+        "speedup": 1.0453648310305936,
+        "acceptance_rate": 0.4166666666666667,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_162",
+        "tps": 44.12357267613057,
+        "speedup": 1.0492789791798254,
+        "acceptance_rate": 0.425,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 10,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_163",
+        "tps": 37.19465884608475,
+        "speedup": 0.9406916116367486,
+        "acceptance_rate": 0.19047619047619047,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_164",
+        "tps": 36.4842015309104,
+        "speedup": 0.9556121004791294,
+        "acceptance_rate": 0.16279069767441862,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 11,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_165",
+        "tps": 38.56309942055247,
+        "speedup": 1.0206769289515607,
+        "acceptance_rate": 0.9032258064516129,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 1,
+        "layer_cycles": 14
+      },
+      {
+        "id": "gsm8k_166",
+        "tps": 45.57038528769557,
+        "speedup": 1.1349535345858501,
+        "acceptance_rate": 0.775,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_167",
+        "tps": 42.15382573329617,
+        "speedup": 1.0172566574224697,
+        "acceptance_rate": 0.6666666666666666,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 13
+      },
+      {
+        "id": "gsm8k_168",
+        "tps": 38.535690671716075,
+        "speedup": 0.9829631439543896,
+        "acceptance_rate": 0.5853658536585366,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 11
+      },
+      {
+        "id": "gsm8k_169",
+        "tps": 37.54322756550513,
+        "speedup": 0.9485266441129505,
+        "acceptance_rate": 0.5185185185185185,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 3,
+        "layer_cycles": 8
+      },
+      {
+        "id": "gsm8k_170",
+        "tps": 36.34220715368556,
+        "speedup": 0.9208665807771375,
+        "acceptance_rate": 0.041666666666666664,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_171",
+        "tps": 38.91793188650752,
+        "speedup": 0.9785264254207185,
+        "acceptance_rate": 0.20833333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_172",
+        "tps": 39.70042128263893,
+        "speedup": 1.0114620219388186,
+        "acceptance_rate": 0.2857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_173",
+        "tps": 39.08785423740855,
+        "speedup": 1.0245353223277476,
+        "acceptance_rate": 0.28125,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_174",
+        "tps": 43.03634697440368,
+        "speedup": 1.1129282549110862,
+        "acceptance_rate": 0.4583333333333333,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_175",
+        "tps": 43.923331612338174,
+        "speedup": 1.172512087649532,
+        "acceptance_rate": 0.5357142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 7,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_176",
+        "tps": 39.51415869973582,
+        "speedup": 0.9817954566404611,
+        "acceptance_rate": 0.25,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_177",
+        "tps": 36.73590561887304,
+        "speedup": 0.9438683489950588,
+        "acceptance_rate": 0.2,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_178",
+        "tps": 42.48357461974494,
+        "speedup": 1.072182309571232,
+        "acceptance_rate": 0.45161290322580644,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 4
+      },
+      {
+        "id": "gsm8k_179",
+        "tps": 43.85924956443811,
+        "speedup": 1.057539336928671,
+        "acceptance_rate": 0.7,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 10
+      },
+      {
+        "id": "gsm8k_180",
+        "tps": 37.67667744958867,
+        "speedup": 0.9396316832720764,
+        "acceptance_rate": 0.38636363636363635,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 6
+      },
+      {
+        "id": "gsm8k_181",
+        "tps": 39.22288213519256,
+        "speedup": 0.9622326773865179,
+        "acceptance_rate": 0.3125,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_182",
+        "tps": 35.81670924400377,
+        "speedup": 0.9176306803603757,
+        "acceptance_rate": 0.29411764705882354,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_183",
+        "tps": 38.316700963464605,
+        "speedup": 1.04074209864251,
+        "acceptance_rate": 0.6111111111111112,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 8
+      },
+      {
+        "id": "gsm8k_184",
+        "tps": 44.095667800176095,
+        "speedup": 1.1300534659611998,
+        "acceptance_rate": 0.5714285714285714,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_185",
+        "tps": 39.83244901880058,
+        "speedup": 1.0145318591065133,
+        "acceptance_rate": 0.6842105263157895,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 11
+      },
+      {
+        "id": "gsm8k_186",
+        "tps": 39.2718520495351,
+        "speedup": 1.0674052708797197,
+        "acceptance_rate": 0.7,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 12
+      },
+      {
+        "id": "gsm8k_187",
+        "tps": 35.92915481170331,
+        "speedup": 0.9209317846360662,
+        "acceptance_rate": 0.4772727272727273,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 10
+      },
+      {
+        "id": "gsm8k_188",
+        "tps": 32.98844112855708,
+        "speedup": 0.9477984674147721,
+        "acceptance_rate": 0.3695652173913043,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 10
+      },
+      {
+        "id": "gsm8k_189",
+        "tps": 39.64701636884522,
+        "speedup": 1.0262642238112176,
+        "acceptance_rate": 0.3,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_190",
+        "tps": 38.084686430615044,
+        "speedup": 0.9485536099800483,
+        "acceptance_rate": 0.2857142857142857,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_191",
+        "tps": 40.63968733907164,
+        "speedup": 1.04165246983237,
+        "acceptance_rate": 0.29411764705882354,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 4,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_192",
+        "tps": 40.798314109633246,
+        "speedup": 0.9729654476365084,
+        "acceptance_rate": 0.2777777777777778,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 8,
+        "layer_cycles": 2
+      },
+      {
+        "id": "gsm8k_193",
+        "tps": 43.43370186503664,
+        "speedup": 1.072986447763454,
+        "acceptance_rate": 0.5714285714285714,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      },
+      {
+        "id": "gsm8k_194",
+        "tps": 37.02707235475715,
+        "speedup": 0.8982073757922062,
+        "acceptance_rate": 0.05,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_195",
+        "tps": 45.462683059596706,
+        "speedup": 1.1134758542558005,
+        "acceptance_rate": 0.4,
+        "exact_match": 0.0,
+        "tokens": 48,
+        "pld_cycles": 10,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_196",
+        "tps": 45.1798602045935,
+        "speedup": 1.0842158062853806,
+        "acceptance_rate": 0.5,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_197",
+        "tps": 40.78877648686136,
+        "speedup": 0.9855356395898913,
+        "acceptance_rate": 0.25,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 12,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_198",
+        "tps": 38.31886116035194,
+        "speedup": 0.9485111186945335,
+        "acceptance_rate": 0.20833333333333334,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 6,
+        "layer_cycles": 0
+      },
+      {
+        "id": "gsm8k_199",
+        "tps": 36.91985742629572,
+        "speedup": 0.9364264260689243,
+        "acceptance_rate": 0.19047619047619047,
+        "exact_match": 100.0,
+        "tokens": 48,
+        "pld_cycles": 5,
+        "layer_cycles": 1
+      }
+    ]
+  }
+}

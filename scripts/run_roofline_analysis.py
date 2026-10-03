@@ -42,7 +42,8 @@ calib.append({"desc": "Prompt Lookup K=4 (h=0.12 fit)", "predicted": pp.speedup,
               "measured": 1.39, "rel_err": round(abs(pp.speedup - 1.39) / 1.39, 3),
               "cycle_ms": pp.t_cycle_ms})
 mape = sum(c["rel_err"] for c in calib) / len(calib)
-print(f"[CALIB] MAPE = {mape*100:.1f}% (2 layer-skip points + 1 PLD hit-rate-fit point)")
+print(f"[CALIB] in-device MAPE = {mape*100:.1f}% (2 layer-skip points + 1 PLD hit-rate-fit point; "
+      "calibration accuracy on RTX 4050, NOT cross-device prediction)")
 
 # --- 2. Cross-GPU sweep ---
 sweep_rows = []

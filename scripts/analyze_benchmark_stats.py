@@ -68,7 +68,13 @@ def main():
 
     for bname, b in benches.items():
         raw = b["raw_samples"]
-        rep = {}
+        # Paired unit = same prompt under both methods: assert ID alignment
+        # so paired tests never compare mismatched prompts.
+        ids = [r["id"] for r in raw[STRATEGIES[0]]]
+        for s in STRATEGIES[1:]:
+            assert [r["id"] for r in raw[s]] == ids, \
+                f"ID misalignment in {bname} for {s}; pairing would be invalid"
+        rep = {"paired_unit": "same prompt id", "n": len(ids)}
         for s in STRATEGIES:
             sp = np.array([r["speedup"] for r in raw[s]], dtype=float)
             m, sd, h = ci95(sp)

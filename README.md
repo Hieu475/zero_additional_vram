@@ -124,12 +124,17 @@ Frozen unified benchmark, N=10 prompts, greedy, 48 new tokens
 
 > **Honesty notes.** Exact-match <100% under 4-bit NF4 is NF4 batched-GEMM
 > dequantization noise on near-tie logits (logit margin Δ ≤ 0.25), not an
-> algorithmic bug: on identical contexts the audit finds logit cosine
-> 0.99994+ with zero violations of the Δ ≤ 2‖L‖∞ flip bound, and a strict
-> FP16 proof (`scripts/run_fp16_exactness_proof.py`) shows 100% token
-> identity. †Routed acceptance counts PLD/LS drafts only; vanilla-skipped
-> cycles cannot diverge, hence the higher exact-match. KnapSpec/SpecBound
-> are our adapted re-implementations, not official code.
+> algorithmic bug. Precision ladder (Qwen2.5-0.5B + Llama-3.2-1B, 40 prompts
+> × 128 tokens each): **FP32 100% identity over 10,113 token positions**,
+> FP16 90% sequences, NF4 60% — plus a 450-token audit with logit cosine
+> 0.99994+ and zero violations of the Δ ≤ 2‖L‖∞ flip bound
+> (`experiments/17_fp16_exactness/`). †Routed acceptance counts PLD/LS
+> drafts only; vanilla-skipped cycles cannot diverge, hence the higher
+> exact-match. KnapSpec/SpecBound are our adapted re-implementations,
+> not official code. 7B-class auxiliary drafts: only large FP16 drafts
+> OOM — quantized 0.5B/1.5B drafts fit but always cost ΔM_aux > 0 and
+> shrink KV headroom (`experiments/16_hybrid_roofline/draft_vram_pareto.json`);
+> ZASSD weight overhead is exactly 0.0 MB.
 
 ---
 

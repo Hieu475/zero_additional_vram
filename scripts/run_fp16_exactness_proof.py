@@ -54,14 +54,18 @@ def main():
     ap.add_argument("--prompts", default="data/benchmarks/prompts.jsonl")
     ap.add_argument("--num-prompts", type=int, default=20)
     ap.add_argument("--max-new-tokens", type=int, default=32)
+    ap.add_argument("--dtype", default="float16", choices=["float16", "float32"],
+                    help="float32 tests exact arithmetic; float16 additionally "
+                         "exposes reduced-precision batched-GEMM noise")
     ap.add_argument("--device", default="cuda:0")
     ap.add_argument("--outdir", default="experiments/17_fp16_exactness")
     a = ap.parse_args()
 
     from transformers import AutoModelForCausalLM, AutoTokenizer
     tok = AutoTokenizer.from_pretrained(a.model)
+    dt = torch.float32 if a.dtype == "float32" else torch.float16
     model = AutoModelForCausalLM.from_pretrained(
-        a.model, torch_dtype=torch.float16, device_map=a.device).eval()
+        a.model, torch_dtype=dt, device_map=a.device).eval()
 
     adapter = ModelAdapter(model)
     nL = adapter.num_layers
@@ -82,35 +86,36 @@ def main():
     for i, item in enumerate(prompts):
         p = item["prompt"]
         ref = vanilla_ids(model, tok, p, a.max_new_tokens, a.device)
-        _, m = self_speculative_generate(
+        ref_text = tok.decode(ref, skip_special_tokens=True)
+        hyp_text, m = self_speculative_generate(
             model, tok, layer_mgr, skip, p, k=2,
             max_new_tokens=a.max_new_tokens, device=a.device)
-        # self_speculative_generate returns text; re-encode for ID comparison
-        hyp_text = _
-        hyp = tok(hyp_text, add_special_tokens=False)["input_ids"][:len(ref)]
-        match = (ref == hyp)
+        # Compare decoded TEXTS (not re-encoded IDs): re-encoding is lossy
+        # on edge cases (e.g. immediate-EOS decodes to ""), which produced
+        # a false mismatch. Identical greedy ID streams <=> identical text.
+        match = (ref_text == hyp_text)
         rows.append({"id": item.get("id", i), "match": match,
                      "tokens": len(ref), "accepted": m.total_accepted_tokens,
                      "proposed": m.total_draft_tokens})
         print(f"[{i+1}/{len(prompts)}] match={match} tok={len(ref)} "
               f"acc={m.total_accepted_tokens}/{m.total_draft_tokens}")
         if not match:
-            for j, (x, y) in enumerate(zip(ref, hyp)):
-                if x != y:
-                    print(f"  first diff at pos {j}: vanilla={x} zassd={y}")
-                    break
+            print(f"  vanilla[:120]={ref_text[:120]!r}")
+            print(f"  zassd  [:120]={hyp_text[:120]!r}")
 
     n_match = sum(r["match"] for r in rows)
     rate = n_match / len(rows)
-    print(f"\nFP16 identity: {n_match}/{len(rows)} = {rate:.1%} "
-          f"({time.perf_counter()-t0:.0f}s total)")
+    positions = sum(r["tokens"] for r in rows)
+    print(f"\n{a.dtype} identity: {n_match}/{len(rows)} sequences = {rate:.1%} "
+          f"over {positions} token positions ({time.perf_counter()-t0:.0f}s total)")
     outp = Path(a.outdir)
     outp.mkdir(parents=True, exist_ok=True)
-    json.dump({"model": a.model, "dtype": "float16", "skip": skip,
-               "identity_rate": rate, "n": len(rows), "rows": rows},
-              open(outp / "fp16_identity.json", "w"), indent=2)
-    assert rate == 1.0, f"ALGORITHMIC DIVERGENCE under FP16: {rate:.1%}"
-    print("PASS: algorithmically exact under exact (FP16) arithmetic.")
+    json.dump({"model": a.model, "dtype": a.dtype, "skip": skip,
+               "identity_rate": rate, "n": len(rows),
+               "token_positions": positions, "rows": rows},
+              open(outp / f"{a.dtype}_identity.json", "w"), indent=2)
+    assert rate == 1.0, f"ALGORITHMIC DIVERGENCE under {a.dtype}: {rate:.1%}"
+    print(f"PASS: algorithmically exact under {a.dtype} arithmetic.")
 
 
 if __name__ == "__main__":

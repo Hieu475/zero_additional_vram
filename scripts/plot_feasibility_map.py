@@ -43,21 +43,37 @@ def alpha_be(c, k, gpu=g4050):
 
 cs = np.linspace(0.05, 1.0, 200)
 
-# Measured operating points on RTX 4050 (Qwen2.5-3B NF4, frozen benchmarks).
-# c inferred from micro-profiling (t_draft_k1 / t_vanilla); alpha measured.
-measured = [
-    {"label": "cka_75 K=2 (0.87x)", "c": 0.75, "alpha": 0.73, "win": False},
-    {"label": "cka_83 K=1 (0.98x)", "c": 0.83 * 19.72 / 24.1 * 0.75 / 0.75, "alpha": 0.86, "win": False},
-    {"label": "cka_50 K=1 (0.89x)", "c": 0.50, "alpha": 0.37, "win": False},
-    {"label": "PLD K=4 (1.39x)", "c": 0.003, "alpha": 0.95, "win": True},
-]
-# cka_83 draft is cheaper per layer count: scale by kept-layer ratio 33/36 vs 27/36
-measured[1]["c"] = round(0.75 * 33 / 27, 3)
-
+# (measured operating points are defined below from MEASURED latencies)
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+from zassd.profiling.action_cost_model import Qwen25_3B_CostProfile as PROF
+
+TVms = 1000.0 / PROF.baseline_tps  # measured vanilla step: 24.10 ms
+
+
+def measured_c(config: str) -> float:
+    """Draft cost ratio from MEASURED draft latency (CUDA events, Phase 15).
+
+    Never inferred from layer counts: attention/MLP/KV traffic and kernel
+    launches do not scale linearly with layer count.
+    """
+    return PROF.measured_draft_latencies[config][1] / TVms
+
+
+# Operating points (Qwen2.5-3B NF4, RTX 4050). Acceptance prefers directly
+# measured benchmark values; profile-fitted values are flagged as such.
+measured = [
+    {"label": "cka_75 K=2 (0.87x)", "c": round(measured_c("cka_75"), 3),
+     "alpha": 0.732, "win": False, "src": "measured (frozen unified benchmark)"},
+    {"label": "cka_83 K=1 (0.93x)", "c": round(measured_c("cka_83"), 3),
+     "alpha": 0.90, "win": False, "src": "measured (sweet-spot sweep)"},
+    {"label": "cka_50 K=1 (0.89x)", "c": round(measured_c("cka_50"), 3),
+     "alpha": 0.367, "win": False, "src": "alpha fitted (cost-model profile)"},
+    {"label": "PLD K=4 (1.39x)", "c": round(0.08 / TVms, 4),
+     "alpha": 0.95, "win": True, "src": "alpha fitted (hit-rate fit h=0.12)"},
+]
 fig, ax = plt.subplots(figsize=(7.5, 5))
 for k, style in [(1, "o-"), (2, "s-"), (4, "^-")]:
     ys = [alpha_be(c, k) for c in cs]
@@ -83,7 +99,9 @@ fig.tight_layout()
 fig.savefig(OUT / "feasibility_map.png", dpi=150)
 shutil.copy(OUT / "feasibility_map.png", Path("paper/figures/feasibility_map.png"))
 json.dump({"measured": measured,
-           "note": "cka_83 K=1 at alpha=0.86 sits just below its K=1 boundary: "
-                   "even 86% acceptance cannot pay for c~0.9 draft on 192 GB/s."},
+           "note": "cka_83 K=1 at alpha=0.90 sits just below its K=1 boundary: "
+                   "even 90% acceptance cannot pay for c~0.9 draft on 192 GB/s. "
+                   "All c values are measured draft latencies / measured vanilla "
+                   "latency (never inferred from layer counts)."},
           open(OUT / "feasibility_map.json", "w"), indent=2)
 print(f"DONE -> {OUT/'feasibility_map.png'} + paper/figures/feasibility_map.png")

@@ -39,6 +39,9 @@ class GPUSpec:
 
 # T_vanilla derived from baseline_tps in cost_model + actual measurements in the report:
 # Qwen 41.5 tok/s -> 24.1ms; Llama 54.1 tok/s -> 18.5ms. Use Qwen as reference.
+# verify_rho values below are ASSUMED (parallel-efficiency priors), not measured:
+# cross-GPU rows are projections until scripts/run_cross_gpu_calibration.py
+# is executed on a second device. Do not cite them as measured results.
 KNOWN_GPUS: dict[str, GPUSpec] = {
     "RTX4050-laptop": GPUSpec("RTX4050-laptop", 192.0, 24.1, 1.0, "original device, measured"),
     "RTX3060-12GB": GPUSpec("RTX3060-12GB", 360.0, 24.1 * 192 / 360, 0.85, "derived from BW"),

@@ -33,8 +33,8 @@
 
 \begin{abstract}
 Deploying large language models (LLMs) on 6~GB consumer laptop GPUs is bounded by two walls: \textit{capacity}---a 0.5--1.5B auxiliary draft model costs 1.0--3.0~GB of VRAM and triggers CUDA out-of-memory---and \textit{bandwidth}---at 192~GB/s, a draft pass over most of the target model's layers costs nearly as much as full decoding itself.
-We present \textbf{ZASSD}, a zero-auxiliary-weight speculative decoding framework that (i)~derives draft subnetworks from the target model via layer skipping with zero-copy KV-prefix sharing (0.0~MB weight overhead, $\le$8~MB dynamic buffers, four machine-checked cache invariants); (ii)~routes each speculative cycle through a \textbf{cost-aware hybrid router} choosing between prompt-lookup drafting ($c{\approx}0$), layer-skip drafting, and skipping speculation entirely; and (iii)~explains both its wins and losses with a \textbf{speculative roofline model} that predicts speedup from draft-cost ratio $c$, acceptance $\alpha$, and horizon $K$ (calibration MAPE 2.4\% on real hardware).
-On an RTX~4050 laptop GPU with Qwen2.5-3B/Llama-3.2-3B in 4-bit NF4, the router reaches \textbf{1.063$\times$ overall speedup} across GSM8K, HumanEval, and CNN/DailyMail ($N{=}50$ each; prompt-lookup alone: 1.144$\times$), while pure layer-skip self-speculation runs at 0.88--0.98$\times$ despite 73--88\% acceptance---a negative result our roofline shows is a bandwidth ceiling, not an implementation bug. A 450-token numerical audit confirms zero violations of the derived quantization-noise bound. Code, calibration data, and one-command benchmarks are released.
+We present \textbf{ZASSD}, a zero-auxiliary-weight speculative decoding framework that (i)~derives draft subnetworks from the target model via layer skipping with zero-copy KV-prefix sharing (0.0~MB weight overhead, $\le$8~MB dynamic buffers, four machine-checked cache invariants); (ii)~routes each speculative cycle through a \textbf{cost-aware hybrid router} choosing between prompt-lookup drafting ($c{\approx}0$), layer-skip drafting, and skipping speculation entirely; and (iii)~explains both its wins and losses with a \textbf{speculative roofline model} that predicts speedup from draft-cost ratio $c$, acceptance $\alpha$, and horizon $K$ (in-device calibration MAPE 2.4\% on real hardware; cross-device prediction MAPE pending multi-GPU validation).
+On an RTX~4050 laptop GPU with Qwen2.5-3B/Llama-3.2-3B in 4-bit NF4, the router reaches \textbf{1.063$\times$ overall speedup} across GSM8K, HumanEval, and CNN/DailyMail ($N{=}50$ each; prompt-lookup alone: 1.144$\times$; extended GSM8K $N{=}200$: 1.026$\pm$0.014$\times$, $p{=}0.0005$ vs vanilla), while pure layer-skip self-speculation runs at 0.88--0.98$\times$ despite 73--88\% acceptance---a negative result our roofline shows is a bandwidth ceiling, not an implementation bug. A hardware controller with a feasibility gate (skip speculation whenever it is predicted to lose) improves controller throughput 1.083$\times$ over the same controller without it. A 450-token numerical audit confirms zero violations of the derived quantization-noise bound, and a strict FP32 identity proof reaches 100\% over 10,113 token positions on two unquantized models. Code, calibration data, and one-command benchmarks are released.
 \end{abstract}
 
 \section{Introduction}
@@ -47,8 +47,10 @@ This paper makes four contributions:
 \item \textbf{Zero-weight speculative architecture} with zero-copy KV-prefix sharing, $O(1)$ rollback, and four regression-tested cache invariants (Sec.~\ref{sec:system}).
 \item \textbf{HybridDraftRouter}, a per-cycle cost-aware router over three actions---prompt-lookup draft, layer-skip draft, vanilla skip---with weak-hit horizon capping, asymmetric PLD preference, and opportunity-cost speculation skipping (Sec.~\ref{sec:router}).
 \item \textbf{A speculative roofline model} (Sec.~\ref{sec:roofline}) that turns our headline negative result (0.88$\times$ at $c{=}0.75$, $K{=}2$) into a verified prediction: break-even needs $\alpha{\ge}0.81$ ($K{=}1$) to $\alpha{\ge}0.89$ ($K{=}2$) on a 192~GB/s device, and prompt-lookup's measured 1.39$\times$ implies an effective n-gram hit rate of only $\sim$12\%.
-\item \textbf{Honest edge-GPU evaluation}: 6 methods $\times$ 2 models $\times$ 3 benchmarks, an OOM feasibility proof, a 450-token quantization-noise audit, and full artifacts (76/76 tests passing).
+\item \textbf{Honest edge-GPU evaluation}: 6 methods $\times$ 2 models $\times$ 4 benchmarks (GSM8K extended to $N{=}200$), a measured auxiliary-draft VRAM pareto, an OOM feasibility proof, a 450-token quantization-noise audit plus a 10,113-position FP32 identity proof, paired significance tests throughout, and full artifacts (81/81 tests passing).
 \end{enumerate}
+
+Existing self-speculative systems implicitly assume some speculative configuration is profitable. We show this fails on bandwidth-constrained GPUs, and build the runtime around the opposite default: \textit{do not speculate unless the measured cost model says it wins}.
 
 \section{Related Work}
 \label{sec:related}
@@ -89,6 +91,11 @@ for $s \in \{\mathrm{pld}, \mathrm{ls}\}$, with $T_{\mathrm{draft}}(\mathrm{pld}
 \textbf{(R4)} PLD horizon is truncated $4{\to}2$ when the shorter verify has higher expected throughput.
 The router is pure CPU code ($\mu$s per decision), needs no GPU, and logs per-source EMAs for analysis. Entropy panic ($H{\ge}4.5$) forces vanilla directly.
 
+\subsection{Feasibility-Gated Hardware Controller}
+\label{sec:gate}
+
+The depth/horizon controller optimizes $a_t{=}(S_t,K_t)$ for throughput under VRAM/power/thermal barriers---but without a skip option it can only choose \textit{how} to lose when every speculative action is predicted below vanilla. We add the missing action: if $\max_{S,K}\hat{\mathrm{TPS}}(S,K) < \mathrm{TPS}_{\mathrm{vanilla}}$, the controller emits $K{=}0$, executed by the decoder as a plain single-token vanilla step. The gate is a one-line feasibility check against the same calibrated cost model, with an optional hysteresis margin. A paired A/B on Qwen2.5-3B (6 prompts $\times$ 32 tokens) gives gate-ON 35.44 vs gate-OFF 32.73~tok/s (1.083$\times$), with 47/130 cycles vanilla-skipped: the gate fires exactly where the roofline says speculation loses, and never where it wins.
+
 \subsection{Speculative Roofline Model}
 \label{sec:roofline}
 
@@ -97,12 +104,19 @@ For greedy decoding with per-cycle cost $T_{\mathrm{cycle}} = T_{\mathrm{draft}}
 \mathrm{Speedup} = \frac{(1 + \alpha K)\, T_v}{T_{\mathrm{cycle}}}, \quad
 \alpha_{BE} = \frac{T_{\mathrm{cycle}}/T_v - 1}{K}.
 \end{equation}
-Memory-bound scaling gives $T(\mathrm{GPU}_2) = T(4050) \times 192/\mathrm{BW}_2$ for streaming passes; batched verification parallelizes on wide GPUs, modeled by efficiency $\rho \in \{1.0, 0.85, 0.55, 0.45, 0.40\}$ for 4050/3060/4090/A100/H100. A subtle consequence: pure $1/\mathrm{BW}$ scaling leaves $K{=}1$ speedup \textit{invariant}---bandwidth alone cannot save layer-skip at $K{=}1$; only verification parallelism (larger $K$ on wide GPUs) moves the needle. Retrieval drafting needs a hit rate $h$:
+Memory-bound scaling gives $T(\mathrm{GPU}_2) = T(4050) \times 192/\mathrm{BW}_2$ for streaming passes; batched verification parallelizes on wide GPUs, modeled by efficiency $\rho \in \{1.0, 0.85, 0.55, 0.45, 0.40\}$ for 4050/3060/4090/A100/H100. These $\rho$ values are \textit{assumed priors}, not measurements---cross-GPU rows are projections until calibrated per-device ($\sim$3~min/GPU with \texttt{scripts/run\_cross\_gpu\_calibration.py}). A subtle consequence: pure $1/\mathrm{BW}$ scaling leaves $K{=}1$ speedup \textit{invariant}---bandwidth alone cannot save layer-skip at $K{=}1$; only verification parallelism (larger $K$ on wide GPUs) moves the needle. Retrieval drafting needs a hit rate $h$:
 \begin{equation}
 \mathbb{E}[N] = h(1{+}\alpha K) + (1{-}h), \;
 \bar{T} = h(T_{\mathrm{pld}}{+}T_{\mathrm{verify}}) + (1{-}h)T_v,
 \end{equation}
 which explains why PLD's theoretical 2.8$\times$ ($h{=}1$) collapses to the measured 1.39$\times$ ($h{\approx}0.12$ on generic prompts).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../figures/feasibility_map.png}
+\caption{Speculation feasibility map (Qwen2.5-3B NF4, RTX~4050): break-even acceptance vs.\ draft-cost ratio for $K{=}1,2,4$. All $c$ values are \textit{measured} draft latencies over measured vanilla latency---never inferred from layer counts. Even 90\% acceptance at $c{\approx}0.9$ (cka\_83, $K{=}1$) sits below its boundary, while PLD ($c{\approx}0$) wins everywhere: acceptance alone does not determine speedup.}
+\label{fig:feasibility}
+\end{figure}
 
 \section{Experiments}
 \label{sec:evaluation}
@@ -128,7 +142,7 @@ Table~\ref{tab:final_unified_benchmark} (frozen protocol, $N{=}10$ prompts) conf
 
 \input{../tables/routed_benchmark_table.tex}
 
-Table~\ref{tab:routed_benchmarks} ($N{=}50$ per benchmark, 48 new tokens) is the paper's central empirical result. \textbf{Routed} leads overall (1.063$\times$), taking GSM8K (1.061$\times$) and CNN/DM (1.032$\times$) and tying HumanEval (1.096$\times$ vs 1.093$\times$ for naive hybrid); pure PLD peaks higher overall on these long-prompt tasks (1.144$\times$) and we report it honestly alongside. Two observations matter more than the means: (i)~the router strongly prefers PLD/vanilla over $K{=}2$ layer-skip (LS vs PLD cycles: 99/369 on GSM8K, 205/329 on HumanEval, 11/529 on CNN/DM)---it \textit{discovered} the roofline prediction that $K{=}2$ layer-skip loses; (ii)~routed exact-match is highest (83.3\%), since vanilla-skipped cycles cannot diverge.
+Table~\ref{tab:routed_benchmarks} ($N{=}50$ per benchmark, 48 new tokens) is the paper's central empirical result. \textbf{Routed} leads overall (1.063$\times$), taking GSM8K (1.061$\times$) and CNN/DM (1.032$\times$) and tying HumanEval (1.096$\times$ vs 1.093$\times$ for naive hybrid); pure PLD peaks higher overall on these long-prompt tasks (1.144$\times$) and we report it honestly alongside. A non-overlapping GSM8K extension (test[50:200], +150 samples) confirms the direction on harder prompts: routed 1.014$\times$ on the new slice, combined GSM8K $N{=}200$ at 1.026$\pm$0.014$\times$ ($p{=}0.0005$ vs vanilla; vs hybrid $+0.009$, n.s.). All paired tests use same-prompt pairing with ID-alignment checks. Two observations matter more than the means: (i)~the router strongly prefers PLD/vanilla over $K{=}2$ layer-skip (LS vs PLD cycles: 99/369 on GSM8K, 205/329 on HumanEval, 11/529 on CNN/DM)---it \textit{discovered} the roofline prediction that $K{=}2$ layer-skip loses; (ii)~routed exact-match is highest (83.3\%), since vanilla-skipped cycles cannot diverge.
 
 \subsection{Roofline Calibration and Projection}
 \label{sec:roofline_exp}
@@ -142,7 +156,7 @@ Table~\ref{tab:routed_benchmarks} ($N{=}50$ per benchmark, 48 new tokens) is the
 
 \input{../tables/roofline_breakeven_table.tex}
 
-Calibration on three RTX~4050 anchor points gives \textbf{MAPE 2.4\%} (CKA $K{=}2$: 0.888 predicted vs 0.873 measured; $K{=}1$: 1.029 vs 0.980; PLD $K{=}4$: 1.383 vs 1.390 with fitted $h{=}0.12$). Table~\ref{tab:breakeven} lists break-even thresholds: $K{=}1$ needs $\alpha{\ge}0.81$ on \textit{any} bandwidth, while $K{=}2$ relaxes from 0.89 (4050) to 0.84 (H100). Fig.~\ref{fig:roofline} visualizes the regimes. An analytic workload sweep (generic-chat, summarization, reasoning, code) predicts routed hybrids beat naive fallback hybrids by +4--11\% (\texttt{experiments/16\_hybrid\_roofline/}).
+Calibration on three RTX~4050 anchor points gives \textbf{in-device MAPE 2.4\%} (CKA $K{=}2$: 0.888 predicted vs 0.873 measured; $K{=}1$: 1.029 vs 0.980; PLD $K{=}4$: 1.383 vs 1.390 with fitted $h{=}0.12$). This is calibration accuracy on one hardware regime, not predictive generalization: cross-device MAPE (3060/4090/A100) is the pending validation that would promote the roofline from descriptive to predictive. Table~\ref{tab:breakeven} lists break-even thresholds: $K{=}1$ needs $\alpha{\ge}0.81$ on \textit{any} bandwidth, while $K{=}2$ relaxes from 0.89 (4050) to 0.84 (H100). Fig.~\ref{fig:roofline} visualizes the regimes. An analytic workload sweep (generic-chat, summarization, reasoning, code) predicts routed hybrids beat naive fallback hybrids by +4--11\% (\texttt{experiments/16\_hybrid\_roofline/}).
 
 \begin{figure}[t]
 \centering
@@ -156,7 +170,7 @@ Calibration on three RTX~4050 anchor points gives \textbf{MAPE 2.4\%} (CKA $K{=}
 
 \input{../tables/oom_boundary_table.tex}
 
-Table~\ref{tab:oom_boundary}: Mistral-7B NF4 (3946.6~MB) plus a 1.5B FP16 draft (3080.0~MB) needs 7526.6~MB on a 6141~MB device---an unavoidable OOM. ZASSD adds 0.0~MB of weights ($\le$8~MB ephemeral KV), the only speculative option that fits.
+Table~\ref{tab:oom_boundary}: Mistral-7B NF4 (3946.6~MB) plus a 1.5B FP16 draft (measured 2945.5~MB) needs $\sim$7.4~GB on a 6141~MB device---an unavoidable OOM. But the honest boundary is finer than ``all auxiliary drafts OOM'': we \textit{measured} draft footprints on-device (0.5B FP16: 942.3~MB; 0.5B NF4: 459.2~MB; 1.5B NF4: 1181.5~MB), and quantized small drafts do fit next to a 7B target---at the cost of $\Delta M_{\mathrm{aux}}{>}0$ weight VRAM and shrunken KV/context headroom (1.5B NF4 leaves only 62.9~MB). ZASSD adds 0.0~MB of weights ($\le$8~MB ephemeral KV) with 1244.4~MB headroom: the claim is strictly-dominant memory efficiency, not exclusivity of feasibility.
 
 \subsection{Numerical Equivalence Audit}
 \label{sec:audit}
@@ -170,7 +184,7 @@ Table~\ref{tab:oom_boundary}: Mistral-7B NF4 (3946.6~MB) plus a 1.5B FP16 draft 
 
 \input{../tables/exactness_table.tex}
 
-Direct comparison of single-token vs.\ batched verification logits on identical contexts (450 tokens): mean cosine 0.99994 (Qwen) / 0.99995 (Llama), \textbf{zero violations} of the flip condition $\Delta \le 2\|L\|_{\infty}$, and a single argmax flip at an exact tie ($\Delta{=}0$). Algorithmic exactness holds; residual divergence is NF4 GEMM noise on near-tie tokens.
+Direct comparison of single-token vs.\ batched verification logits on identical contexts (450 tokens): mean cosine 0.99994 (Qwen) / 0.99995 (Llama), \textbf{zero violations} of the flip condition $\Delta \le 2\|L\|_{\infty}$, and a single argmax flip at an exact tie ($\Delta{=}0$). Algorithmic exactness holds; residual divergence is NF4 GEMM noise on near-tie tokens. A strict FP32 identity proof on unquantized 0.5B/1B models reaches \textbf{100\% over 10,113 token positions} (FP16: 90\% sequences, NF4: 60\%)---the precision ladder localizing divergence to reduced-precision kernels, not the algorithm.
 
 \subsection{Router Ablation}
 \label{sec:ablation}
@@ -180,12 +194,17 @@ Starting from naive fallback (overall 1.002$\times$): asymmetric PLD margin (R2)
 \section{Limitations}
 \label{sec:limitations}
 
-(i)~Standard benchmarks use $N{=}50$ samples per task---solid for a workshop; main-track claims would need multiple seeds and wider coverage; (ii)~only the RTX~4050 rows are measured, cross-GPU rows are projections with assumed $\rho$ (calibration script provided: \texttt{scripts/run\_cross\_gpu\_calibration.py}, $\sim$3~min/GPU); (iii)~greedy decoding only; (iv)~PLD still beats the router overall on long-prompt tasks---the router's edge is robustness (task means never below 1.03$\times$ vs.\ 0.90$\times$ worst task for fixed layer-skip), not peak speedup; (v)~7B+ feasibility is shown via OOM accounting, not end-to-end 7B generation.
+(i)~GSM8K is extended to $N{=}200$ but HumanEval/CNN-DM remain $N{=}50$; main-track claims need full HumanEval-164, wider coverage, and multiple seeds; (ii)~only the RTX~4050 rows are measured, cross-GPU rows are projections with assumed $\rho$ (calibration script provided: \texttt{scripts/run\_cross\_gpu\_calibration.py}, $\sim$3~min/GPU); (iii)~greedy decoding only---sampling-mode distribution tests are future work; (iv)~PLD still beats the router overall on long-prompt tasks---the router's edge is robustness (task means never below 1.03$\times$ vs.\ 0.90$\times$ worst task for fixed layer-skip), not peak speedup; (v)~7B feasibility is shown via measured weight accounting plus a 1.5B-NF4 near-boundary case (62.9~MB headroom), not end-to-end 7B generation; (vi)~KnapSpec/SpecBound comparisons use our adapted re-implementations, validated for ranking behavior on shared hardware but not official code.
+
+\section{Reproducibility}
+\label{sec:repro}
+
+All claims are reproducible from the release: \texttt{reproduce.sh --quick} re-runs unit tests (81/81), roofline calibration, router simulation, margin/robustness sweeps, and benchmark statistics on CPU in $\sim$2~min; the full GPU path re-runs the $N{=}50$ suite ($\sim$1~h on an RTX~4050). A pinned \texttt{Dockerfile} (PyTorch~2.11/CUDA~12.8), per-experiment JSON with raw per-sample rows, ID-aligned paired-test scripts, and model-exact \texttt{requirements}/\texttt{pyproject} are included. No hyperparameter was tuned on test prompts: router constants come from analytic simulation, and the GSM8K extension slice is non-overlapping with the $N{=}50$ split.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-Zero-weight speculation is \textit{feasible} on 6~GB GPUs, layer-skip self-speculation at $c{\approx}0.75$ is \textit{not faster} there (and we prove why), and a cost-aware router over retrieval drafting plus selective vanilla skipping recovers consistent $>1.0\times$ speedups with the highest output fidelity. The roofline (MAPE 2.4\%) tells practitioners exactly when each technique wins. All code, measurements, and analysis scripts are released for reproduction and for the pending multi-GPU validation.
+Zero-weight speculation is \textit{feasible} on 6~GB GPUs, layer-skip self-speculation at $c{\approx}0.75$ is \textit{not faster} there (and we prove why), and a cost-aware router over retrieval drafting plus selective vanilla skipping recovers consistent $>1.0\times$ speedups with the highest output fidelity. The roofline (in-device MAPE 2.4\%) tells practitioners exactly when each technique wins on measured hardware; cross-GPU rows remain labeled projections until the calibration protocol in \texttt{scripts/run\_cross\_gpu\_calibration.py} is executed on a second device. All code, measurements, and analysis scripts are released for reproduction and for the pending multi-GPU validation.
 
 \bibliographystyle{plain}
 \bibliography{references}

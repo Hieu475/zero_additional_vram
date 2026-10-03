@@ -6,7 +6,7 @@
 \begin{table*}[t]
 \centering
 \small
-\caption{Cross-domain evaluation with the cost-aware hybrid router (Qwen2.5-3B NF4, RTX 4050 6GB, $N{=}50$ per benchmark, 48 new tokens). PLD uses $K{=}2$; Hybrid runs layer-skip $K{=}2$ on PLD miss; \textbf{Routed} selects per-cycle between PLD ($K{\le}4$), layer-skip ($K{=}2$), and vanilla skip. Overall shows mean $\pm$ 95\% CI over $n{=}150$ pooled samples. Routed beats Hybrid (paired $t$, $p{<}10^{-4}$, $d_z{=}0.44$) and vanilla ($p{=}5{\times}10^{-5}$) but trails pure PLD ($-0.081$, $p{<}10^{-4}$): routing buys robustness (exact-match 83.3\% vs 78.0\%), not peak speed on repetitive text. All strategies use 0.0~MB auxiliary weight VRAM. Exact-match is measured against greedy vanilla output.}
+\caption{Cross-domain evaluation with the cost-aware hybrid router (Qwen2.5-3B NF4, RTX 4050 6GB, $N{=}50$ per benchmark, 48 new tokens). PLD uses $K{=}2$; Hybrid runs layer-skip $K{=}2$ on PLD miss; \textbf{Routed} selects per-cycle between PLD ($K{\le}4$), layer-skip ($K{=}2$), and vanilla skip. Overall shows mean $\pm$ 95\% CI over $n{=}150$ pooled samples. Routed beats Hybrid (paired $t$, $p{<}10^{-4}$, $d_z{=}0.44$) and vanilla ($p{=}5{\times}10^{-5}$) but trails pure PLD ($-0.081$, $p{<}10^{-4}$): routing buys robustness (exact-match 83.3\% vs 78.0\%), not peak speed on repetitive text. An extended non-overlapping GSM8K slice (test[50:200], +150 samples) confirms the direction: routed 1.014$\times$ on new data, combined GSM8K $N{=}200$ at 1.026$\pm$0.014$\times$ ($p{=}0.0005$ vs vanilla; vs hybrid $+0.009$, n.s.). All strategies use 0.0~MB auxiliary weight VRAM. Exact-match is measured against greedy vanilla output.}
 \label{tab:routed_benchmarks}
 \begin{tabular}{lcccccc}
 \toprule
