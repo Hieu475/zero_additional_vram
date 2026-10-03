@@ -109,31 +109,49 @@ Standardized benchmark on **NVIDIA GeForce RTX 4050 Laptop GPU** (6 GB GDDR6, 19
 
 ### Qwen2.5-3B-Instruct (36 Layers, 4-bit NF4)
 
+Frozen unified benchmark, N=10 prompts, greedy, 48 new tokens
+(`experiments/final_validation/`; routed row: N=50/bench, `experiments/16_hybrid_roofline/`):
+
 | Method | Draft Mechanism | Additional Weight VRAM | Throughput (tok/s) | Relative Speedup | Acceptance Rate | Exact Match (%) |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Vanilla Target** | N/A (Standard AR) | 0.0 MB | 41.0 | 1.00× | 100.0% | 100.0% |
-| **Prompt Lookup (PLD)** | N-gram Context Matching | **0.0 MB** | **59.8** | **1.39×** | **100.0%** | 100.0% |
-| **ZASSD (mid_12, K=1)** | Logical Layer Skip (L12–23) | **0.0 MB** | 40.2 | 0.98× | 73.8% | 100.0% |
-| **ZASSD HW Controller** | Adaptive Depth & Length | **0.0 MB** | 36.5 | 0.89× | 88.1% | 100.0% |
-| **KnapSpec (ICML'24)** | Whole-Layer Knapsack | **0.0 MB** | 35.2 | 0.86× | 73.2% | 100.0% |
-| **SpecBound (ACL'24)** | Bounded Layer Skip | **0.0 MB** | 33.8 | 0.83× | 74.1% | 100.0% |
+| **Vanilla Target** | N/A (Standard AR) | 0.0 MB | 41.7 | 1.00× | — | 100.0% |
+| **Prompt Lookup (PLD, K=4)** | N-gram Context Matching | **0.0 MB** | **57.9** | **1.39×** | **100.0%** | 100.0% |
+| **ZASSD (mid_12, K=1)** | Logical Layer Skip (L12–23) | **0.0 MB** | 40.2 | 0.98× | 73.8% | 60.0% |
+| **ZASSD HW Controller** | Adaptive Depth & Length (+vanilla skip gate) | **0.0 MB** | 38.6 | 0.93× | 89.0% | 60.0% |
+| **ZASSD Routed (K=2+PLD4)** | Cost-aware AR / PLD / layer-skip per cycle | **0.0 MB** | **44.1** | **1.06×** | 35.8%† | 83.3% |
+| **KnapSpec (adapted)** | Whole-Layer Knapsack | **0.0 MB** | 35.9 | 0.86× | 73.2% | 60.0% |
+| **SpecBound (adapted)** | Bounded Layer Skip | **0.0 MB** | 34.4 | 0.83× | 74.1% | 50.0% |
+
+> **Honesty notes.** Exact-match <100% under 4-bit NF4 is NF4 batched-GEMM
+> dequantization noise on near-tie logits (logit margin Δ ≤ 0.25), not an
+> algorithmic bug: on identical contexts the audit finds logit cosine
+> 0.99994+ with zero violations of the Δ ≤ 2‖L‖∞ flip bound, and a strict
+> FP16 proof (`scripts/run_fp16_exactness_proof.py`) shows 100% token
+> identity. †Routed acceptance counts PLD/LS drafts only; vanilla-skipped
+> cycles cannot diverge, hence the higher exact-match. KnapSpec/SpecBound
+> are our adapted re-implementations, not official code.
 
 ---
 
-## 🧪 Formal Verification & Invariant Test Suite
+## 🧪 Invariant Validation & System Test Suite
 
-All 60 unit and systems tests run under `pytest`:
+All 80+ unit and systems tests run under `pytest`:
 
 ```bash
 pytest tests/ -v
 ```
 
-Verified Invariants:
+Verified Invariants (regression-tested, not formal-methods proofs):
 1. **Invariant 1 (Zero-Copy Prefix Sharing)**: Pointer aliasing between target and ephemeral draft cache.
 2. **Invariant 2 (Draft-Private Mutation)**: In-place draft writes into candidate slots leave canonical prefix memory bitwise identical.
 3. **Invariant 3 (Exact Rollback)**: Truncation resets sequence length to $P + \text{accepted}$ with zero residual token pollution.
 4. **Invariant 4 (Zero Dynamic Memory Allocation)**: Pre-allocated buffer addresses remain strictly constant across all forward steps.
-5. **Exactness Equivalence**: Numerical logits and greedy tokens match ground-truth full recomputation.
+5. **Numerical Equivalence Audit**: 450-token single-vs-batched logit comparison
+   (cosine 0.99994+, zero flip-bound violations) plus a strict FP16
+   token-identity proof on a 0.5B model.
+6. **Algorithmic vs numerical exactness** are reported separately: the
+   speculation algorithm is distribution-preserving under exact arithmetic;
+   residual NF4 divergences are quantified kernel noise.
 
 ---
 
@@ -154,7 +172,7 @@ zero_additional_vram/
 │   └── tables/                  # Auto-generated .tex tables and macros
 ├── scripts/                     # Standalone benchmarking & profiling scripts
 ├── experiments/                 # Empirical raw results and summaries
-└── tests/                       # Complete formal verification test suite (60 tests)
+└── tests/                       # Invariant-based system test suite (80+ tests)
 ```
 
 ## 📜 License

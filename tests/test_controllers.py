@@ -92,9 +92,15 @@ class TestHardwareAwareJointController:
             verify_ms=25.0,
         )
 
-        assert action.config_name in configs
-        assert 1 <= action.draft_length <= 8
-        assert action.skip_indices == configs[action.config_name]
+        # Feasibility-gate contract: the action is either a speculative (S,K)
+        # or the VANILLA skip (K=0) when speculation is predicted to lose.
+        if action.vanilla_skip:
+            assert action.draft_length == 0
+            assert action.config_name == "vanilla"
+        else:
+            assert action.config_name in configs
+            assert 1 <= action.draft_length <= 8
+            assert action.skip_indices == configs[action.config_name]
         assert len(controller.action_history) == 1
 
     def test_controller_with_action_cost_db(self):

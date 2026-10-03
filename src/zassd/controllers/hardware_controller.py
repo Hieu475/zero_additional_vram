@@ -1,11 +1,19 @@
 """Hardware-aware joint speculation controller (Phase 8 & Phase 9).
 
 This is the novel systems contribution of the research.
-The controller jointly optimizes:
-  a_t = (S_t, K_t) = argmax_{S in S, K in K} U(S, K | z_t)
+The controller jointly optimizes over an action space that includes
+doing nothing:
+  a_t in {VANILLA} union {S x K},  a_t = argmax U(a | z_t)
 where:
+  VANILLA = skip speculation this cycle (single autoregressive step, K=0)
   S_t = draft subnetwork layer configuration (e.g. CKA-83, CKA-75, CKA-60, CKA-50)
   K_t = draft speculation length (1..8)
+
+The VANILLA action is the feasibility gate: whenever every speculative
+action is predicted to be slower than plain autoregressive decoding
+(E[TPS] < baseline TPS), the controller disables speculation instead of
+knowingly running at <1.0x. A speculation controller without this gate
+cannot be throughput-optimal.
 
 Based on runtime observation vector:
   z_t = [ H_t, A_{t-1}, T_draft, T_verify, VRAM_t, P_t, Temp_t ]
@@ -54,12 +62,13 @@ class HardwareState:
 @dataclass
 class ControllerAction:
     """Joint controller output action."""
-    config_name: str            # e.g. "cka_83", "cka_75"
-    skip_indices: list[int]     # Layers to skip S_t
-    draft_length: int           # K_t
+    config_name: str            # e.g. "cka_83", "cka_75" ("vanilla" when skipping)
+    skip_indices: list[int]     # Layers to skip S_t (empty when skipping)
+    draft_length: int           # K_t (0 = VANILLA: single autoregressive step)
     predicted_utility: float = 0.0
     expected_cycle_ms: float = 0.0
     expected_energy_j_tok: float = 0.0
+    vanilla_skip: bool = False  # True iff the feasibility gate disabled speculation
 
 
 @dataclass
@@ -101,7 +110,19 @@ class HardwareAwareJointController:
         initial_k: int = 3,
         candidate_k_values: Optional[list[int]] = None,
         hardware_override: Optional[HardwareState] = None,
+        enable_vanilla_skip: bool = True,
+        vanilla_margin: float = 1.0,
     ) -> None:
+        """Args:
+            enable_vanilla_skip: feasibility gate — return K=0 (plain AR step)
+                whenever every speculative action is predicted slower than
+                vanilla (E[TPS] < baseline_TPS * vanilla_margin).
+            vanilla_margin: hysteresis bar for skipping (1.0 = skip as soon
+                as speculation is predicted to lose; >1.0 requires speculation
+                to beat vanilla by the margin before it is used).
+        """
+        self.enable_vanilla_skip = enable_vanilla_skip
+        self.vanilla_margin = vanilla_margin
         self.configs = candidate_layer_configs
         self.model_name = model_name or "qwen25_3b"
         if cost_model is not None:
@@ -330,6 +351,27 @@ class HardwareAwareJointController:
             gpu_power_w=hw_state.gpu_power_w,
             gpu_temp_c=hw_state.gpu_temperature_c,
         )
+
+        # Feasibility gate: never knowingly speculate at a predicted loss.
+        # speculative.py treats draft_length=0 as a plain single-token
+        # vanilla step, so returning K=0 *is* the VANILLA action.
+        baseline = float(getattr(self.cost_model, "baseline_tps", 0.0) or 0.0)
+        if (
+            self.enable_vanilla_skip
+            and baseline > 0
+            and float(pred.expected_tps) < baseline * self.vanilla_margin
+        ):
+            action = ControllerAction(
+                config_name="vanilla",
+                skip_indices=[],
+                draft_length=0,
+                predicted_utility=float(pred.expected_tps),
+                expected_cycle_ms=1000.0 / baseline,
+                expected_energy_j_tok=pred.expected_energy_j_tok,
+                vanilla_skip=True,
+            )
+            self.action_history.append(action)
+            return action
 
         self.current_config_name = best_config
         action = ControllerAction(
