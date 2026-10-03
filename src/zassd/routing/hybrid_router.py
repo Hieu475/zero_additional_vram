@@ -86,13 +86,26 @@ class HybridDraftRouter:
         pld_prior_alpha: float = 0.85,
         ls_prior_alpha: float = 0.60,
         prefer_pld_margin: float = 1.25,
+        enable_vanilla_skip: bool = True,
+        enable_weak_hit_cap: bool = True,
+        enable_horizon_tuning: bool = True,
     ) -> None:
+        """Args (ablation switches, all True in the full router):
+            prefer_pld_margin: 1.25 = asymmetric PLD preference; 1.0 = none.
+            enable_vanilla_skip: False = never skip speculation (no panic
+                vanilla, no LS-vs-vanilla opportunity-cost skip).
+            enable_weak_hit_cap: False = weak bigram hits keep full horizon.
+            enable_horizon_tuning: False = no 4->2 PLD horizon truncation.
+        """
         self.cost_model = cost_model
         self.ngram_size = ngram_size
         self.entropy_low = entropy_low
         self.entropy_high = entropy_high
         self.ema_beta = ema_beta
         self.prefer_pld_margin = prefer_pld_margin
+        self.enable_vanilla_skip = enable_vanilla_skip
+        self.enable_weak_hit_cap = enable_weak_hit_cap
+        self.enable_horizon_tuning = enable_horizon_tuning
         self.pld_k = pld_k
         self.stats = RouterStats(
             alpha_pld_ema=pld_prior_alpha, alpha_ls_ema=ls_prior_alpha
@@ -165,13 +178,13 @@ class HybridDraftRouter:
         """
         pld_k = step_k if pld_k is None else max(step_k, pld_k)
         cands, mlen = self.probe_pld(full_history, curr_tok, pld_k)
-        if mlen <= 2 and len(cands) > step_k:
+        if self.enable_weak_hit_cap and mlen <= 2 and len(cands) > step_k:
             # Weak (bigram) hit: weak evidence -> clamp horizon to step_k.
             # PLD draft is free but long verify is wasteful when alpha is low.
             cands = cands[:step_k]
 
         # Extremely uncertain text -> go straight to 1-token vanilla, avoid wasting a cycle
-        if entropy >= self.ENTROPY_PANIC_THRESHOLD and not cands:
+        if self.enable_vanilla_skip and entropy >= self.ENTROPY_PANIC_THRESHOLD and not cands:
             return RouterDecision(
                 source="vanilla", candidates=[], ngram_match_len=0,
                 reason=f"panic-entropy H={entropy:.2f}, skip speculation",
@@ -193,7 +206,7 @@ class HybridDraftRouter:
             tps_pld = (1.0 + alpha_pld * k_eff) / (t_cycle / 1000.0)
             # Pick the optimal horizon for PLD: long K only pays off when alpha is high.
             # Compare E[TPS] of full horizon vs truncated at 2 (cheaper verify).
-            if k_eff > 2:
+            if self.enable_horizon_tuning and k_eff > 2:
                 _k2 = 2
                 _t2 = self.PLD_DRAFT_MS + self._verify_ms(_k2)
                 _tps2 = (1.0 + alpha_pld * _k2) / (_t2 / 1000.0)
@@ -217,6 +230,20 @@ class HybridDraftRouter:
             )
             return RouterDecision(
                 source="pld", candidates=cands, ngram_match_len=mlen,
+                expected_tps_pld=tps_pld, expected_tps_ls=tps_ls, reason=reason,
+            )
+        if not self.enable_vanilla_skip and tps_ls < self._vanilla_tps():
+            # Ablation (no feasibility gate): never skip; fall through to the
+            # argmax between the available speculative sources instead.
+            if cands and tps_pld >= tps_ls:
+                return RouterDecision(
+                    source="pld", candidates=cands, ngram_match_len=mlen,
+                    expected_tps_pld=tps_pld, expected_tps_ls=tps_ls,
+                    reason=f"no-gate argmax PLD (tps_pld={tps_pld:.1f})",
+                )
+            reason = f"no-gate fallback layer_skip (tps_ls={tps_ls:.1f}, H={entropy:.2f})"
+            return RouterDecision(
+                source="layer_skip", candidates=[], ngram_match_len=mlen,
                 expected_tps_pld=tps_pld, expected_tps_ls=tps_ls, reason=reason,
             )
         if tps_ls < self._vanilla_tps():

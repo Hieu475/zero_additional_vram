@@ -1,0 +1,20 @@
+{
+  "FP32 (exact arithmetic), Qwen2.5-0.5B + Llama-3.2-1B, 40 prompts x 128 tok each": {
+    "seq_identity": "100% (80/80)",
+    "token_positions": 10113,
+    "token_identity": "100%",
+    "note": "algorithmically exact"
+  },
+  "FP16, Qwen2.5-0.5B, 40x128": {
+    "seq_identity": "90% (36/40)",
+    "note": "reduced-precision batched-GEMM noise on near-tie logits"
+  },
+  "NF4, Qwen2.5-3B/Llama-3.2-3B, 40x50 (scaled audit)": {
+    "token_identity": "99.35% / 99.8%",
+    "positions": 4000,
+    "max_Linf": "2.5 / 0.875",
+    "bound_violations": 0,
+    "end_to_end_seq_identity": "60%",
+    "note": "kernel noise, zero flip-bound violations"
+  }
+}
