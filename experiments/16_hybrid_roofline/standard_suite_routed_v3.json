@@ -1,0 +1,1511 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "samples_per_benchmark": 10,
+  "aggregated_summary": {
+    "Vanilla": {
+      "extra_weight_vram_mb": 0.0,
+      "overall_speedup": 1.0,
+      "gsm8k_speedup": 1.0,
+      "humaneval_speedup": 1.0,
+      "cnndm_speedup": 1.0,
+      "mean_acceptance_rate": 0.0,
+      "exact_match_pct": 100.0
+    },
+    "Prompt-Lookup (PLD)": {
+      "extra_weight_vram_mb": 0.0,
+      "overall_speedup": 1.1098918318409183,
+      "gsm8k_speedup": 1.1984060918549868,
+      "humaneval_speedup": 1.0164931001925352,
+      "cnndm_speedup": 1.114776303475233,
+      "mean_acceptance_rate": 0.37744713919455924,
+      "exact_match_pct": 83.33333333333333
+    },
+    "ZASSD Empirical-6 (k=1)": {
+      "extra_weight_vram_mb": 0.0,
+      "overall_speedup": 0.9376229827154793,
+      "gsm8k_speedup": 0.9720889586237549,
+      "humaneval_speedup": 0.9507934706920949,
+      "cnndm_speedup": 0.889986518830588,
+      "mean_acceptance_rate": 0.8803526354445893,
+      "exact_match_pct": 86.66666666666667
+    },
+    "ZASSD Hybrid (k=2)": {
+      "extra_weight_vram_mb": 0.0,
+      "overall_speedup": 1.0005143577005542,
+      "gsm8k_speedup": 1.058950890183754,
+      "humaneval_speedup": 0.9644288351390564,
+      "cnndm_speedup": 0.9781633477788523,
+      "mean_acceptance_rate": 0.7044809130827469,
+      "exact_match_pct": 86.66666666666667
+    },
+    "ZASSD Routed (k=2+PLD4)": {
+      "extra_weight_vram_mb": 0.0,
+      "overall_speedup": 0.9807936505461088,
+      "gsm8k_speedup": 1.0392422235728405,
+      "humaneval_speedup": 0.9592833388457054,
+      "cnndm_speedup": 0.9438553892197804,
+      "mean_acceptance_rate": 0.6152087302548597,
+      "exact_match_pct": 90.0
+    }
+  },
+  "benchmarks": {
+    "gsm8k": {
+      "summary": {
+        "Vanilla": {
+          "mean_tps": 38.224822380324866,
+          "mean_speedup": 1.0,
+          "mean_acceptance": 0.0,
+          "exact_match_pct": 100.0
+        },
+        "Prompt-Lookup (PLD)": {
+          "mean_tps": 45.63928600438586,
+          "mean_speedup": 1.1984060918549868,
+          "mean_acceptance": 0.5289994435389171,
+          "exact_match_pct": 90.0
+        },
+        "ZASSD Empirical-6 (k=1)": {
+          "mean_tps": 36.92825518791616,
+          "mean_speedup": 0.9720889586237549,
+          "mean_acceptance": 0.9021538461538462,
+          "exact_match_pct": 100.0
+        },
+        "ZASSD Hybrid (k=2)": {
+          "mean_tps": 40.25333473710783,
+          "mean_speedup": 1.058950890183754,
+          "mean_acceptance": 0.7190595038252292,
+          "exact_match_pct": 100.0
+        },
+        "ZASSD Routed (k=2+PLD4)": {
+          "mean_tps": 39.48708031796788,
+          "mean_speedup": 1.0392422235728405,
+          "mean_acceptance": 0.611661023835862,
+          "exact_match_pct": 100.0
+        }
+      },
+      "raw_samples": {
+        "Vanilla": [
+          {
+            "id": "gsm8k_000",
+            "tps": 29.485226624079335,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_001",
+            "tps": 39.745606983916815,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_002",
+            "tps": 39.07968392987493,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_003",
+            "tps": 40.44806202508134,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_004",
+            "tps": 38.194235097123226,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_005",
+            "tps": 37.11136735444772,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_006",
+            "tps": 41.45409778977863,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_007",
+            "tps": 38.053331380751814,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_008",
+            "tps": 39.51247076979841,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_009",
+            "tps": 39.16414184839639,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          }
+        ],
+        "Prompt-Lookup (PLD)": [
+          {
+            "id": "gsm8k_000",
+            "tps": 40.56379291268111,
+            "speedup": 1.3757327840768359,
+            "acceptance_rate": 0.42857142857142855,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_001",
+            "tps": 42.364535265980976,
+            "speedup": 1.0658922703866094,
+            "acceptance_rate": 0.2857142857142857,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_002",
+            "tps": 50.353242050011005,
+            "speedup": 1.288476184719546,
+            "acceptance_rate": 1.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_003",
+            "tps": 43.01532580308653,
+            "speedup": 1.063470625030521,
+            "acceptance_rate": 0.3157894736842105,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_004",
+            "tps": 44.83089259139095,
+            "speedup": 1.173760712248629,
+            "acceptance_rate": 0.36363636363636365,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_005",
+            "tps": 43.50873049865377,
+            "speedup": 1.172382846557642,
+            "acceptance_rate": 0.36363636363636365,
+            "exact_match": 0.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_006",
+            "tps": 53.08277056524757,
+            "speedup": 1.2805192585408585,
+            "acceptance_rate": 0.8125,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_007",
+            "tps": 43.619566137953896,
+            "speedup": 1.1462745719029899,
+            "acceptance_rate": 0.5714285714285714,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_008",
+            "tps": 42.27334531637932,
+            "speedup": 1.069873497981584,
+            "acceptance_rate": 0.5333333333333333,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_009",
+            "tps": 52.78065890247345,
+            "speedup": 1.347678167104652,
+            "acceptance_rate": 0.6153846153846154,
+            "exact_match": 100.0,
+            "tokens": 48
+          }
+        ],
+        "ZASSD Empirical-6 (k=1)": [
+          {
+            "id": "gsm8k_000",
+            "tps": 35.3979728266643,
+            "speedup": 1.2005324998165785,
+            "acceptance_rate": 0.8461538461538461,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_001",
+            "tps": 38.9013182066804,
+            "speedup": 0.9787576831427418,
+            "acceptance_rate": 0.92,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_002",
+            "tps": 36.73994019109532,
+            "speedup": 0.9401288981001464,
+            "acceptance_rate": 0.92,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_003",
+            "tps": 38.591182818995286,
+            "speedup": 0.9540922577468699,
+            "acceptance_rate": 0.92,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_004",
+            "tps": 36.14090269098148,
+            "speedup": 0.9462397296104929,
+            "acceptance_rate": 0.92,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_005",
+            "tps": 36.199571076895,
+            "speedup": 0.9754308088720033,
+            "acceptance_rate": 0.96,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_006",
+            "tps": 39.05174662737613,
+            "speedup": 0.9420479207004996,
+            "acceptance_rate": 0.92,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_007",
+            "tps": 36.92856803073208,
+            "speedup": 0.9704424472389647,
+            "acceptance_rate": 0.8461538461538461,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_008",
+            "tps": 36.100290487839786,
+            "speedup": 0.9136429533390065,
+            "acceptance_rate": 0.8846153846153846,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "gsm8k_009",
+            "tps": 35.23105892190181,
+            "speedup": 0.8995743876702453,
+            "acceptance_rate": 0.8846153846153846,
+            "exact_match": 100.0,
+            "tokens": 48
+          }
+        ],
+        "ZASSD Hybrid (k=2)": [
+          {
+            "id": "gsm8k_000",
+            "tps": 38.258584091829135,
+            "speedup": 1.2975509593195722,
+            "acceptance_rate": 0.7,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 5,
+            "layer_cycles": 15
+          },
+          {
+            "id": "gsm8k_001",
+            "tps": 40.307279082243305,
+            "speedup": 1.0141316774594429,
+            "acceptance_rate": 0.6428571428571429,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 7,
+            "layer_cycles": 14
+          },
+          {
+            "id": "gsm8k_002",
+            "tps": 41.82240320371968,
+            "speedup": 1.0701827394194467,
+            "acceptance_rate": 0.7631578947368421,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 6,
+            "layer_cycles": 13
+          },
+          {
+            "id": "gsm8k_003",
+            "tps": 38.575971546495985,
+            "speedup": 0.9537161884931719,
+            "acceptance_rate": 0.6829268292682927,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 6,
+            "layer_cycles": 15
+          },
+          {
+            "id": "gsm8k_004",
+            "tps": 39.41996818233905,
+            "speedup": 1.0320920966763423,
+            "acceptance_rate": 0.7,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 7,
+            "layer_cycles": 13
+          },
+          {
+            "id": "gsm8k_005",
+            "tps": 38.035539444304135,
+            "speedup": 1.0249026687976683,
+            "acceptance_rate": 0.725,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 5,
+            "layer_cycles": 15
+          },
+          {
+            "id": "gsm8k_006",
+            "tps": 44.52380747148672,
+            "speedup": 1.0740508139213438,
+            "acceptance_rate": 0.7894736842105263,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 7,
+            "layer_cycles": 12
+          },
+          {
+            "id": "gsm8k_007",
+            "tps": 36.15153367236967,
+            "speedup": 0.9500228327093562,
+            "acceptance_rate": 0.7435897435897436,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 4,
+            "layer_cycles": 16
+          },
+          {
+            "id": "gsm8k_008",
+            "tps": 38.5796543702549,
+            "speedup": 0.9763918484121596,
+            "acceptance_rate": 0.7,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 6,
+            "layer_cycles": 14
+          },
+          {
+            "id": "gsm8k_009",
+            "tps": 46.858606306035675,
+            "speedup": 1.1964670766290348,
+            "acceptance_rate": 0.7435897435897436,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 10,
+            "layer_cycles": 10
+          }
+        ],
+        "ZASSD Routed (k=2+PLD4)": [
+          {
+            "id": "gsm8k_000",
+            "tps": 37.95775912837366,
+            "speedup": 1.2873483935638184,
+            "acceptance_rate": 0.6304347826086957,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 4,
+            "layer_cycles": 15
+          },
+          {
+            "id": "gsm8k_001",
+            "tps": 37.82689136600628,
+            "speedup": 0.9517250895504766,
+            "acceptance_rate": 0.48214285714285715,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 7,
+            "layer_cycles": 14
+          },
+          {
+            "id": "gsm8k_002",
+            "tps": 42.51823256887381,
+            "speedup": 1.0879881384191605,
+            "acceptance_rate": 0.7380952380952381,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 4,
+            "layer_cycles": 13
+          },
+          {
+            "id": "gsm8k_003",
+            "tps": 37.46407259843431,
+            "speedup": 0.926226640356794,
+            "acceptance_rate": 0.58,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 5,
+            "layer_cycles": 15
+          },
+          {
+            "id": "gsm8k_004",
+            "tps": 39.310045446040434,
+            "speedup": 1.0292141038059759,
+            "acceptance_rate": 0.58,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 6,
+            "layer_cycles": 13
+          },
+          {
+            "id": "gsm8k_005",
+            "tps": 37.0651938003304,
+            "speedup": 0.9987558110247913,
+            "acceptance_rate": 0.58,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 5,
+            "layer_cycles": 15
+          },
+          {
+            "id": "gsm8k_006",
+            "tps": 44.47269658991982,
+            "speedup": 1.072817862674254,
+            "acceptance_rate": 0.825,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 4,
+            "layer_cycles": 12
+          },
+          {
+            "id": "gsm8k_007",
+            "tps": 36.53579410503823,
+            "speedup": 0.9601207773235542,
+            "acceptance_rate": 0.6170212765957447,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 4,
+            "layer_cycles": 16
+          },
+          {
+            "id": "gsm8k_008",
+            "tps": 37.229439902917925,
+            "speedup": 0.9422199922606325,
+            "acceptance_rate": 0.5384615384615384,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 6,
+            "layer_cycles": 14
+          },
+          {
+            "id": "gsm8k_009",
+            "tps": 44.490677673743846,
+            "speedup": 1.1360054267489472,
+            "acceptance_rate": 0.5454545454545454,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 9,
+            "layer_cycles": 10
+          }
+        ]
+      }
+    },
+    "humaneval": {
+      "summary": {
+        "Vanilla": {
+          "mean_tps": 38.438099243218545,
+          "mean_speedup": 1.0,
+          "mean_acceptance": 0.0,
+          "exact_match_pct": 100.0
+        },
+        "Prompt-Lookup (PLD)": {
+          "mean_tps": 38.993068162859075,
+          "mean_speedup": 1.0164931001925352,
+          "mean_acceptance": 0.2301999657262815,
+          "exact_match_pct": 90.0
+        },
+        "ZASSD Empirical-6 (k=1)": {
+          "mean_tps": 36.519740267080024,
+          "mean_speedup": 0.9507934706920949,
+          "mean_acceptance": 0.9138461538461538,
+          "exact_match_pct": 90.0
+        },
+        "ZASSD Hybrid (k=2)": {
+          "mean_tps": 37.0515512857571,
+          "mean_speedup": 0.9644288351390564,
+          "mean_acceptance": 0.7615137079459331,
+          "exact_match_pct": 90.0
+        },
+        "ZASSD Routed (k=2+PLD4)": {
+          "mean_tps": 36.824040502932476,
+          "mean_speedup": 0.9592833388457054,
+          "mean_acceptance": 0.706018315018315,
+          "exact_match_pct": 90.0
+        }
+      },
+      "raw_samples": {
+        "Vanilla": [
+          {
+            "id": "HumanEval/0",
+            "tps": 40.183479845197866,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/1",
+            "tps": 39.20249886140684,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/2",
+            "tps": 35.86512991433138,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/3",
+            "tps": 38.19099878150994,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/4",
+            "tps": 36.61080779792053,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/5",
+            "tps": 39.607891642616764,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/6",
+            "tps": 40.139810035516376,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/7",
+            "tps": 37.35950645282028,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/8",
+            "tps": 38.22796160358361,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/9",
+            "tps": 38.99290749728186,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          }
+        ],
+        "Prompt-Lookup (PLD)": [
+          {
+            "id": "HumanEval/0",
+            "tps": 39.86464395327784,
+            "speedup": 0.9920654982309073,
+            "acceptance_rate": 0.16666666666666666,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/1",
+            "tps": 39.34872366628184,
+            "speedup": 1.0037299868406846,
+            "acceptance_rate": 0.35714285714285715,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/2",
+            "tps": 40.51895311016565,
+            "speedup": 1.1297589945150217,
+            "acceptance_rate": 0.21052631578947367,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/3",
+            "tps": 37.69314627781065,
+            "speedup": 0.986964140253375,
+            "acceptance_rate": 0.07692307692307693,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/4",
+            "tps": 39.46626445556975,
+            "speedup": 1.0779949099569284,
+            "acceptance_rate": 0.5,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/5",
+            "tps": 36.98156221104781,
+            "speedup": 0.9336917638720483,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/6",
+            "tps": 36.22635983879363,
+            "speedup": 0.9025045162580475,
+            "acceptance_rate": 0.16666666666666666,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/7",
+            "tps": 40.34489031196784,
+            "speedup": 1.0799096171925524,
+            "acceptance_rate": 0.5,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/8",
+            "tps": 38.65120453696206,
+            "speedup": 1.0110715537952926,
+            "acceptance_rate": 0.07407407407407407,
+            "exact_match": 0.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/9",
+            "tps": 40.83493326671375,
+            "speedup": 1.047240021010495,
+            "acceptance_rate": 0.25,
+            "exact_match": 100.0,
+            "tokens": 48
+          }
+        ],
+        "ZASSD Empirical-6 (k=1)": [
+          {
+            "id": "HumanEval/0",
+            "tps": 38.3973477261458,
+            "speedup": 0.9555505863122625,
+            "acceptance_rate": 0.96,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/1",
+            "tps": 36.52417833427294,
+            "speedup": 0.9316798519246795,
+            "acceptance_rate": 0.96,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/2",
+            "tps": 36.33176897103589,
+            "speedup": 1.013010940091926,
+            "acceptance_rate": 0.92,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/3",
+            "tps": 37.23547326359575,
+            "speedup": 0.9749803475059468,
+            "acceptance_rate": 0.92,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/4",
+            "tps": 35.29804593025326,
+            "speedup": 0.9641427778673096,
+            "acceptance_rate": 0.8846153846153846,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/5",
+            "tps": 36.85881341161643,
+            "speedup": 0.9305926643153503,
+            "acceptance_rate": 0.92,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/6",
+            "tps": 36.330613487406836,
+            "speedup": 0.9051017793871197,
+            "acceptance_rate": 0.92,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/7",
+            "tps": 34.35471956807397,
+            "speedup": 0.9195710230128193,
+            "acceptance_rate": 0.8846153846153846,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/8",
+            "tps": 36.92495719865511,
+            "speedup": 0.9659148866361121,
+            "acceptance_rate": 0.8846153846153846,
+            "exact_match": 0.0,
+            "tokens": 48
+          },
+          {
+            "id": "HumanEval/9",
+            "tps": 36.94148477974421,
+            "speedup": 0.9473898498674238,
+            "acceptance_rate": 0.8846153846153846,
+            "exact_match": 100.0,
+            "tokens": 48
+          }
+        ],
+        "ZASSD Hybrid (k=2)": [
+          {
+            "id": "HumanEval/0",
+            "tps": 39.395954922227624,
+            "speedup": 0.980401773912959,
+            "acceptance_rate": 0.9117647058823529,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 1,
+            "layer_cycles": 16
+          },
+          {
+            "id": "HumanEval/1",
+            "tps": 39.82765462001607,
+            "speedup": 1.015946834430615,
+            "acceptance_rate": 0.9393939393939394,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 3,
+            "layer_cycles": 14
+          },
+          {
+            "id": "HumanEval/2",
+            "tps": 32.692217293638436,
+            "speedup": 0.9115321029570541,
+            "acceptance_rate": 0.6428571428571429,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 3,
+            "layer_cycles": 18
+          },
+          {
+            "id": "HumanEval/3",
+            "tps": 39.337222028756905,
+            "speedup": 1.0300129162320286,
+            "acceptance_rate": 0.717948717948718,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 5,
+            "layer_cycles": 15
+          },
+          {
+            "id": "HumanEval/4",
+            "tps": 35.24734351499927,
+            "speedup": 0.9627578749300718,
+            "acceptance_rate": 0.725,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 3,
+            "layer_cycles": 17
+          },
+          {
+            "id": "HumanEval/5",
+            "tps": 39.10552919364789,
+            "speedup": 0.9873166071675386,
+            "acceptance_rate": 0.8333333333333334,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 2,
+            "layer_cycles": 16
+          },
+          {
+            "id": "HumanEval/6",
+            "tps": 31.753097188174646,
+            "speedup": 0.7910624679110084,
+            "acceptance_rate": 0.725,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 1,
+            "layer_cycles": 19
+          },
+          {
+            "id": "HumanEval/7",
+            "tps": 39.98738497972737,
+            "speedup": 1.0703402902344477,
+            "acceptance_rate": 0.9117647058823529,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 2,
+            "layer_cycles": 15
+          },
+          {
+            "id": "HumanEval/8",
+            "tps": 35.9434741154196,
+            "speedup": 0.9402404053908577,
+            "acceptance_rate": 0.5652173913043478,
+            "exact_match": 0.0,
+            "tokens": 48,
+            "pld_cycles": 7,
+            "layer_cycles": 16
+          },
+          {
+            "id": "HumanEval/9",
+            "tps": 37.22563500096316,
+            "speedup": 0.9546770782239847,
+            "acceptance_rate": 0.6428571428571429,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 5,
+            "layer_cycles": 16
+          }
+        ],
+        "ZASSD Routed (k=2+PLD4)": [
+          {
+            "id": "HumanEval/0",
+            "tps": 37.860579186983124,
+            "speedup": 0.942192645655293,
+            "acceptance_rate": 0.8611111111111112,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 1,
+            "layer_cycles": 16
+          },
+          {
+            "id": "HumanEval/1",
+            "tps": 40.664501981584245,
+            "speedup": 1.0372936206272474,
+            "acceptance_rate": 0.8888888888888888,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 2,
+            "layer_cycles": 14
+          },
+          {
+            "id": "HumanEval/2",
+            "tps": 34.14678054797434,
+            "speedup": 0.9520885782245443,
+            "acceptance_rate": 0.6666666666666666,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 2,
+            "layer_cycles": 17
+          },
+          {
+            "id": "HumanEval/3",
+            "tps": 36.21045412737214,
+            "speedup": 0.9481410615766175,
+            "acceptance_rate": 0.56,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 5,
+            "layer_cycles": 15
+          },
+          {
+            "id": "HumanEval/4",
+            "tps": 37.165047541196486,
+            "speedup": 1.015138692004153,
+            "acceptance_rate": 0.6904761904761905,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 3,
+            "layer_cycles": 15
+          },
+          {
+            "id": "HumanEval/5",
+            "tps": 39.13361486728454,
+            "speedup": 0.9880257000394862,
+            "acceptance_rate": 0.75,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 2,
+            "layer_cycles": 16
+          },
+          {
+            "id": "HumanEval/6",
+            "tps": 32.10040435101741,
+            "speedup": 0.7997149045452491,
+            "acceptance_rate": 0.6904761904761905,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 1,
+            "layer_cycles": 19
+          },
+          {
+            "id": "HumanEval/7",
+            "tps": 42.4222994399595,
+            "speedup": 1.1355155211574546,
+            "acceptance_rate": 1.0,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 1,
+            "layer_cycles": 14
+          },
+          {
+            "id": "HumanEval/8",
+            "tps": 33.22688158085464,
+            "speedup": 0.8691774341883781,
+            "acceptance_rate": 0.43333333333333335,
+            "exact_match": 0.0,
+            "tokens": 48,
+            "pld_cycles": 7,
+            "layer_cycles": 16
+          },
+          {
+            "id": "HumanEval/9",
+            "tps": 35.309841405098304,
+            "speedup": 0.9055452304386304,
+            "acceptance_rate": 0.5192307692307693,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 5,
+            "layer_cycles": 16
+          }
+        ]
+      }
+    },
+    "cnndm": {
+      "summary": {
+        "Vanilla": {
+          "mean_tps": 35.21088776021086,
+          "mean_speedup": 1.0,
+          "mean_acceptance": 0.0,
+          "exact_match_pct": 100.0
+        },
+        "Prompt-Lookup (PLD)": {
+          "mean_tps": 39.22836729745934,
+          "mean_speedup": 1.114776303475233,
+          "mean_acceptance": 0.37314200831847893,
+          "exact_match_pct": 70.0
+        },
+        "ZASSD Empirical-6 (k=1)": {
+          "mean_tps": 31.300213459061343,
+          "mean_speedup": 0.889986518830588,
+          "mean_acceptance": 0.8250579063337684,
+          "exact_match_pct": 70.0
+        },
+        "ZASSD Hybrid (k=2)": {
+          "mean_tps": 34.39299744726645,
+          "mean_speedup": 0.9781633477788523,
+          "mean_acceptance": 0.6328695274770781,
+          "exact_match_pct": 70.0
+        },
+        "ZASSD Routed (k=2+PLD4)": {
+          "mean_tps": 33.18363883942693,
+          "mean_speedup": 0.9438553892197804,
+          "mean_acceptance": 0.5279468519104021,
+          "exact_match_pct": 80.0
+        }
+      },
+      "raw_samples": {
+        "Vanilla": [
+          {
+            "id": "cnndm_000",
+            "tps": 35.282045350393695,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_001",
+            "tps": 33.49720082561924,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_002",
+            "tps": 34.25982274277036,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_003",
+            "tps": 35.27094370348389,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_004",
+            "tps": 36.11773141609829,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_005",
+            "tps": 34.36501324754453,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_006",
+            "tps": 36.499839774067645,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_007",
+            "tps": 34.49343461137033,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_008",
+            "tps": 36.23520985838197,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_009",
+            "tps": 36.087636072378636,
+            "speedup": 1.0,
+            "acceptance_rate": 0.0,
+            "exact_match": 100.0,
+            "tokens": 48
+          }
+        ],
+        "Prompt-Lookup (PLD)": [
+          {
+            "id": "cnndm_000",
+            "tps": 41.398484873907,
+            "speedup": 1.1733584168029265,
+            "acceptance_rate": 0.5,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_001",
+            "tps": 34.924591712817204,
+            "speedup": 1.0426122437701204,
+            "acceptance_rate": 0.2727272727272727,
+            "exact_match": 0.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_002",
+            "tps": 40.47256686452087,
+            "speedup": 1.1813419809085717,
+            "acceptance_rate": 0.45,
+            "exact_match": 0.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_003",
+            "tps": 36.23665461570565,
+            "speedup": 1.027379786612468,
+            "acceptance_rate": 0.2222222222222222,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_004",
+            "tps": 37.024939395313325,
+            "speedup": 1.0251180775659314,
+            "acceptance_rate": 0.3,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_005",
+            "tps": 44.270358229317864,
+            "speedup": 1.2882392307088983,
+            "acceptance_rate": 0.56,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_006",
+            "tps": 33.0784418179108,
+            "speedup": 0.9062626582106896,
+            "acceptance_rate": 0.17647058823529413,
+            "exact_match": 0.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_007",
+            "tps": 37.05759021735213,
+            "speedup": 1.0743374974070155,
+            "acceptance_rate": 0.25,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_008",
+            "tps": 39.0639211853764,
+            "speedup": 1.0780652668509407,
+            "acceptance_rate": 0.375,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_009",
+            "tps": 48.75612406237223,
+            "speedup": 1.3510478759147655,
+            "acceptance_rate": 0.625,
+            "exact_match": 100.0,
+            "tokens": 48
+          }
+        ],
+        "ZASSD Empirical-6 (k=1)": [
+          {
+            "id": "cnndm_000",
+            "tps": 31.81986502871456,
+            "speedup": 0.9018713261293254,
+            "acceptance_rate": 0.8846153846153846,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_001",
+            "tps": 28.961404152756227,
+            "speedup": 0.8645917700265284,
+            "acceptance_rate": 0.7777777777777778,
+            "exact_match": 0.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_002",
+            "tps": 35.10861112887142,
+            "speedup": 1.024775037292923,
+            "acceptance_rate": 0.96,
+            "exact_match": 0.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_003",
+            "tps": 31.529231826806246,
+            "speedup": 0.893915175388175,
+            "acceptance_rate": 0.8148148148148148,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_004",
+            "tps": 29.87690643593022,
+            "speedup": 0.8272088324632032,
+            "acceptance_rate": 0.75,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_005",
+            "tps": 30.67313084751322,
+            "speedup": 0.8925685733499578,
+            "acceptance_rate": 0.8148148148148148,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_006",
+            "tps": 26.87602769728669,
+            "speedup": 0.7363327582709427,
+            "acceptance_rate": 0.6896551724137931,
+            "exact_match": 0.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_007",
+            "tps": 33.145110536839084,
+            "speedup": 0.9609107040304189,
+            "acceptance_rate": 0.96,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_008",
+            "tps": 33.744004642064304,
+            "speedup": 0.9312490468234063,
+            "acceptance_rate": 0.8846153846153846,
+            "exact_match": 100.0,
+            "tokens": 48
+          },
+          {
+            "id": "cnndm_009",
+            "tps": 31.267842293831475,
+            "speedup": 0.8664419645309985,
+            "acceptance_rate": 0.7142857142857143,
+            "exact_match": 100.0,
+            "tokens": 48
+          }
+        ],
+        "ZASSD Hybrid (k=2)": [
+          {
+            "id": "cnndm_000",
+            "tps": 41.51738413648514,
+            "speedup": 1.17672838193384,
+            "acceptance_rate": 0.6829268292682927,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 11,
+            "layer_cycles": 10
+          },
+          {
+            "id": "cnndm_001",
+            "tps": 32.24812998990283,
+            "speedup": 0.9627111876535934,
+            "acceptance_rate": 0.5106382978723404,
+            "exact_match": 0.0,
+            "tokens": 48,
+            "pld_cycles": 10,
+            "layer_cycles": 14
+          },
+          {
+            "id": "cnndm_002",
+            "tps": 31.15761058491248,
+            "speedup": 0.90945043174479,
+            "acceptance_rate": 0.5777777777777777,
+            "exact_match": 0.0,
+            "tokens": 48,
+            "pld_cycles": 6,
+            "layer_cycles": 17
+          },
+          {
+            "id": "cnndm_003",
+            "tps": 37.41951880059421,
+            "speedup": 1.0609162917548502,
+            "acceptance_rate": 0.8333333333333334,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 4,
+            "layer_cycles": 14
+          },
+          {
+            "id": "cnndm_004",
+            "tps": 31.781466378364104,
+            "speedup": 0.8799408249710435,
+            "acceptance_rate": 0.5909090909090909,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 7,
+            "layer_cycles": 15
+          },
+          {
+            "id": "cnndm_005",
+            "tps": 37.8578757043025,
+            "speedup": 1.1016400730474778,
+            "acceptance_rate": 0.5909090909090909,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 11,
+            "layer_cycles": 11
+          },
+          {
+            "id": "cnndm_006",
+            "tps": 26.06602956573534,
+            "speedup": 0.7141409312227912,
+            "acceptance_rate": 0.5208333333333334,
+            "exact_match": 0.0,
+            "tokens": 48,
+            "pld_cycles": 4,
+            "layer_cycles": 20
+          },
+          {
+            "id": "cnndm_007",
+            "tps": 35.76172233507365,
+            "speedup": 1.0367689601801857,
+            "acceptance_rate": 0.7435897435897436,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 7,
+            "layer_cycles": 13
+          },
+          {
+            "id": "cnndm_008",
+            "tps": 32.94427598431909,
+            "speedup": 0.9091785617656187,
+            "acceptance_rate": 0.7,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 4,
+            "layer_cycles": 16
+          },
+          {
+            "id": "cnndm_009",
+            "tps": 37.17596099297522,
+            "speedup": 1.0301578335143315,
+            "acceptance_rate": 0.5777777777777777,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 10,
+            "layer_cycles": 13
+          }
+        ],
+        "ZASSD Routed (k=2+PLD4)": [
+          {
+            "id": "cnndm_000",
+            "tps": 38.494741872751234,
+            "speedup": 1.0910575475557482,
+            "acceptance_rate": 0.5454545454545454,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 9,
+            "layer_cycles": 10
+          },
+          {
+            "id": "cnndm_001",
+            "tps": 31.899750589024332,
+            "speedup": 0.9523109335340896,
+            "acceptance_rate": 0.43333333333333335,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 8,
+            "layer_cycles": 14
+          },
+          {
+            "id": "cnndm_002",
+            "tps": 30.053624739026375,
+            "speedup": 0.8772265100340721,
+            "acceptance_rate": 0.5094339622641509,
+            "exact_match": 0.0,
+            "tokens": 48,
+            "pld_cycles": 5,
+            "layer_cycles": 17
+          },
+          {
+            "id": "cnndm_003",
+            "tps": 37.55685291832762,
+            "speedup": 1.0648099816682235,
+            "acceptance_rate": 0.775,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 3,
+            "layer_cycles": 14
+          },
+          {
+            "id": "cnndm_004",
+            "tps": 30.881372673270057,
+            "speedup": 0.8550197219614326,
+            "acceptance_rate": 0.4482758620689655,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 7,
+            "layer_cycles": 15
+          },
+          {
+            "id": "cnndm_005",
+            "tps": 36.7277145812971,
+            "speedup": 1.0687531041158957,
+            "acceptance_rate": 0.4827586206896552,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 9,
+            "layer_cycles": 11
+          },
+          {
+            "id": "cnndm_006",
+            "tps": 26.313046381928547,
+            "speedup": 0.7209085449362275,
+            "acceptance_rate": 0.44642857142857145,
+            "exact_match": 0.0,
+            "tokens": 48,
+            "pld_cycles": 4,
+            "layer_cycles": 20
+          },
+          {
+            "id": "cnndm_007",
+            "tps": 33.99470742492995,
+            "speedup": 0.9855413880334206,
+            "acceptance_rate": 0.5471698113207547,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 7,
+            "layer_cycles": 13
+          },
+          {
+            "id": "cnndm_008",
+            "tps": 31.792800637975645,
+            "speedup": 0.8774007591574994,
+            "acceptance_rate": 0.6976744186046512,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 3,
+            "layer_cycles": 16
+          },
+          {
+            "id": "cnndm_009",
+            "tps": 34.12177657573853,
+            "speedup": 0.9455254012011951,
+            "acceptance_rate": 0.3939393939393939,
+            "exact_match": 100.0,
+            "tokens": 48,
+            "pld_cycles": 10,
+            "layer_cycles": 13
+          }
+        ]
+      }
+    }
+  }
+}

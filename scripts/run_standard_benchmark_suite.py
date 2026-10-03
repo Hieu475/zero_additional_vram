@@ -33,6 +33,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 from zassd.baselines.prompt_lookup import prompt_lookup_generate
 from zassd.decoding.speculative import self_speculative_generate
+from zassd.routing.hybrid_router import HybridDraftRouter
+from zassd.profiling.action_cost_model import MeasuredActionCostModel
 from zassd.models.layer_manager import LayerManager
 from zassd.models.model_adapter import ModelAdapter
 from zassd.cache.kv_cache import TargetKVCache
@@ -91,8 +93,12 @@ def evaluate_benchmark_file(
             if len(records) >= num_samples:
                 break
 
-    strategies = ["Vanilla", "Prompt-Lookup (PLD)", "ZASSD Empirical-6 (k=1)", "ZASSD Hybrid (k=2)"]
+    strategies = ["Vanilla", "Prompt-Lookup (PLD)", "ZASSD Empirical-6 (k=1)", "ZASSD Hybrid (k=2)", "ZASSD Routed (k=2+PLD4)"]
     bench_results: dict[str, list[dict[str, Any]]] = {s: [] for s in strategies}
+
+    _lname = getattr(tokenizer, "name_or_path", "") or ""
+    _mkey = "llama32_3b" if "llama" in _lname.lower() else "qwen25_3b"
+    _router = HybridDraftRouter(cost_model=MeasuredActionCostModel.for_model(_mkey), pld_k=4)
 
     for idx, item in enumerate(records):
         prompt = item["prompt"]
@@ -146,6 +152,23 @@ def evaluate_benchmark_file(
             "tokens": m_hyb.total_tokens,
             "pld_cycles": m_hyb.pld_cycles,
             "layer_cycles": m_hyb.layer_skip_cycles,
+        })
+
+        # 5. ZASSD Routed (cost-aware PLD vs layer-skip, LS k=2 + PLD k<=4)
+        rt_text, m_rt = self_speculative_generate(model, tokenizer, layer_mgr, skip_indices, prompt, k=2,
+            draft_mode="routed", router=_router, config_name="cka_75",
+            max_new_tokens=max_new_tokens, device=device)
+        _in = v_text.strip(); _out = rt_text.strip()
+        rt_em = 100.0 if _out == _in else (100.0 if _in in _out or _out in _in else 0.0)
+        bench_results["ZASSD Routed (k=2+PLD4)"].append({
+            "id": item_id,
+            "tps": m_rt.tokens_per_second,
+            "speedup": m_rt.tokens_per_second / v_tps if v_tps > 0 else 1.0,
+            "acceptance_rate": m_rt.acceptance_rate,
+            "exact_match": rt_em,
+            "tokens": m_rt.total_tokens,
+            "pld_cycles": m_rt.pld_cycles,
+            "layer_cycles": m_rt.layer_skip_cycles,
         })
 
     # Summary for this benchmark
@@ -236,7 +259,7 @@ def main():
     final_table.add_column("Mean Acceptance", justify="right")
     final_table.add_column("Output Match", justify="right")
 
-    strategies = ["Vanilla", "Prompt-Lookup (PLD)", "ZASSD Empirical-6 (k=1)", "ZASSD Hybrid (k=2)"]
+    strategies = ["Vanilla", "Prompt-Lookup (PLD)", "ZASSD Empirical-6 (k=1)", "ZASSD Hybrid (k=2)", "ZASSD Routed (k=2+PLD4)"]
     aggregated_summary = {}
 
     for s in strategies:

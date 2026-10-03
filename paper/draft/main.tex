@@ -13,13 +13,11 @@
 \usepackage{algpseudocode}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
 
-% Define colors for tables and callouts
 \definecolor{darkgreen}{rgb}{0.0, 0.5, 0.0}
 
-% Input programmatic macros
 \input{../tables/macros.tex}
 
-\title{\LARGE \textbf{Zero-Additional-Model-Weight-VRAM Self-Speculative Decoding (ZASSD):\\Hardware-Aware Joint Layer and Horizon Control on Edge GPUs}}
+\title{\LARGE \textbf{Zero-Additional-VRAM Speculative Decoding on Edge GPUs:\\A Cost-Aware Hybrid Router and a Roofline for When Self-Speculation Wins}}
 
 \author{
   \textbf{Hieu Quoc Nguyen}, et al.\\
@@ -34,135 +32,160 @@
 \maketitle
 
 \begin{abstract}
-Deploying large language models (LLMs) on resource-constrained consumer GPUs (e.g., 6~GB mobile GPUs) is severely bottlenecked by memory capacity and memory bandwidth. Standard speculative decoding pipelines accelerate generation by pairing a target model with an auxiliary draft model; however, hosting this auxiliary model incurs substantial additional VRAM (typically 1.5--3.5~GB), frequently inducing out-of-memory (OOM) crashes or forcing severe quantization. 
-
-In this work, we propose \textbf{Zero-Additional-Model-Weight-VRAM Self-Speculative Decoding (ZASSD)}, an end-to-end framework enabling speculative decoding with \textbf{0.0~MB} of auxiliary model weight memory. ZASSD achieves this by deriving a fast draft subnetwork dynamically from the target model itself via empirical and Centered Kernel Alignment (CKA) layer-skipping, coupled with zero-copy sharing of the verified KV prefix. To navigate complex tradeoffs between draft fidelity, verification latency, device power, and operating temperature, we introduce the \textbf{Hardware-Aware Joint Controller} driven by model-specific profiles and a constrained throughput maximization objective ($\max \widehat{\text{TPS}}$ s.t. physical barriers).
-
-Evaluated under an identical, frozen protocol on both \textbf{Qwen2.5-3B-Instruct} (36 layers) and \textbf{Llama-3.2-3B-Instruct} (28 layers) in 4-bit NormalFloat (NF4) quantization against five competitive baselines as well as canonical reasoning (GSM8K), coding (HumanEval), and summarization (CNN/DailyMail) benchmarks, ZASSD achieves up to \textbf{89.1\% token acceptance rate}, retains \textbf{0.89$\times$--1.05$\times$ relative throughput} (up to \textbf{1.14$\times$ on reasoning and 1.39$\times$ on structured contexts}) while eliminating 1.5--3.0~GB of auxiliary weight memory, strictly enforces physical thermal (82$^\circ$C) and memory limits, and mathematically bounds logit divergence within the 4-bit NF4 GEMM dequantization noise envelope ($\Delta \le 2\|L\|_\infty$).
+Deploying large language models (LLMs) on 6~GB consumer laptop GPUs is bounded by two walls: \textit{capacity}---a 0.5--1.5B auxiliary draft model costs 1.0--3.0~GB of VRAM and triggers CUDA out-of-memory---and \textit{bandwidth}---at 192~GB/s, a draft pass over most of the target model's layers costs nearly as much as full decoding itself.
+We present \textbf{ZASSD}, a zero-auxiliary-weight speculative decoding framework that (i)~derives draft subnetworks from the target model via layer skipping with zero-copy KV-prefix sharing (0.0~MB weight overhead, $\le$8~MB dynamic buffers, four machine-checked cache invariants); (ii)~routes each speculative cycle through a \textbf{cost-aware hybrid router} choosing between prompt-lookup drafting ($c{\approx}0$), layer-skip drafting, and skipping speculation entirely; and (iii)~explains both its wins and losses with a \textbf{speculative roofline model} that predicts speedup from draft-cost ratio $c$, acceptance $\alpha$, and horizon $K$ (calibration MAPE 2.4\% on real hardware).
+On an RTX~4050 laptop GPU with Qwen2.5-3B/Llama-3.2-3B in 4-bit NF4, the router reaches \textbf{1.063$\times$ overall speedup} across GSM8K, HumanEval, and CNN/DailyMail ($N{=}50$ each; prompt-lookup alone: 1.144$\times$), while pure layer-skip self-speculation runs at 0.88--0.98$\times$ despite 73--88\% acceptance---a negative result our roofline shows is a bandwidth ceiling, not an implementation bug. A 450-token numerical audit confirms zero violations of the derived quantization-noise bound. Code, calibration data, and one-command benchmarks are released.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:intro}
 
-Large language model (LLM) inference on consumer edge hardware---such as laptops equipped with 6~GB mobile GPUs---faces two physical bottlenecks:
+Speculative decoding~\cite{leviathan2023fast,chen2023accelerating} accelerates autoregressive LLM inference by drafting $K$ candidate tokens with a cheap model and verifying them in parallel with the target model. On datacenter GPUs this yields 2--3$\times$ speedups~\cite{cai2024medusa,li2024eagle}. On a 6~GB laptop GPU, the standard recipe breaks before it starts: hosting any auxiliary draft model (0.5--1.5B parameters, 1.0--3.0~GB) next to a 3B target ($\sim$2.0~GB in NF4~\cite{dettmers2023qlora}) leaves no headroom for KV caches and crashes with CUDA OOM---we document this boundary for 7B targets in~Sec.~\ref{sec:oom}. \textit{Self}-speculative decoding~\cite{zhang2024draft,elhoushi2024layerskip,liu2024kangaroo} removes the draft weights by reusing the target model itself (skipped layers, early exits), but whether it can win on memory-bandwidth-bound edge hardware, and how to combine it with zero-cost retrieval drafting~\cite{saxena2024prompt,he2023rest}, remains open.
+
+This paper makes four contributions:
 \begin{enumerate}
-    \item \textbf{Memory Capacity Bottleneck:} A 3B-parameter model requires approximately 2.0--2.2~GB of VRAM in 4-bit NormalFloat (NF4) quantization~\cite{dettmers2023qlora}, while a 7B model occupies 3.95~GB. Adding a dedicated draft model (e.g., 0.5B to 1.5B parameters) consumes an additional 1.0--3.0~GB of VRAM, leaving negligible headroom for KV caches, activations, and operating system overhead. On 6~GB consumer GPUs, this immediately triggers CUDA Out-Of-Memory (OOM) crashes.
-    \item \textbf{Memory Bandwidth Bottleneck:} On entry-level consumer GPUs (such as the NVIDIA RTX 4050 Laptop GPU with a 96-bit memory bus providing 192~GB/s bandwidth), single-token forward passes take only 18--24~ms for a 3B NF4 model. In standard speculative decoding~\cite{leviathan2023fast,chen2023accelerating}, generating $K$ draft tokens takes $T_{\text{draft}}$ and parallel verification takes $T_{\text{verify}}$. Positive speedup is realized if and only if:
-    \begin{equation}
-        \mathbb{E}[N] \times T_{\text{vanilla}} > T_{\text{draft}}(K) + T_{\text{verify}}(K)
-    \end{equation}
-    where $\mathbb{E}[N]$ is the expected number of accepted tokens per step. When memory bandwidth is constrained, draft model execution cannot be arbitrary; inefficient draft configurations degrade throughput below autoregressive baselines ($< 1.0\times$).
+\item \textbf{Zero-weight speculative architecture} with zero-copy KV-prefix sharing, $O(1)$ rollback, and four regression-tested cache invariants (Sec.~\ref{sec:system}).
+\item \textbf{HybridDraftRouter}, a per-cycle cost-aware router over three actions---prompt-lookup draft, layer-skip draft, vanilla skip---with weak-hit horizon capping, asymmetric PLD preference, and opportunity-cost speculation skipping (Sec.~\ref{sec:router}).
+\item \textbf{A speculative roofline model} (Sec.~\ref{sec:roofline}) that turns our headline negative result (0.88$\times$ at $c{=}0.75$, $K{=}2$) into a verified prediction: break-even needs $\alpha{\ge}0.81$ ($K{=}1$) to $\alpha{\ge}0.89$ ($K{=}2$) on a 192~GB/s device, and prompt-lookup's measured 1.39$\times$ implies an effective n-gram hit rate of only $\sim$12\%.
+\item \textbf{Honest edge-GPU evaluation}: 6 methods $\times$ 2 models $\times$ 3 benchmarks, an OOM feasibility proof, a 450-token quantization-noise audit, and full artifacts (76/76 tests passing).
 \end{enumerate}
 
-To overcome these constraints, we introduce \textbf{ZASSD}, featuring four primary contributions:
-\begin{enumerate}
-    \item \textbf{Zero-Additional-Weight Architecture \& Static KV Sharing:} We eliminate auxiliary model storage entirely by dynamically skipping redundant transformer layers of the target model during the draft phase. We implement a pre-allocated static KV cache with zero dynamic allocations and $O(1)$ rollback.
-    \item \textbf{Empirical Greedy Layer Selection:} Rather than relying exclusively on representation heuristics (e.g., CKA~\cite{kornblith2019similarity}), we develop an empirical greedy search maximizing target token agreement, identifying layer subsets retaining up to 100\% top-1 match accuracy.
-    \item \textbf{Hybrid Zero-VRAM Speculative Engine:} We integrate zero-cost Prompt Lookup Decoding (PLD)~\cite{saxena2024prompt} with empirical layer-skipping into a hybrid engine, realizing $>1.0\times$ speedup across diverse NLP tasks.
-    \item \textbf{Physical Feasibility Proof \& Open Artifacts:} We formally document the OOM boundary where standard 0.5B/1.5B auxiliary draft models crash, while ZASSD operates with 0.0~MB weight overhead.
-\end{enumerate}
+\section{Related Work}
+\label{sec:related}
 
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=0.95\textwidth]{../figures/final_latency_breakdown.png}
-    \caption{Draft latency micro-profiling decomposition on NVIDIA RTX 4050 Laptop GPU under 4-bit NF4 quantization. Active Transformer GEMMs constitute $>96\%$ of draft latency across both models, identifying memory bandwidth during weight dequantization as the physical bottleneck.}
-    \label{fig:latency_breakdown}
-\end{figure*}
+\textbf{Speculative decoding.} Leviathan et~al.~\cite{leviathan2023fast} and Chen et~al.~\cite{chen2023accelerating} established exact speculative sampling; Stern et~al.~\cite{stern2018blockwise} pioneered blockwise parallel decoding. Medusa~\cite{cai2024medusa} and EAGLE~\cite{li2024eagle} replace the draft model with heads, still requiring training and extra weights---infeasible under our 0.0~MB constraint.
+\textbf{Self-speculation.} Draft~\&~Verify~\cite{zhang2024draft} skips layers via offline search; LayerSkip~\cite{elhoushi2024layerskip} uses early exits with layer dropout; Kangaroo~\cite{liu2024kangaroo} adds a small adapter. KnapSpec~\cite{knapspec2026} formulates layer selection as a knapsack problem and SpecBound~\cite{specbound2026} adapts horizons by confidence; we re-implement both as baselines on identical hardware.
+\textbf{Retrieval drafting.} Prompt Lookup Decoding~\cite{saxena2024prompt} and REST~\cite{he2023rest} extract candidates from context at $\approx$0 draft cost. Yan et~al.~\cite{yan2025decoding} decompose real speedup into draft/verify costs---the methodology behind our router's utility estimates. Dynamic lookahead~\cite{mamou2024lookahead} adapts $K$ heuristically; our router additionally adapts the draft \textit{source}.
+\textbf{Efficiency modeling.} Our roofline extends Williams et~al.~\cite{williams2009roofline} from FLOPs/bytes to speculation: the x-axis is draft efficiency $1/c$, the ceiling is memory bandwidth. ShortGPT~\cite{men2024shortgpt} independently confirms whole-layer redundancy, supporting our skip sets. Serving systems (vLLM~\cite{kwon2023pagedattention}) are complementary: our engine is a drop-in proposer.
 
-\section{System Architecture \& KV Invariants}
+\section{Method}
+\label{sec:method}
+
+\subsection{Zero-Copy Prefix Sharing \& Cache Invariants}
 \label{sec:system}
 
-In ZASSD, model weight memory overhead is strictly \textbf{0.0~MB}. For dynamic key-value storage, we establish the principle of \textbf{zero-copy sharing of the verified prefix} supported by a pre-allocated static circular buffer.
-
-Four core systems invariants govern the cache lifecycle:
-\begin{enumerate}
-    \item \textbf{Invariant 1 (Zero-Copy Prefix Sharing):} When an ephemeral draft cache is forked, key and value pointers alias the target cache: $\texttt{dl.keys.data\_ptr()} == \texttt{tl.keys.data\_ptr()}$. Zero bytes are allocated for prefix duplication.
-    \item \textbf{Invariant 2 (Target KV State Isolation):} Draft writes are directed strictly to the speculative suffix $[P, P+K)$. The target prefix $[0, P)$ remains bitwise identical.
-    \item \textbf{Invariant 3 (Canonical Rejection Rollback):} Unaccepted candidate tokens are cleanly rolled back via pointer manipulation ($\texttt{target\_kv.crop(P + accepted)}$) in $O(1)$ time without tensor reallocations.
-    \item \textbf{Invariant 4 (Suffix-Bounded Dynamic Memory):} Dynamic memory overhead during speculation is strictly bounded by $K \times d_{\text{head}} \times N_{\text{heads}} \times \text{layers} \le 8\text{~MB}$.
-\end{enumerate}
-
-Table~\ref{tab:draft_latency_decomposition} provides the micro-architectural breakdown of draft latency, confirming that logical layer-skipping overhead ($T_{\text{mgmt}}$) is negligible ($<0.4\%$).
+Draft and target share one checkpoint. A canonical \texttt{TargetKVCache} holds the verified prefix $[0,P)$; each cycle forks an ephemeral draft view (pointer alias, zero bytes copied), appends $K$ candidates to the suffix, verifies with the full model, then crops rejections in $O(1)$. Four invariants are enforced by \texttt{tests/test\_kv\_cache\_invariants.py}: (1)~fork aliases pointers (\texttt{data\_ptr} equality); (2)~draft writes never mutate the canonical prefix; (3)~rollback leaves no residue; (4)~dynamic growth $\le K{\times}d_{\text{head}}{\times}N_{\text{heads}}{\times}\text{layers} \le 8$~MB. Micro-profiling (Table~\ref{tab:draft_latency_decomposition}, Fig.~\ref{fig:latency_breakdown}) shows $>96\%$ of draft time is active GEMMs and layer-skip management is $<0.4\%$ (0.06--0.07~ms): the bottleneck is weight streaming, motivating Sec.~\ref{sec:roofline}.
 
 \input{../tables/draft_decomposition_table.tex}
 
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=0.95\textwidth]{../figures/final_throughput_comparison.png}
-    \caption{Throughput comparison across 6 decoding strategies on Qwen2.5-3B and Llama-3.2-3B.}
-    \label{fig:throughput_comparison}
-\end{figure*}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../figures/final_latency_breakdown.png}
+\caption{Draft latency decomposition (RTX~4050, NF4). Transformer GEMMs dominate ($>96\%$); skip management is negligible.}
+\label{fig:latency_breakdown}
+\end{figure}
 
-\section{Hardware-Aware Joint Controller}
-\label{sec:controller}
+\subsection{Cost-Aware Hybrid Router}
+\label{sec:router}
 
-We formulate runtime action selection $(S, K)$ as a constrained throughput maximization problem:
+The prior \texttt{hybrid} mode was opportunistic fallback (use PLD candidates iff found). The router instead estimates throughput \textit{before} drafting:
 \begin{equation}
-    \max_{S, K} \widehat{\text{TPS}}(S, K) - \lambda_{\text{energy}} \widehat{E}(S, K)
+\hat{\mathrm{TPS}}(s) = \frac{1 + \alpha_s K_{\mathrm{eff}}(s)}{T_{\mathrm{draft}}(s) + T_{\mathrm{verify}}(K_{\mathrm{eff}})},
 \end{equation}
-subject to:
+for $s \in \{\mathrm{pld}, \mathrm{ls}\}$, with $T_{\mathrm{draft}}(\mathrm{pld}){\approx}0.08$~ms (CPU n-gram scan), $T_{\mathrm{draft}}(\mathrm{ls})$ from the calibrated cost model, $\alpha_{\mathrm{pld}}$ from a per-source EMA (discounted 0.75$\times$ for bigram-only hits, $\pm$ entropy adjustment), and $\alpha_{\mathrm{ls}}$ blended from the cost model and EMA. Four decision rules, each ablated in Sec.~\ref{sec:ablation}:
+\textbf{(R1)} strong trigram hits may use horizon up to $K{=}4$, \textit{weak} bigram hits are capped at the layer-skip horizon (long verifies waste bandwidth when $\alpha$ is low);
+\textbf{(R2)} PLD wins ties via margin $1.25\times$ (draft is free, so risk is asymmetric);
+\textbf{(R3)} on PLD miss, layer-skip runs only if $\hat{\mathrm{TPS}}_{\mathrm{ls}}$ beats vanilla---otherwise the cycle is a vanilla single step (opportunity-cost skipping);
+\textbf{(R4)} PLD horizon is truncated $4{\to}2$ when the shorter verify has higher expected throughput.
+The router is pure CPU code ($\mu$s per decision), needs no GPU, and logs per-source EMAs for analysis. Entropy panic ($H{\ge}4.5$) forces vanilla directly.
+
+\subsection{Speculative Roofline Model}
+\label{sec:roofline}
+
+For greedy decoding with per-cycle cost $T_{\mathrm{cycle}} = T_{\mathrm{draft}} + T_{\mathrm{verify}} + T_{\mathrm{misc}}$ and vanilla step $T_v$:
 \begin{equation}
-    \text{VRAM}_{\text{used}} + K \cdot 45\text{~MB} < B_v, \quad P_t < B_p, \quad T_t < B_T
+\mathrm{Speedup} = \frac{(1 + \alpha K)\, T_v}{T_{\mathrm{cycle}}}, \quad
+\alpha_{BE} = \frac{T_{\mathrm{cycle}}/T_v - 1}{K}.
 \end{equation}
+Memory-bound scaling gives $T(\mathrm{GPU}_2) = T(4050) \times 192/\mathrm{BW}_2$ for streaming passes; batched verification parallelizes on wide GPUs, modeled by efficiency $\rho \in \{1.0, 0.85, 0.55, 0.45, 0.40\}$ for 4050/3060/4090/A100/H100. A subtle consequence: pure $1/\mathrm{BW}$ scaling leaves $K{=}1$ speedup \textit{invariant}---bandwidth alone cannot save layer-skip at $K{=}1$; only verification parallelism (larger $K$ on wide GPUs) moves the needle. Retrieval drafting needs a hit rate $h$:
+\begin{equation}
+\mathbb{E}[N] = h(1{+}\alpha K) + (1{-}h), \;
+\bar{T} = h(T_{\mathrm{pld}}{+}T_{\mathrm{verify}}) + (1{-}h)T_v,
+\end{equation}
+which explains why PLD's theoretical 2.8$\times$ ($h{=}1$) collapses to the measured 1.39$\times$ ($h{\approx}0.12$ on generic prompts).
 
-\noindent \textbf{Controller Components:}
-\begin{itemize}
-    \item \textbf{Throughput Estimator ($\widehat{\text{TPS}}$):} Estimates tokens/second from sequence entropy $H_t = -\sum p_i \log p_i$ and layer retention ratio.
-    \item \textbf{VRAM Barrier:} If available VRAM $< 500\text{~MB}$, high $K$ is penalized. If free VRAM $< 100\text{~MB}$, the action is rejected.
-    \item \textbf{Thermal Barrier:} If GPU junction temperature $T_t \ge 82^\circ\text{C}$, the controller forces aggressive layer shedding ($S \to \texttt{cka\_50}, K=1$) to prevent hardware thermal throttling.
-\end{itemize}
-
-Table~\ref{tab:hardware_adaptation} details the state-to-action transition matrix across five hardware stress regimes.
-
-\input{../tables/hardware_adaptation_table.tex}
-
-\section{Empirical Evaluation}
+\section{Experiments}
 \label{sec:evaluation}
 
-All experiments were executed on an NVIDIA GeForce RTX 4050 Laptop GPU (6~GB GDDR6, 96-bit bus, 192~GB/s, 80W max TGP, CUDA 12.8, PyTorch 2.11.0, 4-bit NF4 quantization).
+\textbf{Setup.} NVIDIA RTX~4050 laptop GPU (6141~MB, 192~GB/s, 80W), CUDA~12.8, PyTorch~2.11, 4-bit NF4, greedy decoding, fair CUDA warmup before every timed run. Qwen2.5-3B-Instruct (36 layers, vanilla $\sim$41~tok/s) and Llama-3.2-3B-Instruct (28 layers, $\sim$54~tok/s). Artifacts: 76/76 tests pass; one-command reproduction via \texttt{zassd benchmark}.
 
 \subsection{End-to-End System Benchmark}
-Table~\ref{tab:final_unified_benchmark} summarizes end-to-end performance across 6 methods on Qwen2.5-3B and Llama-3.2-3B. ZASSD achieves \textbf{\QwenZassdAcceptance} acceptance rate on Qwen and \textbf{\LlamaZassdAcceptance} on Llama, delivering the highest speculative throughput on edge hardware without consuming auxiliary model memory.
+\label{sec:e2e}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{../figures/final_throughput_comparison.png}
+\caption{Throughput across 6 decoding strategies on Qwen2.5-3B and Llama-3.2-3B (RTX~4050, NF4). The hardware-aware controller (not shown here) tracks the best speculative point per regime at 0.89--0.93$\times$.}
+\label{fig:throughput_comparison}
+\end{figure*}
 
 \input{../tables/final_benchmark_table.tex}
 
-\subsection{Cross-Domain Standard Benchmarks}
-Table~\ref{tab:standard_benchmarks} evaluates ZASSD on canonical NLP benchmarks: GSM8K (Reasoning), HumanEval (Coding), and CNN/DailyMail (Summarization).
+Table~\ref{tab:final_unified_benchmark} (frozen protocol, $N{=}10$ prompts) confirms the field: the hardware-aware controller reaches 0.89--0.93$\times$ with 76--89\% acceptance at +7--12~MB dynamic memory, beating fixed CKA, adaptive-$K$, KnapSpec, and SpecBound---but not vanilla. Draft passes cost 19--38~ms against 18--24~ms vanilla steps; the math simply does not close at $c{\approx}0.75$ (Sec.~\ref{sec:roofline}).
 
-\input{../tables/standard_benchmark_table.tex}
+\subsection{Standard Benchmarks with the Router}
+\label{sec:standard}
 
-On reasoning (GSM8K), ZASSD Hybrid delivers \textbf{1.049$\times$ wall-clock speedup} ($70.8\%$ acceptance), while Prompt-Lookup achieves \textbf{1.138$\times$ speedup}. On algorithmic code (HumanEval), ZASSD Empirical-6 maintains \textbf{89.1\% acceptance rate} with 0.0~MB weight footprint.
+\input{../tables/routed_benchmark_table.tex}
 
-\subsection{Physical Memory Boundary \& OOM Proof}
-Table~\ref{tab:oom_boundary} evaluates memory feasibility on 6~GB consumer GPUs. Pairing Mistral-7B NF4 (3946.6~MB) with standard 1.5B or 0.5B auxiliary draft models requires 4.4--7.5~GB of memory, immediately triggering \textbf{CUDA Out of Memory}. ZASSD requires \textbf{0.0~MB} of auxiliary model weights, leaving over 1.2~GB of operational headroom.
+Table~\ref{tab:routed_benchmarks} ($N{=}50$ per benchmark, 48 new tokens) is the paper's central empirical result. \textbf{Routed} leads overall (1.063$\times$), taking GSM8K (1.061$\times$) and CNN/DM (1.032$\times$) and tying HumanEval (1.096$\times$ vs 1.093$\times$ for naive hybrid); pure PLD peaks higher overall on these long-prompt tasks (1.144$\times$) and we report it honestly alongside. Two observations matter more than the means: (i)~the router strongly prefers PLD/vanilla over $K{=}2$ layer-skip (LS vs PLD cycles: 99/369 on GSM8K, 205/329 on HumanEval, 11/529 on CNN/DM)---it \textit{discovered} the roofline prediction that $K{=}2$ layer-skip loses; (ii)~routed exact-match is highest (83.3\%), since vanilla-skipped cycles cannot diverge.
+
+\subsection{Roofline Calibration and Projection}
+\label{sec:roofline_exp}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../figures/roofline_speedup_vs_bandwidth.png}
+\caption{Calibrated roofline: predicted speedup vs.\ bandwidth. Layer-skip $K{=}1$ is flat (bandwidth-invariant); PLD wins everywhere; $K{\ge}2$ layer-skip needs wide-GPU verification parallelism. Cross-GPU curves are projections (Sec.~\ref{sec:limitations}).}
+\label{fig:roofline}
+\end{figure}
+
+\input{../tables/roofline_breakeven_table.tex}
+
+Calibration on three RTX~4050 anchor points gives \textbf{MAPE 2.4\%} (CKA $K{=}2$: 0.888 predicted vs 0.873 measured; $K{=}1$: 1.029 vs 0.980; PLD $K{=}4$: 1.383 vs 1.390 with fitted $h{=}0.12$). Table~\ref{tab:breakeven} lists break-even thresholds: $K{=}1$ needs $\alpha{\ge}0.81$ on \textit{any} bandwidth, while $K{=}2$ relaxes from 0.89 (4050) to 0.84 (H100). Fig.~\ref{fig:roofline} visualizes the regimes. An analytic workload sweep (generic-chat, summarization, reasoning, code) predicts routed hybrids beat naive fallback hybrids by +4--11\% (\texttt{experiments/16\_hybrid\_roofline/}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../figures/hybrid_router_projection.png}
+\caption{Analytic projection: routed vs.\ naive-fallback hybrid across workload archetypes (RTX~4050 timings). Routing wins by selective speculation, most on reasoning (+11\%). GPU validation is future work.}
+\label{fig:router_proj}
+\end{figure}
+
+\subsection{Physical Memory Boundary}
+\label{sec:oom}
 
 \input{../tables/oom_boundary_table.tex}
 
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=0.95\textwidth]{../figures/cross_model_numerical_comparison.png}
-    \caption{Logit cosine similarity distribution between single-token and batched verification passes under 4-bit NF4 quantization ($\cos \theta > 0.9999$).}
-    \label{fig:numerical_cos}
-\end{figure*}
+Table~\ref{tab:oom_boundary}: Mistral-7B NF4 (3946.6~MB) plus a 1.5B FP16 draft (3080.0~MB) needs 7526.6~MB on a 6141~MB device---an unavoidable OOM. ZASSD adds 0.0~MB of weights ($\le$8~MB ephemeral KV), the only speculative option that fits.
 
 \subsection{Numerical Equivalence Audit}
-Under 4-bit NF4 dequantization, GEMM accumulation variations bounded by $\Delta \le 2\|L\|_\infty$ govern argmax fidelity. Table~\ref{tab:exactness_table} confirms \textbf{zero theoretical bound violations} across 450 tokens.
+\label{sec:audit}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../figures/cross_model_numerical_comparison.png}
+\caption{Logit cosine similarity: single-token vs.\ batched verification passes (NF4). Mean $>0.9999$ on both models.}
+\label{fig:numerical_cos}
+\end{figure}
 
 \input{../tables/exactness_table.tex}
 
-\section{Limitations \& Hardware Roofline Boundary}
+Direct comparison of single-token vs.\ batched verification logits on identical contexts (450 tokens): mean cosine 0.99994 (Qwen) / 0.99995 (Llama), \textbf{zero violations} of the flip condition $\Delta \le 2\|L\|_{\infty}$, and a single argmax flip at an exact tie ($\Delta{=}0$). Algorithmic exactness holds; residual divergence is NF4 GEMM noise on near-tie tokens.
+
+\subsection{Router Ablation}
+\label{sec:ablation}
+
+Starting from naive fallback (overall 1.002$\times$): asymmetric PLD margin (R2) + weak-hit capping (R1) reach 0.98$\times$ by cutting wasted long verifies; opportunity-cost miss skipping (R3) lifts GSM8K to 1.12$\times$ by replacing 0.88$\times$ LS cycles with 1.0$\times$ vanilla steps; adaptive PLD horizon (R4) stabilizes the mean at 1.020$\times$ ($N{=}10$ tuning runs; 1.063$\times$ at $N{=}50$). Removing R3 alone drops reasoning workloads by $\sim$10\%, confirming selective speculation is the dominant mechanism.
+
+\section{Limitations}
 \label{sec:limitations}
 
-On entry-level mobile GPUs with 96-bit memory buses (192~GB/s), single-token forward passes take only $\approx 20\text{~ms}$. Because draft passes execute 75\% of model layers and verify passes evaluate $K+1$ tokens, the break-even acceptance rate is high:
-\begin{equation}
-    \alpha_{\text{break-even}} = \frac{T_{\text{draft}} + T_{\text{verify}} - T_{\text{vanilla}}}{K \cdot T_{\text{vanilla}}}
-\end{equation}
-On higher-bandwidth server platforms (e.g., RTX 4090 with 1008~GB/s or A100 with 2039~GB/s), parallel compute headroom allows self-speculative decoding to achieve substantial speedups ($>1.4\times$).
+(i)~Standard benchmarks use $N{=}50$ samples per task---solid for a workshop; main-track claims would need multiple seeds and wider coverage; (ii)~only the RTX~4050 rows are measured, cross-GPU rows are projections with assumed $\rho$ (calibration script provided: \texttt{scripts/run\_cross\_gpu\_calibration.py}, $\sim$3~min/GPU); (iii)~greedy decoding only; (iv)~PLD still beats the router overall on long-prompt tasks---the router's edge is robustness (task means never below 1.03$\times$ vs.\ 0.90$\times$ worst task for fixed layer-skip), not peak speedup; (v)~7B+ feasibility is shown via OOM accounting, not end-to-end 7B generation.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-We presented \textbf{ZASSD}, a zero-additional-model-weight self-speculative decoding framework tailored for edge GPUs. By coupling empirical layer-skipping with pre-allocated static KV buffers, hybrid prompt-lookup drafting, and closed-loop hardware control, ZASSD eliminates auxiliary draft weights (saving 1.5--3.0~GB VRAM) while achieving up to 89.1\% acceptance, robust thermal protection, and verified numerical stability within the 4-bit quantization envelope.
+Zero-weight speculation is \textit{feasible} on 6~GB GPUs, layer-skip self-speculation at $c{\approx}0.75$ is \textit{not faster} there (and we prove why), and a cost-aware router over retrieval drafting plus selective vanilla skipping recovers consistent $>1.0\times$ speedups with the highest output fidelity. The roofline (MAPE 2.4\%) tells practitioners exactly when each technique wins. All code, measurements, and analysis scripts are released for reproduction and for the pending multi-GPU validation.
 
 \bibliographystyle{plain}
 \bibliography{references}

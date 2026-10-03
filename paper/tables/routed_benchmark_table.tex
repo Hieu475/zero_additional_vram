@@ -1,0 +1,22 @@
+% Measured on RTX 4050 Laptop GPU, Qwen2.5-3B-Instruct NF4, 50 samples/bench, 48 new tokens.
+% Source: experiments/16_hybrid_roofline/standard_suite_N50.json
+% Stats: experiments/16_hybrid_roofline/benchmark_stats.json (mean +/- 95% CI, paired tests, n=150 pooled).
+% Independent replication N=12/bench: experiments/16_hybrid_roofline/standard_suite_replication_N12.json
+%   (Routed 1.040x overall vs Hybrid 0.988x — same ranking as N50).
+\begin{table*}[t]
+\centering
+\small
+\caption{Cross-domain evaluation with the cost-aware hybrid router (Qwen2.5-3B NF4, RTX 4050 6GB, $N{=}50$ per benchmark, 48 new tokens). PLD uses $K{=}2$; Hybrid runs layer-skip $K{=}2$ on PLD miss; \textbf{Routed} selects per-cycle between PLD ($K{\le}4$), layer-skip ($K{=}2$), and vanilla skip. Overall shows mean $\pm$ 95\% CI over $n{=}150$ pooled samples. Routed beats Hybrid (paired $t$, $p{<}10^{-4}$, $d_z{=}0.44$) and vanilla ($p{=}5{\times}10^{-5}$) but trails pure PLD ($-0.081$, $p{<}10^{-4}$): routing buys robustness (exact-match 83.3\% vs 78.0\%), not peak speed on repetitive text. All strategies use 0.0~MB auxiliary weight VRAM. Exact-match is measured against greedy vanilla output.}
+\label{tab:routed_benchmarks}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Strategy} & \textbf{GSM8K} & \textbf{HumanEval} & \textbf{CNN/DM} & \textbf{Overall} & \textbf{Mean acc.} & \textbf{Exact match} \\
+\midrule
+Vanilla & 1.000$\times$ & 1.000$\times$ & 1.000$\times$ & 1.000$\times$ & -- & 100\% \\
+Prompt-Lookup (PLD, $K{=}2$) & 1.144$\times$ & 1.168$\times$ & 1.120$\times$ & 1.144$\pm$0.029$\times$ & 41.8\% & 78.0\% \\
+ZASSD Empirical-6 ($K{=}1$) & 0.924$\times$ & 0.937$\times$ & 0.901$\times$ & 0.921$\pm$0.010$\times$ & 87.8\% & 76.0\% \\
+ZASSD Hybrid ($K{=}2$) & 1.011$\times$ & 1.093$\times$ & 0.976$\times$ & 1.027$\pm$0.032$\times$ & 71.2\% & 76.0\% \\
+\textbf{ZASSD Routed ($K{=}2$+PLD4)} & \textbf{1.061$\times$} & \textbf{1.096$\times$} & \textbf{1.032$\times$} & \textbf{1.063$\pm$0.030$\times$} & 35.8\% & \textbf{83.3\%} \\
+\bottomrule
+\end{tabular}
+\end{table*}

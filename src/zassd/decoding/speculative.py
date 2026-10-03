@@ -72,6 +72,8 @@ def self_speculative_generate(
     kv_cache_backend: str = "static",
     draft_mode: str = "layer_skip",
     ngram_size: int = 3,
+    router: Optional[Any] = None,
+    config_name: str = "cka_75",
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Zero-Additional-VRAM self-speculative decoding.
 
@@ -87,7 +89,9 @@ def self_speculative_generate(
         temperature: Sampling temperature (0.0 = greedy).
         device: Device to run generation on.
         kv_cache_backend: KV cache backend ('static' for pre-allocated or 'dynamic').
-        draft_mode: Speculative draft mode ('layer_skip', 'hybrid', or 'prompt_lookup').
+        draft_mode: Speculative draft mode ('layer_skip', 'hybrid', 'prompt_lookup', or 'routed').
+        router: Optional HybridDraftRouter for draft_mode='routed' (cost-aware PLD vs layer-skip).
+        config_name: CKA config name used by router cost estimates.
         ngram_size: Context n-gram length used for prompt lookup.
 
     Returns:
@@ -226,9 +230,26 @@ def self_speculative_generate(
 
         t_draft_start = time.perf_counter()
 
-        # Check PLD n-gram lookup if hybrid or prompt_lookup mode
+        # Routed mode: cost-aware choice between PLD and layer-skip (Huong 1)
         used_pld = False
-        if draft_mode in ("hybrid", "prompt_lookup"):
+        routed_force_vanilla = False
+        if draft_mode == "routed" and router is not None:
+            decision = router.select_source(
+                full_history, curr_target_tok, step_k,
+                entropy=curr_entropy, config_name=config_name,
+                pld_k=getattr(router, "pld_k", None),
+            )
+            if decision.source == "pld" and decision.candidates:
+                draft_tokens = list(decision.candidates)
+                draft_token_tensors = [torch.tensor([[t]], device=device) for t in draft_tokens]
+                used_pld = True
+                metrics.pld_cycles += 1
+            elif decision.source == "vanilla":
+                routed_force_vanilla = True  # skip draft, force vanilla fallback below
+                router.update("vanilla", 0, 0)
+            # else: fall through to layer-skip draft below
+            router._pending_decision = decision
+        if not used_pld and draft_mode in ("hybrid", "prompt_lookup"):
             cands = find_candidate_tokens(full_history + [curr_target_tok], ngram_size=ngram_size, max_candidates=step_k)
             if len(cands) > 0:
                 draft_tokens = cands
@@ -236,7 +257,7 @@ def self_speculative_generate(
                 used_pld = True
                 metrics.pld_cycles += 1
 
-        if not used_pld and draft_mode in ("layer_skip", "hybrid"):
+        if not used_pld and not routed_force_vanilla and draft_mode in ("layer_skip", "hybrid", "routed"):
             metrics.layer_skip_cycles += 1
             with torch.no_grad():
                 with layer_mgr.skip_layers(active_skip):
@@ -401,6 +422,11 @@ def self_speculative_generate(
         last_draft_ms = draft_elapsed * 1000
         last_verify_ms = verify_elapsed * 1000
 
+        if draft_mode == "routed" and router is not None:
+            _dec = getattr(router, "_pending_decision", None)
+            if _dec is not None and _dec.source in ("pld", "layer_skip"):
+                router.update(_dec.source, num_accepted_draft, actual_k,
+                              ngram_match_len=_dec.ngram_match_len)
         metrics.total_accepted_tokens += num_accepted_draft
         generated_token_ids.extend(cycle_emitted)
         full_history.extend(cycle_emitted)

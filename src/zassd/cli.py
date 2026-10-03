@@ -144,6 +144,13 @@ def handle_benchmark(args: argparse.Namespace) -> None:
 
     print(f"[ZASSD Benchmark] Running method: '{args.method}' across {len(prompts)} prompt(s) (k={args.k}) ...")
 
+    # Warmup (not timed): eliminate cold-start CUDA allocation bias for both paths
+    try:
+        run_vanilla(model, tokenizer, "Warmup: explain gravity briefly.",
+                    max_new_tokens=16, temperature=args.temperature, device=device)
+    except Exception:
+        pass
+
     # Measure Vanilla baseline
     vanilla_tps_list = []
     for p in prompts:
@@ -166,6 +173,14 @@ def handle_benchmark(args: argparse.Namespace) -> None:
         elif args.method == "hybrid":
             text, m = self_speculative_generate(model, tokenizer, layer_mgr, skip_indices, prompt, k=args.k, draft_mode="hybrid", max_new_tokens=args.max_new_tokens, temperature=args.temperature, device=device)
             res = {"prompt_idx": p_idx, "tps": m.tokens_per_second, "tokens": m.total_tokens, "acc_rate": m.acceptance_rate, "speedup": m.tokens_per_second / baseline_tps, "pld_cycles": m.pld_cycles, "layer_skip_cycles": m.layer_skip_cycles}
+        elif args.method == "routed":
+            from zassd.routing.hybrid_router import HybridDraftRouter
+            from zassd.profiling.action_cost_model import MeasuredActionCostModel
+            _cm = MeasuredActionCostModel.for_model(args.model)
+            _router = HybridDraftRouter(cost_model=_cm, pld_k=4)
+            _cfg = args.skip_strategy if args.skip_strategy in _cm.known_kept_layers else "cka_75"
+            text, m = self_speculative_generate(model, tokenizer, layer_mgr, skip_indices, prompt, k=args.k, draft_mode="routed", router=_router, config_name=_cfg, max_new_tokens=args.max_new_tokens, temperature=args.temperature, device=device)
+            res = {"prompt_idx": p_idx, "tps": m.tokens_per_second, "tokens": m.total_tokens, "acc_rate": m.acceptance_rate, "speedup": m.tokens_per_second / baseline_tps, "pld_cycles": m.pld_cycles, "layer_skip_cycles": m.layer_skip_cycles, "router_stats": _router.stats.to_dict()}
         elif args.method == "specbound":
             ctrl = SpecBoundController(skip_indices=skip_indices, k_min=1, k_max=max(2, args.k), initial_k=args.k)
             text, m = self_speculative_generate(model, tokenizer, layer_mgr, skip_indices, prompt, k=args.k, controller=ctrl, max_new_tokens=args.max_new_tokens, temperature=args.temperature, device=device)
@@ -243,7 +258,7 @@ def main() -> None:
         "--method",
         type=str,
         default="zassd",
-        choices=["vanilla", "zassd", "prompt_lookup", "hybrid", "knapspec", "specbound"],
+        choices=["vanilla", "zassd", "prompt_lookup", "hybrid", "routed", "knapspec", "specbound"],
         help="Decoding method to benchmark",
     )
     bench_parser.add_argument("--k", type=int, default=2, help="Speculative draft length K")
