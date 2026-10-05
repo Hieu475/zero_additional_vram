@@ -140,8 +140,8 @@ def build_code_prompt(request: str, context: str = "") -> str:
 
 
 TASK_DESCRIPTIONS = {
-    "chat": "General chat (short prompt, routed decoding).",
-    "summarize": "Document summarization (long repetitive context, PLD-friendly).",
-    "qa": "Retrieval-augmented QA over user documents (PLD-friendly).",
-    "code": "Code explanation / generation.",
+    "chat": "General chat (routed decoding: core router picks AR/PLD/layer-skip).",
+    "summarize": "Document summarization (routed decoding).",
+    "qa": "Retrieval-augmented QA over user documents (routed decoding).",
+    "code": "Code explanation / generation (routed decoding).",
 }

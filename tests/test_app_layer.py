@@ -17,10 +17,11 @@ def _fake_generate(prompt: str, method: str):
 
 
 class TestAppLayer:
-    def test_choose_method_prefers_pld_for_long_context(self):
-        long_prompt = "x" * 2000
-        assert choose_method("summarize", long_prompt, "auto") == "prompt_lookup"
-        assert choose_method("qa", long_prompt, "auto") == "prompt_lookup"
+    def test_choose_method_delegates_auto_to_routed(self):
+        # App-level auto always delegates to the core cost-aware router;
+        # no char-count heuristic here (no router-outside-router).
+        assert choose_method("summarize", "x" * 2000, "auto") == "routed"
+        assert choose_method("qa", "x" * 2000, "auto") == "routed"
         assert choose_method("chat", "hi", "auto") == "routed"
         assert choose_method("chat", "hi", "vanilla") == "vanilla"
 
@@ -69,6 +70,11 @@ class TestAppLayer:
         s.add("b", "quantum computing qubits")
         assert s.query("quantum qubits")[0].doc_id == "b"
         assert len(s) == 2
+
+    def test_doc_store_zero_overlap_returns_empty(self):
+        s = SimpleDocStore()
+        s.add("a", "cats and dogs play together")
+        assert s.query("quantum electrodynamics Lagrangian") == []
 
     def test_http_api_roundtrip(self):
         a = IntelligentAssistant(generate_fn=_fake_generate)

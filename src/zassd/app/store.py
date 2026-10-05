@@ -46,7 +46,12 @@ class SimpleDocStore:
             overlap = len(q & set(_tokens(d.text)))
             scored.append((overlap, d))
         scored.sort(key=lambda t: t[0], reverse=True)
-        return [d for s, d in scored[:top_k] if s > 0] or [d for _, d in scored[:1]]
+        # Zero word-overlap means no supporting evidence: return nothing so
+        # the QA prompt receives an empty context (answer "I don't know")
+        # instead of an unrelated passage that invites hallucination.
+        if not scored or scored[0][0] == 0:
+            return []
+        return [d for s, d in scored[:top_k] if s > 0]
 
     def to_context(self, docs: list[Doc]) -> str:
         return "\n\n".join(f"[{d.doc_id}] {d.text}" for d in docs)

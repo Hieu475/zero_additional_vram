@@ -38,14 +38,17 @@ class AppResult:
 
 
 def choose_method(task: str, full_prompt: str, requested: str = "auto") -> str:
-    """Heuristic dispatcher (explainable for thesis)."""
+    """Dispatcher for the app layer.
+
+    With ``auto`` (the default), always delegate to ``routed`` and let the
+    core cost-aware router decide per cycle between AR / PLD / layer-skip
+    from measured draft costs. The app layer must not second-guess the
+    router with its own char-count heuristic (no router-outside-router);
+    token-aware policy lives in one place: the decoding core.
+    An explicit ``requested`` value is passed through unchanged.
+    """
     if requested != "auto":
         return requested
-    # Long context with repeated blocks favours Prompt Lookup Decoding.
-    if task in ("summarize", "qa") and len(full_prompt) > 800:
-        return "prompt_lookup"
-    if task in ("summarize", "qa"):
-        return "routed"
     return "routed"
 
 

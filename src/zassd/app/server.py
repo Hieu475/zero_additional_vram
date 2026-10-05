@@ -1,5 +1,12 @@
 """Stdlib-only HTTP JSON API for the thesis demo.
 
+Local demonstration server, NOT production serving infrastructure:
+  - in-memory sessions with a small FIFO cap, no persistence;
+  - bounded request bodies (oversized payloads get HTTP 413);
+  - no per-request generation timeout (a slow GPU blocks its thread);
+  - no authentication, rate limiting, or TLS -- bind is 127.0.0.1 only;
+  - exception messages are returned to the caller for debuggability.
+
 No FastAPI/uvicorn dependency on purpose: the 6GB laptop target
 and CPU-only CI both run this with the standard library.
 
@@ -27,6 +34,8 @@ from zassd.app.assistant import Conversation, IntelligentAssistant
 
 def make_handler(assistant: IntelligentAssistant) -> type[BaseHTTPRequestHandler]:
     sessions: dict[str, Conversation] = {}
+    MAX_SESSIONS = 64
+    MAX_BODY_BYTES = 512 * 1024
 
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args: object) -> None:  # quieter logs
@@ -54,6 +63,13 @@ def make_handler(assistant: IntelligentAssistant) -> type[BaseHTTPRequestHandler
         def do_POST(self) -> None:
             try:
                 n = int(self.headers.get("Content-Length", 0))
+            except (TypeError, ValueError):
+                self._send({"error": "bad content-length"}, 400)
+                return
+            if n > MAX_BODY_BYTES:
+                self._send({"error": "request body too large"}, 413)
+                return
+            try:
                 data = json.loads(self.rfile.read(n).decode("utf-8") or "{}")
             except Exception as e:
                 self._send({"error": f"bad json: {e}"}, 400)
@@ -79,6 +95,8 @@ def make_handler(assistant: IntelligentAssistant) -> type[BaseHTTPRequestHandler
                     conv = sessions.get(sid)
                     if conv is None:
                         conv = assistant.start_conversation()
+                        if len(sessions) >= MAX_SESSIONS:
+                            sessions.pop(next(iter(sessions)))
                         sessions[sid] = conv
                     if data.get("reset"):
                         conv.reset()
