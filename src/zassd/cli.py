@@ -4,6 +4,7 @@ Provides subcommands:
   - zassd benchmark: Run standardized inference benchmarks across methods and models.
   - zassd audit: Run mathematical exactness and numerical verification audits.
   - zassd demo: Launch interactive streaming generation demo.
+  - zassd app: Run thin application layer (chat/summarize/qa/code) or serve HTTP API.
   - zassd generate-tables: Generate verified LaTeX paper tables and macros from raw results.
 """
 
@@ -222,6 +223,70 @@ def handle_benchmark(args: argparse.Namespace) -> None:
         print(f"[ZASSD] Saved benchmark results to {args.output}")
 
 
+def handle_app(args: argparse.Namespace) -> None:
+    """Thin application layer: tasks + optional stdlib HTTP server."""
+    from zassd.app.assistant import IntelligentAssistant
+
+    if args.list_tasks:
+        from zassd.app.prompts import TASK_DESCRIPTIONS
+
+        print("Available tasks:")
+        for name, desc in TASK_DESCRIPTIONS.items():
+            print(f"  {name:<10} {desc}")
+        return
+
+    if args.serve:
+        from zassd.app.server import serve
+
+        serve(port=args.port, model_name=args.model, method=args.method)
+        return
+
+    assistant = IntelligentAssistant(
+        model_name=args.model,
+        method=args.method,  # type: ignore[arg-type]
+        device=args.device,
+        max_new_tokens=args.max_new_tokens,
+        temperature=args.temperature,
+        k=args.k,
+    )
+    if getattr(args, "interactive", False):
+        assistant.run_interactive()
+        return
+    if args.docs_file:
+        import json as _json
+
+        with open(args.docs_file) as f:
+            for i, line in enumerate(f):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    obj = _json.loads(line)
+                    assistant.store.add(str(obj.get("id", f"doc{i}")), obj.get("text", line))
+                except Exception:
+                    assistant.store.add(f"doc{i}", line)
+
+    if args.compare:
+        results = assistant.compare(args.task, args.input or "", context=args.context or "")  # type: ignore[arg-type]
+        print(f"\n[ZASSD App] compare task='{args.task}' input_len={len(args.input or '')}")
+        for r in results:
+            print(f"  [{r.method_used}] {r.tps:.1f} tok/s | {r.latency_s:.2f}s | {r.text[:160]}")
+        return
+
+    if args.task == "qa":
+        res = assistant.ask(args.input or "")
+    elif args.task == "summarize":
+        res = assistant.summarize(args.input or "")
+    elif args.task == "code":
+        res = assistant.code_assist(args.input or "", context=args.context or "")
+    else:
+        res = assistant.generate("chat", args.input or "", context=args.context or "")
+    print(f"\n[ZASSD App] task={res.task} method={res.method_used} "
+          f"({res.tps:.1f} tok/s, {res.latency_s:.2f}s)")
+    print("-" * 60)
+    print(res.text)
+
+
 def handle_tables(args: argparse.Namespace) -> None:
     """Execute generate-tables subcommand."""
     import subprocess
@@ -288,6 +353,25 @@ def main() -> None:
     # Subcommand: generate-tables
     subparsers.add_parser("generate-tables", help="Generate verified LaTeX tables and macros for manuscript")
 
+    # Subcommand: app (thin application layer for thesis demo)
+    app_parser = subparsers.add_parser("app", help="Run end-user tasks (chat/summarize/qa/code) or serve HTTP API")
+    app_parser.add_argument("--task", type=str, default="chat", choices=["chat", "summarize", "qa", "code"])
+    app_parser.add_argument("--input", type=str, default="Hello, what can you do on a 6GB laptop GPU?")
+    app_parser.add_argument("--context", type=str, default="")
+    app_parser.add_argument("--docs-file", type=str, default=None, help="JSONL docs file {id, text} for QA")
+    app_parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-3B-Instruct")
+    app_parser.add_argument("--method", type=str, default="auto",
+                            choices=["auto", "vanilla", "prompt_lookup", "zassd", "routed", "hybrid"])
+    app_parser.add_argument("--k", type=int, default=4)
+    app_parser.add_argument("--max-new-tokens", type=int, default=128)
+    app_parser.add_argument("--temperature", type=float, default=0.0)
+    app_parser.add_argument("--device", type=str, default="cuda:0")
+    app_parser.add_argument("--compare", action="store_true", help="Run same prompt via vanilla/prompt_lookup/routed")
+    app_parser.add_argument("--interactive", action="store_true", help="Multi-turn REPL keeping history (/reset, /quit)")
+    app_parser.add_argument("--serve", action="store_true", help="Serve stdlib HTTP JSON API")
+    app_parser.add_argument("--port", type=int, default=8000)
+    app_parser.add_argument("--list-tasks", action="store_true")
+
     args = parser.parse_args()
 
     if args.subcommand == "benchmark":
@@ -298,6 +382,8 @@ def main() -> None:
         handle_demo(args)
     elif args.subcommand == "generate-tables":
         handle_tables(args)
+    elif args.subcommand == "app":
+        handle_app(args)
     else:
         parser.print_help()
 
