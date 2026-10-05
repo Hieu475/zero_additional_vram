@@ -161,6 +161,54 @@ class HybridDraftRouter:
         mlen = 3 if strong else 2
         return cands, mlen
 
+    def oracle_select(
+        self,
+        full_history: list[int],
+        curr_tok: int,
+        step_k: int,
+        entropy: float,
+        config_name: str = "cka_75",
+        pld_k: int | None = None,
+    ) -> tuple[str, dict[str, float]]:
+        """Model-based per-cycle oracle: pure E[TPS] argmax over actions.
+
+        Uses the SAME estimators and information as select_source (shared
+        EMA/cost-model estimates, weak-hit discount, entropy adjustments)
+        but a bare decision rule: margin 1.0, no panic threshold. Vanilla
+        wins naturally whenever both drafts score below baseline TPS.
+        Returns (oracle_source, {"vanilla": t, "pld": t, "ls": t}).
+
+        Comparing the router against this oracle isolates exactly the cost
+        of the robustness heuristics (margin 1.25, panic skip). It is NOT
+        a clairvoyant oracle: both use the same predicted (not realized)
+        throughputs, so efficiency < 1 measures decision-rule regret only.
+        """
+        pld_k = step_k if pld_k is None else max(step_k, pld_k)
+        cands, mlen = self.probe_pld(full_history, curr_tok, pld_k)
+        tps_v = self._vanilla_tps()
+        tps_pld = 0.0
+        if cands:
+            k_eff = len(cands)
+            alpha_pld = self.stats.alpha_pld_ema
+            if mlen <= 2:
+                alpha_pld *= 0.75
+            if entropy < self.entropy_low:
+                alpha_pld = min(0.98, alpha_pld + 0.05)
+            elif entropy > self.entropy_high:
+                alpha_pld *= 0.90
+            t_cycle = self.PLD_DRAFT_MS + self._verify_ms(k_eff)
+            tps_pld = (1.0 + alpha_pld * k_eff) / (t_cycle / 1000.0)
+        alpha_ls = 0.5 * self._ls_alpha(config_name, step_k, entropy)
+        alpha_ls += 0.5 * self.stats.alpha_ls_ema
+        t_cycle_ls = self._ls_draft_ms(config_name, step_k) + self._verify_ms(step_k)
+        tps_ls = (1.0 + alpha_ls * step_k) / (t_cycle_ls / 1000.0)
+        scored = {"vanilla": tps_v, "pld": tps_pld, "layer_skip": tps_ls}
+        if cands and tps_pld >= tps_ls and tps_pld >= tps_v:
+            return "pld", scored
+        if tps_ls >= tps_v:
+            return "layer_skip", scored
+        return "vanilla", scored
+
     def select_source(
         self,
         full_history: list[int],

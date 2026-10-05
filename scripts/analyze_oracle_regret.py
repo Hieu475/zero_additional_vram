@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Router-vs-oracle regret + robustness metrics (CPU-only).
+"""Router-vs-best-fixed regret + robustness metrics (CPU-only).
 
-Oracle: per-PROMPT best of {Vanilla, PLD, LayerSkip} measured TPS, where
+Best-fixed baseline: per-PROMPT best of {Vanilla, PLD, LayerSkip} measured TPS, where
 LayerSkip = ZASSD Empirical-6 (k=1), the pure layer-skip strategy.
   regret(prompt) = TPS_oracle(prompt) - TPS_router(prompt)
 Regret can be NEGATIVE: the router mixes strategies within a prompt, so it
@@ -13,7 +13,7 @@ Robustness per strategy: min task-mean speedup, std across tasks,
 fraction of prompts slower than vanilla, fraction of tasks with mean < 1.
 
 Run: python3 scripts/analyze_oracle_regret.py
-Output: experiments/16_hybrid_roofline/oracle_regret.json
+Output: experiments/16_hybrid_roofline/oracle_regret.json (name kept for provenance; contents use best-fixed terminology)
 """
 import json
 import sys
@@ -72,13 +72,13 @@ def main():
             rep["benches"][key] = {
                 "n": n,
                 "mean_tps": {s: round(float(np.mean(tps[s])), 2) for s in raw},
-                "oracle_mean_tps": round(float(np.mean(oracle_tps)), 2),
+                "best_fixed_mean_tps": round(float(np.mean(oracle_tps)), 2),
                 "routed_mean_tps": round(float(np.mean(r_tps)), 2),
-                "oracle_share": share,
+                "best_fixed_share": share,
                 "regret_mean": round(float(np.mean(regret)), 3),
                 "regret_std": round(float(np.std(regret, ddof=1)), 3),
                 "regret_frac_negative": round(float(np.mean(regret < 0)), 3),
-                "router_efficiency_vs_oracle": round(eff, 4),
+                "router_efficiency_vs_best_fixed": round(eff, 4),
             }
             if HAS:
                 t = ss.ttest_1samp(regret, 0.0)
@@ -102,9 +102,9 @@ def main():
         }
     json.dump(rep, open(OUT / "oracle_regret.json", "w"), indent=2)
     for k, v in rep["benches"].items():
-        print(f"[{k:12s}] n={v['n']} oracle={v['oracle_mean_tps']:.1f} routed={v['routed_mean_tps']:.1f} "
-              f"eff={v['router_efficiency_vs_oracle']:.3f} regret={v['regret_mean']:+.2f}±{v['regret_std']:.2f} "
-              f"neg={v['regret_frac_negative']:.2f} share={v['oracle_share']}")
+        print(f"[{k:12s}] n={v['n']} bestfixed={v['best_fixed_mean_tps']:.1f} routed={v['routed_mean_tps']:.1f} "
+              f"eff={v['router_efficiency_vs_best_fixed']:.3f} regret={v['regret_mean']:+.2f}±{v['regret_std']:.2f} "
+              f"neg={v['regret_frac_negative']:.2f} share={v['best_fixed_share']}")
     print("\nRobustness (N50, 150 prompts):")
     for s, v in rep["robustness"].items():
         print(f"  {s:26s} min_task={v['min_task_mean']:.3f} slow_frac={v['frac_prompts_slower_than_vanilla']:.3f} "

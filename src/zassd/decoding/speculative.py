@@ -249,6 +249,17 @@ def self_speculative_generate(
                 router.update("vanilla", 0, 0)
             # else: fall through to layer-skip draft below
             router._pending_decision = decision
+            # Per-cycle oracle log (model-based): same info, bare argmax rule.
+            if hasattr(router, "oracle_select"):
+                try:
+                    _o_src, _o_tps = router.oracle_select(
+                        full_history, curr_target_tok, step_k,
+                        entropy=curr_entropy, config_name=config_name,
+                        pld_k=getattr(router, "pld_k", None),
+                    )
+                    router._pending_oracle = {"source": _o_src, "tps": _o_tps}
+                except Exception:
+                    router._pending_oracle = None
         if not used_pld and draft_mode in ("hybrid", "prompt_lookup"):
             cands = find_candidate_tokens(full_history + [curr_target_tok], ngram_size=ngram_size, max_candidates=step_k)
             if len(cands) > 0:
@@ -324,6 +335,19 @@ def self_speculative_generate(
             last_proposed = 0
             last_draft_ms = 0.0
             last_verify_ms = verify_elapsed * 1000
+            if draft_mode == "routed" and router is not None:
+                # Log vanilla-fallback cycles too (router and/or oracle said AR)
+                _o = getattr(router, "_pending_oracle", None) or {}
+                metrics.per_iteration_stats.append({
+                    "k": 0, "accepted": 0, "rejected_at": None,
+                    "emitted_count": 1,
+                    "draft_time_ms": 0.0, "verify_time_ms": verify_elapsed * 1000,
+                    "cache_time_ms": 0.0, "skip_indices": active_skip,
+                    "entropy": curr_entropy,
+                    "router_source": getattr(getattr(router, "_pending_decision", None), "source", "vanilla"),
+                    "oracle_source": _o.get("source"),
+                    "oracle_tps": _o.get("tps"),
+                })
             continue
 
         # -------------------------------------------------------------------
@@ -442,6 +466,9 @@ def self_speculative_generate(
             "cache_time_ms": cache_cycle_s * 1000,
             "skip_indices": active_skip,
             "entropy": curr_entropy,
+            "router_source": getattr(getattr(router, "_pending_decision", None), "source", None),
+            "oracle_source": (getattr(router, "_pending_oracle", None) or {}).get("source"),
+            "oracle_tps": (getattr(router, "_pending_oracle", None) or {}).get("tps"),
         }
         metrics.per_iteration_stats.append(iter_stat)
 
