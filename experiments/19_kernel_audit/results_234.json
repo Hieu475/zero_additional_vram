@@ -1,0 +1,128 @@
+{
+  "hardware": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "3B_params": 1698672640,
+  "T_sync_us_mean": 7.5758280000000005,
+  "T_sync_us_std": 3.341617232699723,
+  "T_sync_us_p50": 6.958,
+  "T_layer_us_mean": 31.169050000000002,
+  "T_layer_us_std": 10.80308565577121,
+  "T_vanilla_ms": 23.584569966666667,
+  "T_vanilla_std": 1.443060862086211,
+  "T_vanilla_cudaevent": 23.482676378885905,
+  "achieved_BW_GBs": 36.01237254698358,
+  "sweep_c": {
+    "skip10": {
+      "skip_n": 4,
+      "T_draft_ms": 22.7235869,
+      "T_draft_std": 1.8608303863531885,
+      "c": 0.9634937983654762,
+      "alpha_mean": 0.08505747126436781,
+      "speedup_mean": 0.5205854914110722,
+      "T_verify2_est_ms": 29.436467
+    },
+    "skip25": {
+      "skip_n": 9,
+      "T_draft_ms": 18.696751850000002,
+      "T_draft_std": 1.0126221045999593,
+      "c": 0.79275356202912,
+      "alpha_mean": 0.06666666666666667,
+      "speedup_mean": 0.547869573534246,
+      "T_verify2_est_ms": 25.6447318
+    },
+    "skip40": {
+      "skip_n": 14,
+      "T_draft_ms": 15.77404615,
+      "T_draft_std": 0.20634680397440117,
+      "c": 0.6688290764806949,
+      "alpha_mean": 0.03225806451612903,
+      "speedup_mean": 0.5754904038532955,
+      "T_verify2_est_ms": 25.378194099999998
+    },
+    "skip50": {
+      "skip_n": 18,
+      "T_draft_ms": 14.432730150000001,
+      "T_draft_std": 0.8110549239402427,
+      "c": 0.6119564685893595,
+      "alpha_mean": 0.016129032258064516,
+      "speedup_mean": 0.5745396838762595,
+      "T_verify2_est_ms": 25.427647
+    },
+    "skip70": {
+      "skip_n": 25,
+      "T_draft_ms": 9.8540504,
+      "T_draft_std": 0.12809728477150323,
+      "c": 0.41781768393179336,
+      "alpha_mean": 0.0,
+      "speedup_mean": 0.6315152597214988,
+      "T_verify2_est_ms": 24.8849052
+    }
+  },
+  "vanilla_self_determinism": true,
+  "vanilla_vs_layerskip_match": [
+    28,
+    32,
+    false
+  ],
+  "vanilla_vs_pld_match": [
+    32,
+    32,
+    true
+  ],
+  "audit_single_vs_batched": {
+    "linf": 0.0,
+    "cos": 1.0000001192092896,
+    "flip": false,
+    "margin": 0.625
+  },
+  "freeform_96tok": {
+    "Write a haiku about a lighthou": {
+      "vanilla_tps": 43.11467417783287,
+      "pld_sp": 1.277571554259049,
+      "pld_acc": 0.75,
+      "ls_sp": 0.5164887819832049,
+      "ls_acc": 0.07865168539325842
+    },
+    "Invent a completely new soup r": {
+      "vanilla_tps": 41.98488411655429,
+      "pld_sp": 1.2001132345760677,
+      "pld_acc": 0.5714285714285714,
+      "ls_sp": 0.5485091679266365,
+      "ls_acc": 0.043478260869565216
+    },
+    "Translate into French: The qui": {
+      "vanilla_tps": 43.98242338115994,
+      "pld_sp": 1.152230238898837,
+      "pld_acc": 0.6153846153846154,
+      "ls_sp": 0.5195635981036061,
+      "ls_acc": 0.054945054945054944
+    },
+    "You are a lonely chatbot on a ": {
+      "vanilla_tps": 40.18855973216562,
+      "pld_sp": 1.2640348091243812,
+      "pld_acc": 0.4339622641509434,
+      "ls_sp": 0.5904937497856375,
+      "ls_acc": 0.12941176470588237
+    },
+    "Write a 4-line poem where each": {
+      "vanilla_tps": 40.704930962480525,
+      "pld_sp": 1.273982065122709,
+      "pld_acc": 0.8461538461538461,
+      "ls_sp": 0.5420899493216631,
+      "ls_acc": 0.054945054945054944
+    },
+    "Explain quantum tunneling usin": {
+      "vanilla_tps": 40.10671037011215,
+      "pld_sp": 1.049673625212415,
+      "pld_acc": 0.6666666666666666,
+      "ls_sp": 0.5522080851943577,
+      "ls_acc": 0.06666666666666667
+    }
+  },
+  "long256": {
+    "vanilla_tps": 39.699434674436525,
+    "pld_sp": 1.4374457775434748,
+    "ls_sp": 0.5580307655125408,
+    "pld_acc": 0.680672268907563,
+    "ls_acc": 0.08016877637130802
+  }
+}
