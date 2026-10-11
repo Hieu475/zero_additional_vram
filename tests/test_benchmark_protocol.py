@@ -150,6 +150,29 @@ def test_bootstrap_uses_prompt_as_sampling_unit():
     assert summary["pld"]["bootstrap_unit"].startswith("prompt")
 
 
+def test_paired_ratios_average_runs_within_prompt():
+    from scripts.run_exactness_latency_tradeoff import METHODS as TRADEOFF_METHODS
+    from scripts.run_exactness_latency_tradeoff import summarize as summarize_tradeoff
+
+    rows = []
+    for sample_id in ("p0", "p1"):
+        for repeat in range(2):
+            for seed in (42, 43):
+                for method in TRADEOFF_METHODS:
+                    tps = 10.0 if method == "vanilla" else (8.0 if method == "pld_batched" else 9.0)
+                    rows.append({
+                        "benchmark": "toy", "id": sample_id, "repeat": repeat,
+                        "order_seed": seed, "method": method,
+                        "exact_token_match": method != "pld_batched",
+                        "end_to_end_tps": tps, "decode_tps": tps - 1,
+                    })
+    result = summarize_tradeoff(rows)
+    assert result["n_mismatch_prompts"] == 2
+    assert result["methods"]["pld_batched"]["exact_match_pct"] == 0.0
+    assert result["methods"]["pld_batched"]["end_to_end_speedup_mean"] == pytest.approx(0.8)
+    assert result["methods"]["pld_sequential"]["exact_match_pct"] == 100.0
+
+
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="requires the benchmark GPU")
 def test_vanilla_via_speculative_core_matches_direct_vanilla(session_pipeline):
     from zassd.decoding.speculative import self_speculative_generate
