@@ -1,6 +1,9 @@
-# Zero-Additional-VRAM Self-Speculative Decoding (ZASSD)
+# Zero-Additional-Model-Weight-VRAM Self-Speculative Decoding (ZASSD)
 
 > A Systems Study on Self-Speculative Decoding for Memory-Constrained Consumer GPUs: When it Works, When it Doesn't, and Why.
+
+"Zero additional" refers to auxiliary **model weights**. The decoder still
+uses temporary KV and activation memory during drafting and verification.
 
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.11](https://img.shields.io/badge/pytorch-2.11.0%2Bcu128-orange.svg)](https://pytorch.org/)
@@ -20,8 +23,8 @@ On consumer hardware (e.g. 6 GB laptop GPUs), deploying modern Large Language Mo
 | **Traditional Speculative** | 7B (NF4, ~3.9 GB) | 1.5B Draft FP16 (~2.9 GB) | **+2.9 GB** | **OOM (7.4 GB > 6.0 GB)** | 0.0x (Crash) | **VRAM Capacity Boundary** |
 | **Traditional Speculative** | 7B (NF4, ~3.9 GB) | 0.5B Draft NF4 (~0.5 GB) | **+0.5 GB** | Fits, tight headroom | workload-dependent | KV/context headroom |
 | **ZASSD (Layer-Skip $K=1$)** | 3B (NF4, ~2.0 GB) | Logical Middle-Skip | **0.00 MB** | **Yes (2.4 GB, 60% free)** | 0.92–1.01x | Memory Bandwidth (192 GB/s) |
-| **ZASSD (Prompt-Lookup)** | 3B (NF4, ~2.0 GB) | N-gram History Lookup | **0.00 MB** | **Yes (2.4 GB, 60% free)** | **1.39x** | Requires context recurrence |
-| **ZASSD Routed** | 3B (NF4, ~2.0 GB) | Cost-aware AR / PLD / layer-skip | **0.00 MB** | **Yes** | **1.06–1.08x** | Generality over peak speed |
+| **Prompt Lookup (PLD)** | 3B (NF4, ~2.0 GB) | N-gram History Lookup | **0.00 MB** | **Yes (2.4 GB, 60% free)** | **1.098x** | Requires context recurrence |
+| **ZASSD Routed** | 3B (NF4, ~2.0 GB) | Cost-aware AR / PLD / layer-skip | **0.00 MB** | **Yes** | **1.090x** | Slightly below PLD on the paired N=150 benchmark |
 
 ---
 
@@ -31,7 +34,7 @@ On consumer hardware (e.g. 6 GB laptop GPUs), deploying modern Large Language Mo
 - **Under Hard VRAM Constraints (e.g. 7B Models on 6 GB GPUs)**:
   When the target model exhausts 80%+ of total VRAM, loading a large auxiliary draft model triggers CUDA Out-Of-Memory or hostile host-memory swapping, and even small quantized drafts (measured 459–1182 MB) eat KV/context headroom. Zero-weight self-speculation costs 0.0 MB of model-weight VRAM with strictly better memory headroom in every configuration we measured.
 - **On Structured and Repetitive Contexts (Prompt Lookup / PLD)**:
-  When prompts contain recurrent tokens (summarization, RAG, coding, markdown structures), **Prompt Lookup Decoding (PLD)** extracts candidate sequences at $\approx 0\text{ ms}$ draft compute, yielding **100% acceptance rates and $1.39\times$ wall-clock speedup** with zero weight overhead.
+  When prompts contain recurrent tokens (summarization, RAG, coding, markdown structures), **Prompt Lookup Decoding (PLD)** extracts candidates at low draft cost. The paired N=150 benchmark measures **1.098×** mean speedup with zero auxiliary weight memory.
 - **Compute-Bound Regimes (Batch Size > 1 or Datacenter Accelerators)**:
   Parallel target verification of $K+1$ candidate tokens incurs nearly identical latency to a 1-token step on wide matrix execution units, maximizing speculation efficiency.
 
@@ -53,7 +56,7 @@ This project is organized around three axes (supporting components below are sec
 
 1. **Feasibility Boundary.** High acceptance does not imply speedup. We characterize the $(c, \alpha, K)$ boundary where speculation turns unprofitable and show the controller must be allowed *not* to speculate (VANILLA action with a feasibility gate: +0.083x in ablation, 1.083x gate A/B on GPU).
 2. **Speculative Roofline.** Speedup predicted from draft-cost ratio $c$, acceptance $\alpha$, horizon $K$ (in-device calibration MAPE 2.4% on RTX 4050; cross-GPU rows are labeled projections with assumed efficiency factors, pending second-device calibration).
-3. **Cost-Aware Hybrid Router.** Per-cycle argmax over {Vanilla AR, PLD, Layer-Skip SSD} using measured latencies and online EMA acceptance. Reaches 92–93% of per-prompt oracle efficiency; never drops below 1.03x task-mean while fixed layer-skip falls to 0.90x.
+3. **Cost-Aware Hybrid Router.** Per-cycle choice over {Vanilla AR, PLD, Layer-Skip SSD} using measured latencies and online EMA acceptance. In the equal-horizon N=150 comparison it reaches 1.090× versus pure PLD's 1.098×; this is a measured negative result for the router's incremental benefit.
 
 ---
 
@@ -121,6 +124,13 @@ bash reproduce.sh           # + full GPU benchmark suite on RTX 4050
 
 A pinned `Dockerfile` (PyTorch 2.11 / CUDA 12.8) is provided for artifact evaluation.
 
+To reproduce the corrected same-GPU comparison and inspect a first divergence:
+
+```bash
+python scripts/run_strong_baseline_comparison.py --samples-per-bench 50
+python scripts/trace_first_divergence.py --benchmark data/benchmarks/humaneval_eval.jsonl --ids HumanEval/8 --method routed --hash-kv
+```
+
 ---
 
 ## Experimental Results
@@ -129,35 +139,63 @@ Standardized benchmark on **NVIDIA GeForce RTX 4050 Laptop GPU** (6 GB GDDR6, 19
 
 ### Qwen2.5-3B-Instruct (36 Layers, 4-bit NF4)
 
-Frozen unified benchmark, N=10 prompts, greedy, 48 new tokens
-(`experiments/final_validation/`; routed row: N=50/bench, `experiments/16_hybrid_roofline/`):
+New paired comparison: N=50 prompts each from GSM8K, HumanEval, and CNN/DailyMail;
+Qwen2.5-3B-Instruct NF4; 48-token limit; identical PLD horizon K=4; a fresh
+router per prompt; rotated method order; exact match by generated token IDs.
+Raw per-prompt rows and bootstrap confidence intervals are in
+[`experiments/diagnostics/strong_baselines_n50.json`](experiments/diagnostics/strong_baselines_n50.json).
 
-| Method | Draft Mechanism | Additional Weight VRAM | Throughput (tok/s) | Relative Speedup | Acceptance Rate | Exact Match (%) |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Vanilla Target** | N/A (Standard AR) | 0.0 MB | 41.7 | 1.00x | — | 100.0% |
-| **Prompt Lookup (PLD, K=4)** | N-gram Context Matching | **0.0 MB** | **57.9** | **1.39x** | **100.0%** | 100.0% |
-| **ZASSD (mid_12, K=1)** | Logical Layer Skip (L12–23) | **0.0 MB** | 40.2 | 0.98x | 73.8% | 60.0% |
-| **ZASSD HW Controller** | Adaptive Depth and Length (+vanilla skip gate) | **0.0 MB** | 38.6 | 0.93x | 89.0% | 60.0% |
-| **ZASSD Routed (K=2+PLD4)** | Cost-aware AR / PLD / layer-skip per cycle | **0.0 MB** | **44.1** | **1.06x** | 35.8%† | 83.3% |
-| **KnapSpec (adapted)** | Whole-Layer Knapsack | **0.0 MB** | 35.9 | 0.86x | 73.2% | 60.0% |
-| **SpecBound (adapted)** | Bounded Layer Skip | **0.0 MB** | 34.4 | 0.83x | 74.1% | 50.0% |
+| Method | Mean speedup vs vanilla | 95% bootstrap CI | Exact token-sequence match |
+| :--- | ---: | :---: | ---: |
+| PLD K=4 (vanilla on lookup miss) | **1.098x** | [1.070, 1.129] | 83.3% |
+| PLD cost gate K≤4 | 1.089x | [1.061, 1.118] | 83.3% |
+| Routed PLD / layer skip / vanilla | 1.090x | [1.062, 1.118] | 83.3% |
 
-Extended non-overlapping slices (same frozen protocol): GSM8K N=200 routed 1.026±0.014x (p=0.0005 vs vanilla); HumanEval full-164 routed 1.081±0.037x; CNN/DM N=200 routed 1.066±0.018x. Official KnapSpec code on this GPU (Llama-3.2-1B, AIME24): 0.86x at 97.8% acceptance — independently confirming the bandwidth-ceiling thesis (`experiments/18_official_baselines/`).
+The paired routed/PLD throughput ratio is **0.993** (95% bootstrap CI
+[0.988, 0.999]); the router is slower than pure PLD on this workload. PLD
+already falls back to vanilla on lookup misses, so the separate cost-gated
+baseline tests whether skipping some *hits* helps.
 
-> **Honesty notes.** Exact-match <100% under 4-bit NF4 is NF4 batched-GEMM
-> dequantization noise on near-tie logits (logit margin Δ ≤ 0.25), not an
-> algorithmic bug. Precision ladder (Qwen2.5-0.5B + Llama-3.2-1B, 40 prompts
-> × 128 tokens each): **FP32 100% identity over 10,113 token positions**,
-> FP16 90% sequences, NF4 60% — plus a 4000-position 3B audit (99.4–99.8%
-> token agreement, zero flip-bound violations) over the earlier 450-token
-> audit (cosine 0.99994+).
-> (`experiments/17_fp16_exactness/`, `experiments/19_numerical_audit_scaled/`).
-> †Routed acceptance counts PLD/LS drafts only; vanilla-skipped cycles cannot
-> diverge, hence the higher exact-match. KnapSpec/SpecBound are our adapted
-> re-implementations, not official code. 7B-class auxiliary drafts: only large
-> FP16 drafts OOM — quantized 0.5B/1.5B drafts fit but always cost ΔM_aux > 0 and
-> shrink KV headroom (`experiments/16_hybrid_roofline/draft_vram_pareto.json`);
-> ZASSD weight overhead is exactly 0.0 MB.
+Earlier benchmark files in `experiments/final_validation/` and
+`experiments/16_hybrid_roofline/` used mixed sample sizes or unequal PLD
+horizons; their speedups and text-based exact-match fields should not be
+compared directly with this table. The official KnapSpec implementation on
+this GPU (Llama-3.2-1B FP16, AIME24, N=8) measured 0.86x at 97.8%
+acceptance (`experiments/18_official_baselines/`).
+
+Under NF4, batched target verification can write KV values that differ
+bytewise from single-token vanilla evaluation even when no candidate is
+accepted and cache lengths agree. Targeted first-divergence traces for
+HumanEval/8 and CNN/DM 001/006 are in `experiments/diagnostics/`. This
+implementation does not claim bitwise lossless greedy output under NF4.
+An exploratory margin-triggered canonical replay guard selected threshold 1.5
+on a 30-prompt dev split and reached 100% exact token match on 30 held-out
+prompts, but ran at 0.35x vanilla and 0.33x PLD throughput. It is a measured
+correctness/latency tradeoff, not an acceleration result; the full sweep is in
+`experiments/diagnostics/nf4_margin_guard_study_n10.json`.
+
+### PLD per-cycle and candidate-source study
+
+Run a dev-tuned K/source ablation and paired test report with:
+
+```bash
+python scripts/run_pld_adaptive_study.py --samples-per-split 10 --max-new-tokens 32 --max-k 4
+python scripts/analyze_pld_adaptive_study.py
+```
+
+The RTX 4050 exploratory run selected K=2 for history, prompt-only, and
+prompt-plus-generated on each task. Prompt-plus-generated versus prompt-only
+had paired speed ratios of 1.003 (GSM8K), 1.004 (HumanEval), and 1.021
+(CNN/DailyMail); only the last small-split interval barely excluded 1.0.
+Adaptive K did not consistently beat the source-matched, dev-tuned fixed-K
+baseline. The original `history` lookup already searches both prompt and
+generated tokens, so this ablation does not make generated-prefix reuse a new
+contribution. Cycle costs and per-prompt losses are in
+`experiments/diagnostics/pld_adaptive_source_analysis.json`; raw rows are in
+`experiments/diagnostics/pld_adaptive_n10_source_matched.json`. These are
+exploratory single-GPU results, not publication-strength validation. REST
+retrieves draft text from an external corpus, a different method family
+([NAACL 2024 paper](https://aclanthology.org/2024.naacl-long.88/)).
 
 ---
 
