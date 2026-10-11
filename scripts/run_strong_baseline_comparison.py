@@ -299,6 +299,7 @@ def main() -> None:
                         "input_tokens": len(tokenizer(prompt, add_special_tokens=True)["input_ids"]),
                         "output_tokens": len(ids), "prefill_ms": prefill_ms,
                         "decode_ms": decode_ms, "total_ms": total_ms, "tps": tps,
+                        "generated_token_ids": ids,
                         "pld_cycles": metrics.pld_cycles if metrics else 0,
                         "layer_skip_cycles": metrics.layer_skip_cycles if metrics else 0,
                         "vanilla_cycles": metrics.num_verification_cycles if metrics else len(ids),
@@ -320,6 +321,14 @@ def main() -> None:
                     row["exact_token_match"] = row["method"] == "vanilla" or row["method"] in measurements and measurements[row["method"]]["ids"] == vanilla_ids
                     row["vanilla_tps"] = measurements["vanilla"]["tps"]
                     row["speedup_vs_vanilla"] = row["tps"] / measurements["vanilla"]["tps"] if measurements["vanilla"]["tps"] else None
+                    row["vanilla_token_ids"] = vanilla_ids
+                    candidate_ids = row["generated_token_ids"]
+                    row["first_divergence_index"] = next(
+                        (position for position, (left, right) in enumerate(zip(candidate_ids, vanilla_ids))
+                         if left != right),
+                        min(len(candidate_ids), len(vanilla_ids))
+                        if len(candidate_ids) != len(vanilla_ids) else None,
+                    )
                 with (output / "raw_measurements.jsonl").open("a", encoding="utf-8") as stream:
                     for row in rows[-len(METHODS):]:
                         stream.write(json.dumps(row) + "\n")
