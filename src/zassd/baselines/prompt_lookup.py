@@ -26,6 +26,11 @@ logger = logging.getLogger(__name__)
 from zassd.decoding.ngram import find_candidate_match, find_candidate_tokens
 
 
+def force_candidate_miss(match):
+    """Keep match metadata while removing all draft candidates for a control."""
+    return type(match)([], "forced_miss", match.ngram_size, 0, 0.0)
+
+
 def prompt_lookup_generate(
     model: PreTrainedModel,
     tokenizer: PreTrainedTokenizer,
@@ -122,7 +127,7 @@ def prompt_lookup_generate(
         if force_miss:
             # Negative control: retain lookup and fallback overhead while
             # suppressing every speculative candidate.
-            match = type(match)([], "forced_miss", match.ngram_size, 0, 0.0)
+            match = force_candidate_miss(match)
         if candidate_source == "history" and match.candidates:
             match = type(match)(match.candidates, "history", match.ngram_size,
                                 match.repetitions, match.confidence)
@@ -221,6 +226,7 @@ def prompt_lookup_generate(
             continue
 
         metrics.total_draft_tokens += actual_k
+        metrics.pld_cycles += 1
 
         # Parallel verification with TargetKVCache
         cand_ids = [curr_target_tok] + candidate_tokens

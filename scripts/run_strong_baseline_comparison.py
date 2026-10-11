@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
 import os
 import platform
@@ -39,6 +40,66 @@ METHODS = ("vanilla", "vanilla_via_speculative_core", "pld_forced_miss",
            "pld", "pld_gate", "routed")
 
 
+def tokenize_prompt(tokenizer, prompt: str) -> torch.Tensor:
+    """Create the single CPU token-ID tensor shared by every method in a pair."""
+    return tokenizer(prompt, return_tensors="pt")["input_ids"].detach().cpu()
+
+
+def validate_complete_pairs(rows: list[dict]) -> None:
+    """Reject missing/duplicate methods or differing input IDs within a pair."""
+    groups: dict[tuple, list[dict]] = {}
+    for row in rows:
+        key = (row["benchmark"], row["id"], row["repeat"], row["order_seed"])
+        groups.setdefault(key, []).append(row)
+    for key, group in groups.items():
+        methods = [row["method"] for row in group]
+        if len(methods) != len(METHODS) or set(methods) != set(METHODS):
+            raise ValueError(f"Incomplete or duplicate method pair {key}: {methods}")
+        token_ids = {tuple(row["input_token_ids"]) for row in group}
+        if len(token_ids) != 1:
+            raise ValueError(f"Methods received different input token IDs for {key}")
+
+
+def prompt_level_means(rows: list[dict], value_key: str) -> dict[tuple[str, str], float]:
+    """Average repeats/order rotations within each prompt before CI estimation."""
+    grouped: dict[tuple[str, str], list[float]] = {}
+    for row in rows:
+        value = row.get(value_key)
+        if value is not None and np.isfinite(value):
+            grouped.setdefault((row["benchmark"], row["id"]), []).append(float(value))
+    return {key: float(np.mean(values)) for key, values in grouped.items()}
+
+
+def paired_prompt_ratios(rows: list[dict], method: str, metric: str) -> list[float]:
+    grouped: dict[tuple, dict[str, dict]] = {}
+    for row in rows:
+        key = (row["benchmark"], row["id"], row["repeat"], row["order_seed"])
+        grouped.setdefault(key, {})[row["method"]] = row
+    per_prompt: dict[tuple[str, str], list[float]] = {}
+    for key, values in grouped.items():
+        if method not in values or "vanilla" not in values:
+            continue
+        baseline = values["vanilla"].get(metric, 0.0)
+        if baseline and np.isfinite(baseline):
+            value = values[method].get(metric, 0.0)
+            if np.isfinite(value):
+                per_prompt.setdefault(key[:2], []).append(value / baseline)
+    return [float(np.mean(values)) for values in per_prompt.values()]
+
+
+def ratio_summary(ratios: list[float]) -> dict:
+    return {
+        "n_prompts": len(ratios),
+        "mean_ratio": float(np.mean(ratios)) if ratios else None,
+        "median_ratio": float(np.median(ratios)) if ratios else None,
+        "p10_ratio": float(np.quantile(ratios, 0.10)) if ratios else None,
+        "p90_ratio": float(np.quantile(ratios, 0.90)) if ratios else None,
+        "ratio_ci95": bootstrap_mean_ci(ratios),
+        "faster_prompt_pct": float(np.mean(np.asarray(ratios) > 1.0) * 100) if ratios else None,
+        "bootstrap_unit": "prompt (repeats/order seeds averaged within prompt)",
+    }
+
+
 def bootstrap_mean_ci(values: list[float], seed: int = 2026) -> list[float]:
     array = np.asarray(values, dtype=float)
     if array.size == 0:
@@ -52,60 +113,41 @@ def summarize(rows: list[dict]) -> dict:
     report: dict = {}
     for method in METHODS:
         method_rows = [row for row in rows if row["method"] == method]
-        prompt_speeds: dict[tuple[str, str], list[float]] = {}
-        for row in method_rows:
-            value = row["speedup_vs_vanilla"]
-            if value is not None and np.isfinite(value):
-                prompt_speeds.setdefault((row["benchmark"], row["id"]), []).append(value)
-        prompt_means = {key: float(np.mean(values)) for key, values in prompt_speeds.items()}
+        prompt_means = prompt_level_means(method_rows, "speedup_vs_vanilla")
         finite_speeds = list(prompt_means.values())
         report[method] = {
             "n": len(method_rows),
             "n_prompts": len(prompt_means),
             "mean_speedup": float(np.mean(finite_speeds)) if finite_speeds else None,
+            "median_speedup": float(np.median(finite_speeds)) if finite_speeds else None,
+            "p10_speedup": float(np.quantile(finite_speeds, 0.10)) if finite_speeds else None,
+            "p90_speedup": float(np.quantile(finite_speeds, 0.90)) if finite_speeds else None,
             "speedup_ci95": bootstrap_mean_ci(finite_speeds),
+            "bootstrap_unit": "prompt (repeats/order seeds averaged within prompt)",
             "exact_match_pct": (float(np.mean([row["exact_token_match"] for row in method_rows]) * 100)
                                 if method_rows else None),
             "speedup_by_prompt": [{"benchmark": benchmark, "id": sample_id,
                                    "speedup": speed}
                                   for (benchmark, sample_id), speed in prompt_means.items()],
         }
-    grouped = {}
-    for row in rows:
-        grouped.setdefault((row["benchmark"], row["id"], row["repeat"], row["order_seed"]), {})[row["method"]] = row
     for method in METHODS:
         if method == "vanilla":
             continue
-        prompt_ratios: dict[tuple[str, str], list[float]] = {}
-        for key, values in grouped.items():
-            if method in values and "vanilla" in values and values["vanilla"]["tps"] > 0:
-                prompt_ratios.setdefault(key[:2], []).append(
-                    values[method]["tps"] / values["vanilla"]["tps"])
-        ratios = [float(np.mean(values)) for values in prompt_ratios.values()]
-        report[f"{method}_vs_vanilla_paired"] = {
-            "n": len(ratios), "mean_ratio": float(np.mean(ratios)) if ratios else None,
-            "ratio_ci95": bootstrap_mean_ci(ratios),
-            "faster_prompt_pct": float(np.mean(np.asarray(ratios) > 1.0) * 100) if ratios else None,
-        }
+        report[f"{method}_vs_vanilla_paired"] = ratio_summary(
+            paired_prompt_ratios(rows, method, "end_to_end_tps"))
+        report[f"{method}_decode_tps_vs_vanilla_paired"] = ratio_summary(
+            paired_prompt_ratios(rows, method, "decode_tps"))
     for control in ("vanilla_via_speculative_core", "pld_forced_miss"):
-        prompt_ratios: dict[tuple[str, str], list[float]] = {}
-        for key, values in grouped.items():
-            if control in values and "vanilla" in values and values["vanilla"]["tps"] > 0:
-                prompt_ratios.setdefault(key[:2], []).append(
-                    values[control]["tps"] / values["vanilla"]["tps"])
-        ratios = [float(np.mean(values)) for values in prompt_ratios.values()]
-        report[f"{control}_control_ratio"] = {
-            "n": len(ratios), "mean_ratio": float(np.mean(ratios)) if ratios else None,
-            "ratio_ci95": bootstrap_mean_ci(ratios),
-        }
+        report[f"{control}_control_ratio"] = ratio_summary(
+            paired_prompt_ratios(rows, control, "end_to_end_tps"))
     return report
 
 
 def run_vanilla_timed(model, tokenizer, prompt, max_new_tokens, device):
     """Greedy vanilla path with prefill and decode wall time separated."""
     from zassd.cache.kv_cache import TargetKVCache
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
-    ids = inputs["input_ids"]
+    ids = (prompt if isinstance(prompt, torch.Tensor)
+           else tokenize_prompt(tokenizer, prompt)).to(device)
     cache = TargetKVCache(backend="static")
     torch.cuda.synchronize(device)
     total_start = time.perf_counter()
@@ -134,7 +176,9 @@ def run_vanilla_timed(model, tokenizer, prompt, max_new_tokens, device):
 
 def gpu_telemetry(device: str) -> dict:
     result = {"gpu_name": None, "gpu_clock_mhz": None,
-              "power_w_mean": None, "temperature_c": None}
+              "power_w_snapshot": None, "power_w_mean": None,
+              "energy_j": None, "temperature_c": None,
+              "telemetry_timestamp_unix_s": time.time()}
     try:
         result["gpu_name"] = torch.cuda.get_device_name(device)
     except Exception:
@@ -146,12 +190,29 @@ def gpu_telemetry(device: str) -> dict:
         handle = pynvml.nvmlDeviceGetHandleByIndex(index)
         result.update({
             "gpu_clock_mhz": pynvml.nvmlDeviceGetClockInfo(handle, pynvml.NVML_CLOCK_SM),
-            "power_w_mean": pynvml.nvmlDeviceGetPowerUsage(handle) / 1000.0,
+            "power_w_snapshot": pynvml.nvmlDeviceGetPowerUsage(handle) / 1000.0,
             "temperature_c": pynvml.nvmlDeviceGetTemperature(handle, pynvml.NVML_TEMPERATURE_GPU),
         })
     except Exception:
         pass
     return result
+
+
+def package_version(name: str) -> str | None:
+    try:
+        return importlib.metadata.version(name)
+    except importlib.metadata.PackageNotFoundError:
+        return None
+
+
+def driver_version() -> str | None:
+    try:
+        return subprocess.check_output(
+            ["nvidia-smi", "--query-gpu=driver_version", "--format=csv,noheader"],
+            text=True, stderr=subprocess.DEVNULL,
+        ).splitlines()[0].strip()
+    except (OSError, subprocess.SubprocessError, IndexError):
+        return None
 
 
 def sha256_file(path: str) -> str:
@@ -192,22 +253,39 @@ def main() -> None:
     model_key = "llama32_3b" if "llama" in args.model.lower() else "qwen25_3b"
     cost_model = MeasuredActionCostModel.for_model(model_key)
 
-    run_stamp = time.strftime("%Y%m%d_%H%M%S")
-    output = Path(args.output_dir or f"experiments/benchmark_validation/run_{run_stamp}")
-    if output.exists() and any(output.iterdir()):
-        raise FileExistsError(f"Refusing to overwrite non-empty benchmark directory: {output}")
-    output.mkdir(parents=True, exist_ok=True)
     try:
         commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     except Exception:
         commit = None
+    run_stamp = time.strftime("%Y%m%d_%H%M%S")
+    default_output = f"experiments/benchmark_validation/run_{run_stamp}_{(commit or 'unknown')[:7]}"
+    output = Path(args.output_dir or default_output)
+    if output.exists() and any(output.iterdir()):
+        raise FileExistsError(f"Refusing to overwrite non-empty benchmark directory: {output}")
+    output.mkdir(parents=True, exist_ok=True)
+    model_revision = (getattr(model.config, "_commit_hash", None)
+                      or getattr(tokenizer, "init_kwargs", {}).get("_commit_hash"))
     env = {"commit_sha": commit, "python": platform.python_version(),
-           "platform": platform.platform(), "torch": torch.__version__,
-           "cuda": torch.version.cuda, "gpu": gpu_telemetry(args.device),
-           "model": args.model, "model_revision": None,
+           "platform": platform.platform(), "torch_version": torch.__version__,
+           "transformers_version": package_version("transformers"),
+           "bitsandbytes_version": package_version("bitsandbytes"),
+           "huggingface_hub_version": package_version("huggingface-hub"),
+           "cuda_version": torch.version.cuda, "driver_version": driver_version(),
+           "attention_implementation": getattr(model.config, "_attn_implementation", None),
+           "model_id": args.model, "model_revision": model_revision,
+           "tokenizer_revision": (getattr(tokenizer, "init_kwargs", {}).get("_commit_hash")
+                                  or model_revision),
+           "quantization": "NF4" if not ("bnb-4bit" in args.model.lower() or "4bit" in args.model.lower()) else "model-default",
+           "compute_dtype": "float16" if not ("bnb-4bit" in args.model.lower() or "4bit" in args.model.lower()) else str(getattr(model.config, "torch_dtype", None)),
+           "environment_variables": {"CUDA_VISIBLE_DEVICES": os.environ.get("CUDA_VISIBLE_DEVICES")},
+           "gpu": gpu_telemetry(args.device),
            "dataset_sha256": {name: sha256_file(path) for name, path in BENCHMARKS.items()}}
     (output / "environment.json").write_text(json.dumps(env, indent=2), encoding="utf-8")
-    (output / "config.yaml").write_text("\n".join(f"{k}: {json.dumps(v)}" for k, v in vars(args).items()) + "\n", encoding="utf-8")
+    config = {**vars(args), "resolved_output_dir": str(output),
+              "decode_tokens_definition": "generated output tokens excluding the first token selected from prefill logits",
+              "ttft_definition": "prefill wall time until final prompt logits are available; excludes sampling/argmax materialization",
+              "decode_seconds_definition": "post-prefill wall time through completion, including first-token selection overhead"}
+    (output / "config.yaml").write_text("\n".join(f"{k}: {json.dumps(v)}" for k, v in config.items()) + "\n", encoding="utf-8")
     rows: list[dict] = []
     records_by_bench = {}
     for bench, filename in BENCHMARKS.items():
@@ -218,7 +296,7 @@ def main() -> None:
     # Warm every method on the same small set before collecting measurements.
     for bench, records in records_by_bench.items():
         for item in records[:args.warmup_prompts]:
-            prompt = item["prompt"]
+            prompt = tokenize_prompt(tokenizer, item["prompt"])
             run_vanilla_timed(model, tokenizer, prompt, args.max_new_tokens, args.device)
             self_speculative_generate(model, tokenizer, manager, skip_indices, prompt,
                                       k=0, draft_mode="layer_skip",
@@ -237,6 +315,7 @@ def main() -> None:
     for bench, records in records_by_bench.items():
         for index, item in enumerate(records):
             prompt = item["prompt"]
+            prompt_ids = tokenize_prompt(tokenizer, prompt)
             sample_id = item.get("id", f"{bench}_{index}")
             for repeat in range(args.repeats):
               for order_seed in args.order_seeds:
@@ -248,11 +327,11 @@ def main() -> None:
                     telemetry = gpu_telemetry(args.device)
                     if method == "vanilla":
                         ids, prefill_ms, decode_ms, total_ms = run_vanilla_timed(
-                            model, tokenizer, prompt, args.max_new_tokens, args.device)
+                            model, tokenizer, prompt_ids, args.max_new_tokens, args.device)
                         metrics = None
                     elif method == "vanilla_via_speculative_core":
                         _, metrics = self_speculative_generate(
-                            model, tokenizer, manager, skip_indices, prompt, k=0,
+                            model, tokenizer, manager, skip_indices, prompt_ids, k=0,
                             draft_mode="layer_skip", max_new_tokens=args.max_new_tokens,
                             device=args.device)
                         ids = metrics.generated_token_ids
@@ -261,7 +340,7 @@ def main() -> None:
                         decode_ms = max(0.0, total_ms - prefill_ms)
                     elif method == "pld_forced_miss":
                         _, metrics = prompt_lookup_generate(
-                            model, tokenizer, prompt, k=4, max_new_tokens=args.max_new_tokens,
+                            model, tokenizer, prompt_ids, k=4, max_new_tokens=args.max_new_tokens,
                             device=args.device, force_miss=True)
                         ids = metrics.generated_token_ids
                         total_ms = metrics.total_time_s * 1000
@@ -269,7 +348,7 @@ def main() -> None:
                         decode_ms = max(0.0, total_ms - prefill_ms)
                     elif method == "pld":
                         _, metrics = prompt_lookup_generate(
-                            model, tokenizer, prompt, k=4,
+                            model, tokenizer, prompt_ids, k=4,
                             max_new_tokens=args.max_new_tokens, device=args.device)
                         ids = metrics.generated_token_ids
                         total_ms = metrics.total_time_s * 1000
@@ -280,7 +359,7 @@ def main() -> None:
                             cost_model=cost_model, pld_k=4,
                             enable_layer_skip=(method == "routed"))
                         _, metrics = self_speculative_generate(
-                            model, tokenizer, manager, skip_indices, prompt,
+                            model, tokenizer, manager, skip_indices, prompt_ids,
                             k=2, draft_mode="routed", router=router,
                             max_new_tokens=args.max_new_tokens, device=args.device)
                         ids = metrics.generated_token_ids
@@ -288,6 +367,8 @@ def main() -> None:
                         prefill_ms = metrics.prefill_time_s * 1000
                         decode_ms = max(0.0, total_ms - prefill_ms)
                     tps = len(ids) / (total_ms / 1000) if total_ms > 0 else 0.0
+                    decode_tokens = max(0, len(ids) - 1)
+                    decode_seconds = decode_ms / 1000.0
                     iteration_rows = metrics.per_iteration_stats if metrics else []
                     def phase_sum(*names):
                         return sum(float(cycle.get(name, 0.0) or 0.0)
@@ -296,13 +377,25 @@ def main() -> None:
                     rows.append({
                         "benchmark": bench, "id": sample_id, "method": method,
                         "repeat": repeat, "order_seed": order_seed,
-                        "input_tokens": len(tokenizer(prompt, add_special_tokens=True)["input_ids"]),
+                        "input_tokens": int(prompt_ids.shape[1]),
+                        "input_token_ids": prompt_ids[0].tolist(),
                         "output_tokens": len(ids), "prefill_ms": prefill_ms,
+                        "ttft_ms": prefill_ms,
+                        "decode_tokens": decode_tokens,
+                        "decode_seconds": decode_seconds,
+                        "decode_tps": decode_tokens / decode_seconds if decode_seconds > 0 else 0.0,
                         "decode_ms": decode_ms, "total_ms": total_ms, "tps": tps,
+                        "end_to_end_tps": tps,
                         "generated_token_ids": ids,
                         "pld_cycles": metrics.pld_cycles if metrics else 0,
                         "layer_skip_cycles": metrics.layer_skip_cycles if metrics else 0,
                         "vanilla_cycles": metrics.num_verification_cycles if metrics else len(ids),
+                        "pld_hit_rate": (metrics.pld_cycles / metrics.num_verification_cycles
+                                         if metrics and metrics.num_verification_cycles else 0.0),
+                        "accepted_tokens": metrics.total_accepted_tokens if metrics else 0,
+                        "accepted_tokens_per_cycle": (
+                            metrics.total_accepted_tokens / metrics.num_verification_cycles
+                            if metrics and metrics.num_verification_cycles else 0.0),
                         "phase_ms": {
                             "draft": metrics.draft_time_s * 1000 if metrics else 0.0,
                             "verify": metrics.verify_time_s * 1000 if metrics else decode_ms,
@@ -334,6 +427,7 @@ def main() -> None:
                         stream.write(json.dumps(row) + "\n")
             print(f"{bench}: {index + 1}/{len(records)}", flush=True)
 
+    validate_complete_pairs(rows)
     report = {"model": args.model, "max_new_tokens": args.max_new_tokens,
               "samples_per_bench": args.samples_per_bench,
               "methods": {"pld": "PLD k=4 with vanilla on lookup miss",
@@ -345,10 +439,10 @@ def main() -> None:
                                for bench in BENCHMARKS},
               "rows": rows}
     report["run_config"] = vars(args)
-    with (output / "raw_measurements.jsonl").open("w", encoding="utf-8") as stream:
-        for row in rows:
-            stream.write(json.dumps(row) + "\n")
     (output / "summary.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    (output / "statistics.json").write_text(json.dumps({
+        "overall": report["overall"], "by_benchmark": report["by_benchmark"]
+    }, indent=2), encoding="utf-8")
     print(json.dumps(report["overall"], indent=2))
     print(f"Saved benchmark artifacts to {output}")
 
