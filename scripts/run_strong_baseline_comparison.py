@@ -197,6 +197,17 @@ def main() -> None:
     if output.exists() and any(output.iterdir()):
         raise FileExistsError(f"Refusing to overwrite non-empty benchmark directory: {output}")
     output.mkdir(parents=True, exist_ok=True)
+    try:
+        commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    except Exception:
+        commit = None
+    env = {"commit_sha": commit, "python": platform.python_version(),
+           "platform": platform.platform(), "torch": torch.__version__,
+           "cuda": torch.version.cuda, "gpu": gpu_telemetry(args.device),
+           "model": args.model, "model_revision": None,
+           "dataset_sha256": {name: sha256_file(path) for name, path in BENCHMARKS.items()}}
+    (output / "environment.json").write_text(json.dumps(env, indent=2), encoding="utf-8")
+    (output / "config.yaml").write_text("\n".join(f"{k}: {json.dumps(v)}" for k, v in vars(args).items()) + "\n", encoding="utf-8")
     rows: list[dict] = []
     records_by_bench = {}
     for bench, filename in BENCHMARKS.items():
@@ -309,6 +320,9 @@ def main() -> None:
                     row["exact_token_match"] = row["method"] == "vanilla" or row["method"] in measurements and measurements[row["method"]]["ids"] == vanilla_ids
                     row["vanilla_tps"] = measurements["vanilla"]["tps"]
                     row["speedup_vs_vanilla"] = row["tps"] / measurements["vanilla"]["tps"] if measurements["vanilla"]["tps"] else None
+                with (output / "raw_measurements.jsonl").open("a", encoding="utf-8") as stream:
+                    for row in rows[-len(METHODS):]:
+                        stream.write(json.dumps(row) + "\n")
             print(f"{bench}: {index + 1}/{len(records)}", flush=True)
 
     report = {"model": args.model, "max_new_tokens": args.max_new_tokens,
@@ -326,17 +340,6 @@ def main() -> None:
         for row in rows:
             stream.write(json.dumps(row) + "\n")
     (output / "summary.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
-    try:
-        commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
-    except Exception:
-        commit = None
-    env = {"commit_sha": commit, "python": platform.python_version(),
-           "platform": platform.platform(), "torch": torch.__version__,
-           "cuda": torch.version.cuda, "gpu": gpu_telemetry(args.device),
-           "model": args.model, "model_revision": None,
-           "dataset_sha256": {name: sha256_file(path) for name, path in BENCHMARKS.items()}}
-    (output / "environment.json").write_text(json.dumps(env, indent=2), encoding="utf-8")
-    (output / "config.yaml").write_text("\n".join(f"{k}: {json.dumps(v)}" for k, v in vars(args).items()) + "\n", encoding="utf-8")
     print(json.dumps(report["overall"], indent=2))
     print(f"Saved benchmark artifacts to {output}")
 
