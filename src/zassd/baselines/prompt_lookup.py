@@ -39,6 +39,7 @@ def prompt_lookup_generate(
     k_policy: str = "fixed",
     candidate_source: str = "history",
     adaptive_profile: dict | None = None,
+    force_miss: bool = False,
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Prompt Lookup Decoding (PLD).
 
@@ -118,6 +119,10 @@ def prompt_lookup_generate(
             ngram_size=ngram_size, max_candidates=step_k,
             include_generated=(candidate_source == "prompt+generated"),
         )
+        if force_miss:
+            # Negative control: retain lookup and fallback overhead while
+            # suppressing every speculative candidate.
+            match = type(match)([], "forced_miss", match.ngram_size, 0, 0.0)
         if candidate_source == "history" and match.candidates:
             match = type(match)(match.candidates, "history", match.ngram_size,
                                 match.repetitions, match.confidence)
