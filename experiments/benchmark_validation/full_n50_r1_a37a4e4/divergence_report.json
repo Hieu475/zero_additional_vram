@@ -1,0 +1,5106 @@
+{
+  "raw_measurements": "experiments/benchmark_validation/full_n50_r1_a37a4e4/raw_measurements.jsonl",
+  "model_id": "Qwen/Qwen2.5-3B-Instruct",
+  "trace_files": [
+    "experiments/benchmark_validation/full_n50_r1_a37a4e4/gsm8k_divergences_default.json",
+    "experiments/benchmark_validation/full_n50_r1_a37a4e4/gsm8k_divergences_sequential.json",
+    "experiments/benchmark_validation/full_n50_r1_a37a4e4/humaneval_divergences_default.json",
+    "experiments/benchmark_validation/full_n50_r1_a37a4e4/humaneval_divergences_sequential.json",
+    "experiments/benchmark_validation/full_n50_r1_a37a4e4/cnndm_divergences_default.json",
+    "experiments/benchmark_validation/full_n50_r1_a37a4e4/cnndm_divergences_sequential.json"
+  ],
+  "mismatch_case_count": 75,
+  "classification_counts": {
+    "numerical_divergence": 75
+  },
+  "cases": [
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_001",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 28,
+      "first_mismatch_positions_by_run": [
+        28
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 2,
+        "source": "vanilla",
+        "cache_len_before_verify": 400,
+        "reference_cache_len": 400
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6782499840010132,
+      "batched_total_time_s": 2.9406504969992966,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.10792600005515851,
+        "verify_time_ms": 29.45158899819944,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.8318382501602173,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 28,
+        "cache_len_before_verify": 426,
+        "cache_len_after_commit": 427,
+        "emitted_tokens": [
+          2937
+        ],
+        "verify_argmax": [
+          11
+        ],
+        "next_pending_token": 11,
+        "cache_digest_before": "fb8179d115c5d8202d0f812f233fdf8128f6d58acdf3c09e20e8fa989b7aa69b",
+        "cache_digest_after": "c755e7a05f9967a4e1d4cd76b8a5b735d83a0034eb59bd425979055627fe84f5"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_001",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 28,
+      "first_mismatch_positions_by_run": [
+        28
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 2,
+        "source": "vanilla",
+        "cache_len_before_verify": 400,
+        "reference_cache_len": 400
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6782499840010132,
+      "batched_total_time_s": 2.9406504969992966,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.10792600005515851,
+        "verify_time_ms": 29.45158899819944,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.8318382501602173,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 28,
+        "cache_len_before_verify": 426,
+        "cache_len_after_commit": 427,
+        "emitted_tokens": [
+          2937
+        ],
+        "verify_argmax": [
+          11
+        ],
+        "next_pending_token": 11,
+        "cache_digest_before": "fb8179d115c5d8202d0f812f233fdf8128f6d58acdf3c09e20e8fa989b7aa69b",
+        "cache_digest_after": "c755e7a05f9967a4e1d4cd76b8a5b735d83a0034eb59bd425979055627fe84f5"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_001",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 28,
+      "first_mismatch_positions_by_run": [
+        28
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 2,
+        "source": "vanilla",
+        "cache_len_before_verify": 400,
+        "reference_cache_len": 400
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6782499840010132,
+      "batched_total_time_s": 2.9406504969992966,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.10792600005515851,
+        "verify_time_ms": 29.45158899819944,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.8318382501602173,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 28,
+        "cache_len_before_verify": 426,
+        "cache_len_after_commit": 427,
+        "emitted_tokens": [
+          2937
+        ],
+        "verify_argmax": [
+          11
+        ],
+        "next_pending_token": 11,
+        "cache_digest_before": "fb8179d115c5d8202d0f812f233fdf8128f6d58acdf3c09e20e8fa989b7aa69b",
+        "cache_digest_after": "c755e7a05f9967a4e1d4cd76b8a5b735d83a0034eb59bd425979055627fe84f5"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_006",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 21,
+      "first_mismatch_positions_by_run": [
+        21
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 3,
+        "source": "vanilla",
+        "cache_len_before_verify": 418,
+        "reference_cache_len": 418
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6477241909997247,
+      "batched_total_time_s": 2.9299253639983363,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.10407499939901754,
+        "verify_time_ms": 27.82496299914783,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.629624605178833,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 21,
+        "cache_len_before_verify": 436,
+        "cache_len_after_commit": 437,
+        "emitted_tokens": [
+          1496
+        ],
+        "verify_argmax": [
+          979
+        ],
+        "next_pending_token": 979,
+        "cache_digest_before": "5e45bcea056a9cf9c7165d096302e37a891835bd8c85966ecdd91a843eeb197d",
+        "cache_digest_after": "17d3d28525c4afab6c4aa6c3c701346f8b3cd8130bfd9a91ef83a70b5f1f44d6"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_006",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 21,
+      "first_mismatch_positions_by_run": [
+        21
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 3,
+        "source": "vanilla",
+        "cache_len_before_verify": 418,
+        "reference_cache_len": 418
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6477241909997247,
+      "batched_total_time_s": 2.9299253639983363,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.10407499939901754,
+        "verify_time_ms": 27.82496299914783,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.629624605178833,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 21,
+        "cache_len_before_verify": 436,
+        "cache_len_after_commit": 437,
+        "emitted_tokens": [
+          1496
+        ],
+        "verify_argmax": [
+          979
+        ],
+        "next_pending_token": 979,
+        "cache_digest_before": "5e45bcea056a9cf9c7165d096302e37a891835bd8c85966ecdd91a843eeb197d",
+        "cache_digest_after": "17d3d28525c4afab6c4aa6c3c701346f8b3cd8130bfd9a91ef83a70b5f1f44d6"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_006",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 21,
+      "first_mismatch_positions_by_run": [
+        21
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 3,
+        "source": "vanilla",
+        "cache_len_before_verify": 418,
+        "reference_cache_len": 418
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6477241909997247,
+      "batched_total_time_s": 2.9299253639983363,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.10407499939901754,
+        "verify_time_ms": 27.82496299914783,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.629624605178833,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 21,
+        "cache_len_before_verify": 436,
+        "cache_len_after_commit": 437,
+        "emitted_tokens": [
+          1496
+        ],
+        "verify_argmax": [
+          979
+        ],
+        "next_pending_token": 979,
+        "cache_digest_before": "5e45bcea056a9cf9c7165d096302e37a891835bd8c85966ecdd91a843eeb197d",
+        "cache_digest_after": "17d3d28525c4afab6c4aa6c3c701346f8b3cd8130bfd9a91ef83a70b5f1f44d6"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_010",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 23,
+      "first_mismatch_positions_by_run": [
+        23
+      ],
+      "target_logit_margin": 0.25,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 3,
+        "source": null,
+        "cache_len_before_verify": 167,
+        "reference_cache_len": 167
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.4455769080013852,
+      "batched_total_time_s": 2.109904828001163,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_count": 1,
+        "draft_time_ms": 0.14089999967836775,
+        "verify_time_ms": 41.240164999180706,
+        "cache_time_ms": 0.3145689988741651,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.00866419356316328,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 23,
+        "cache_len_before_verify": 187,
+        "cache_len_after_commit": 188,
+        "pending_token": 279,
+        "draft_tokens": [
+          4168,
+          1948,
+          6702,
+          220
+        ],
+        "verify_argmax": [
+          6424,
+          1948,
+          6702,
+          220,
+          16
+        ],
+        "verify_margin": [
+          7.375,
+          0.375,
+          6.75,
+          4.5,
+          7.875
+        ],
+        "emitted_tokens": [
+          279
+        ],
+        "next_pending_token": 6424,
+        "cache_digest_before": "40979e30ae37e5020727be67c9c58120f740def30fd33ce45595336eeae28ca0",
+        "cache_digest_after": "efabcd479dda84a565b21ee10b401681b9512d3fc5e6bafe39c435faa9c1a848"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_010",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 23,
+      "first_mismatch_positions_by_run": [
+        23
+      ],
+      "target_logit_margin": 0.25,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 3,
+        "source": null,
+        "cache_len_before_verify": 167,
+        "reference_cache_len": 167
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.4455769080013852,
+      "batched_total_time_s": 2.109904828001163,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_count": 1,
+        "draft_time_ms": 0.14089999967836775,
+        "verify_time_ms": 41.240164999180706,
+        "cache_time_ms": 0.3145689988741651,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.00866419356316328,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 23,
+        "cache_len_before_verify": 187,
+        "cache_len_after_commit": 188,
+        "pending_token": 279,
+        "draft_tokens": [
+          4168,
+          1948,
+          6702,
+          220
+        ],
+        "verify_argmax": [
+          6424,
+          1948,
+          6702,
+          220,
+          16
+        ],
+        "verify_margin": [
+          7.375,
+          0.375,
+          6.75,
+          4.5,
+          7.875
+        ],
+        "emitted_tokens": [
+          279
+        ],
+        "next_pending_token": 6424,
+        "cache_digest_before": "40979e30ae37e5020727be67c9c58120f740def30fd33ce45595336eeae28ca0",
+        "cache_digest_after": "efabcd479dda84a565b21ee10b401681b9512d3fc5e6bafe39c435faa9c1a848"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_010",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 23,
+      "first_mismatch_positions_by_run": [
+        23
+      ],
+      "target_logit_margin": 0.25,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 3,
+        "source": null,
+        "cache_len_before_verify": 167,
+        "reference_cache_len": 167
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.4455769080013852,
+      "batched_total_time_s": 2.109904828001163,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_count": 1,
+        "draft_time_ms": 0.14089999967836775,
+        "verify_time_ms": 41.240164999180706,
+        "cache_time_ms": 0.3145689988741651,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.00866419356316328,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 23,
+        "cache_len_before_verify": 187,
+        "cache_len_after_commit": 188,
+        "pending_token": 279,
+        "draft_tokens": [
+          4168,
+          1948,
+          6702,
+          220
+        ],
+        "verify_argmax": [
+          6424,
+          1948,
+          6702,
+          220,
+          16
+        ],
+        "verify_margin": [
+          7.375,
+          0.375,
+          6.75,
+          4.5,
+          7.875
+        ],
+        "emitted_tokens": [
+          279
+        ],
+        "next_pending_token": 6424,
+        "cache_digest_before": "40979e30ae37e5020727be67c9c58120f740def30fd33ce45595336eeae28ca0",
+        "cache_digest_after": "efabcd479dda84a565b21ee10b401681b9512d3fc5e6bafe39c435faa9c1a848"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_015",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 47,
+      "first_mismatch_positions_by_run": [
+        47
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 2,
+        "source": null,
+        "cache_len_before_verify": 399,
+        "reference_cache_len": 399
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.615399301997968,
+      "batched_total_time_s": 2.9361925429984694,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.0,
+        "verify_time_ms": 29.877978999138577,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.2933810949325562,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 47,
+        "cache_len_before_verify": 444,
+        "cache_len_after_commit": 445,
+        "emitted_tokens": [
+          4842
+        ],
+        "verify_argmax": [
+          13
+        ],
+        "next_pending_token": 13,
+        "cache_digest_before": "fcb20c22705bb2493f4dac77397be72d3041803c0dfbb2e2ccba98867003cd60",
+        "cache_digest_after": "61e04f4ead62e8476b5c600df46e7cb84b43173146b56eaefef102913b0945d9"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_015",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 47,
+      "first_mismatch_positions_by_run": [
+        47
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 2,
+        "source": null,
+        "cache_len_before_verify": 399,
+        "reference_cache_len": 399
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.615399301997968,
+      "batched_total_time_s": 2.9361925429984694,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.0,
+        "verify_time_ms": 29.877978999138577,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.2933810949325562,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 47,
+        "cache_len_before_verify": 444,
+        "cache_len_after_commit": 445,
+        "emitted_tokens": [
+          4842
+        ],
+        "verify_argmax": [
+          13
+        ],
+        "next_pending_token": 13,
+        "cache_digest_before": "fcb20c22705bb2493f4dac77397be72d3041803c0dfbb2e2ccba98867003cd60",
+        "cache_digest_after": "61e04f4ead62e8476b5c600df46e7cb84b43173146b56eaefef102913b0945d9"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_015",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 47,
+      "first_mismatch_positions_by_run": [
+        47
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 2,
+        "source": null,
+        "cache_len_before_verify": 399,
+        "reference_cache_len": 399
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.615399301997968,
+      "batched_total_time_s": 2.9361925429984694,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.0,
+        "verify_time_ms": 29.877978999138577,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.2933810949325562,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 47,
+        "cache_len_before_verify": 444,
+        "cache_len_after_commit": 445,
+        "emitted_tokens": [
+          4842
+        ],
+        "verify_argmax": [
+          13
+        ],
+        "next_pending_token": 13,
+        "cache_digest_before": "fcb20c22705bb2493f4dac77397be72d3041803c0dfbb2e2ccba98867003cd60",
+        "cache_digest_after": "61e04f4ead62e8476b5c600df46e7cb84b43173146b56eaefef102913b0945d9"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_018",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 28,
+      "first_mismatch_positions_by_run": [
+        28
+      ],
+      "target_logit_margin": 0.5,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 7,
+        "source": null,
+        "cache_len_before_verify": 461,
+        "reference_cache_len": 461
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.769137982999382,
+      "batched_total_time_s": 2.2609454699995695,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.1046029974531848,
+        "verify_time_ms": 26.85715400002664,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.00010299136920366436,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 28,
+        "cache_len_before_verify": 482,
+        "cache_len_after_commit": 483,
+        "emitted_tokens": [
+          5823
+        ],
+        "verify_argmax": [
+          3123
+        ],
+        "next_pending_token": 3123,
+        "cache_digest_before": "c99ad56d4ae2a149e3e432a0b39531786d0ca50156851a13c8b635b9357984de",
+        "cache_digest_after": "974b8c0d45668b0b21ffebfb6f9f6e1f3a8117e29727f6f35f325305d2d6c5df"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_018",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 28,
+      "first_mismatch_positions_by_run": [
+        28
+      ],
+      "target_logit_margin": 0.5,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 7,
+        "source": null,
+        "cache_len_before_verify": 461,
+        "reference_cache_len": 461
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.769137982999382,
+      "batched_total_time_s": 2.2609454699995695,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.1046029974531848,
+        "verify_time_ms": 26.85715400002664,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.00010299136920366436,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 28,
+        "cache_len_before_verify": 482,
+        "cache_len_after_commit": 483,
+        "emitted_tokens": [
+          5823
+        ],
+        "verify_argmax": [
+          3123
+        ],
+        "next_pending_token": 3123,
+        "cache_digest_before": "c99ad56d4ae2a149e3e432a0b39531786d0ca50156851a13c8b635b9357984de",
+        "cache_digest_after": "974b8c0d45668b0b21ffebfb6f9f6e1f3a8117e29727f6f35f325305d2d6c5df"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_018",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 28,
+      "first_mismatch_positions_by_run": [
+        28
+      ],
+      "target_logit_margin": 0.5,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 7,
+        "source": null,
+        "cache_len_before_verify": 461,
+        "reference_cache_len": 461
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.769137982999382,
+      "batched_total_time_s": 2.2609454699995695,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.1046029974531848,
+        "verify_time_ms": 26.85715400002664,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.00010299136920366436,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 28,
+        "cache_len_before_verify": 482,
+        "cache_len_after_commit": 483,
+        "emitted_tokens": [
+          5823
+        ],
+        "verify_argmax": [
+          3123
+        ],
+        "next_pending_token": 3123,
+        "cache_digest_before": "c99ad56d4ae2a149e3e432a0b39531786d0ca50156851a13c8b635b9357984de",
+        "cache_digest_after": "974b8c0d45668b0b21ffebfb6f9f6e1f3a8117e29727f6f35f325305d2d6c5df"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_023",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 23,
+      "first_mismatch_positions_by_run": [
+        23
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 8,
+        "source": "vanilla",
+        "cache_len_before_verify": 422,
+        "reference_cache_len": 422
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.688921699002094,
+      "batched_total_time_s": 2.406929852000758,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.10077199840452522,
+        "verify_time_ms": 27.283545001409948,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.7327532768249512,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 23,
+        "cache_len_before_verify": 437,
+        "cache_len_after_commit": 438,
+        "emitted_tokens": [
+          879
+        ],
+        "verify_argmax": [
+          1033
+        ],
+        "next_pending_token": 1033,
+        "cache_digest_before": "78187b20446cfbaf00b161c43591c34bb34dad137ebf9bb303c579c90a5414c8",
+        "cache_digest_after": "222794cdd0ef3034c82b1c0e301e71af33de3a4e94b4afdd756e078e079ffd47"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_023",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 23,
+      "first_mismatch_positions_by_run": [
+        23
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 8,
+        "source": "vanilla",
+        "cache_len_before_verify": 422,
+        "reference_cache_len": 422
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.688921699002094,
+      "batched_total_time_s": 2.406929852000758,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.10077199840452522,
+        "verify_time_ms": 27.283545001409948,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.7327532768249512,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 23,
+        "cache_len_before_verify": 437,
+        "cache_len_after_commit": 438,
+        "emitted_tokens": [
+          879
+        ],
+        "verify_argmax": [
+          1033
+        ],
+        "next_pending_token": 1033,
+        "cache_digest_before": "78187b20446cfbaf00b161c43591c34bb34dad137ebf9bb303c579c90a5414c8",
+        "cache_digest_after": "222794cdd0ef3034c82b1c0e301e71af33de3a4e94b4afdd756e078e079ffd47"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_023",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 23,
+      "first_mismatch_positions_by_run": [
+        23
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 8,
+        "source": "vanilla",
+        "cache_len_before_verify": 422,
+        "reference_cache_len": 422
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.688921699002094,
+      "batched_total_time_s": 2.406929852000758,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.10077199840452522,
+        "verify_time_ms": 27.283545001409948,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.7327532768249512,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 23,
+        "cache_len_before_verify": 437,
+        "cache_len_after_commit": 438,
+        "emitted_tokens": [
+          879
+        ],
+        "verify_argmax": [
+          1033
+        ],
+        "next_pending_token": 1033,
+        "cache_digest_before": "78187b20446cfbaf00b161c43591c34bb34dad137ebf9bb303c579c90a5414c8",
+        "cache_digest_after": "222794cdd0ef3034c82b1c0e301e71af33de3a4e94b4afdd756e078e079ffd47"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_024",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 13,
+      "first_mismatch_positions_by_run": [
+        13
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 8,
+        "source": null,
+        "cache_len_before_verify": 408,
+        "reference_cache_len": 408
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6867287480017694,
+      "batched_total_time_s": 2.9419458089978434,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.1067809971573297,
+        "verify_time_ms": 29.87783799835597,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.3516412079334259,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 13,
+        "cache_len_before_verify": 413,
+        "cache_len_after_commit": 414,
+        "emitted_tokens": [
+          5916
+        ],
+        "verify_argmax": [
+          448
+        ],
+        "next_pending_token": 448,
+        "cache_digest_before": "806e76f18fcde679476767d7869d3f1c97a85c520d4508624237bab2e9fcca48",
+        "cache_digest_after": "f0d2b40c1eeaeb9beeea155c02d826bc1d0c5c8d8fed495e9bf0d3c34f321586"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_024",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 13,
+      "first_mismatch_positions_by_run": [
+        13
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 8,
+        "source": null,
+        "cache_len_before_verify": 408,
+        "reference_cache_len": 408
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6867287480017694,
+      "batched_total_time_s": 2.9419458089978434,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.1067809971573297,
+        "verify_time_ms": 29.87783799835597,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.3516412079334259,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 13,
+        "cache_len_before_verify": 413,
+        "cache_len_after_commit": 414,
+        "emitted_tokens": [
+          5916
+        ],
+        "verify_argmax": [
+          448
+        ],
+        "next_pending_token": 448,
+        "cache_digest_before": "806e76f18fcde679476767d7869d3f1c97a85c520d4508624237bab2e9fcca48",
+        "cache_digest_after": "f0d2b40c1eeaeb9beeea155c02d826bc1d0c5c8d8fed495e9bf0d3c34f321586"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_024",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 13,
+      "first_mismatch_positions_by_run": [
+        13
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 8,
+        "source": null,
+        "cache_len_before_verify": 408,
+        "reference_cache_len": 408
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6867287480017694,
+      "batched_total_time_s": 2.9419458089978434,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.1067809971573297,
+        "verify_time_ms": 29.87783799835597,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.3516412079334259,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 13,
+        "cache_len_before_verify": 413,
+        "cache_len_after_commit": 414,
+        "emitted_tokens": [
+          5916
+        ],
+        "verify_argmax": [
+          448
+        ],
+        "next_pending_token": 448,
+        "cache_digest_before": "806e76f18fcde679476767d7869d3f1c97a85c520d4508624237bab2e9fcca48",
+        "cache_digest_after": "f0d2b40c1eeaeb9beeea155c02d826bc1d0c5c8d8fed495e9bf0d3c34f321586"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_037",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 23,
+      "first_mismatch_positions_by_run": [
+        23
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 2,
+        "source": "vanilla",
+        "cache_len_before_verify": 388,
+        "reference_cache_len": 388
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5090119499982393,
+      "batched_total_time_s": 2.7941871189977974,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 3,
+        "rejected_at": 3,
+        "emitted_count": 4,
+        "draft_time_ms": 0.19676599913509563,
+        "verify_time_ms": 43.20620199723635,
+        "cache_time_ms": 0.3179140003339853,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.3140060901641846,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 22,
+        "cache_len_before_verify": 408,
+        "cache_len_after_commit": 412,
+        "pending_token": 5978,
+        "draft_tokens": [
+          279,
+          4271,
+          315,
+          279
+        ],
+        "verify_argmax": [
+          279,
+          4271,
+          315,
+          6731,
+          6731
+        ],
+        "verify_margin": [
+          0.0,
+          1.375,
+          4.25,
+          0.25,
+          2.75
+        ],
+        "emitted_tokens": [
+          5978,
+          279,
+          4271,
+          315
+        ],
+        "next_pending_token": 6731,
+        "cache_digest_before": "22fcb4f003cb4af27b9f5f562cd83746ece3b494eee482faf587dc3b59f97811",
+        "cache_digest_after": "ee7971faf970e8a9aa096edec42bb7585080222467d08f8310c504162fff5a97"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_037",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 23,
+      "first_mismatch_positions_by_run": [
+        23
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 2,
+        "source": "vanilla",
+        "cache_len_before_verify": 388,
+        "reference_cache_len": 388
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5090119499982393,
+      "batched_total_time_s": 2.7941871189977974,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 3,
+        "rejected_at": 3,
+        "emitted_count": 4,
+        "draft_time_ms": 0.19676599913509563,
+        "verify_time_ms": 43.20620199723635,
+        "cache_time_ms": 0.3179140003339853,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.3140060901641846,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 22,
+        "cache_len_before_verify": 408,
+        "cache_len_after_commit": 412,
+        "pending_token": 5978,
+        "draft_tokens": [
+          279,
+          4271,
+          315,
+          279
+        ],
+        "verify_argmax": [
+          279,
+          4271,
+          315,
+          6731,
+          6731
+        ],
+        "verify_margin": [
+          0.0,
+          1.375,
+          4.25,
+          0.25,
+          2.75
+        ],
+        "emitted_tokens": [
+          5978,
+          279,
+          4271,
+          315
+        ],
+        "next_pending_token": 6731,
+        "cache_digest_before": "22fcb4f003cb4af27b9f5f562cd83746ece3b494eee482faf587dc3b59f97811",
+        "cache_digest_after": "ee7971faf970e8a9aa096edec42bb7585080222467d08f8310c504162fff5a97"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_037",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 23,
+      "first_mismatch_positions_by_run": [
+        23
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 2,
+        "source": "vanilla",
+        "cache_len_before_verify": 388,
+        "reference_cache_len": 388
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5090119499982393,
+      "batched_total_time_s": 2.7941871189977974,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 3,
+        "rejected_at": 3,
+        "emitted_count": 4,
+        "draft_time_ms": 0.19676599913509563,
+        "verify_time_ms": 43.20620199723635,
+        "cache_time_ms": 0.3179140003339853,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.3140060901641846,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 22,
+        "cache_len_before_verify": 408,
+        "cache_len_after_commit": 412,
+        "pending_token": 5978,
+        "draft_tokens": [
+          279,
+          4271,
+          315,
+          279
+        ],
+        "verify_argmax": [
+          279,
+          4271,
+          315,
+          6731,
+          6731
+        ],
+        "verify_margin": [
+          0.0,
+          1.375,
+          4.25,
+          0.25,
+          2.75
+        ],
+        "emitted_tokens": [
+          5978,
+          279,
+          4271,
+          315
+        ],
+        "next_pending_token": 6731,
+        "cache_digest_before": "22fcb4f003cb4af27b9f5f562cd83746ece3b494eee482faf587dc3b59f97811",
+        "cache_digest_after": "ee7971faf970e8a9aa096edec42bb7585080222467d08f8310c504162fff5a97"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_041",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 29,
+      "first_mismatch_positions_by_run": [
+        29
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 10,
+        "source": "vanilla",
+        "cache_len_before_verify": 409,
+        "reference_cache_len": 409
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.525302300000476,
+      "batched_total_time_s": 3.0316476080006396,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.1003420002234634,
+        "verify_time_ms": 26.969321002979996,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.19369271397590637,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 29,
+        "cache_len_before_verify": 428,
+        "cache_len_after_commit": 429,
+        "emitted_tokens": [
+          1493
+        ],
+        "verify_argmax": [
+          6872
+        ],
+        "next_pending_token": 6872,
+        "cache_digest_before": "7c2fd4b8d50c514690e45775dd00460799242389985135373cf1ed779e2a1220",
+        "cache_digest_after": "a97d490c23247f1f60058d8d9d3fb8299066c851651feae7d0455ff95cafb350"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_041",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 29,
+      "first_mismatch_positions_by_run": [
+        29
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 10,
+        "source": "vanilla",
+        "cache_len_before_verify": 409,
+        "reference_cache_len": 409
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.525302300000476,
+      "batched_total_time_s": 3.0316476080006396,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.1003420002234634,
+        "verify_time_ms": 26.969321002979996,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.19369271397590637,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 29,
+        "cache_len_before_verify": 428,
+        "cache_len_after_commit": 429,
+        "emitted_tokens": [
+          1493
+        ],
+        "verify_argmax": [
+          6872
+        ],
+        "next_pending_token": 6872,
+        "cache_digest_before": "7c2fd4b8d50c514690e45775dd00460799242389985135373cf1ed779e2a1220",
+        "cache_digest_after": "a97d490c23247f1f60058d8d9d3fb8299066c851651feae7d0455ff95cafb350"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_041",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 29,
+      "first_mismatch_positions_by_run": [
+        29
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 10,
+        "source": "vanilla",
+        "cache_len_before_verify": 409,
+        "reference_cache_len": 409
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.525302300000476,
+      "batched_total_time_s": 3.0316476080006396,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.1003420002234634,
+        "verify_time_ms": 26.969321002979996,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.19369271397590637,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 29,
+        "cache_len_before_verify": 428,
+        "cache_len_after_commit": 429,
+        "emitted_tokens": [
+          1493
+        ],
+        "verify_argmax": [
+          6872
+        ],
+        "next_pending_token": 6872,
+        "cache_digest_before": "7c2fd4b8d50c514690e45775dd00460799242389985135373cf1ed779e2a1220",
+        "cache_digest_after": "a97d490c23247f1f60058d8d9d3fb8299066c851651feae7d0455ff95cafb350"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_044",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 44,
+      "first_mismatch_positions_by_run": [
+        44
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 9,
+        "source": "vanilla",
+        "cache_len_before_verify": 435,
+        "reference_cache_len": 435
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5335055780014955,
+      "batched_total_time_s": 2.666391278999072,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.11042899859603494,
+        "verify_time_ms": 27.65535900107352,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 2.320777177810669,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 44,
+        "cache_len_before_verify": 470,
+        "cache_len_after_commit": 471,
+        "emitted_tokens": [
+          1730
+        ],
+        "verify_argmax": [
+          448
+        ],
+        "next_pending_token": 448,
+        "cache_digest_before": "f9303597735e990fde00c6fa8b6b3bbc2bee3d298bae403073b67d503934f665",
+        "cache_digest_after": "9eced7a24680a2a156844678dfd1601a0758b2becb9bde475e7a1c356e14bfe2"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_044",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 44,
+      "first_mismatch_positions_by_run": [
+        44
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 9,
+        "source": "vanilla",
+        "cache_len_before_verify": 435,
+        "reference_cache_len": 435
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5335055780014955,
+      "batched_total_time_s": 2.666391278999072,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.11042899859603494,
+        "verify_time_ms": 27.65535900107352,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 2.320777177810669,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 44,
+        "cache_len_before_verify": 470,
+        "cache_len_after_commit": 471,
+        "emitted_tokens": [
+          1730
+        ],
+        "verify_argmax": [
+          448
+        ],
+        "next_pending_token": 448,
+        "cache_digest_before": "f9303597735e990fde00c6fa8b6b3bbc2bee3d298bae403073b67d503934f665",
+        "cache_digest_after": "9eced7a24680a2a156844678dfd1601a0758b2becb9bde475e7a1c356e14bfe2"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_044",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 44,
+      "first_mismatch_positions_by_run": [
+        44
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 9,
+        "source": "vanilla",
+        "cache_len_before_verify": 435,
+        "reference_cache_len": 435
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5335055780014955,
+      "batched_total_time_s": 2.666391278999072,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.11042899859603494,
+        "verify_time_ms": 27.65535900107352,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 2.320777177810669,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 44,
+        "cache_len_before_verify": 470,
+        "cache_len_after_commit": 471,
+        "emitted_tokens": [
+          1730
+        ],
+        "verify_argmax": [
+          448
+        ],
+        "next_pending_token": 448,
+        "cache_digest_before": "f9303597735e990fde00c6fa8b6b3bbc2bee3d298bae403073b67d503934f665",
+        "cache_digest_after": "9eced7a24680a2a156844678dfd1601a0758b2becb9bde475e7a1c356e14bfe2"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_046",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 38,
+      "first_mismatch_positions_by_run": [
+        38
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 2,
+        "source": null,
+        "cache_len_before_verify": 378,
+        "reference_cache_len": 378
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6962809299984656,
+      "batched_total_time_s": 2.4764781890007725,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_count": 1,
+        "draft_time_ms": 0.20639299691538326,
+        "verify_time_ms": 42.1973539996543,
+        "cache_time_ms": 0.3166520000377204,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.0681452676653862,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 38,
+        "cache_len_before_verify": 414,
+        "cache_len_after_commit": 415,
+        "pending_token": 387,
+        "draft_tokens": [
+          36302,
+          3881,
+          438,
+          26518
+        ],
+        "verify_argmax": [
+          8454,
+          8454,
+          438,
+          26518,
+          11
+        ],
+        "verify_margin": [
+          4.75,
+          4.375,
+          4.875,
+          3.125,
+          0.375
+        ],
+        "emitted_tokens": [
+          387
+        ],
+        "next_pending_token": 8454,
+        "cache_digest_before": "21b12eae0819efcd2ac87f2af487aa129daa6d456fae2c42ee81d2c2c83ded47",
+        "cache_digest_after": "660ab592979700ab9f1aa455f0fdbb4956e5bd1448836ec398d1cd6bd84af192"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_046",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 38,
+      "first_mismatch_positions_by_run": [
+        38
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 2,
+        "source": null,
+        "cache_len_before_verify": 378,
+        "reference_cache_len": 378
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6962809299984656,
+      "batched_total_time_s": 2.4764781890007725,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_count": 1,
+        "draft_time_ms": 0.20639299691538326,
+        "verify_time_ms": 42.1973539996543,
+        "cache_time_ms": 0.3166520000377204,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.0681452676653862,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 38,
+        "cache_len_before_verify": 414,
+        "cache_len_after_commit": 415,
+        "pending_token": 387,
+        "draft_tokens": [
+          36302,
+          3881,
+          438,
+          26518
+        ],
+        "verify_argmax": [
+          8454,
+          8454,
+          438,
+          26518,
+          11
+        ],
+        "verify_margin": [
+          4.75,
+          4.375,
+          4.875,
+          3.125,
+          0.375
+        ],
+        "emitted_tokens": [
+          387
+        ],
+        "next_pending_token": 8454,
+        "cache_digest_before": "21b12eae0819efcd2ac87f2af487aa129daa6d456fae2c42ee81d2c2c83ded47",
+        "cache_digest_after": "660ab592979700ab9f1aa455f0fdbb4956e5bd1448836ec398d1cd6bd84af192"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_046",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 38,
+      "first_mismatch_positions_by_run": [
+        38
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 2,
+        "source": null,
+        "cache_len_before_verify": 378,
+        "reference_cache_len": 378
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6962809299984656,
+      "batched_total_time_s": 2.4764781890007725,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_count": 1,
+        "draft_time_ms": 0.20639299691538326,
+        "verify_time_ms": 42.1973539996543,
+        "cache_time_ms": 0.3166520000377204,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.0681452676653862,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 38,
+        "cache_len_before_verify": 414,
+        "cache_len_after_commit": 415,
+        "pending_token": 387,
+        "draft_tokens": [
+          36302,
+          3881,
+          438,
+          26518
+        ],
+        "verify_argmax": [
+          8454,
+          8454,
+          438,
+          26518,
+          11
+        ],
+        "verify_margin": [
+          4.75,
+          4.375,
+          4.875,
+          3.125,
+          0.375
+        ],
+        "emitted_tokens": [
+          387
+        ],
+        "next_pending_token": 8454,
+        "cache_digest_before": "21b12eae0819efcd2ac87f2af487aa129daa6d456fae2c42ee81d2c2c83ded47",
+        "cache_digest_after": "660ab592979700ab9f1aa455f0fdbb4956e5bd1448836ec398d1cd6bd84af192"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_047",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 28,
+      "first_mismatch_positions_by_run": [
+        28
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 10,
+        "source": "vanilla",
+        "cache_len_before_verify": 373,
+        "reference_cache_len": 373
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6497668010015332,
+      "batched_total_time_s": 2.7905207879994123,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.10507600018172525,
+        "verify_time_ms": 30.332910999277374,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 2.6313254833221436,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 28,
+        "cache_len_before_verify": 391,
+        "cache_len_after_commit": 392,
+        "emitted_tokens": [
+          374
+        ],
+        "verify_argmax": [
+          1660
+        ],
+        "next_pending_token": 1660,
+        "cache_digest_before": "9019f7b3549fe5604a7db8260ca6e8549ab78bd9b8dc0d568e3ac2639fd8d44c",
+        "cache_digest_after": "199fca4c06702e88edf6ef49b4d561f3d1386d25da4b15d77df73252342e504d"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_047",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 28,
+      "first_mismatch_positions_by_run": [
+        28
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 10,
+        "source": "vanilla",
+        "cache_len_before_verify": 373,
+        "reference_cache_len": 373
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6497668010015332,
+      "batched_total_time_s": 2.7905207879994123,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.10507600018172525,
+        "verify_time_ms": 30.332910999277374,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 2.6313254833221436,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 28,
+        "cache_len_before_verify": 391,
+        "cache_len_after_commit": 392,
+        "emitted_tokens": [
+          374
+        ],
+        "verify_argmax": [
+          1660
+        ],
+        "next_pending_token": 1660,
+        "cache_digest_before": "9019f7b3549fe5604a7db8260ca6e8549ab78bd9b8dc0d568e3ac2639fd8d44c",
+        "cache_digest_after": "199fca4c06702e88edf6ef49b4d561f3d1386d25da4b15d77df73252342e504d"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_047",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 28,
+      "first_mismatch_positions_by_run": [
+        28
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 10,
+        "source": "vanilla",
+        "cache_len_before_verify": 373,
+        "reference_cache_len": 373
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.6497668010015332,
+      "batched_total_time_s": 2.7905207879994123,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.10507600018172525,
+        "verify_time_ms": 30.332910999277374,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 2.6313254833221436,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 28,
+        "cache_len_before_verify": 391,
+        "cache_len_after_commit": 392,
+        "emitted_tokens": [
+          374
+        ],
+        "verify_argmax": [
+          1660
+        ],
+        "next_pending_token": 1660,
+        "cache_digest_before": "9019f7b3549fe5604a7db8260ca6e8549ab78bd9b8dc0d568e3ac2639fd8d44c",
+        "cache_digest_after": "199fca4c06702e88edf6ef49b4d561f3d1386d25da4b15d77df73252342e504d"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_048",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 17,
+      "first_mismatch_positions_by_run": [
+        17
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 5,
+        "source": "vanilla",
+        "cache_len_before_verify": 495,
+        "reference_cache_len": 495
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.7287116699990293,
+      "batched_total_time_s": 2.9893707880000875,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.11959199764532968,
+        "verify_time_ms": 29.475064999132883,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 5.439513552119024e-05,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 17,
+        "cache_len_before_verify": 507,
+        "cache_len_after_commit": 508,
+        "emitted_tokens": [
+          3601
+        ],
+        "verify_argmax": [
+          311
+        ],
+        "next_pending_token": 311,
+        "cache_digest_before": "5c0e4cfe0e63d1a39d0201ee4e21162e4ea6cb7a8d0113f3bb1177bd14cbb9da",
+        "cache_digest_after": "e7944e2447f2cd9b0e11474a8ed84ba638ee261db38982a6a6cf12c961086d82"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_048",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 17,
+      "first_mismatch_positions_by_run": [
+        17
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 5,
+        "source": "vanilla",
+        "cache_len_before_verify": 495,
+        "reference_cache_len": 495
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.7287116699990293,
+      "batched_total_time_s": 2.9893707880000875,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.11959199764532968,
+        "verify_time_ms": 29.475064999132883,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 5.439513552119024e-05,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 17,
+        "cache_len_before_verify": 507,
+        "cache_len_after_commit": 508,
+        "emitted_tokens": [
+          3601
+        ],
+        "verify_argmax": [
+          311
+        ],
+        "next_pending_token": 311,
+        "cache_digest_before": "5c0e4cfe0e63d1a39d0201ee4e21162e4ea6cb7a8d0113f3bb1177bd14cbb9da",
+        "cache_digest_after": "e7944e2447f2cd9b0e11474a8ed84ba638ee261db38982a6a6cf12c961086d82"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "cnndm",
+      "prompt_id": "cnndm_048",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 17,
+      "first_mismatch_positions_by_run": [
+        17
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 5,
+        "source": "vanilla",
+        "cache_len_before_verify": 495,
+        "reference_cache_len": 495
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.7287116699990293,
+      "batched_total_time_s": 2.9893707880000875,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.11959199764532968,
+        "verify_time_ms": 29.475064999132883,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 5.439513552119024e-05,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 17,
+        "cache_len_before_verify": 507,
+        "cache_len_after_commit": 508,
+        "emitted_tokens": [
+          3601
+        ],
+        "verify_argmax": [
+          311
+        ],
+        "next_pending_token": 311,
+        "cache_digest_before": "5c0e4cfe0e63d1a39d0201ee4e21162e4ea6cb7a8d0113f3bb1177bd14cbb9da",
+        "cache_digest_after": "e7944e2447f2cd9b0e11474a8ed84ba638ee261db38982a6a6cf12c961086d82"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_013",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 18,
+      "first_mismatch_positions_by_run": [
+        18
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 9,
+        "source": "vanilla",
+        "cache_len_before_verify": 77,
+        "reference_cache_len": 77
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5689966609970725,
+      "batched_total_time_s": 1.4777480410011776,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 4,
+        "rejected_at": null,
+        "emitted_count": 5,
+        "draft_time_ms": 0.12086200149497017,
+        "verify_time_ms": 41.685259999212576,
+        "cache_time_ms": 0.2076210039376747,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.18485639989376068,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 16,
+        "cache_len_before_verify": 84,
+        "cache_len_after_commit": 89,
+        "pending_token": 2932,
+        "draft_tokens": [
+          6088,
+          264,
+          4843,
+          315
+        ],
+        "verify_argmax": [
+          6088,
+          264,
+          4843,
+          315,
+          1059
+        ],
+        "verify_margin": [
+          5.5,
+          0.125,
+          7.125,
+          3.125,
+          3.375
+        ],
+        "emitted_tokens": [
+          2932,
+          6088,
+          264,
+          4843,
+          315
+        ],
+        "next_pending_token": 1059,
+        "cache_digest_before": "f3aabe36db8c634c0342fe8bbf6245a3ef387d09608f2f5c8dcca81b107bc6d8",
+        "cache_digest_after": "67f80cadca55aacd49d8545154f76f32b6f65e5278cf653f385c7278405e6643"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_013",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 18,
+      "first_mismatch_positions_by_run": [
+        18
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 9,
+        "source": "vanilla",
+        "cache_len_before_verify": 77,
+        "reference_cache_len": 77
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5689966609970725,
+      "batched_total_time_s": 1.4777480410011776,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 4,
+        "rejected_at": null,
+        "emitted_count": 5,
+        "draft_time_ms": 0.12086200149497017,
+        "verify_time_ms": 41.685259999212576,
+        "cache_time_ms": 0.2076210039376747,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.18485639989376068,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 16,
+        "cache_len_before_verify": 84,
+        "cache_len_after_commit": 89,
+        "pending_token": 2932,
+        "draft_tokens": [
+          6088,
+          264,
+          4843,
+          315
+        ],
+        "verify_argmax": [
+          6088,
+          264,
+          4843,
+          315,
+          1059
+        ],
+        "verify_margin": [
+          5.5,
+          0.125,
+          7.125,
+          3.125,
+          3.375
+        ],
+        "emitted_tokens": [
+          2932,
+          6088,
+          264,
+          4843,
+          315
+        ],
+        "next_pending_token": 1059,
+        "cache_digest_before": "f3aabe36db8c634c0342fe8bbf6245a3ef387d09608f2f5c8dcca81b107bc6d8",
+        "cache_digest_after": "67f80cadca55aacd49d8545154f76f32b6f65e5278cf653f385c7278405e6643"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_013",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 18,
+      "first_mismatch_positions_by_run": [
+        18
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 9,
+        "source": "vanilla",
+        "cache_len_before_verify": 77,
+        "reference_cache_len": 77
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5689966609970725,
+      "batched_total_time_s": 1.4777480410011776,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 4,
+        "rejected_at": null,
+        "emitted_count": 5,
+        "draft_time_ms": 0.12086200149497017,
+        "verify_time_ms": 41.685259999212576,
+        "cache_time_ms": 0.2076210039376747,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.18485639989376068,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 16,
+        "cache_len_before_verify": 84,
+        "cache_len_after_commit": 89,
+        "pending_token": 2932,
+        "draft_tokens": [
+          6088,
+          264,
+          4843,
+          315
+        ],
+        "verify_argmax": [
+          6088,
+          264,
+          4843,
+          315,
+          1059
+        ],
+        "verify_margin": [
+          5.5,
+          0.125,
+          7.125,
+          3.125,
+          3.375
+        ],
+        "emitted_tokens": [
+          2932,
+          6088,
+          264,
+          4843,
+          315
+        ],
+        "next_pending_token": 1059,
+        "cache_digest_before": "f3aabe36db8c634c0342fe8bbf6245a3ef387d09608f2f5c8dcca81b107bc6d8",
+        "cache_digest_after": "67f80cadca55aacd49d8545154f76f32b6f65e5278cf653f385c7278405e6643"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_014",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 25,
+      "first_mismatch_positions_by_run": [
+        25
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 14,
+        "source": null,
+        "cache_len_before_verify": 77,
+        "reference_cache_len": 77
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.4711927509997622,
+      "batched_total_time_s": 1.7207764859995223,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.05599799987976439,
+        "verify_time_ms": 29.14130699718953,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.05224332585930824,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 25,
+        "cache_len_before_verify": 88,
+        "cache_len_after_commit": 89,
+        "emitted_tokens": [
+          320
+        ],
+        "verify_argmax": [
+          17
+        ],
+        "next_pending_token": 17,
+        "cache_digest_before": "78295f9d83e9fcebfcecca05bc9c1b9f3149f49d816583f6135d1b4106f0a833",
+        "cache_digest_after": "2e71eac6cf6a443ac56aedb35f3a3f1f5ee62a630620ac16ec49a7a4c58f6722"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_014",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 25,
+      "first_mismatch_positions_by_run": [
+        25
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 14,
+        "source": null,
+        "cache_len_before_verify": 77,
+        "reference_cache_len": 77
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.4711927509997622,
+      "batched_total_time_s": 1.7207764859995223,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.05599799987976439,
+        "verify_time_ms": 29.14130699718953,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.05224332585930824,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 25,
+        "cache_len_before_verify": 88,
+        "cache_len_after_commit": 89,
+        "emitted_tokens": [
+          320
+        ],
+        "verify_argmax": [
+          17
+        ],
+        "next_pending_token": 17,
+        "cache_digest_before": "78295f9d83e9fcebfcecca05bc9c1b9f3149f49d816583f6135d1b4106f0a833",
+        "cache_digest_after": "2e71eac6cf6a443ac56aedb35f3a3f1f5ee62a630620ac16ec49a7a4c58f6722"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_014",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 25,
+      "first_mismatch_positions_by_run": [
+        25
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 14,
+        "source": null,
+        "cache_len_before_verify": 77,
+        "reference_cache_len": 77
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.4711927509997622,
+      "batched_total_time_s": 1.7207764859995223,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.05599799987976439,
+        "verify_time_ms": 29.14130699718953,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.05224332585930824,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 25,
+        "cache_len_before_verify": 88,
+        "cache_len_after_commit": 89,
+        "emitted_tokens": [
+          320
+        ],
+        "verify_argmax": [
+          17
+        ],
+        "next_pending_token": 17,
+        "cache_digest_before": "78295f9d83e9fcebfcecca05bc9c1b9f3149f49d816583f6135d1b4106f0a833",
+        "cache_digest_after": "2e71eac6cf6a443ac56aedb35f3a3f1f5ee62a630620ac16ec49a7a4c58f6722"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_017",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 10,
+      "first_mismatch_positions_by_run": [
+        10
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 6,
+        "source": "vanilla",
+        "cache_len_before_verify": 74,
+        "reference_cache_len": 74
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5437127129989676,
+      "batched_total_time_s": 1.8218955299998925,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.06380000195349567,
+        "verify_time_ms": 30.16859499985003,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.42027968168258667,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 10,
+        "cache_len_before_verify": 78,
+        "cache_len_after_commit": 79,
+        "emitted_tokens": [
+          11047
+        ],
+        "verify_argmax": [
+          1059
+        ],
+        "next_pending_token": 1059,
+        "cache_digest_before": "af0f92b342a789a538c725751ca722c4033930f7318c34b6c1f94e5758f647ba",
+        "cache_digest_after": "0035ac154b478b1a5d0e4eb6524ff48f7ca0599639f62f70c7b09d7a9c3149a4"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_017",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 10,
+      "first_mismatch_positions_by_run": [
+        10
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 6,
+        "source": "vanilla",
+        "cache_len_before_verify": 74,
+        "reference_cache_len": 74
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5437127129989676,
+      "batched_total_time_s": 1.8218955299998925,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.06380000195349567,
+        "verify_time_ms": 30.16859499985003,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.42027968168258667,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 10,
+        "cache_len_before_verify": 78,
+        "cache_len_after_commit": 79,
+        "emitted_tokens": [
+          11047
+        ],
+        "verify_argmax": [
+          1059
+        ],
+        "next_pending_token": 1059,
+        "cache_digest_before": "af0f92b342a789a538c725751ca722c4033930f7318c34b6c1f94e5758f647ba",
+        "cache_digest_after": "0035ac154b478b1a5d0e4eb6524ff48f7ca0599639f62f70c7b09d7a9c3149a4"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_017",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 10,
+      "first_mismatch_positions_by_run": [
+        10
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 6,
+        "source": "vanilla",
+        "cache_len_before_verify": 74,
+        "reference_cache_len": 74
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5437127129989676,
+      "batched_total_time_s": 1.8218955299998925,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.06380000195349567,
+        "verify_time_ms": 30.16859499985003,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.42027968168258667,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 10,
+        "cache_len_before_verify": 78,
+        "cache_len_after_commit": 79,
+        "emitted_tokens": [
+          11047
+        ],
+        "verify_argmax": [
+          1059
+        ],
+        "next_pending_token": 1059,
+        "cache_digest_before": "af0f92b342a789a538c725751ca722c4033930f7318c34b6c1f94e5758f647ba",
+        "cache_digest_after": "0035ac154b478b1a5d0e4eb6524ff48f7ca0599639f62f70c7b09d7a9c3149a4"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_022",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 33,
+      "first_mismatch_positions_by_run": [
+        33
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 5,
+        "source": "vanilla",
+        "cache_len_before_verify": 71,
+        "reference_cache_len": 71
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.3304964610033494,
+      "batched_total_time_s": 1.7148015619968646,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 4,
+        "rejected_at": null,
+        "emitted_count": 5,
+        "draft_time_ms": 0.1319109978794586,
+        "verify_time_ms": 42.11865699835471,
+        "cache_time_ms": 0.23553199571324512,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.13278287649154663,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 30,
+        "cache_len_before_verify": 96,
+        "cache_len_after_commit": 101,
+        "pending_token": 220,
+        "draft_tokens": [
+          23,
+          6310,
+          389,
+          7589
+        ],
+        "verify_argmax": [
+          23,
+          6310,
+          389,
+          7589,
+          624
+        ],
+        "verify_margin": [
+          9.0,
+          7.125,
+          0.0,
+          6.375,
+          4.0
+        ],
+        "emitted_tokens": [
+          220,
+          23,
+          6310,
+          389,
+          7589
+        ],
+        "next_pending_token": 624,
+        "cache_digest_before": "a271f7e731544fc57d886cb40964f72dacb50d74640883bf52d3ffcbe05c65e5",
+        "cache_digest_after": "905df34ca14ebef83399e47ec8cb2808aded5d4ce53115e6500ebd06a2f88095"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_022",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 33,
+      "first_mismatch_positions_by_run": [
+        33
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 5,
+        "source": "vanilla",
+        "cache_len_before_verify": 71,
+        "reference_cache_len": 71
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.3304964610033494,
+      "batched_total_time_s": 1.7148015619968646,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 4,
+        "rejected_at": null,
+        "emitted_count": 5,
+        "draft_time_ms": 0.1319109978794586,
+        "verify_time_ms": 42.11865699835471,
+        "cache_time_ms": 0.23553199571324512,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.13278287649154663,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 30,
+        "cache_len_before_verify": 96,
+        "cache_len_after_commit": 101,
+        "pending_token": 220,
+        "draft_tokens": [
+          23,
+          6310,
+          389,
+          7589
+        ],
+        "verify_argmax": [
+          23,
+          6310,
+          389,
+          7589,
+          624
+        ],
+        "verify_margin": [
+          9.0,
+          7.125,
+          0.0,
+          6.375,
+          4.0
+        ],
+        "emitted_tokens": [
+          220,
+          23,
+          6310,
+          389,
+          7589
+        ],
+        "next_pending_token": 624,
+        "cache_digest_before": "a271f7e731544fc57d886cb40964f72dacb50d74640883bf52d3ffcbe05c65e5",
+        "cache_digest_after": "905df34ca14ebef83399e47ec8cb2808aded5d4ce53115e6500ebd06a2f88095"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_022",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 33,
+      "first_mismatch_positions_by_run": [
+        33
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 5,
+        "source": "vanilla",
+        "cache_len_before_verify": 71,
+        "reference_cache_len": 71
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.3304964610033494,
+      "batched_total_time_s": 1.7148015619968646,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 4,
+        "rejected_at": null,
+        "emitted_count": 5,
+        "draft_time_ms": 0.1319109978794586,
+        "verify_time_ms": 42.11865699835471,
+        "cache_time_ms": 0.23553199571324512,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.13278287649154663,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 30,
+        "cache_len_before_verify": 96,
+        "cache_len_after_commit": 101,
+        "pending_token": 220,
+        "draft_tokens": [
+          23,
+          6310,
+          389,
+          7589
+        ],
+        "verify_argmax": [
+          23,
+          6310,
+          389,
+          7589,
+          624
+        ],
+        "verify_margin": [
+          9.0,
+          7.125,
+          0.0,
+          6.375,
+          4.0
+        ],
+        "emitted_tokens": [
+          220,
+          23,
+          6310,
+          389,
+          7589
+        ],
+        "next_pending_token": 624,
+        "cache_digest_before": "a271f7e731544fc57d886cb40964f72dacb50d74640883bf52d3ffcbe05c65e5",
+        "cache_digest_after": "905df34ca14ebef83399e47ec8cb2808aded5d4ce53115e6500ebd06a2f88095"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_028",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 44,
+      "first_mismatch_positions_by_run": [
+        44
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 1,
+        "source": "vanilla",
+        "cache_len_before_verify": 62,
+        "reference_cache_len": 62
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.3345429109976976,
+      "batched_total_time_s": 1.4758686550012499,
+      "cycle_at_divergence": {
+        "k": 3,
+        "accepted": 2,
+        "rejected_at": 2,
+        "emitted_count": 3,
+        "draft_time_ms": 0.11966300007770769,
+        "verify_time_ms": 40.69016100038425,
+        "cache_time_ms": 0.34352499642409384,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.0073921289294958115,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 44,
+        "cache_len_before_verify": 105,
+        "cache_len_after_commit": 108,
+        "pending_token": 566,
+        "draft_tokens": [
+          30696,
+          220,
+          17
+        ],
+        "verify_argmax": [
+          30696,
+          220,
+          19,
+          15
+        ],
+        "verify_margin": [
+          4.625,
+          9.875,
+          7.125,
+          6.125
+        ],
+        "emitted_tokens": [
+          566,
+          30696,
+          220
+        ],
+        "next_pending_token": 19,
+        "cache_digest_before": "dbb68837714140c7ecc9f2c61c48aaf18e921b0c4a8facbcffbd4904019c72e0",
+        "cache_digest_after": "329ceaf0a1f67482efa0d12f864529fc6e0f648258eac03429a3a5430afe3164"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_028",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 44,
+      "first_mismatch_positions_by_run": [
+        44
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 1,
+        "source": "vanilla",
+        "cache_len_before_verify": 62,
+        "reference_cache_len": 62
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.3345429109976976,
+      "batched_total_time_s": 1.4758686550012499,
+      "cycle_at_divergence": {
+        "k": 3,
+        "accepted": 2,
+        "rejected_at": 2,
+        "emitted_count": 3,
+        "draft_time_ms": 0.11966300007770769,
+        "verify_time_ms": 40.69016100038425,
+        "cache_time_ms": 0.34352499642409384,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.0073921289294958115,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 44,
+        "cache_len_before_verify": 105,
+        "cache_len_after_commit": 108,
+        "pending_token": 566,
+        "draft_tokens": [
+          30696,
+          220,
+          17
+        ],
+        "verify_argmax": [
+          30696,
+          220,
+          19,
+          15
+        ],
+        "verify_margin": [
+          4.625,
+          9.875,
+          7.125,
+          6.125
+        ],
+        "emitted_tokens": [
+          566,
+          30696,
+          220
+        ],
+        "next_pending_token": 19,
+        "cache_digest_before": "dbb68837714140c7ecc9f2c61c48aaf18e921b0c4a8facbcffbd4904019c72e0",
+        "cache_digest_after": "329ceaf0a1f67482efa0d12f864529fc6e0f648258eac03429a3a5430afe3164"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_028",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 44,
+      "first_mismatch_positions_by_run": [
+        44
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 1,
+        "source": "vanilla",
+        "cache_len_before_verify": 62,
+        "reference_cache_len": 62
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.3345429109976976,
+      "batched_total_time_s": 1.4758686550012499,
+      "cycle_at_divergence": {
+        "k": 3,
+        "accepted": 2,
+        "rejected_at": 2,
+        "emitted_count": 3,
+        "draft_time_ms": 0.11966300007770769,
+        "verify_time_ms": 40.69016100038425,
+        "cache_time_ms": 0.34352499642409384,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.0073921289294958115,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 44,
+        "cache_len_before_verify": 105,
+        "cache_len_after_commit": 108,
+        "pending_token": 566,
+        "draft_tokens": [
+          30696,
+          220,
+          17
+        ],
+        "verify_argmax": [
+          30696,
+          220,
+          19,
+          15
+        ],
+        "verify_margin": [
+          4.625,
+          9.875,
+          7.125,
+          6.125
+        ],
+        "emitted_tokens": [
+          566,
+          30696,
+          220
+        ],
+        "next_pending_token": 19,
+        "cache_digest_before": "dbb68837714140c7ecc9f2c61c48aaf18e921b0c4a8facbcffbd4904019c72e0",
+        "cache_digest_after": "329ceaf0a1f67482efa0d12f864529fc6e0f648258eac03429a3a5430afe3164"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_032",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 36,
+      "first_mismatch_positions_by_run": [
+        36
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 7,
+        "source": "vanilla",
+        "cache_len_before_verify": 59,
+        "reference_cache_len": 59
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5521831580008438,
+      "batched_total_time_s": 1.709989761999168,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.04088400237378664,
+        "verify_time_ms": 28.994085998419905,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.46970340609550476,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 36,
+        "cache_len_before_verify": 88,
+        "cache_len_after_commit": 89,
+        "emitted_tokens": [
+          624
+        ],
+        "verify_argmax": [
+          256
+        ],
+        "next_pending_token": 256,
+        "cache_digest_before": "0fd87e20f32ce1e29ed7e86f6ca7ed2d27c7051b66cb975742498b8e8fa43554",
+        "cache_digest_after": "bcc67bd28b93be770fe46881ce3c387f75d22102109c86b4ee6b910d1e01f188"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_032",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 36,
+      "first_mismatch_positions_by_run": [
+        36
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 7,
+        "source": "vanilla",
+        "cache_len_before_verify": 59,
+        "reference_cache_len": 59
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5521831580008438,
+      "batched_total_time_s": 1.709989761999168,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.04088400237378664,
+        "verify_time_ms": 28.994085998419905,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.46970340609550476,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 36,
+        "cache_len_before_verify": 88,
+        "cache_len_after_commit": 89,
+        "emitted_tokens": [
+          624
+        ],
+        "verify_argmax": [
+          256
+        ],
+        "next_pending_token": 256,
+        "cache_digest_before": "0fd87e20f32ce1e29ed7e86f6ca7ed2d27c7051b66cb975742498b8e8fa43554",
+        "cache_digest_after": "bcc67bd28b93be770fe46881ce3c387f75d22102109c86b4ee6b910d1e01f188"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_032",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 36,
+      "first_mismatch_positions_by_run": [
+        36
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 7,
+        "source": "vanilla",
+        "cache_len_before_verify": 59,
+        "reference_cache_len": 59
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5521831580008438,
+      "batched_total_time_s": 1.709989761999168,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.04088400237378664,
+        "verify_time_ms": 28.994085998419905,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.46970340609550476,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 36,
+        "cache_len_before_verify": 88,
+        "cache_len_after_commit": 89,
+        "emitted_tokens": [
+          624
+        ],
+        "verify_argmax": [
+          256
+        ],
+        "next_pending_token": 256,
+        "cache_digest_before": "0fd87e20f32ce1e29ed7e86f6ca7ed2d27c7051b66cb975742498b8e8fa43554",
+        "cache_digest_after": "bcc67bd28b93be770fe46881ce3c387f75d22102109c86b4ee6b910d1e01f188"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_039",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 27,
+      "first_mismatch_positions_by_run": [
+        27
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 12,
+        "source": null,
+        "cache_len_before_verify": 95,
+        "reference_cache_len": 95
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5577805240027374,
+      "batched_total_time_s": 1.664703512997221,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.07580899909953587,
+        "verify_time_ms": 31.03063500020653,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.3449760973453522,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 27,
+        "cache_len_before_verify": 110,
+        "cache_len_after_commit": 111,
+        "emitted_tokens": [
+          42659
+        ],
+        "verify_argmax": [
+          374
+        ],
+        "next_pending_token": 374,
+        "cache_digest_before": "6c582a73d0400fc90c6831e3b872257640af66b84b0b819d2d17a84cf31650fe",
+        "cache_digest_after": "c7aa1b5e7ec114fa18e4d31b6204ccb14ff4378dc418739e801424e9a2d9c57c"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_039",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 27,
+      "first_mismatch_positions_by_run": [
+        27
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 12,
+        "source": null,
+        "cache_len_before_verify": 95,
+        "reference_cache_len": 95
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5577805240027374,
+      "batched_total_time_s": 1.664703512997221,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.07580899909953587,
+        "verify_time_ms": 31.03063500020653,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.3449760973453522,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 27,
+        "cache_len_before_verify": 110,
+        "cache_len_after_commit": 111,
+        "emitted_tokens": [
+          42659
+        ],
+        "verify_argmax": [
+          374
+        ],
+        "next_pending_token": 374,
+        "cache_digest_before": "6c582a73d0400fc90c6831e3b872257640af66b84b0b819d2d17a84cf31650fe",
+        "cache_digest_after": "c7aa1b5e7ec114fa18e4d31b6204ccb14ff4378dc418739e801424e9a2d9c57c"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "gsm8k",
+      "prompt_id": "gsm8k_039",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 27,
+      "first_mismatch_positions_by_run": [
+        27
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 12,
+        "source": null,
+        "cache_len_before_verify": 95,
+        "reference_cache_len": 95
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5577805240027374,
+      "batched_total_time_s": 1.664703512997221,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.07580899909953587,
+        "verify_time_ms": 31.03063500020653,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.3449760973453522,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 27,
+        "cache_len_before_verify": 110,
+        "cache_len_after_commit": 111,
+        "emitted_tokens": [
+          42659
+        ],
+        "verify_argmax": [
+          374
+        ],
+        "next_pending_token": 374,
+        "cache_digest_before": "6c582a73d0400fc90c6831e3b872257640af66b84b0b819d2d17a84cf31650fe",
+        "cache_digest_after": "c7aa1b5e7ec114fa18e4d31b6204ccb14ff4378dc418739e801424e9a2d9c57c"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/39",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 1,
+      "first_mismatch_positions_by_run": [
+        1
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 1,
+        "source": "vanilla",
+        "cache_len_before_verify": 95,
+        "reference_cache_len": 95
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.300540420001198,
+      "batched_total_time_s": 2.078595752998808,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.06726100036757998,
+        "verify_time_ms": 30.865296997944824,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.5015878081321716,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 1,
+        "cache_len_before_verify": 95,
+        "cache_len_after_commit": 96,
+        "emitted_tokens": [
+          600
+        ],
+        "verify_argmax": [
+          284
+        ],
+        "next_pending_token": 284,
+        "cache_digest_before": "766aa8d80839c8db58134214ddf79398d981772bcbd96ff9e23ac012920ac4f7",
+        "cache_digest_after": "0e7ff060d118355ec0f585c14dd753ca370d9cd610bc0e0380f794221afd8044"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/39",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 1,
+      "first_mismatch_positions_by_run": [
+        1
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 1,
+        "source": "vanilla",
+        "cache_len_before_verify": 95,
+        "reference_cache_len": 95
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.300540420001198,
+      "batched_total_time_s": 2.078595752998808,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.06726100036757998,
+        "verify_time_ms": 30.865296997944824,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.5015878081321716,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 1,
+        "cache_len_before_verify": 95,
+        "cache_len_after_commit": 96,
+        "emitted_tokens": [
+          600
+        ],
+        "verify_argmax": [
+          284
+        ],
+        "next_pending_token": 284,
+        "cache_digest_before": "766aa8d80839c8db58134214ddf79398d981772bcbd96ff9e23ac012920ac4f7",
+        "cache_digest_after": "0e7ff060d118355ec0f585c14dd753ca370d9cd610bc0e0380f794221afd8044"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/39",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 1,
+      "first_mismatch_positions_by_run": [
+        1
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 1,
+        "source": "vanilla",
+        "cache_len_before_verify": 95,
+        "reference_cache_len": 95
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.300540420001198,
+      "batched_total_time_s": 2.078595752998808,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.06726100036757998,
+        "verify_time_ms": 30.865296997944824,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.5015878081321716,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 1,
+        "cache_len_before_verify": 95,
+        "cache_len_after_commit": 96,
+        "emitted_tokens": [
+          600
+        ],
+        "verify_argmax": [
+          284
+        ],
+        "next_pending_token": 284,
+        "cache_digest_before": "766aa8d80839c8db58134214ddf79398d981772bcbd96ff9e23ac012920ac4f7",
+        "cache_digest_after": "0e7ff060d118355ec0f585c14dd753ca370d9cd610bc0e0380f794221afd8044"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/40",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 9,
+      "first_mismatch_positions_by_run": [
+        9
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 1,
+        "source": "vanilla",
+        "cache_len_before_verify": 155,
+        "reference_cache_len": 155
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.380401572001574,
+      "batched_total_time_s": 2.027252514999418,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.07145400013541803,
+        "verify_time_ms": 31.296025001211092,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.8360350131988525,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 9,
+        "cache_len_before_verify": 163,
+        "cache_len_after_commit": 164,
+        "emitted_tokens": [
+          2629
+        ],
+        "verify_argmax": [
+          2333
+        ],
+        "next_pending_token": 2333,
+        "cache_digest_before": "2a0f5180013cba375477ee8b14ec764e01a0320dbb46702d3056bc1f66d8778e",
+        "cache_digest_after": "c069578fa69b41f3ed8e851b47f5c45f64cf3f99500673859db1145a7dc7ac79"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/40",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 9,
+      "first_mismatch_positions_by_run": [
+        9
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 1,
+        "source": "vanilla",
+        "cache_len_before_verify": 155,
+        "reference_cache_len": 155
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.380401572001574,
+      "batched_total_time_s": 2.027252514999418,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.07145400013541803,
+        "verify_time_ms": 31.296025001211092,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.8360350131988525,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 9,
+        "cache_len_before_verify": 163,
+        "cache_len_after_commit": 164,
+        "emitted_tokens": [
+          2629
+        ],
+        "verify_argmax": [
+          2333
+        ],
+        "next_pending_token": 2333,
+        "cache_digest_before": "2a0f5180013cba375477ee8b14ec764e01a0320dbb46702d3056bc1f66d8778e",
+        "cache_digest_after": "c069578fa69b41f3ed8e851b47f5c45f64cf3f99500673859db1145a7dc7ac79"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/40",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 9,
+      "first_mismatch_positions_by_run": [
+        9
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 1,
+        "source": "vanilla",
+        "cache_len_before_verify": 155,
+        "reference_cache_len": 155
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.380401572001574,
+      "batched_total_time_s": 2.027252514999418,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.07145400013541803,
+        "verify_time_ms": 31.296025001211092,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 1.8360350131988525,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 9,
+        "cache_len_before_verify": 163,
+        "cache_len_after_commit": 164,
+        "emitted_tokens": [
+          2629
+        ],
+        "verify_argmax": [
+          2333
+        ],
+        "next_pending_token": 2333,
+        "cache_digest_before": "2a0f5180013cba375477ee8b14ec764e01a0320dbb46702d3056bc1f66d8778e",
+        "cache_digest_after": "c069578fa69b41f3ed8e851b47f5c45f64cf3f99500673859db1145a7dc7ac79"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/45",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 14,
+      "first_mismatch_positions_by_run": [
+        14
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 6,
+        "source": "vanilla",
+        "cache_len_before_verify": 47,
+        "reference_cache_len": 47
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.4145605049998267,
+      "batched_total_time_s": 1.3694958039995981,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.05822400271426886,
+        "verify_time_ms": 30.646610000985675,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.07042533159255981,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 14,
+        "cache_len_before_verify": 55,
+        "cache_len_after_commit": 56,
+        "emitted_tokens": [
+          3622
+        ],
+        "verify_argmax": [
+          11
+        ],
+        "next_pending_token": 11,
+        "cache_digest_before": "3b8e80b429c3dae8159c833ce1c5c36c892e7238cb8c98e5083eec1ae4fe2418",
+        "cache_digest_after": "5fa7c49ae57ce4bd77082419ff6c82fb7e94eab1d5d601b7e10762da5a378a22"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/45",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 14,
+      "first_mismatch_positions_by_run": [
+        14
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 6,
+        "source": "vanilla",
+        "cache_len_before_verify": 47,
+        "reference_cache_len": 47
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.4145605049998267,
+      "batched_total_time_s": 1.3694958039995981,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.05822400271426886,
+        "verify_time_ms": 30.646610000985675,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.07042533159255981,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 14,
+        "cache_len_before_verify": 55,
+        "cache_len_after_commit": 56,
+        "emitted_tokens": [
+          3622
+        ],
+        "verify_argmax": [
+          11
+        ],
+        "next_pending_token": 11,
+        "cache_digest_before": "3b8e80b429c3dae8159c833ce1c5c36c892e7238cb8c98e5083eec1ae4fe2418",
+        "cache_digest_after": "5fa7c49ae57ce4bd77082419ff6c82fb7e94eab1d5d601b7e10762da5a378a22"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/45",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 14,
+      "first_mismatch_positions_by_run": [
+        14
+      ],
+      "target_logit_margin": 0.0,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 6,
+        "source": "vanilla",
+        "cache_len_before_verify": 47,
+        "reference_cache_len": 47
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.4145605049998267,
+      "batched_total_time_s": 1.3694958039995981,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.05822400271426886,
+        "verify_time_ms": 30.646610000985675,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.07042533159255981,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 14,
+        "cache_len_before_verify": 55,
+        "cache_len_after_commit": 56,
+        "emitted_tokens": [
+          3622
+        ],
+        "verify_argmax": [
+          11
+        ],
+        "next_pending_token": 11,
+        "cache_digest_before": "3b8e80b429c3dae8159c833ce1c5c36c892e7238cb8c98e5083eec1ae4fe2418",
+        "cache_digest_after": "5fa7c49ae57ce4bd77082419ff6c82fb7e94eab1d5d601b7e10762da5a378a22"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/46",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 18,
+      "first_mismatch_positions_by_run": [
+        18
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 6,
+        "source": "vanilla",
+        "cache_len_before_verify": 173,
+        "reference_cache_len": 173
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5099885480012745,
+      "batched_total_time_s": 1.8121180840025772,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 3,
+        "rejected_at": 3,
+        "emitted_count": 4,
+        "draft_time_ms": 0.16964400128927082,
+        "verify_time_ms": 42.107795998163056,
+        "cache_time_ms": 0.32133099739439785,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.018880167976021767,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 18,
+        "cache_len_before_verify": 185,
+        "cache_len_after_commit": 189,
+        "pending_token": 421,
+        "draft_tokens": [
+          308,
+          621,
+          220,
+          15
+        ],
+        "verify_argmax": [
+          308,
+          621,
+          220,
+          17,
+          476
+        ],
+        "verify_margin": [
+          6.875,
+          6.375,
+          5.75,
+          6.375,
+          0.25
+        ],
+        "emitted_tokens": [
+          421,
+          308,
+          621,
+          220
+        ],
+        "next_pending_token": 17,
+        "cache_digest_before": "056896a50b385f455551a66656195842c1ae7029f75003baf722e4e99e988a87",
+        "cache_digest_after": "48afaedd9c3257e6e1fb56cf63c6921d2adb97e64c4a17a1d49b6d9478d49830"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/46",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 18,
+      "first_mismatch_positions_by_run": [
+        18
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 6,
+        "source": "vanilla",
+        "cache_len_before_verify": 173,
+        "reference_cache_len": 173
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5099885480012745,
+      "batched_total_time_s": 1.8121180840025772,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 3,
+        "rejected_at": 3,
+        "emitted_count": 4,
+        "draft_time_ms": 0.16964400128927082,
+        "verify_time_ms": 42.107795998163056,
+        "cache_time_ms": 0.32133099739439785,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.018880167976021767,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 18,
+        "cache_len_before_verify": 185,
+        "cache_len_after_commit": 189,
+        "pending_token": 421,
+        "draft_tokens": [
+          308,
+          621,
+          220,
+          15
+        ],
+        "verify_argmax": [
+          308,
+          621,
+          220,
+          17,
+          476
+        ],
+        "verify_margin": [
+          6.875,
+          6.375,
+          5.75,
+          6.375,
+          0.25
+        ],
+        "emitted_tokens": [
+          421,
+          308,
+          621,
+          220
+        ],
+        "next_pending_token": 17,
+        "cache_digest_before": "056896a50b385f455551a66656195842c1ae7029f75003baf722e4e99e988a87",
+        "cache_digest_after": "48afaedd9c3257e6e1fb56cf63c6921d2adb97e64c4a17a1d49b6d9478d49830"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/46",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 18,
+      "first_mismatch_positions_by_run": [
+        18
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 6,
+        "source": "vanilla",
+        "cache_len_before_verify": 173,
+        "reference_cache_len": 173
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5099885480012745,
+      "batched_total_time_s": 1.8121180840025772,
+      "cycle_at_divergence": {
+        "k": 4,
+        "accepted": 3,
+        "rejected_at": 3,
+        "emitted_count": 4,
+        "draft_time_ms": 0.16964400128927082,
+        "verify_time_ms": 42.107795998163056,
+        "cache_time_ms": 0.32133099739439785,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 0.018880167976021767,
+        "router_source": null,
+        "oracle_source": null,
+        "oracle_tps": null,
+        "margin_fallback": false,
+        "minimum_batch_margin": null,
+        "output_start": 18,
+        "cache_len_before_verify": 185,
+        "cache_len_after_commit": 189,
+        "pending_token": 421,
+        "draft_tokens": [
+          308,
+          621,
+          220,
+          15
+        ],
+        "verify_argmax": [
+          308,
+          621,
+          220,
+          17,
+          476
+        ],
+        "verify_margin": [
+          6.875,
+          6.375,
+          5.75,
+          6.375,
+          0.25
+        ],
+        "emitted_tokens": [
+          421,
+          308,
+          621,
+          220
+        ],
+        "next_pending_token": 17,
+        "cache_digest_before": "056896a50b385f455551a66656195842c1ae7029f75003baf722e4e99e988a87",
+        "cache_digest_after": "48afaedd9c3257e6e1fb56cf63c6921d2adb97e64c4a17a1d49b6d9478d49830"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/8",
+      "method": "pld",
+      "repeat_count": 3,
+      "first_mismatch_position": 17,
+      "first_mismatch_positions_by_run": [
+        17
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 9,
+        "source": null,
+        "cache_len_before_verify": 115,
+        "reference_cache_len": 115
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5273653079966607,
+      "batched_total_time_s": 2.101406521996978,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.04770699888467789,
+        "verify_time_ms": 27.198313000553753,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 2.433600902557373,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 17,
+        "cache_len_before_verify": 123,
+        "cache_len_after_commit": 124,
+        "emitted_tokens": [
+          2629
+        ],
+        "verify_argmax": [
+          284
+        ],
+        "next_pending_token": 284,
+        "cache_digest_before": "82eff5e8e65233e676ddfb7d81cc728d580d6f547f827b0d416cfb23928f3a4f",
+        "cache_digest_after": "20c41b2c2bfe1c8a399cc719f3b140067ced24ca7c486f0136bf442b35c026a4"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/8",
+      "method": "pld_gate",
+      "repeat_count": 3,
+      "first_mismatch_position": 17,
+      "first_mismatch_positions_by_run": [
+        17
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 9,
+        "source": null,
+        "cache_len_before_verify": 115,
+        "reference_cache_len": 115
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5273653079966607,
+      "batched_total_time_s": 2.101406521996978,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.04770699888467789,
+        "verify_time_ms": 27.198313000553753,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 2.433600902557373,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 17,
+        "cache_len_before_verify": 123,
+        "cache_len_after_commit": 124,
+        "emitted_tokens": [
+          2629
+        ],
+        "verify_argmax": [
+          284
+        ],
+        "next_pending_token": 284,
+        "cache_digest_before": "82eff5e8e65233e676ddfb7d81cc728d580d6f547f827b0d416cfb23928f3a4f",
+        "cache_digest_after": "20c41b2c2bfe1c8a399cc719f3b140067ced24ca7c486f0136bf442b35c026a4"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    },
+    {
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "benchmark": "humaneval",
+      "prompt_id": "HumanEval/8",
+      "method": "routed",
+      "repeat_count": 3,
+      "first_mismatch_position": 17,
+      "first_mismatch_positions_by_run": [
+        17
+      ],
+      "target_logit_margin": 0.125,
+      "max_logit_error": null,
+      "cache_backend": "static",
+      "verification_mode": "batched",
+      "kv_prefix_equal": false,
+      "first_cache_difference": {
+        "output_start": 9,
+        "source": null,
+        "cache_len_before_verify": 115,
+        "reference_cache_len": 115
+      },
+      "vanilla_repeat_stable": true,
+      "canonical_sequential_match": true,
+      "sequential_total_time_s": 1.5273653079966607,
+      "batched_total_time_s": 2.101406521996978,
+      "cycle_at_divergence": {
+        "k": 0,
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_count": 1,
+        "draft_time_ms": 0.04770699888467789,
+        "verify_time_ms": 27.198313000553753,
+        "cache_time_ms": 0.0,
+        "skip_indices": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "entropy": 2.433600902557373,
+        "router_source": "vanilla",
+        "oracle_source": null,
+        "oracle_tps": null,
+        "source": "vanilla",
+        "output_start": 17,
+        "cache_len_before_verify": 123,
+        "cache_len_after_commit": 124,
+        "emitted_tokens": [
+          2629
+        ],
+        "verify_argmax": [
+          284
+        ],
+        "next_pending_token": 284,
+        "cache_digest_before": "82eff5e8e65233e676ddfb7d81cc728d580d6f547f827b0d416cfb23928f3a4f",
+        "cache_digest_after": "20c41b2c2bfe1c8a399cc719f3b140067ced24ca7c486f0136bf442b35c026a4"
+      },
+      "classification": "numerical_divergence",
+      "evidence": "batched path diverges; vanilla repeat is stable; KV digest differs before the first mismatch; canonical sequential verification matches"
+    }
+  ]
+}

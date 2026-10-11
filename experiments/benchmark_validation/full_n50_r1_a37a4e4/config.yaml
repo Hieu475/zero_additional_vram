@@ -1,0 +1,12 @@
+model: "Qwen/Qwen2.5-3B-Instruct"
+samples_per_bench: 50
+max_new_tokens: 48
+device: "cuda:0"
+output_dir: "experiments/benchmark_validation/full_n50_r1_a37a4e4"
+repeats: 1
+order_seeds: [42, 43, 44]
+warmup_prompts: 2
+resolved_output_dir: "experiments/benchmark_validation/full_n50_r1_a37a4e4"
+decode_tokens_definition: "generated output tokens excluding the first token selected from prefill logits"
+ttft_definition: "prefill wall time until final prompt logits are available; excludes sampling/argmax materialization"
+decode_seconds_definition: "post-prefill wall time through completion, including first-token selection overhead"
