@@ -1,0 +1,10 @@
+raw: "experiments/benchmark_validation/full_n50_r1_a37a4e4/raw_measurements.jsonl"
+model: "Qwen/Qwen2.5-3B-Instruct"
+max_new_tokens: 48
+device: "cuda:0"
+repeats: 1
+order_seeds: [42, 43, 44]
+warmup_prompts: 1
+output_dir: "experiments/numerical_validation/tradeoff_n25_r1"
+methods: ["vanilla", "pld_batched", "pld_sequential", "pld_kv_replay", "pld_margin_guard_0.05"]
+decode_tokens_definition: "generated output tokens excluding the first token selected from prefill logits"

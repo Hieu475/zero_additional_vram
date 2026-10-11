@@ -1,0 +1,86 @@
+{
+  "methods": {
+    "vanilla": {
+      "n_runs": 75,
+      "n_prompts": 25,
+      "exact_match_pct": 100.0,
+      "end_to_end_speedup_mean": 1.0,
+      "end_to_end_speedup_ci95": [
+        1.0,
+        1.0
+      ],
+      "decode_tps_speedup_mean": 1.0,
+      "decode_tps_speedup_ci95": [
+        1.0,
+        1.0
+      ],
+      "bootstrap_unit": "prompt (repeats/order seeds averaged within prompt)"
+    },
+    "pld_batched": {
+      "n_runs": 75,
+      "n_prompts": 25,
+      "exact_match_pct": 0.0,
+      "end_to_end_speedup_mean": 1.0168328055043383,
+      "end_to_end_speedup_ci95": [
+        0.9839327549289681,
+        1.0534883488633144
+      ],
+      "decode_tps_speedup_mean": 1.018309283177601,
+      "decode_tps_speedup_ci95": [
+        0.9822229852779474,
+        1.0586763564700863
+      ],
+      "bootstrap_unit": "prompt (repeats/order seeds averaged within prompt)"
+    },
+    "pld_sequential": {
+      "n_runs": 75,
+      "n_prompts": 25,
+      "exact_match_pct": 100.0,
+      "end_to_end_speedup_mean": 0.9678649309235989,
+      "end_to_end_speedup_ci95": [
+        0.9594156096475962,
+        0.9763453221681562
+      ],
+      "decode_tps_speedup_mean": 0.9641430619539748,
+      "decode_tps_speedup_ci95": [
+        0.9548395921897974,
+        0.9735651341900607
+      ],
+      "bootstrap_unit": "prompt (repeats/order seeds averaged within prompt)"
+    },
+    "pld_kv_replay": {
+      "n_runs": 75,
+      "n_prompts": 25,
+      "exact_match_pct": 68.0,
+      "end_to_end_speedup_mean": 0.1664418071438882,
+      "end_to_end_speedup_ci95": [
+        0.14751197372537247,
+        0.18607972997433006
+      ],
+      "decode_tps_speedup_mean": 0.15184596184613142,
+      "decode_tps_speedup_ci95": [
+        0.13385151406525064,
+        0.17055232039728888
+      ],
+      "bootstrap_unit": "prompt (repeats/order seeds averaged within prompt)"
+    },
+    "pld_margin_guard_0.05": {
+      "n_runs": 75,
+      "n_prompts": 25,
+      "exact_match_pct": 36.0,
+      "end_to_end_speedup_mean": 0.7253810493148013,
+      "end_to_end_speedup_ci95": [
+        0.6149538553772596,
+        0.8361843904294278
+      ],
+      "decode_tps_speedup_mean": 0.7082095289477873,
+      "decode_tps_speedup_ci95": [
+        0.5918410984924135,
+        0.8253394399869474
+      ],
+      "bootstrap_unit": "prompt (repeats/order seeds averaged within prompt)"
+    }
+  },
+  "n_mismatch_prompts": 25,
+  "full_run_commit_sha": "a37a4e4cda647a5f5fc2b6861fb1d28f7db48eea"
+}
