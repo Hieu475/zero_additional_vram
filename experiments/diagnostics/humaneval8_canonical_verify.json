@@ -1,0 +1,800 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "method": "prompt_lookup",
+  "k": 4,
+  "canonical_kv_replay": false,
+  "canonical_verify": true,
+  "benchmark": "data/benchmarks/humaneval_eval.jsonl",
+  "samples": [
+    {
+      "id": "HumanEval/8",
+      "first_divergence": null,
+      "vanilla_repeat_first_divergence": null,
+      "vanilla_token_ids": [
+        262,
+        421,
+        537,
+        5109,
+        510,
+        286,
+        470,
+        220,
+        15,
+        11,
+        220,
+        16,
+        198,
+        262,
+        770,
+        510,
+        286,
+        2790,
+        10160,
+        284,
+        220,
+        15,
+        198,
+        286,
+        2790,
+        9840,
+        284,
+        220,
+        16,
+        198,
+        286,
+        369
+      ],
+      "spec_token_ids": [
+        262,
+        421,
+        537,
+        5109,
+        510,
+        286,
+        470,
+        220,
+        15,
+        11,
+        220,
+        16,
+        198,
+        262,
+        770,
+        510,
+        286,
+        2790,
+        10160,
+        284,
+        220,
+        15,
+        198,
+        286,
+        2790,
+        9840,
+        284,
+        220,
+        16,
+        198,
+        286,
+        369
+      ],
+      "canonical_replay_time_s": 0.0,
+      "total_time_s": 0.88811271799932,
+      "spec_prefill": {
+        "token_id": 262,
+        "margin": 7.125,
+        "cache_len": 106
+      },
+      "vanilla_step": null,
+      "spec_cycle": null,
+      "cycle_trace": [
+        {
+          "source": "vanilla",
+          "output_start": 0,
+          "cache_len_before_verify": 106,
+          "cache_len_after_commit": 107,
+          "emitted_tokens": [
+            262
+          ],
+          "verify_argmax": [
+            421
+          ],
+          "next_pending_token": 421,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 1,
+          "cache_len_before_verify": 107,
+          "cache_len_after_commit": 108,
+          "emitted_tokens": [
+            421
+          ],
+          "verify_argmax": [
+            537
+          ],
+          "next_pending_token": 537,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 2,
+          "cache_len_before_verify": 108,
+          "cache_len_after_commit": 109,
+          "emitted_tokens": [
+            537
+          ],
+          "verify_argmax": [
+            5109
+          ],
+          "next_pending_token": 5109,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 3,
+          "cache_len_before_verify": 109,
+          "cache_len_after_commit": 110,
+          "emitted_tokens": [
+            5109
+          ],
+          "verify_argmax": [
+            510
+          ],
+          "next_pending_token": 510,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 4,
+          "cache_len_before_verify": 110,
+          "cache_len_after_commit": 111,
+          "emitted_tokens": [
+            510
+          ],
+          "verify_argmax": [
+            286
+          ],
+          "next_pending_token": 286,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 5,
+          "cache_len_before_verify": 111,
+          "cache_len_after_commit": 112,
+          "emitted_tokens": [
+            286
+          ],
+          "verify_argmax": [
+            470
+          ],
+          "next_pending_token": 470,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 6,
+          "cache_len_before_verify": 112,
+          "cache_len_after_commit": 113,
+          "emitted_tokens": [
+            470
+          ],
+          "verify_argmax": [
+            220
+          ],
+          "next_pending_token": 220,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 7,
+          "cache_len_before_verify": 113,
+          "cache_len_after_commit": 114,
+          "emitted_tokens": [
+            220
+          ],
+          "verify_argmax": [
+            15
+          ],
+          "next_pending_token": 15,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "k": 4,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "draft_time_ms": 0.12369400064926594,
+          "verify_time_ms": 24.129358000209322,
+          "cache_time_ms": 9.864359995845007,
+          "skip_indices": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "entropy": 0.009564162231981754,
+          "router_source": null,
+          "oracle_source": null,
+          "oracle_tps": null,
+          "output_start": 8,
+          "cache_len_before_verify": 114,
+          "cache_len_after_commit": 115,
+          "pending_token": 15,
+          "draft_tokens": [
+            323,
+            4287,
+            1985,
+            1265
+          ],
+          "verify_argmax": [
+            11
+          ],
+          "verify_margin": [
+            7.75
+          ],
+          "emitted_tokens": [
+            15
+          ],
+          "next_pending_token": 11,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "k": 4,
+          "accepted": 1,
+          "rejected_at": 1,
+          "emitted_count": 2,
+          "draft_time_ms": 0.13025000225752592,
+          "verify_time_ms": 48.59657799897832,
+          "cache_time_ms": 5.4004230005375575,
+          "skip_indices": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "entropy": 0.055111441761255264,
+          "router_source": null,
+          "oracle_source": null,
+          "oracle_tps": null,
+          "output_start": 9,
+          "cache_len_before_verify": 115,
+          "cache_len_after_commit": 117,
+          "pending_token": 11,
+          "draft_tokens": [
+            220,
+            17,
+            19,
+            340
+          ],
+          "verify_argmax": [
+            220,
+            16
+          ],
+          "verify_margin": [
+            6.75,
+            4.625
+          ],
+          "emitted_tokens": [
+            11,
+            220
+          ],
+          "next_pending_token": 16,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "k": 4,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "draft_time_ms": 0.1278000017919112,
+          "verify_time_ms": 24.25924999988638,
+          "cache_time_ms": 0.2116840005328413,
+          "skip_indices": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "entropy": 0.8377294540405273,
+          "router_source": null,
+          "oracle_source": null,
+          "oracle_tps": null,
+          "output_start": 11,
+          "cache_len_before_verify": 117,
+          "cache_len_after_commit": 118,
+          "pending_token": 16,
+          "draft_tokens": [
+            340,
+            262,
+            12109,
+            2629
+          ],
+          "verify_argmax": [
+            198
+          ],
+          "verify_margin": [
+            0.625
+          ],
+          "emitted_tokens": [
+            16
+          ],
+          "next_pending_token": 198,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 12,
+          "cache_len_before_verify": 118,
+          "cache_len_after_commit": 119,
+          "emitted_tokens": [
+            198
+          ],
+          "verify_argmax": [
+            262
+          ],
+          "next_pending_token": 262,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 13,
+          "cache_len_before_verify": 119,
+          "cache_len_after_commit": 120,
+          "emitted_tokens": [
+            262
+          ],
+          "verify_argmax": [
+            770
+          ],
+          "next_pending_token": 770,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 14,
+          "cache_len_before_verify": 120,
+          "cache_len_after_commit": 121,
+          "emitted_tokens": [
+            770
+          ],
+          "verify_argmax": [
+            510
+          ],
+          "next_pending_token": 510,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 15,
+          "cache_len_before_verify": 121,
+          "cache_len_after_commit": 122,
+          "emitted_tokens": [
+            510
+          ],
+          "verify_argmax": [
+            286
+          ],
+          "next_pending_token": 286,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "k": 4,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "draft_time_ms": 0.12016600157949142,
+          "verify_time_ms": 23.81196499845828,
+          "cache_time_ms": 0.19433900160947815,
+          "skip_indices": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "entropy": 1.3443166017532349,
+          "router_source": null,
+          "oracle_source": null,
+          "oracle_tps": null,
+          "output_start": 16,
+          "cache_len_before_verify": 122,
+          "cache_len_after_commit": 123,
+          "pending_token": 286,
+          "draft_tokens": [
+            470,
+            220,
+            15,
+            11
+          ],
+          "verify_argmax": [
+            2790
+          ],
+          "verify_margin": [
+            0.125
+          ],
+          "emitted_tokens": [
+            286
+          ],
+          "next_pending_token": 2790,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 17,
+          "cache_len_before_verify": 123,
+          "cache_len_after_commit": 124,
+          "emitted_tokens": [
+            2790
+          ],
+          "verify_argmax": [
+            10160
+          ],
+          "next_pending_token": 10160,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 18,
+          "cache_len_before_verify": 124,
+          "cache_len_after_commit": 125,
+          "emitted_tokens": [
+            10160
+          ],
+          "verify_argmax": [
+            284
+          ],
+          "next_pending_token": 284,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 19,
+          "cache_len_before_verify": 125,
+          "cache_len_after_commit": 126,
+          "emitted_tokens": [
+            284
+          ],
+          "verify_argmax": [
+            220
+          ],
+          "next_pending_token": 220,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 20,
+          "cache_len_before_verify": 126,
+          "cache_len_after_commit": 127,
+          "emitted_tokens": [
+            220
+          ],
+          "verify_argmax": [
+            15
+          ],
+          "next_pending_token": 15,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "k": 4,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "draft_time_ms": 0.13017200035392307,
+          "verify_time_ms": 24.114821000694064,
+          "cache_time_ms": 0.21234900123090483,
+          "skip_indices": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "entropy": 0.032811492681503296,
+          "router_source": null,
+          "oracle_source": null,
+          "oracle_tps": null,
+          "output_start": 21,
+          "cache_len_before_verify": 127,
+          "cache_len_after_commit": 128,
+          "pending_token": 15,
+          "draft_tokens": [
+            11,
+            220,
+            16,
+            198
+          ],
+          "verify_argmax": [
+            198
+          ],
+          "verify_margin": [
+            6.125
+          ],
+          "emitted_tokens": [
+            15
+          ],
+          "next_pending_token": 198,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 22,
+          "cache_len_before_verify": 128,
+          "cache_len_after_commit": 129,
+          "emitted_tokens": [
+            198
+          ],
+          "verify_argmax": [
+            286
+          ],
+          "next_pending_token": 286,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 23,
+          "cache_len_before_verify": 129,
+          "cache_len_after_commit": 130,
+          "emitted_tokens": [
+            286
+          ],
+          "verify_argmax": [
+            2790
+          ],
+          "next_pending_token": 2790,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "k": 4,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "draft_time_ms": 0.12432899893610738,
+          "verify_time_ms": 23.98026800074149,
+          "cache_time_ms": 0.20821400175918825,
+          "skip_indices": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "entropy": 0.049476634711027145,
+          "router_source": null,
+          "oracle_source": null,
+          "oracle_tps": null,
+          "output_start": 24,
+          "cache_len_before_verify": 130,
+          "cache_len_after_commit": 131,
+          "pending_token": 2790,
+          "draft_tokens": [
+            10160,
+            284,
+            220,
+            15
+          ],
+          "verify_argmax": [
+            9840
+          ],
+          "verify_margin": [
+            6.125
+          ],
+          "emitted_tokens": [
+            2790
+          ],
+          "next_pending_token": 9840,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 25,
+          "cache_len_before_verify": 131,
+          "cache_len_after_commit": 132,
+          "emitted_tokens": [
+            9840
+          ],
+          "verify_argmax": [
+            284
+          ],
+          "next_pending_token": 284,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 26,
+          "cache_len_before_verify": 132,
+          "cache_len_after_commit": 133,
+          "emitted_tokens": [
+            284
+          ],
+          "verify_argmax": [
+            220
+          ],
+          "next_pending_token": 220,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "k": 4,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "draft_time_ms": 0.11759700282709673,
+          "verify_time_ms": 23.835820000385866,
+          "cache_time_ms": 0.19789499856415205,
+          "skip_indices": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "entropy": 0.006698121782392263,
+          "router_source": null,
+          "oracle_source": null,
+          "oracle_tps": null,
+          "output_start": 27,
+          "cache_len_before_verify": 133,
+          "cache_len_after_commit": 134,
+          "pending_token": 220,
+          "draft_tokens": [
+            15,
+            198,
+            286,
+            2790
+          ],
+          "verify_argmax": [
+            16
+          ],
+          "verify_margin": [
+            7.125
+          ],
+          "emitted_tokens": [
+            220
+          ],
+          "next_pending_token": 16,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "k": 3,
+          "accepted": 1,
+          "rejected_at": 1,
+          "emitted_count": 2,
+          "draft_time_ms": 0.10072100121760741,
+          "verify_time_ms": 50.153449999925215,
+          "cache_time_ms": 0.19637800141936168,
+          "skip_indices": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "entropy": 0.033613353967666626,
+          "router_source": null,
+          "oracle_source": null,
+          "oracle_tps": null,
+          "output_start": 28,
+          "cache_len_before_verify": 134,
+          "cache_len_after_commit": 136,
+          "pending_token": 16,
+          "draft_tokens": [
+            198,
+            262,
+            770
+          ],
+          "verify_argmax": [
+            198,
+            286
+          ],
+          "verify_margin": [
+            2.875,
+            5.25
+          ],
+          "emitted_tokens": [
+            16,
+            198
+          ],
+          "next_pending_token": 286,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "k": 1,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "draft_time_ms": 0.1015150010061916,
+          "verify_time_ms": 25.208507002389524,
+          "cache_time_ms": 0.19478700050967745,
+          "skip_indices": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "entropy": 0.032069604843854904,
+          "router_source": null,
+          "oracle_source": null,
+          "oracle_tps": null,
+          "output_start": 30,
+          "cache_len_before_verify": 136,
+          "cache_len_after_commit": 137,
+          "pending_token": 286,
+          "draft_tokens": [
+            2790
+          ],
+          "verify_argmax": [
+            369
+          ],
+          "verify_margin": [
+            6.625
+          ],
+          "emitted_tokens": [
+            286
+          ],
+          "next_pending_token": 369,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        },
+        {
+          "source": "vanilla",
+          "output_start": 31,
+          "cache_len_before_verify": 137,
+          "cache_len_after_commit": 138,
+          "emitted_tokens": [
+            369
+          ],
+          "verify_argmax": [
+            1372
+          ],
+          "next_pending_token": 1372,
+          "cache_digest_before": null,
+          "cache_digest_after": null
+        }
+      ],
+      "first_cache_difference": null,
+      "expected_cache_len_before_cycle": null
+    }
+  ]
+}

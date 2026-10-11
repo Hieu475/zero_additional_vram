@@ -13,6 +13,7 @@ Zero-Additional-VRAM self-speculative decoding using a shared model checkpoint:
 from __future__ import annotations
 
 import logging
+import hashlib
 import time
 from dataclasses import dataclass, field
 from typing import Any, Optional
@@ -25,6 +26,34 @@ from zassd.cache.kv_cache import TargetKVCache
 from zassd.controllers.entropy import compute_entropy
 from zassd.decoding.ngram import find_candidate_tokens
 from zassd.models.layer_manager import LayerManager
+
+def _logit_margin(logit_1d: torch.Tensor) -> float | None:
+    """Top1-top2 logit gap (confidence signal for the calibrated predictor).
+
+    Returns None on any failure so callers can fall back to prior-only
+    estimates. Kept separate from compute_entropy to avoid slowing
+    non-routed paths (only called when a router is attached).
+    """
+    try:
+        top2 = torch.topk(logit_1d.float().flatten(), 2).values
+        return float((top2[0] - top2[1]).item())
+    except Exception:
+        return None
+
+
+def diagnostic_cache_digest(target_kv: TargetKVCache) -> str:
+    """Hash only the active KV prefix for a slow, diagnostic-only audit."""
+    digest = hashlib.sha256()
+    for layer in target_kv.cache.layers:
+        length = layer.get_seq_length()
+        digest.update(length.to_bytes(8, "little"))
+        if not getattr(layer, "is_initialized", False):
+            continue
+        for tensor in (layer.keys, layer.values):
+            raw_bytes = tensor[:, :, :length, :].detach().contiguous().view(torch.uint8)
+            digest.update(raw_bytes.cpu().numpy().tobytes())
+    return digest.hexdigest()
+
 
 logger = logging.getLogger(__name__)
 
@@ -41,11 +70,13 @@ class SpeculativeMetrics:
     total_time_s: float = 0.0
     tokens_per_second: float = 0.0
 
-    # Latency decomposition: T_total = T_prefill + T_draft + T_verify + T_cache + T_controller + T_other
+    # Latency decomposition includes diagnostic canonical cache replay when enabled.
     prefill_time_s: float = 0.0
     draft_time_s: float = 0.0
     verify_time_s: float = 0.0
     cache_time_s: float = 0.0
+    canonical_replay_time_s: float = 0.0
+    margin_fallback_cycles: int = 0
     controller_time_s: float = 0.0
     other_time_s: float = 0.0
 
@@ -56,6 +87,8 @@ class SpeculativeMetrics:
     speedup_vs_vanilla: float = 0.0
     k_value: int = 4
     per_iteration_stats: list[dict] = field(default_factory=list)
+    generated_token_ids: list[int] = field(default_factory=list)
+    diagnostic_prefill: dict = field(default_factory=dict)
 
 
 def self_speculative_generate(
@@ -74,6 +107,11 @@ def self_speculative_generate(
     ngram_size: int = 3,
     router: Optional[Any] = None,
     config_name: str = "cka_75",
+    diagnostic_trace: bool = False,
+    diagnostic_hash_kv: bool = False,
+    canonical_kv_replay: bool = False,
+    canonical_verify: bool = False,
+    margin_fallback_threshold: Optional[float] = None,
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Zero-Additional-VRAM self-speculative decoding.
 
@@ -93,11 +131,21 @@ def self_speculative_generate(
         router: Optional HybridDraftRouter for draft_mode='routed' (cost-aware PLD vs layer-skip).
         config_name: CKA config name used by router cost estimates.
         ngram_size: Context n-gram length used for prompt lookup.
+        canonical_kv_replay: Diagnostic full-prefix KV reconstruction after each speculative cycle.
+        canonical_verify: Verify draft positions sequentially; intended for greedy exactness audits.
+        margin_fallback_threshold: Rebuild canonical KV and verify sequentially when any batched
+            top-1 margin in a cycle is at or below this value (greedy only).
 
     Returns:
         Tuple of (generated_text, SpeculativeMetrics).
     """
     metrics = SpeculativeMetrics(k_value=k)
+    if (canonical_verify or margin_fallback_threshold is not None) and temperature != 0.0:
+        raise ValueError("canonical verification and margin fallback currently support greedy decoding only")
+    if canonical_verify and margin_fallback_threshold is not None:
+        raise ValueError("choose canonical_verify or margin_fallback_threshold, not both")
+    if margin_fallback_threshold is not None and margin_fallback_threshold < 0:
+        raise ValueError("margin_fallback_threshold must be nonnegative")
 
     if isinstance(prompt, torch.Tensor):
         prompt_ids = prompt.to(device)
@@ -134,6 +182,19 @@ def self_speculative_generate(
         curr_target_tok_tensor = torch.tensor([[curr_target_tok]], device=device)
 
     curr_entropy = float(compute_entropy(target_prefix_logit.float()).item())
+    _need_margin = router is not None and draft_mode == "routed"
+    curr_margin: float | None = (
+        _logit_margin(target_prefix_logit) if _need_margin else None
+    )
+    if diagnostic_trace:
+        prefill_top2 = torch.topk(target_prefix_logit.float(), 2)
+        metrics.diagnostic_prefill = {
+            "token_id": curr_target_tok,
+            "margin": float((prefill_top2.values[0] - prefill_top2.values[1]).item()),
+            "cache_len": target_kv.get_seq_length(),
+        }
+        if diagnostic_hash_kv:
+            metrics.diagnostic_prefill["cache_digest"] = diagnostic_cache_digest(target_kv)
     last_accepted = 1
     last_proposed = k
     last_draft_ms = 20.0
@@ -173,12 +234,17 @@ def self_speculative_generate(
             step_k = k
             active_skip = skip_indices
 
-        step_k = min(step_k, rem_tokens)
+        # The pending target token already occupies one output position.
+        # Do not draft tokens that cannot be emitted within the budget.
+        step_k = min(step_k, max(0, rem_tokens - 1))
         if step_k <= 0 and rem_tokens <= 0:
             break
 
         if step_k == 0:
             # Fallback to single-token vanilla step with Target KV
+            trace_prefix_len = target_kv.get_seq_length() if diagnostic_trace else 0
+            trace_cache_digest = diagnostic_cache_digest(target_kv) if diagnostic_hash_kv else None
+            trace_output_start = len(generated_token_ids)
             t_v_start = time.perf_counter()
             curr_tensor = curr_target_tok_tensor
             with torch.no_grad():
@@ -191,6 +257,9 @@ def self_speculative_generate(
 
             target_logit = out.logits[0, -1, :].float()
             curr_entropy = float(compute_entropy(target_logit).item())
+            if _need_margin and router is not None:
+                curr_margin = _logit_margin(target_logit)
+                router.observe_vanilla(verify_elapsed * 1000.0)
             if temperature == 0.0:
                 next_tok_tensor = out.logits[:, -1:, :].argmax(dim=-1)
                 next_tok = int(next_tok_tensor.item())
@@ -203,6 +272,17 @@ def self_speculative_generate(
             generated_token_ids.append(curr_target_tok)
             full_history.append(curr_target_tok)
             current_prefix_len += 1
+            if diagnostic_trace:
+                metrics.per_iteration_stats.append({
+                    "source": "vanilla", "output_start": trace_output_start,
+                    "cache_len_before_verify": trace_prefix_len,
+                    "cache_len_after_commit": target_kv.get_seq_length(),
+                    "emitted_tokens": [curr_target_tok],
+                    "verify_argmax": [next_tok],
+                    "next_pending_token": next_tok,
+                    "cache_digest_before": trace_cache_digest,
+                    "cache_digest_after": diagnostic_cache_digest(target_kv) if diagnostic_hash_kv else None,
+                })
             if curr_target_tok == tokenizer.eos_token_id:
                 break
             curr_target_tok = next_tok
@@ -237,7 +317,8 @@ def self_speculative_generate(
             decision = router.select_source(
                 full_history, curr_target_tok, step_k,
                 entropy=curr_entropy, config_name=config_name,
-                pld_k=getattr(router, "pld_k", None),
+                pld_k=min(getattr(router, "pld_k", step_k) or step_k, max(0, rem_tokens - 1)),
+                margin=curr_margin,
             )
             if decision.source == "pld" and decision.candidates:
                 draft_tokens = list(decision.candidates)
@@ -255,7 +336,8 @@ def self_speculative_generate(
                     _o_src, _o_tps = router.oracle_select(
                         full_history, curr_target_tok, step_k,
                         entropy=curr_entropy, config_name=config_name,
-                        pld_k=getattr(router, "pld_k", None),
+                        pld_k=min(getattr(router, "pld_k", step_k) or step_k, max(0, rem_tokens - 1)),
+                        margin=curr_margin,
                     )
                     router._pending_oracle = {"source": _o_src, "tps": _o_tps}
                 except Exception:
@@ -267,6 +349,13 @@ def self_speculative_generate(
                 draft_token_tensors = [torch.tensor([[t]], device=device) for t in cands]
                 used_pld = True
                 metrics.pld_cycles += 1
+
+        # A lookup hit may contain tokens after EOS. Verifying/emitting those
+        # tokens changes the stopping semantics relative to vanilla decoding.
+        if used_pld and tokenizer.eos_token_id in draft_tokens:
+            eos_end = draft_tokens.index(tokenizer.eos_token_id) + 1
+            draft_tokens = draft_tokens[:eos_end]
+            draft_token_tensors = draft_token_tensors[:eos_end]
 
         if not used_pld and not routed_force_vanilla and draft_mode in ("layer_skip", "hybrid", "routed"):
             metrics.layer_skip_cycles += 1
@@ -305,6 +394,9 @@ def self_speculative_generate(
 
         if actual_k == 0:
             # Fallback to single-token vanilla step with Target KV
+            trace_prefix_len = target_kv.get_seq_length() if diagnostic_trace else 0
+            trace_cache_digest = diagnostic_cache_digest(target_kv) if diagnostic_hash_kv else None
+            trace_output_start = len(generated_token_ids)
             t_v_start = time.perf_counter()
             with torch.no_grad():
                 out = model(curr_target_tok_tensor, past_key_values=target_kv.cache, use_cache=True)
@@ -316,6 +408,8 @@ def self_speculative_generate(
 
             target_logit = out.logits[0, -1, :].float()
             curr_entropy = float(compute_entropy(target_logit).item())
+            if _need_margin and router is not None:
+                curr_margin = _logit_margin(target_logit)
             if temperature == 0.0:
                 next_tok_tensor = out.logits[:, -1:, :].argmax(dim=-1)
                 next_tok = int(next_tok_tensor.item())
@@ -328,6 +422,17 @@ def self_speculative_generate(
             generated_token_ids.append(curr_target_tok)
             full_history.append(curr_target_tok)
             current_prefix_len += 1
+            if diagnostic_trace:
+                metrics.per_iteration_stats.append({
+                    "source": "vanilla", "output_start": trace_output_start,
+                    "cache_len_before_verify": trace_prefix_len,
+                    "cache_len_after_commit": target_kv.get_seq_length(),
+                    "emitted_tokens": [curr_target_tok],
+                    "verify_argmax": [next_tok],
+                    "next_pending_token": next_tok,
+                    "cache_digest_before": trace_cache_digest,
+                    "cache_digest_after": diagnostic_cache_digest(target_kv) if diagnostic_hash_kv else None,
+                })
             if curr_target_tok == tokenizer.eos_token_id:
                 break
             curr_target_tok = next_tok
@@ -336,9 +441,11 @@ def self_speculative_generate(
             last_draft_ms = 0.0
             last_verify_ms = verify_elapsed * 1000
             if draft_mode == "routed" and router is not None:
+                router.observe_vanilla(verify_elapsed * 1000.0)
                 # Log vanilla-fallback cycles too (router and/or oracle said AR)
                 _o = getattr(router, "_pending_oracle", None) or {}
-                metrics.per_iteration_stats.append({
+                if not diagnostic_trace:
+                    metrics.per_iteration_stats.append({
                     "k": 0, "accepted": 0, "rejected_at": None,
                     "emitted_count": 1,
                     "draft_time_ms": 0.0, "verify_time_ms": verify_elapsed * 1000,
@@ -347,7 +454,7 @@ def self_speculative_generate(
                     "router_source": getattr(getattr(router, "_pending_decision", None), "source", "vanilla"),
                     "oracle_source": _o.get("source"),
                     "oracle_tps": _o.get("tps"),
-                })
+                    })
             continue
 
         # -------------------------------------------------------------------
@@ -355,15 +462,61 @@ def self_speculative_generate(
         # Verify inputs: [curr_target_tok] + draft_tokens concatenated on GPU.
         # Directly computes all verification logits and the bonus token in 1 pass.
         # -------------------------------------------------------------------
+        trace_prefix_len = target_kv.get_seq_length() if diagnostic_trace else 0
+        trace_cache_digest = diagnostic_cache_digest(target_kv) if diagnostic_hash_kv else None
         cand_tensor = torch.cat([curr_target_tok_tensor] + draft_token_tensors, dim=-1)
 
         t_verify_start = time.perf_counter()
+        margin_fallback_triggered = False
+        minimum_batch_margin: Optional[float] = None
+        cycle_replay_s = 0.0
         with torch.no_grad():
-            v_out = model(cand_tensor, past_key_values=target_kv.cache, use_cache=True)
+            if canonical_verify:
+                # Exact autoregressive reference path: evaluate each candidate
+                # position with a single-token query and advance canonical KV.
+                # This isolates batch-kernel numerical drift from PLD quality.
+                step_logits = []
+                for position, input_token in enumerate([curr_target_tok] + draft_tokens):
+                    input_tensor = torch.tensor([[input_token]], device=device)
+                    step_out = model(input_tensor, past_key_values=target_kv.cache, use_cache=True)
+                    position_logits = step_out.logits[0, -1, :]
+                    step_logits.append(position_logits)
+                    if position < actual_k and int(position_logits.argmax().item()) != draft_tokens[position]:
+                        break
+                v_logits = torch.stack(step_logits).unsqueeze(0)
+            else:
+                v_logits = model(cand_tensor, past_key_values=target_kv.cache, use_cache=True).logits
+                if margin_fallback_threshold is not None:
+                    batch_top2 = torch.topk(v_logits[0].float(), 2, dim=-1).values
+                    batch_margins = batch_top2[:, 0] - batch_top2[:, 1]
+                    minimum_batch_margin = float(batch_margins.min().item())
+                    margin_fallback_triggered = minimum_batch_margin <= margin_fallback_threshold
+                if margin_fallback_triggered:
+                    # The batched call has mutated the cache. Rebuild the
+                    # already-emitted prefix tokenwise before exact verification.
+                    replay_start = time.perf_counter()
+                    target_kv = TargetKVCache(backend=kv_cache_backend)
+                    model(prompt_ids, past_key_values=target_kv.cache, use_cache=True)
+                    for replay_token in generated_token_ids:
+                        replay_input = torch.tensor([[replay_token]], device=device)
+                        model(replay_input, past_key_values=target_kv.cache, use_cache=True)
+                    torch.cuda.synchronize()
+                    cycle_replay_s = time.perf_counter() - replay_start
+                    metrics.canonical_replay_time_s += cycle_replay_s
+                    metrics.margin_fallback_cycles += 1
+                    step_logits = []
+                    for position, input_token in enumerate([curr_target_tok] + draft_tokens):
+                        input_tensor = torch.tensor([[input_token]], device=device)
+                        step_out = model(input_tensor, past_key_values=target_kv.cache, use_cache=True)
+                        position_logits = step_out.logits[0, -1, :]
+                        step_logits.append(position_logits)
+                        if position < actual_k and int(position_logits.argmax().item()) != draft_tokens[position]:
+                            break
+                    v_logits = torch.stack(step_logits).unsqueeze(0)
 
         torch.cuda.synchronize()
         t_verify_end = time.perf_counter()
-        verify_elapsed = t_verify_end - t_verify_start
+        verify_elapsed = t_verify_end - t_verify_start - cycle_replay_s
         metrics.verify_time_s += verify_elapsed
         metrics.num_verification_cycles += 1
 
@@ -377,14 +530,16 @@ def self_speculative_generate(
         num_accepted_draft = 0
 
         if temperature == 0.0:
-            v_preds = v_out.logits[0, :actual_k, :].argmax(dim=-1)
+            v_preds = v_logits[0, :actual_k, :].argmax(dim=-1)
             d_preds = torch.cat(draft_token_tensors, dim=-1).squeeze(0)
+            if canonical_verify or margin_fallback_triggered:
+                d_preds = d_preds[:v_preds.shape[0]]
             matches = (v_preds == d_preds)
 
             if bool(matches.all().item()):
                 num_accepted_draft = actual_k
                 cycle_emitted.extend(draft_tokens)
-                bonus_tok_tensor = v_out.logits[:, actual_k:, :].argmax(dim=-1)
+                bonus_tok_tensor = v_logits[:, actual_k:, :].argmax(dim=-1)
                 curr_target_tok_tensor = bonus_tok_tensor
                 curr_target_tok = int(bonus_tok_tensor.item())
                 rejected_at = None
@@ -399,7 +554,7 @@ def self_speculative_generate(
                 curr_target_tok = int(rej_tok_tensor.item())
                 rejected_at = mismatch_idx
         else:
-            target_probs_tensor = F.softmax(v_out.logits[0, :actual_k, :] / temperature, dim=-1)
+            target_probs_tensor = F.softmax(v_logits[0, :actual_k, :] / temperature, dim=-1)
             for i in range(actual_k):
                 t_prob = target_probs_tensor[i]
                 d_prob = draft_probs_list[i]
@@ -425,7 +580,7 @@ def self_speculative_generate(
                     break
 
             if rejected_at is None:
-                b_probs = F.softmax(v_out.logits[0, actual_k, :] / temperature, dim=-1)
+                b_probs = F.softmax(v_logits[0, actual_k, :] / temperature, dim=-1)
                 bonus_tok = int(torch.multinomial(b_probs, num_samples=1).item())
                 curr_target_tok = bonus_tok
                 curr_target_tok_tensor = torch.tensor([[curr_target_tok]], device=device)
@@ -437,9 +592,15 @@ def self_speculative_generate(
         metrics.cache_time_s += cache_cycle_s
 
         if rejected_at is not None:
-            curr_entropy = float(compute_entropy(v_out.logits[0, rejected_at, :].float()).item())
+            _rej_logit = v_logits[0, rejected_at, :].float()
+            curr_entropy = float(compute_entropy(_rej_logit).item())
+            if _need_margin:
+                curr_margin = _logit_margin(_rej_logit)
         else:
-            curr_entropy = float(compute_entropy(v_out.logits[0, actual_k, :].float()).item())
+            _ok_logit = v_logits[0, actual_k, :].float()
+            curr_entropy = float(compute_entropy(_ok_logit).item())
+            if _need_margin:
+                curr_margin = _logit_margin(_ok_logit)
 
         last_accepted = num_accepted_draft
         last_proposed = actual_k
@@ -450,11 +611,29 @@ def self_speculative_generate(
             _dec = getattr(router, "_pending_decision", None)
             if _dec is not None and _dec.source in ("pld", "layer_skip"):
                 router.update(_dec.source, num_accepted_draft, actual_k,
-                              ngram_match_len=_dec.ngram_match_len)
+                              ngram_match_len=_dec.ngram_match_len,
+                              draft_ms=draft_elapsed * 1000.0,
+                              verify_ms=verify_elapsed * 1000.0,
+                              config_name=config_name, step_k=step_k)
         metrics.total_accepted_tokens += num_accepted_draft
         generated_token_ids.extend(cycle_emitted)
         full_history.extend(cycle_emitted)
         current_prefix_len += len(cycle_emitted)
+
+        # Diagnostic mode: rebuild the target cache through the exact same
+        # prompt-prefill + one-token decode path used by vanilla generation.
+        # Batched verification can produce numerically different NF4 K/V even
+        # when its greedy token decisions match; those differences can accrue.
+        if canonical_kv_replay:
+            replay_start = time.perf_counter()
+            target_kv = TargetKVCache(backend=kv_cache_backend)
+            with torch.no_grad():
+                model(prompt_ids, past_key_values=target_kv.cache, use_cache=True)
+                for replay_token in generated_token_ids:
+                    replay_input = torch.tensor([[replay_token]], device=device)
+                    model(replay_input, past_key_values=target_kv.cache, use_cache=True)
+            torch.cuda.synchronize()
+            metrics.canonical_replay_time_s += time.perf_counter() - replay_start
 
         iter_stat = {
             "k": actual_k,
@@ -469,7 +648,24 @@ def self_speculative_generate(
             "router_source": getattr(getattr(router, "_pending_decision", None), "source", None),
             "oracle_source": (getattr(router, "_pending_oracle", None) or {}).get("source"),
             "oracle_tps": (getattr(router, "_pending_oracle", None) or {}).get("tps"),
+            "margin_fallback": margin_fallback_triggered,
+            "minimum_batch_margin": minimum_batch_margin,
         }
+        if diagnostic_trace:
+            top2 = torch.topk(v_logits[0].float(), 2, dim=-1).values
+            iter_stat.update({
+                "output_start": len(generated_token_ids) - len(cycle_emitted),
+                "cache_len_before_verify": trace_prefix_len,
+                "cache_len_after_commit": target_kv.get_seq_length(),
+                "pending_token": cycle_emitted[0],
+                "draft_tokens": list(draft_tokens),
+                "verify_argmax": v_logits[0].argmax(dim=-1).tolist(),
+                "verify_margin": (top2[:, 0] - top2[:, 1]).tolist(),
+                "emitted_tokens": list(cycle_emitted),
+                "next_pending_token": curr_target_tok,
+                "cache_digest_before": trace_cache_digest,
+                "cache_digest_after": diagnostic_cache_digest(target_kv) if diagnostic_hash_kv else None,
+            })
         metrics.per_iteration_stats.append(iter_stat)
 
         if any(t == tokenizer.eos_token_id for t in cycle_emitted):
@@ -489,6 +685,7 @@ def self_speculative_generate(
         generated_token_ids = generated_token_ids[:max_new_tokens]
 
     new_tokens_count = len(generated_token_ids)
+    metrics.generated_token_ids = generated_token_ids
     metrics.total_tokens = new_tokens_count
     metrics.tokens_per_second = (
         new_tokens_count / metrics.total_time_s if metrics.total_time_s > 0 else 0.0
@@ -506,7 +703,7 @@ def self_speculative_generate(
     metrics.other_time_s = max(
         0.0,
         metrics.total_time_s
-        - (metrics.prefill_time_s + metrics.draft_time_s + metrics.verify_time_s + metrics.cache_time_s + metrics.controller_time_s),
+        - (metrics.prefill_time_s + metrics.draft_time_s + metrics.verify_time_s + metrics.cache_time_s + metrics.controller_time_s + metrics.canonical_replay_time_s),
     )
     metrics.peak_vram_mb = torch.cuda.max_memory_allocated(device) / (1024**2)
 

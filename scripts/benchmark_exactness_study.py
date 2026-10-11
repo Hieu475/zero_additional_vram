@@ -112,12 +112,12 @@ def compute_logit_cosine_and_divergence(
     tokenizer,
     prompt: str,
     vanilla_data: dict[str, Any],
-    spec_text: str,
+    spec_token_ids: list[int],
     device: str = "cuda:0",
 ) -> tuple[float, float, list[dict[str, Any]]]:
     """Analyze exact match, partial match, logit cosine similarity, and divergence points."""
     v_tokens = vanilla_data["token_ids"]
-    s_tokens = tokenizer.encode(spec_text, add_special_tokens=False)
+    s_tokens = spec_token_ids
 
     min_len = min(len(v_tokens), len(s_tokens))
     if min_len == 0:
@@ -344,18 +344,18 @@ def main() -> None:
                     tokenizer=tokenizer,
                     prompt=p["prompt"],
                     vanilla_data=v_data,
-                    spec_text=spec_text,
+                    spec_token_ids=spec_m.generated_token_ids,
                     device=device,
                 )
 
-                is_exact = 1.0 if pm == 1.0 else 0.0
+                is_exact = 1.0 if v_data["token_ids"] == spec_m.generated_token_ids else 0.0
                 em_list.append(is_exact)
                 pm_list.append(pm)
                 acc_list.append(spec_m.acceptance_rate * 100.0)
                 cos_list.append(mean_cos)
 
                 v_toks = v_data["token_ids"]
-                s_toks = tokenizer.encode(spec_text, add_special_tokens=False)
+                s_toks = spec_m.generated_token_ids
                 min_len = min(len(v_toks), len(s_toks))
                 matches = sum(1 for idx in range(min_len) if v_toks[idx] == s_toks[idx])
                 top1_agreement = (matches / max(1, min_len)) * 100.0
