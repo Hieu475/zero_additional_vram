@@ -23,7 +23,7 @@ from zassd.decoding.speculative import SpeculativeMetrics
 logger = logging.getLogger(__name__)
 
 
-from zassd.decoding.ngram import find_candidate_tokens
+from zassd.decoding.ngram import find_candidate_match, find_candidate_tokens
 
 
 def prompt_lookup_generate(
@@ -36,6 +36,9 @@ def prompt_lookup_generate(
     temperature: float = 0.0,
     device: str = "cuda:0",
     kv_cache_backend: str = "static",
+    k_policy: str = "fixed",
+    candidate_source: str = "history",
+    adaptive_profile: dict | None = None,
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Prompt Lookup Decoding (PLD).
 
@@ -76,6 +79,10 @@ def prompt_lookup_generate(
     t_prefill_end = time.perf_counter()
     metrics.prefill_time_s = (t_prefill_end - t_prefill_start)
 
+    if k_policy not in {"fixed", "confidence_cost"}:
+        raise ValueError("k_policy must be 'fixed' or 'confidence_cost'")
+    if candidate_source not in {"history", "prompt", "prompt+generated"}:
+        raise ValueError("candidate_source must be 'history', 'prompt', or 'prompt+generated'")
     generated_token_ids: list[int] = []
     current_prefix_len = prompt_len
     if temperature == 0.0:
@@ -88,36 +95,97 @@ def prompt_lookup_generate(
 
     # Full history tracking for n-gram lookup
     full_history = prompt_ids[0].tolist()
+    prompt_token_list = full_history.copy()
 
+    measured_verify_ms: dict[int, float] = {}
+    measured_vanilla_ms: list[float] = []
     while len(generated_token_ids) < max_new_tokens:
         if curr_target_tok == tokenizer.eos_token_id:
             generated_token_ids.append(curr_target_tok)
             break
 
         rem_tokens = max_new_tokens - len(generated_token_ids)
-        step_k = min(k, rem_tokens)
+        step_k = min(k, max(0, rem_tokens - 1))
 
         # Lookup candidate tokens from history
         full_tokens = full_history + [curr_target_tok]
         t_draft_start = time.perf_counter()
-        candidate_tokens = find_candidate_tokens(full_tokens, ngram_size=ngram_size, max_candidates=step_k)
+        generated_list = full_history[prompt_len:]
+        match = find_candidate_match(
+            full_tokens,
+            prompt_token_list if candidate_source != "history" else full_tokens,
+            generated_list if candidate_source == "prompt+generated" else [],
+            ngram_size=ngram_size, max_candidates=step_k,
+            include_generated=(candidate_source == "prompt+generated"),
+        )
+        if candidate_source == "history" and match.candidates:
+            match = type(match)(match.candidates, "history", match.ngram_size,
+                                match.repetitions, match.confidence)
+        candidate_tokens = match.candidates
+        lookup_so_far_ms = (time.perf_counter() - t_draft_start) * 1000.0
+        if k_policy == "confidence_cost" and candidate_tokens:
+            # Select the horizon with the best measured cost estimate. The
+            # confidence score is an input feature; calibration is reported
+            # separately by the paired development-set sweep.
+            available = len(candidate_tokens)
+            best_k, best_rate = 0, 0.0
+            vanilla_ms = ((adaptive_profile or {}).get("vanilla_token_ms")
+                          or (sum(measured_vanilla_ms[-8:]) / len(measured_vanilla_ms[-8:])
+                              if measured_vanilla_ms else None))
+            for candidate_k in range(1, available + 1):
+                verify_ms = (adaptive_profile or {}).get("verify_ms_by_k", {}).get(str(candidate_k))
+                verify_ms = verify_ms or measured_verify_ms.get(candidate_k)
+                if verify_ms is None and measured_verify_ms:
+                    nearest = min(measured_verify_ms, key=lambda x: abs(x - candidate_k))
+                    verify_ms = measured_verify_ms[nearest] * candidate_k / nearest
+                if verify_ms is None:
+                    continue
+                profiles = (adaptive_profile or {}).get("acceptance_by_feature_k", {})
+                rep_bin = min(match.repetitions, 3)
+                feature_key = f"{match.ngram_size}:{rep_bin}:{candidate_k}"
+                order_key = f"{match.ngram_size}:*:{candidate_k}"
+                global_key = f"*:*:{candidate_k}"
+                accepted_est = profiles.get(feature_key, profiles.get(order_key,
+                                profiles.get(global_key)))
+                if accepted_est is None:
+                    alpha = min(0.95, max(0.05, match.confidence))
+                    accepted_est = sum(alpha ** i for i in range(1, candidate_k + 1))
+                cycle_ms = lookup_so_far_ms + float(verify_ms)
+                rate = (1.0 + accepted_est) / cycle_ms if cycle_ms > 0 else 0.0
+                if rate > best_rate:
+                    best_k, best_rate = candidate_k, rate
+            if vanilla_ms and best_rate <= 1.0 / vanilla_ms:
+                candidate_tokens = []
+            elif best_k:
+                candidate_tokens = candidate_tokens[:best_k]
+        if tokenizer.eos_token_id in candidate_tokens:
+            candidate_tokens = candidate_tokens[:candidate_tokens.index(tokenizer.eos_token_id) + 1]
         t_draft_end = time.perf_counter()
         draft_elapsed = (t_draft_end - t_draft_start)
         metrics.draft_time_s += draft_elapsed
 
         actual_k = len(candidate_tokens)
+        cycle_lookup_ms = draft_elapsed * 1000.0
+        cycle_verify_ms = 0.0
+        cycle_crop_ms = 0.0
+        cycle_sync_ms = 0.0
 
         if actual_k == 0:
             # Fallback single-token forward pass
             t_v_start = time.perf_counter()
             with torch.no_grad():
                 out = model(curr_target_tok_tensor, past_key_values=target_kv.cache, use_cache=True)
+            t_sync_start = time.perf_counter()
             torch.cuda.synchronize()
+            t_sync_end = time.perf_counter()
+            cycle_sync_ms += (t_sync_end - t_sync_start) * 1000.0
             t_v_end = time.perf_counter()
             verify_elapsed = t_v_end - t_v_start
+            cycle_verify_ms = verify_elapsed * 1000.0
             metrics.verify_time_s += verify_elapsed
+            measured_vanilla_ms.append(cycle_verify_ms)
             metrics.num_verification_cycles += 1
-
+            t_decision = time.perf_counter()
             if temperature == 0.0:
                 next_tok_tensor = out.logits[:, -1:, :].argmax(dim=-1)
                 next_tok = int(next_tok_tensor.item())
@@ -128,6 +196,17 @@ def prompt_lookup_generate(
                 next_tok = int(torch.multinomial(probs, num_samples=1).item())
                 curr_target_tok_tensor = torch.tensor([[next_tok]], device=device)
 
+            metrics.per_iteration_stats.append({
+                "k": 0, "accepted": 0, "rejected_at": None,
+                "lookup_ms": cycle_lookup_ms, "verify_ms": cycle_verify_ms,
+                "crop_ms": 0.0,
+                "decision_ms": (time.perf_counter() - t_decision) * 1000.0,
+                "sync_wait_ms": cycle_sync_ms,
+                "match_source": match.source, "match_order": match.ngram_size,
+                "match_repetitions": match.repetitions,
+                "match_confidence": match.confidence,
+                "context_len": current_prefix_len,
+            })
             generated_token_ids.append(curr_target_tok)
             full_history.append(curr_target_tok)
             current_prefix_len += 1
@@ -145,13 +224,19 @@ def prompt_lookup_generate(
         t_verify_start = time.perf_counter()
         with torch.no_grad():
             v_out = model(cand_tensor, past_key_values=target_kv.cache, use_cache=True)
+        t_sync_start = time.perf_counter()
         torch.cuda.synchronize()
+        t_sync_end = time.perf_counter()
+        cycle_sync_ms += (t_sync_end - t_sync_start) * 1000.0
         t_verify_end = time.perf_counter()
         verify_elapsed = t_verify_end - t_verify_start
         metrics.verify_time_s += verify_elapsed
+        cycle_verify_ms = verify_elapsed * 1000.0
+        measured_verify_ms[actual_k] = cycle_verify_ms
         metrics.num_verification_cycles += 1
 
         # Phase 3: Accept / Reject & Target KV Crop
+        t_decision = time.perf_counter()
         cycle_emitted = [curr_target_tok]
         rejected_at: Optional[int] = None
         num_accepted_draft = 0
@@ -172,7 +257,9 @@ def prompt_lookup_generate(
                 num_accepted_draft = mismatch_idx
                 if mismatch_idx > 0:
                     cycle_emitted.extend(candidate_tokens[:mismatch_idx])
+                t_crop = time.perf_counter()
                 target_kv.crop(current_prefix_len + len(cycle_emitted))
+                cycle_crop_ms += (time.perf_counter() - t_crop) * 1000.0
                 rej_tok_tensor = v_preds[mismatch_idx].view(1, 1)
                 curr_target_tok_tensor = rej_tok_tensor
                 curr_target_tok = int(rej_tok_tensor.item())
@@ -188,7 +275,9 @@ def prompt_lookup_generate(
                     cycle_emitted.append(tok_id)
                     num_accepted_draft += 1
                 else:
+                    t_crop = time.perf_counter()
                     target_kv.crop(current_prefix_len + len(cycle_emitted))
+                    cycle_crop_ms += (time.perf_counter() - t_crop) * 1000.0
                     curr_target_tok = int(t_prob.argmax().item())
                     curr_target_tok_tensor = torch.tensor([[curr_target_tok]], device=device)
                     rejected_at = i
@@ -204,6 +293,17 @@ def prompt_lookup_generate(
         generated_token_ids.extend(cycle_emitted)
         full_history.extend(cycle_emitted)
         current_prefix_len += len(cycle_emitted)
+        metrics.per_iteration_stats.append({
+            "k": actual_k, "accepted": num_accepted_draft,
+            "rejected_at": rejected_at, "lookup_ms": cycle_lookup_ms,
+            "verify_ms": cycle_verify_ms, "crop_ms": cycle_crop_ms,
+            "decision_ms": (time.perf_counter() - t_decision) * 1000.0,
+            "sync_wait_ms": cycle_sync_ms, "match_source": match.source,
+            "match_order": match.ngram_size,
+            "match_repetitions": match.repetitions,
+            "match_confidence": match.confidence,
+            "context_len": current_prefix_len - len(cycle_emitted),
+        })
 
         if any(t == tokenizer.eos_token_id for t in cycle_emitted):
             break
@@ -218,6 +318,8 @@ def prompt_lookup_generate(
 
     if len(generated_token_ids) > max_new_tokens:
         generated_token_ids = generated_token_ids[:max_new_tokens]
+
+    metrics.generated_token_ids = generated_token_ids
 
     new_tokens_count = len(generated_token_ids)
     metrics.total_tokens = new_tokens_count

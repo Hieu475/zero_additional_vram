@@ -62,3 +62,22 @@ class TestCompetitiveBaselines:
         cands_none = find_candidate_tokens(tokens_none, ngram_size=3, max_candidates=3)
         assert cands_none == []
 
+    def test_prompt_lookup_reports_separate_sources(self):
+        from zassd.decoding.ngram import find_candidate_match
+
+        prompt = [10, 20, 30, 40, 50]
+        generated = [7, 8, 9, 60, 70, 80, 7, 8, 9]
+        prompt_history = prompt + [10, 20, 30]
+        prompt_match = find_candidate_match(prompt_history, prompt, generated,
+                                            ngram_size=3, max_candidates=3)
+        assert prompt_match.source == "prompt"
+        assert prompt_match.candidates == [40, 50]
+
+        generated_match = find_candidate_match(prompt + generated, prompt, generated,
+                                               ngram_size=3, max_candidates=3,
+                                               include_generated=True)
+        assert generated_match.source == "generated"
+        assert generated_match.candidates == [60, 70, 80]
+        assert generated_match.repetitions >= 1
+        assert 0.0 <= generated_match.confidence <= 1.0
+
