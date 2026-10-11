@@ -101,3 +101,18 @@ def test_oracle_differs_from_router_on_panic():
     assert dec.source == "vanilla"
     o_src, _ = r.oracle_select(hist, 999, step_k=1, entropy=5.0)
     assert o_src == "layer_skip", f"oracle should speculate, got {o_src}"
+
+
+def test_pld_only_cost_gate_never_selects_layer_skip():
+    hist = [10, 20, 30, 40, 10, 20, 30, 50, 10, 20, 30]
+    fast = HybridDraftRouter(
+        cost_model=_stub_cost_model(verify_ms=25.0, draft_ms=1.0, ls_alpha=1.0),
+        enable_layer_skip=False,
+    )
+    slow = HybridDraftRouter(
+        cost_model=_stub_cost_model(verify_ms=500.0, draft_ms=1.0, ls_alpha=1.0),
+        enable_layer_skip=False,
+    )
+    assert fast.select_source(hist, 40, step_k=2, entropy=1.0).source == "pld"
+    assert slow.select_source(hist, 40, step_k=2, entropy=1.0).source == "vanilla"
+    assert slow.oracle_select(hist, 40, step_k=2, entropy=1.0)[0] == "vanilla"

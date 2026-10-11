@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Standardized Benchmark Suite for NeurIPS/ICML Top-Tier Submission.
+"""Standardized paired benchmark suite for zero auxiliary-weight decoding.
 
 Evaluates Zero-Additional-Model-Weight-VRAM Decoding across three canonical NLP benchmarks:
 1. GSM8K (Multi-step mathematical reasoning)
@@ -10,7 +10,7 @@ Measures:
 - Generation throughput (tokens/second)
 - Relative wall-clock speedup vs. Vanilla
 - Token acceptance rate (%)
-- Exact match (%) with canonical target model output
+- Exact token-ID match (%) with canonical target model output
 - Memory footprint (MB auxiliary weight VRAM)
 
 Saves results to experiments/final_validation/standard_benchmark_suite.json.
@@ -93,12 +93,12 @@ def evaluate_benchmark_file(
             if len(records) >= num_samples:
                 break
 
-    strategies = ["Vanilla", "Prompt-Lookup (PLD)", "ZASSD Empirical-6 (k=1)", "ZASSD Hybrid (k=2)", "ZASSD Routed (k=2+PLD4)"]
+    strategies = ["Vanilla", "Prompt-Lookup (PLD, k=4)", "PLD Cost-Gated (k<=4)", "ZASSD Empirical-6 (k=1)", "ZASSD Hybrid (k=2)", "ZASSD Routed (k=2+PLD4)"]
     bench_results: dict[str, list[dict[str, Any]]] = {s: [] for s in strategies}
 
     _lname = getattr(tokenizer, "name_or_path", "") or ""
     _mkey = "llama32_3b" if "llama" in _lname.lower() else "qwen25_3b"
-    _router = HybridDraftRouter(cost_model=MeasuredActionCostModel.for_model(_mkey), pld_k=4)
+    cost_model = MeasuredActionCostModel.for_model(_mkey)
 
     for idx, item in enumerate(records):
         prompt = item["prompt"]
@@ -116,21 +116,42 @@ def evaluate_benchmark_file(
             "tokens": len(v_tokens),
         })
 
-        # 2. Prompt Lookup (PLD, k=2)
-        pld_text, m_pld = prompt_lookup_generate(model, tokenizer, prompt, k=2, max_new_tokens=max_new_tokens, device=device)
-        pld_em = 100.0 if pld_text.strip() == v_text.strip() else (100.0 if v_text.strip() in pld_text or pld_text.strip() in v_text else 0.0)
-        bench_results["Prompt-Lookup (PLD)"].append({
+        # 2. Pure PLD already falls back to vanilla whenever lookup misses.
+        # Use the same maximum PLD horizon as the routed methods.
+        _, m_pld = prompt_lookup_generate(model, tokenizer, prompt, k=4, max_new_tokens=max_new_tokens, device=device)
+        pld_em = 100.0 if m_pld.generated_token_ids == v_tokens else 0.0
+        bench_results["Prompt-Lookup (PLD, k=4)"].append({
             "id": item_id,
             "tps": m_pld.tokens_per_second,
             "speedup": m_pld.tokens_per_second / v_tps if v_tps > 0 else 1.0,
             "acceptance_rate": m_pld.acceptance_rate,
             "exact_match": pld_em,
             "tokens": m_pld.total_tokens,
+            "token_ids": m_pld.generated_token_ids,
+        })
+
+        # 3. Cost-aware PLD vs vanilla, with layer-skip disabled.
+        gated_router = HybridDraftRouter(cost_model=cost_model, pld_k=4, enable_layer_skip=False)
+        _, m_gated = self_speculative_generate(
+            model, tokenizer, layer_mgr, skip_indices, prompt, k=2,
+            draft_mode="routed", router=gated_router, config_name="cka_75",
+            max_new_tokens=max_new_tokens, device=device,
+        )
+        bench_results["PLD Cost-Gated (k<=4)"].append({
+            "id": item_id,
+            "tps": m_gated.tokens_per_second,
+            "speedup": m_gated.tokens_per_second / v_tps if v_tps > 0 else 1.0,
+            "acceptance_rate": m_gated.acceptance_rate,
+            "exact_match": 100.0 if m_gated.generated_token_ids == v_tokens else 0.0,
+            "tokens": m_gated.total_tokens,
+            "token_ids": m_gated.generated_token_ids,
+            "pld_cycles": m_gated.pld_cycles,
+            "layer_cycles": m_gated.layer_skip_cycles,
         })
 
         # 3. ZASSD Empirical-6 (k=1)
         emp_text, m_emp = self_speculative_generate(model, tokenizer, layer_mgr, skip_indices, prompt, k=1, max_new_tokens=max_new_tokens, device=device)
-        emp_em = 100.0 if emp_text.strip() == v_text.strip() else (100.0 if v_text.strip() in emp_text or emp_text.strip() in v_text else 0.0)
+        emp_em = 100.0 if m_emp.generated_token_ids == v_tokens else 0.0
         bench_results["ZASSD Empirical-6 (k=1)"].append({
             "id": item_id,
             "tps": m_emp.tokens_per_second,
@@ -142,7 +163,7 @@ def evaluate_benchmark_file(
 
         # 4. ZASSD Hybrid (k=2)
         hyb_text, m_hyb = self_speculative_generate(model, tokenizer, layer_mgr, skip_indices, prompt, k=2, draft_mode="hybrid", max_new_tokens=max_new_tokens, device=device)
-        hyb_em = 100.0 if hyb_text.strip() == v_text.strip() else (100.0 if v_text.strip() in hyb_text or hyb_text.strip() in v_text else 0.0)
+        hyb_em = 100.0 if m_hyb.generated_token_ids == v_tokens else 0.0
         bench_results["ZASSD Hybrid (k=2)"].append({
             "id": item_id,
             "tps": m_hyb.tokens_per_second,
@@ -155,11 +176,11 @@ def evaluate_benchmark_file(
         })
 
         # 5. ZASSD Routed (cost-aware PLD vs layer-skip, LS k=2 + PLD k<=4)
+        routed_router = HybridDraftRouter(cost_model=cost_model, pld_k=4)
         rt_text, m_rt = self_speculative_generate(model, tokenizer, layer_mgr, skip_indices, prompt, k=2,
-            draft_mode="routed", router=_router, config_name="cka_75",
+            draft_mode="routed", router=routed_router, config_name="cka_75",
             max_new_tokens=max_new_tokens, device=device)
-        _in = v_text.strip(); _out = rt_text.strip()
-        rt_em = 100.0 if _out == _in else (100.0 if _in in _out or _out in _in else 0.0)
+        rt_em = 100.0 if m_rt.generated_token_ids == v_tokens else 0.0
         bench_results["ZASSD Routed (k=2+PLD4)"].append({
             "id": item_id,
             "tps": m_rt.tokens_per_second,
@@ -259,7 +280,7 @@ def main():
     final_table.add_column("Mean Acceptance", justify="right")
     final_table.add_column("Output Match", justify="right")
 
-    strategies = ["Vanilla", "Prompt-Lookup (PLD)", "ZASSD Empirical-6 (k=1)", "ZASSD Hybrid (k=2)", "ZASSD Routed (k=2+PLD4)"]
+    strategies = ["Vanilla", "Prompt-Lookup (PLD, k=4)", "PLD Cost-Gated (k<=4)", "ZASSD Empirical-6 (k=1)", "ZASSD Hybrid (k=2)", "ZASSD Routed (k=2+PLD4)"]
     aggregated_summary = {}
 
     for s in strategies:

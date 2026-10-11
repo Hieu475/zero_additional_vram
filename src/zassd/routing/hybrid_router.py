@@ -29,6 +29,11 @@ from dataclasses import dataclass, field
 from typing import Any, Optional
 
 from zassd.decoding.ngram import find_candidate_tokens
+from zassd.profiling.online_cost import (
+    AcceptanceFeatures,
+    CalibratedAcceptancePredictor,
+    OnlineLatencyTracker,
+)
 
 
 @dataclass
@@ -89,6 +94,9 @@ class HybridDraftRouter:
         enable_vanilla_skip: bool = True,
         enable_weak_hit_cap: bool = True,
         enable_horizon_tuning: bool = True,
+        enable_layer_skip: bool = True,
+        latency_tracker: OnlineLatencyTracker | None = None,
+        alpha_predictor: CalibratedAcceptancePredictor | None = None,
     ) -> None:
         """Args (ablation switches, all True in the full router):
             prefer_pld_margin: 1.25 = asymmetric PLD preference; 1.0 = none.
@@ -96,6 +104,11 @@ class HybridDraftRouter:
                 vanilla, no LS-vs-vanilla opportunity-cost skip).
             enable_weak_hit_cap: False = weak bigram hits keep full horizon.
             enable_horizon_tuning: False = no 4->2 PLD horizon truncation.
+            latency_tracker: optional online EMA tracker for T_vanilla /
+                T_draft / T_verify. When None, profile predictions are used
+                as-is (legacy behaviour).
+            alpha_predictor: optional online calibrated acceptance model.
+                When None, EMA + heuristic adjustments are used (legacy).
         """
         self.cost_model = cost_model
         self.ngram_size = ngram_size
@@ -106,30 +119,74 @@ class HybridDraftRouter:
         self.enable_vanilla_skip = enable_vanilla_skip
         self.enable_weak_hit_cap = enable_weak_hit_cap
         self.enable_horizon_tuning = enable_horizon_tuning
+        self.enable_layer_skip = enable_layer_skip
         self.pld_k = pld_k
+        self.latency_tracker = latency_tracker
+        self.alpha_predictor = alpha_predictor
+        self._pending_features: dict[str, AcceptanceFeatures] = {}
         self.stats = RouterStats(
             alpha_pld_ema=pld_prior_alpha, alpha_ls_ema=ls_prior_alpha
         )
 
     # -- internal estimators -------------------------------------------------
     def _verify_ms(self, k: int) -> float:
+        fallback: float
         if self.cost_model is not None and hasattr(self.cost_model, "predict_verify_ms"):
             try:
-                return float(self.cost_model.predict_verify_ms(k))
+                fallback = float(self.cost_model.predict_verify_ms(k))
             except Exception:
-                pass
-        # fallback: gamma_0=23.3 (Qwen) + 3.5ms/extra token (measured in cost_model)
-        return 23.3 + max(0, k - 1) * 3.5
+                # fallback: gamma_0=23.3 (Qwen) + 3.5ms/extra token
+                fallback = 23.3 + max(0, k - 1) * 3.5
+        else:
+            fallback = 23.3 + max(0, k - 1) * 3.5
+        if self.latency_tracker is not None:
+            return self.latency_tracker.predict_verify(k, fallback).value_ms
+        return fallback
 
     def _ls_draft_ms(self, config_name: str, k: int) -> float:
+        fallback: float
         if self.cost_model is not None and hasattr(self.cost_model, "predict_draft_ms"):
             try:
-                return float(self.cost_model.predict_draft_ms(config_name, k))
+                fallback = float(self.cost_model.predict_draft_ms(config_name, k))
             except Exception:
-                pass
-        return 19.7 * k  # fallback Qwen cka_75 K=1
+                fallback = 19.7 * k  # fallback Qwen cka_75 K=1
+        else:
+            fallback = 19.7 * k
+        if self.latency_tracker is not None:
+            return self.latency_tracker.predict_draft(config_name, k, fallback).value_ms
+        return fallback
 
-    def _ls_alpha(self, config_name: str, k: int, entropy: float) -> float:
+    def _retained_frac(self, config_name: str) -> float:
+        try:
+            kept = self.cost_model.known_kept_layers[config_name]
+            total = self.cost_model.total_layers
+            return float(kept) / float(total)
+        except Exception:
+            return 0.75
+
+    def _pld_alpha_legacy(self, mlen: int, entropy: float) -> float:
+        alpha_pld = self.stats.alpha_pld_ema
+        if mlen <= 2:
+            alpha_pld *= 0.75
+        if entropy < self.entropy_low:
+            alpha_pld = min(0.98, alpha_pld + 0.05)
+        elif entropy > self.entropy_high:
+            alpha_pld *= 0.90
+        return alpha_pld
+
+    def _pld_alpha(self, mlen: int, k_eff: int, entropy: float,
+                   margin: float | None) -> float:
+        if self.alpha_predictor is not None:
+            hit = 1.0 if mlen >= 3 else (0.25 if mlen == 2 else 0.0)
+            f = AcceptanceFeatures(
+                entropy=entropy, margin=margin, retained_frac=0.75,
+                ngram_hit=hit, alpha_ema=self.stats.alpha_pld_ema, k=k_eff,
+            )
+            self._pending_features["pld"] = f
+            return float(self.alpha_predictor.predict(f))
+        return self._pld_alpha_legacy(mlen, entropy)
+
+    def _ls_alpha_legacy(self, config_name: str, k: int, entropy: float) -> float:
         if self.cost_model is not None and hasattr(self.cost_model, "predict_acceptance_rate"):
             try:
                 return float(
@@ -138,6 +195,22 @@ class HybridDraftRouter:
             except Exception:
                 pass
         return self.stats.alpha_ls_ema
+
+    def _ls_alpha(self, config_name: str, k: int, entropy: float) -> float:
+        return self._ls_alpha_legacy(config_name, k, entropy)
+
+    def _ls_alpha_full(self, config_name: str, k: int, entropy: float,
+                       margin: float | None) -> float:
+        if self.alpha_predictor is not None:
+            f = AcceptanceFeatures(
+                entropy=entropy, margin=margin,
+                retained_frac=self._retained_frac(config_name),
+                ngram_hit=0.0, alpha_ema=self.stats.alpha_ls_ema, k=k,
+            )
+            self._pending_features["layer_skip"] = f
+            return float(self.alpha_predictor.predict(f))
+        legacy = self._ls_alpha_legacy(config_name, k, entropy)
+        return 0.5 * legacy + 0.5 * self.stats.alpha_ls_ema
 
     # -- main API ---------------------------------------------------------
     def _vanilla_tps(self) -> float:
@@ -169,6 +242,7 @@ class HybridDraftRouter:
         entropy: float,
         config_name: str = "cka_75",
         pld_k: int | None = None,
+        margin: float | None = None,
     ) -> tuple[str, dict[str, float]]:
         """Model-based per-cycle oracle: pure E[TPS] argmax over actions.
 
@@ -189,19 +263,15 @@ class HybridDraftRouter:
         tps_pld = 0.0
         if cands:
             k_eff = len(cands)
-            alpha_pld = self.stats.alpha_pld_ema
-            if mlen <= 2:
-                alpha_pld *= 0.75
-            if entropy < self.entropy_low:
-                alpha_pld = min(0.98, alpha_pld + 0.05)
-            elif entropy > self.entropy_high:
-                alpha_pld *= 0.90
+            alpha_pld = self._pld_alpha(mlen, k_eff, entropy, margin)
             t_cycle = self.PLD_DRAFT_MS + self._verify_ms(k_eff)
             tps_pld = (1.0 + alpha_pld * k_eff) / (t_cycle / 1000.0)
-        alpha_ls = 0.5 * self._ls_alpha(config_name, step_k, entropy)
-        alpha_ls += 0.5 * self.stats.alpha_ls_ema
-        t_cycle_ls = self._ls_draft_ms(config_name, step_k) + self._verify_ms(step_k)
-        tps_ls = (1.0 + alpha_ls * step_k) / (t_cycle_ls / 1000.0)
+        if self.enable_layer_skip:
+            alpha_ls = self._ls_alpha_full(config_name, step_k, entropy, margin)
+            t_cycle_ls = self._ls_draft_ms(config_name, step_k) + self._verify_ms(step_k)
+            tps_ls = (1.0 + alpha_ls * step_k) / (t_cycle_ls / 1000.0)
+        else:
+            tps_ls = 0.0
         scored = {"vanilla": tps_v, "pld": tps_pld, "layer_skip": tps_ls}
         if cands and tps_pld >= tps_ls and tps_pld >= tps_v:
             return "pld", scored
@@ -217,12 +287,15 @@ class HybridDraftRouter:
         entropy: float,
         config_name: str = "cka_75",
         pld_k: int | None = None,
+        margin: float | None = None,
     ) -> RouterDecision:
         """Pick the best draft source for the current cycle (runs on CPU before draft).
 
         pld_k: max candidates for PLD (free draft so it may exceed layer-skip's
             step_k; None = use step_k). The router compares E[TPS] fairly
             using each source's actual K_eff.
+        margin: optional top1-top2 logit gap for the calibrated predictor;
+            None keeps the prior-only direction (legacy behaviour).
         """
         pld_k = step_k if pld_k is None else max(step_k, pld_k)
         cands, mlen = self.probe_pld(full_history, curr_tok, pld_k)
@@ -243,13 +316,7 @@ class HybridDraftRouter:
         if cands:
             k_eff = len(cands)
             # weak (bigram) hits get discounted alpha; strong hits keep EMA; low entropy adds bonus
-            alpha_pld = self.stats.alpha_pld_ema
-            if mlen <= 2:
-                alpha_pld *= 0.75
-            if entropy < self.entropy_low:
-                alpha_pld = min(0.98, alpha_pld + 0.05)
-            elif entropy > self.entropy_high:
-                alpha_pld *= 0.90
+            alpha_pld = self._pld_alpha(mlen, k_eff, entropy, margin)
             t_cycle = self.PLD_DRAFT_MS + self._verify_ms(k_eff)
             tps_pld = (1.0 + alpha_pld * k_eff) / (t_cycle / 1000.0)
             # Pick the optimal horizon for PLD: long K only pays off when alpha is high.
@@ -264,13 +331,26 @@ class HybridDraftRouter:
                     tps_pld = _tps2
 
         # --- layer-skip branch ---
-        alpha_ls = self._ls_alpha(config_name, step_k, entropy)
-        # correct with observed EMA (simple BanditSpec-style online learning)
-        alpha_ls = 0.5 * alpha_ls + 0.5 * self.stats.alpha_ls_ema
-        t_cycle_ls = self._ls_draft_ms(config_name, step_k) + self._verify_ms(step_k)
-        tps_ls = (1.0 + alpha_ls * step_k) / (t_cycle_ls / 1000.0)
+        if self.enable_layer_skip:
+            alpha_ls = self._ls_alpha_full(config_name, step_k, entropy, margin)
+            t_cycle_ls = self._ls_draft_ms(config_name, step_k) + self._verify_ms(step_k)
+            tps_ls = (1.0 + alpha_ls * step_k) / (t_cycle_ls / 1000.0)
+        else:
+            tps_ls = 0.0
 
         # --- argmax decision with margin preferring PLD (0 VRAM + 0 draft energy) ---
+        if not self.enable_layer_skip:
+            if cands and tps_pld >= self._vanilla_tps():
+                return RouterDecision(
+                    source="pld", candidates=cands, ngram_match_len=mlen,
+                    expected_tps_pld=tps_pld, expected_tps_ls=0.0,
+                    reason="PLD-only cost gate: predicted faster than vanilla",
+                )
+            return RouterDecision(
+                source="vanilla", expected_tps_pld=tps_pld,
+                expected_tps_ls=0.0,
+                reason="PLD-only cost gate: vanilla predicted faster",
+            )
         if cands and tps_pld * self.prefer_pld_margin >= tps_ls:
             reason = (
                 f"PLD win: tps_pld={tps_pld:.1f} vs tps_ls={tps_ls:.1f} "
@@ -316,10 +396,23 @@ class HybridDraftRouter:
         )
 
     def update(
-        self, source: str, accepted: int, proposed: int, ngram_match_len: int = 0
+        self, source: str, accepted: int, proposed: int, ngram_match_len: int = 0,
+        draft_ms: float | None = None, verify_ms: float | None = None,
+        config_name: str = "cka_75", step_k: int | None = None,
     ) -> None:
-        """Update EMA after each cycle (called from the generate loop)."""
+        """Update EMA after each cycle (called from the generate loop).
+
+        Extra kwargs feed the online tracker/predictor only and default to
+        None, so all existing call sites keep working unchanged:
+            draft_ms / verify_ms: measured wall times for this cycle;
+            config_name / step_k: identify the draft bucket for LS cycles.
+        """
         self.stats.total_cycles += 1
+        if self.latency_tracker is not None and verify_ms is not None:
+            k = step_k if step_k is not None else max(1, proposed)
+            self.latency_tracker.update_verify(k, verify_ms)
+            if source == "layer_skip" and draft_ms is not None:
+                self.latency_tracker.update_draft(config_name, k, draft_ms)
         if proposed <= 0:
             self.stats.vanilla_fallbacks += 1
             return
@@ -334,3 +427,37 @@ class HybridDraftRouter:
         elif source == "layer_skip":
             self.stats.layer_skip_cycles += 1
             self.stats.alpha_ls_ema = (1 - b) * self.stats.alpha_ls_ema + b * obs_alpha
+        if self.alpha_predictor is not None:
+            f = self._pending_features.get(source)
+            if f is None:
+                f = AcceptanceFeatures(
+                    alpha_ema=(self.stats.alpha_pld_ema if source == "pld"
+                               else self.stats.alpha_ls_ema),
+                    k=max(1, proposed),
+                    retained_frac=(0.75 if source == "pld"
+                                   else self._retained_frac(config_name)),
+                    ngram_hit=(1.0 if ngram_match_len >= 3
+                               else (0.25 if ngram_match_len == 2 else 0.0)),
+                )
+            self.alpha_predictor.update(f, accepted, proposed)
+
+    def observe_vanilla(self, ms: float) -> None:
+        """Feed a measured single-token vanilla step to the latency tracker.
+
+        Stats counters are untouched (unlike update()), so existing
+        benchmark counts stay identical when no tracker is attached.
+        """
+        if self.latency_tracker is not None:
+            self.latency_tracker.update_vanilla(ms)
+
+    def calibration_report(self) -> dict:
+        """ECE + observation counts for the paper (no GPU needed)."""
+        out: dict = {
+            "alpha_ece": (self.alpha_predictor.expected_calibration_error()
+                          if self.alpha_predictor is not None else 0.0),
+            "alpha_obs": (self.alpha_predictor.n_observations
+                          if self.alpha_predictor is not None else 0),
+            "vanilla_obs": (self.latency_tracker.n_vanilla_obs
+                            if self.latency_tracker is not None else 0),
+        }
+        return out
