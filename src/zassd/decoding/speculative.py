@@ -272,8 +272,17 @@ def self_speculative_generate(
             generated_token_ids.append(curr_target_tok)
             full_history.append(curr_target_tok)
             current_prefix_len += 1
+            vanilla_stat = {
+                "k": 0, "accepted": 0, "rejected_at": None,
+                "emitted_count": 1, "draft_time_ms": 0.0,
+                "verify_time_ms": verify_elapsed * 1000, "cache_time_ms": 0.0,
+                "skip_indices": active_skip, "entropy": curr_entropy,
+                "router_source": getattr(getattr(router, "_pending_decision", None), "source", "vanilla"),
+                "oracle_source": (getattr(router, "_pending_oracle", None) or {}).get("source"),
+                "oracle_tps": (getattr(router, "_pending_oracle", None) or {}).get("tps"),
+            }
             if diagnostic_trace:
-                metrics.per_iteration_stats.append({
+                vanilla_stat.update({
                     "source": "vanilla", "output_start": trace_output_start,
                     "cache_len_before_verify": trace_prefix_len,
                     "cache_len_after_commit": target_kv.get_seq_length(),
@@ -283,6 +292,7 @@ def self_speculative_generate(
                     "cache_digest_before": trace_cache_digest,
                     "cache_digest_after": diagnostic_cache_digest(target_kv) if diagnostic_hash_kv else None,
                 })
+            metrics.per_iteration_stats.append(vanilla_stat)
             if curr_target_tok == tokenizer.eos_token_id:
                 break
             curr_target_tok = next_tok
@@ -422,8 +432,17 @@ def self_speculative_generate(
             generated_token_ids.append(curr_target_tok)
             full_history.append(curr_target_tok)
             current_prefix_len += 1
+            vanilla_stat = {
+                "k": 0, "accepted": 0, "rejected_at": None,
+                "emitted_count": 1, "draft_time_ms": draft_elapsed * 1000,
+                "verify_time_ms": verify_elapsed * 1000, "cache_time_ms": 0.0,
+                "skip_indices": active_skip, "entropy": curr_entropy,
+                "router_source": getattr(getattr(router, "_pending_decision", None), "source", "vanilla"),
+                "oracle_source": (getattr(router, "_pending_oracle", None) or {}).get("source"),
+                "oracle_tps": (getattr(router, "_pending_oracle", None) or {}).get("tps"),
+            }
             if diagnostic_trace:
-                metrics.per_iteration_stats.append({
+                vanilla_stat.update({
                     "source": "vanilla", "output_start": trace_output_start,
                     "cache_len_before_verify": trace_prefix_len,
                     "cache_len_after_commit": target_kv.get_seq_length(),
@@ -433,6 +452,7 @@ def self_speculative_generate(
                     "cache_digest_before": trace_cache_digest,
                     "cache_digest_after": diagnostic_cache_digest(target_kv) if diagnostic_hash_kv else None,
                 })
+            metrics.per_iteration_stats.append(vanilla_stat)
             if curr_target_tok == tokenizer.eos_token_id:
                 break
             curr_target_tok = next_tok
@@ -442,19 +462,6 @@ def self_speculative_generate(
             last_verify_ms = verify_elapsed * 1000
             if draft_mode == "routed" and router is not None:
                 router.observe_vanilla(verify_elapsed * 1000.0)
-                # Log vanilla-fallback cycles too (router and/or oracle said AR)
-                _o = getattr(router, "_pending_oracle", None) or {}
-                if not diagnostic_trace:
-                    metrics.per_iteration_stats.append({
-                    "k": 0, "accepted": 0, "rejected_at": None,
-                    "emitted_count": 1,
-                    "draft_time_ms": 0.0, "verify_time_ms": verify_elapsed * 1000,
-                    "cache_time_ms": 0.0, "skip_indices": active_skip,
-                    "entropy": curr_entropy,
-                    "router_source": getattr(getattr(router, "_pending_decision", None), "source", "vanilla"),
-                    "oracle_source": _o.get("source"),
-                    "oracle_tps": _o.get("tps"),
-                    })
             continue
 
         # -------------------------------------------------------------------
