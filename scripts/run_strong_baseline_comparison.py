@@ -87,6 +87,23 @@ def paired_prompt_ratios(rows: list[dict], method: str, metric: str) -> list[flo
     return [float(np.mean(values)) for values in per_prompt.values()]
 
 
+def paired_method_prompt_ratios(rows: list[dict], method: str, baseline_method: str,
+                                metric: str = "end_to_end_tps") -> list[float]:
+    grouped: dict[tuple, dict[str, dict]] = {}
+    for row in rows:
+        key = (row["benchmark"], row["id"], row["repeat"], row["order_seed"])
+        grouped.setdefault(key, {})[row["method"]] = row
+    per_prompt: dict[tuple[str, str], list[float]] = {}
+    for key, values in grouped.items():
+        if method not in values or baseline_method not in values:
+            continue
+        baseline = values[baseline_method].get(metric, 0.0)
+        value = values[method].get(metric, 0.0)
+        if baseline and np.isfinite(baseline) and np.isfinite(value):
+            per_prompt.setdefault(key[:2], []).append(value / baseline)
+    return [float(np.mean(values)) for values in per_prompt.values()]
+
+
 def ratio_summary(ratios: list[float]) -> dict:
     return {
         "n_prompts": len(ratios),
@@ -137,6 +154,11 @@ def summarize(rows: list[dict]) -> dict:
             paired_prompt_ratios(rows, method, "end_to_end_tps"))
         report[f"{method}_decode_tps_vs_vanilla_paired"] = ratio_summary(
             paired_prompt_ratios(rows, method, "decode_tps"))
+    for method in ("routed", "pld_gate"):
+        report[f"{method}_vs_pld_paired"] = ratio_summary(
+            paired_method_prompt_ratios(rows, method, "pld"))
+        report[f"{method}_decode_tps_vs_pld_paired"] = ratio_summary(
+            paired_method_prompt_ratios(rows, method, "pld", "decode_tps"))
     for control in ("vanilla_via_speculative_core", "pld_forced_miss"):
         report[f"{control}_control_ratio"] = ratio_summary(
             paired_prompt_ratios(rows, control, "end_to_end_tps"))
@@ -436,8 +458,7 @@ def main() -> None:
               "overall": summarize(rows),
               "by_benchmark": {bench: summarize([row for row in rows
                                                 if row["benchmark"] == bench])
-                               for bench in BENCHMARKS},
-              "rows": rows}
+                               for bench in BENCHMARKS}}
     report["run_config"] = vars(args)
     (output / "summary.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     (output / "statistics.json").write_text(json.dumps({
