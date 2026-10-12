@@ -168,6 +168,7 @@ def run_action(model, tokenizer, manager, prompt: str | torch.Tensor, action: di
         skip_indices=action["skip_indices"], prompt=prompt, k=k,
         max_new_tokens=max_new_tokens, temperature=0.0, device=device,
         kv_cache_backend="static", config_name=action["config"],
+        collect_acceptance_cycles=True,
         kv_cache_max_capacity=max(2048, int(prompt.shape[-1]) + max_new_tokens + max(K_VALUES) + 8)
         if isinstance(prompt, torch.Tensor) else 2048,
     )
@@ -190,6 +191,7 @@ def run_action(model, tokenizer, manager, prompt: str | torch.Tensor, action: di
         "acceptance_rate": metrics.acceptance_rate,
         "peak_vram_mb": metrics.peak_vram_mb,
         "token_ids": metrics.generated_token_ids,
+        "acceptance_cycles": metrics.per_iteration_stats,
     }
 
 
@@ -217,6 +219,7 @@ def main() -> None:
         raise FileExistsError(f"Refusing to overwrite non-empty output directory: {out}")
     for split in ("calibration", "heldout"):
         (out / split).mkdir(parents=True, exist_ok=True)
+    (out / "acceptance_cycles").mkdir(parents=True, exist_ok=True)
     (out / "figures").mkdir(parents=True, exist_ok=True)
 
     calibration = []
@@ -258,6 +261,8 @@ def main() -> None:
     rng = random.Random(args.seed)
     cal_raw = out / "calibration/raw_measurements.jsonl"
     held_raw = out / "heldout/raw_measurements.jsonl"
+    cycle_paths = {"calibration": out / "acceptance_cycles/calibration.jsonl",
+                   "heldout": out / "acceptance_cycles/heldout.jsonl"}
     cal_vanilla: list[dict[str, Any]] = []
 
     # Warm the exact decode paths and action shapes used below. These runs are
@@ -329,6 +334,24 @@ def main() -> None:
                 telemetry_before = gpu_snapshot(args.device)
                 actual = run_action(model, tokenizer, manager, prompt, action, k,
                                     args.max_new_tokens, args.device)
+                for cycle_index, cycle in enumerate(actual.pop("acceptance_cycles")):
+                    accepted = int(cycle.get("accepted", 0))
+                    proposed = int(cycle.get("k", 0))
+                    append_jsonl(cycle_paths[split_name], {
+                        "split": split_name, "task": record["task"],
+                        "prompt_id": str(record["id"]), "action": action["config"], "k": k,
+                        "cycle_index": cycle_index,
+                        "context_length": cycle.get("cycle_context_length", int(ids.shape[-1])),
+                        "draft_tokens": proposed, "accepted_tokens": accepted,
+                        "emitted_tokens": int(cycle.get("emitted_count", 0)),
+                        "accepted_survival": [int(accepted >= i) for i in range(1, proposed + 1)],
+                        "draft_ms": float(cycle.get("draft_time_ms", 0.0)),
+                        "verify_ms": float(cycle.get("verify_time_ms", 0.0)),
+                        "cache_ms": float(cycle.get("cache_time_ms", 0.0)),
+                        "entropy": cycle.get("cycle_entropy"),
+                        "logit_margin": cycle.get("cycle_logit_margin"),
+                        "source": cycle.get("source", "layer_skip"),
+                    })
                 telemetry_after = gpu_snapshot(args.device)
                 row = {
                     "split": split_name, "task": record["task"], "prompt_id": str(record["id"]),

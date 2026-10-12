@@ -113,6 +113,7 @@ def self_speculative_generate(
     canonical_kv_replay: bool = False,
     canonical_verify: bool = False,
     margin_fallback_threshold: Optional[float] = None,
+    collect_acceptance_cycles: bool = False,
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Zero-Additional-VRAM self-speculative decoding.
 
@@ -137,6 +138,8 @@ def self_speculative_generate(
         canonical_verify: Verify draft positions sequentially; intended for greedy exactness audits.
         margin_fallback_threshold: Rebuild canonical KV and verify sequentially when any batched
             top-1 margin in a cycle is at or below this value (greedy only).
+        collect_acceptance_cycles: Include pre-cycle context/confidence and survival labels in
+            per_iteration_stats. Intended for offline predictor evaluation.
 
     Returns:
         Tuple of (generated_text, SpeculativeMetrics).
@@ -186,7 +189,7 @@ def self_speculative_generate(
     curr_entropy = float(compute_entropy(target_prefix_logit.float()).item())
     _need_margin = router is not None and draft_mode == "routed"
     curr_margin: float | None = (
-        _logit_margin(target_prefix_logit) if _need_margin else None
+        _logit_margin(target_prefix_logit) if (_need_margin or collect_acceptance_cycles) else None
     )
     if diagnostic_trace:
         prefill_top2 = torch.topk(target_prefix_logit.float(), 2)
@@ -210,6 +213,8 @@ def self_speculative_generate(
             break
 
         rem_tokens = max_new_tokens - len(generated_token_ids)
+        cycle_entropy = curr_entropy
+        cycle_margin = curr_margin if collect_acceptance_cycles else None
 
         if controller is not None:
             t_ctrl_start = time.perf_counter()
@@ -259,8 +264,9 @@ def self_speculative_generate(
 
             target_logit = out.logits[0, -1, :].float()
             curr_entropy = float(compute_entropy(target_logit).item())
-            if _need_margin and router is not None:
+            if _need_margin or collect_acceptance_cycles:
                 curr_margin = _logit_margin(target_logit)
+            if _need_margin and router is not None:
                 router.observe_vanilla(verify_elapsed * 1000.0)
             if temperature == 0.0:
                 next_tok_tensor = out.logits[:, -1:, :].argmax(dim=-1)
@@ -279,6 +285,9 @@ def self_speculative_generate(
                 "emitted_count": 1, "draft_time_ms": 0.0,
                 "verify_time_ms": verify_elapsed * 1000, "cache_time_ms": 0.0,
                 "skip_indices": active_skip, "entropy": curr_entropy,
+                "cycle_context_length": current_prefix_len - 1,
+                "cycle_entropy": cycle_entropy, "cycle_logit_margin": cycle_margin,
+                "draft_tokens": [], "accepted_survival": [], "source": "vanilla",
                 "router_source": getattr(getattr(router, "_pending_decision", None), "source", "vanilla"),
                 "oracle_source": (getattr(router, "_pending_oracle", None) or {}).get("source"),
                 "oracle_tps": (getattr(router, "_pending_oracle", None) or {}).get("tps"),
@@ -420,7 +429,7 @@ def self_speculative_generate(
 
             target_logit = out.logits[0, -1, :].float()
             curr_entropy = float(compute_entropy(target_logit).item())
-            if _need_margin and router is not None:
+            if _need_margin or collect_acceptance_cycles:
                 curr_margin = _logit_margin(target_logit)
             if temperature == 0.0:
                 next_tok_tensor = out.logits[:, -1:, :].argmax(dim=-1)
@@ -603,12 +612,12 @@ def self_speculative_generate(
         if rejected_at is not None:
             _rej_logit = v_logits[0, rejected_at, :].float()
             curr_entropy = float(compute_entropy(_rej_logit).item())
-            if _need_margin:
+            if _need_margin or collect_acceptance_cycles:
                 curr_margin = _logit_margin(_rej_logit)
         else:
             _ok_logit = v_logits[0, actual_k, :].float()
             curr_entropy = float(compute_entropy(_ok_logit).item())
-            if _need_margin:
+            if _need_margin or collect_acceptance_cycles:
                 curr_margin = _logit_margin(_ok_logit)
 
         last_accepted = num_accepted_draft
@@ -659,7 +668,13 @@ def self_speculative_generate(
             "oracle_tps": (getattr(router, "_pending_oracle", None) or {}).get("tps"),
             "margin_fallback": margin_fallback_triggered,
             "minimum_batch_margin": minimum_batch_margin,
+            "cycle_context_length": current_prefix_len - len(cycle_emitted),
+            "cycle_entropy": cycle_entropy,
+            "cycle_logit_margin": cycle_margin,
+            "source": "pld" if used_pld else ("vanilla" if routed_force_vanilla else "layer_skip"),
         }
+        if collect_acceptance_cycles:
+            iter_stat["accepted_survival"] = [int(num_accepted_draft >= i) for i in range(1, actual_k + 1)]
         if diagnostic_trace:
             top2 = torch.topk(v_logits[0].float(), 2, dim=-1).values
             iter_stat.update({
