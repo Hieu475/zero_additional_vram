@@ -96,13 +96,14 @@ def self_speculative_generate(
     tokenizer: PreTrainedTokenizer,
     layer_mgr: LayerManager,
     skip_indices: list[int],
-    prompt: str,
+    prompt: str | torch.Tensor,
     k: int = 4,
     controller: Optional[Any] = None,
     max_new_tokens: int = 128,
     temperature: float = 0.0,
     device: str = "cuda:0",
     kv_cache_backend: str = "static",
+    kv_cache_max_capacity: int = 2048,
     draft_mode: str = "layer_skip",
     ngram_size: int = 3,
     router: Optional[Any] = None,
@@ -127,6 +128,7 @@ def self_speculative_generate(
         temperature: Sampling temperature (0.0 = greedy).
         device: Device to run generation on.
         kv_cache_backend: KV cache backend ('static' for pre-allocated or 'dynamic').
+        kv_cache_max_capacity: Static cache capacity; must cover prompt plus generated tokens.
         draft_mode: Speculative draft mode ('layer_skip', 'hybrid', 'prompt_lookup', or 'routed').
         router: Optional HybridDraftRouter for draft_mode='routed' (cost-aware PLD vs layer-skip).
         config_name: CKA config name used by router cost estimates.
@@ -163,7 +165,7 @@ def self_speculative_generate(
     # Canonical Prefill: Populate Target KV Cache
     # -----------------------------------------------------------------------
     t_prefill_start = time.perf_counter()
-    target_kv = TargetKVCache(backend=kv_cache_backend)
+    target_kv = TargetKVCache(backend=kv_cache_backend, max_capacity=kv_cache_max_capacity)
     with torch.no_grad():
         prefill_out = model(prompt_ids, past_key_values=target_kv.cache, use_cache=True)
     target_prefix_logit = prefill_out.logits[0, -1, :]
@@ -502,7 +504,7 @@ def self_speculative_generate(
                     # The batched call has mutated the cache. Rebuild the
                     # already-emitted prefix tokenwise before exact verification.
                     replay_start = time.perf_counter()
-                    target_kv = TargetKVCache(backend=kv_cache_backend)
+                    target_kv = TargetKVCache(backend=kv_cache_backend, max_capacity=kv_cache_max_capacity)
                     model(prompt_ids, past_key_values=target_kv.cache, use_cache=True)
                     for replay_token in generated_token_ids:
                         replay_input = torch.tensor([[replay_token]], device=device)
@@ -633,7 +635,7 @@ def self_speculative_generate(
         # when its greedy token decisions match; those differences can accrue.
         if canonical_kv_replay:
             replay_start = time.perf_counter()
-            target_kv = TargetKVCache(backend=kv_cache_backend)
+            target_kv = TargetKVCache(backend=kv_cache_backend, max_capacity=kv_cache_max_capacity)
             with torch.no_grad():
                 model(prompt_ids, past_key_values=target_kv.cache, use_cache=True)
                 for replay_token in generated_token_ids:
