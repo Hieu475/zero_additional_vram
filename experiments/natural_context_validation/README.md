@@ -84,6 +84,54 @@ or another implementation detail, and three prompts do not establish a general
 NF4 guarantee. Its diagnostic timings include cache hashing and must not be
 used as a performance comparison.
 
+## Expanded paired run with PLD
+
+`full_n20_pld_rtx4050/` contains 80 natural-document prompts, 20 at each exact
+input length (384, 768, 1536 and 3072 tokens). It has 640 raw rows: one paired
+vanilla, PLD K=4 (`prompt+generated` candidates) and six layer-skip actions per
+prompt, all using NF4, FP16 compute, SDPA and the static KV backend. Method order
+was randomized within each prompt. The cost-model coefficients remained frozen.
+
+PLD averaged **1.031x** over all 80 prompts (prompt-bootstrap 95% CI
+**0.985–1.081**) with **91.2%** sequence identity. This is near break-even, not
+an overall speedup claim. The short-context bucket (384-token inputs) is a
+promising stratum: **1.129x** (95% CI **1.034–1.234**), but sequence identity
+was 90%. At 3072 tokens PLD was **0.967x** (95% CI **0.911–1.025**) with 95%
+sequence identity. The observed PLD lookup hit rate was 22.3% overall and 19.5%
+at 384 tokens; it accepted 0.22 draft tokens per verification cycle overall.
+
+All layer-skip actions were slower on average. CKA90/K2 was 0.847x
+(95% CI 0.828–0.867) with 80% sequence identity; CKA90/K4 was 0.732x
+(95% CI 0.707–0.757), also with 80% identity. Frozen cost-model predictions
+marked every layer-skip action unprofitable. Individual single-run observations
+above 1x occurred for K2 actions, but they did not change the paired mean
+conclusion.
+
+The run was one session, not a thermal-controlled study. Telemetry snapshots
+ranged from 61–88°C and 1935–2550 MHz SM clock; buckets were traversed in order,
+although method order was randomized within each prompt. The prompt bootstrap
+does not account for session or thermal variation. Treat the short-context PLD
+result as a candidate regime for a repeated, thermally controlled validation.
+The 91.2% sequence identity also means performance must be reported with the
+correctness trade-off; this does not support a lossless-output claim.
+
+Reproduction:
+
+```bash
+python scripts/run_natural_context_validation.py \
+  --output-dir experiments/natural_context_validation/my_n20_run \
+  --per-bucket 20 --max-new-tokens 16 --seed 2027
+
+python scripts/analyze_natural_context_validation.py \
+  --raw experiments/natural_context_validation/my_n20_run/raw_measurements.jsonl \
+  --output experiments/natural_context_validation/my_n20_run/summary.json \
+  --seed 2027
+
+python scripts/plot_natural_context_validation.py \
+  --summary experiments/natural_context_validation/my_n20_run/summary.json \
+  --output experiments/natural_context_validation/my_n20_run/figures/natural_context_summary.pdf
+```
+
 Reproduce the diagnostic with:
 
 ```bash
