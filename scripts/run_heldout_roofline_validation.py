@@ -80,6 +80,17 @@ def package_version(name: str) -> str | None:
         return None
 
 
+def context_token_ids(tokenizer, prompt: str, target_tokens: int) -> torch.Tensor:
+    """Create token-exact context; extension by repetition is synthetic."""
+    ids = tokenizer(prompt, return_tensors="pt")["input_ids"]
+    if ids.shape[-1] >= target_tokens:
+        return ids[:, :target_tokens].contiguous()
+    body = ids[:, 1:] if ids.shape[-1] > 1 else ids
+    repeats = (target_tokens + body.shape[-1] - 1) // body.shape[-1]
+    extended = torch.cat([ids[:, :1], body.repeat(1, repeats)], dim=-1)
+    return extended[:, :target_tokens].contiguous()
+
+
 def gpu_snapshot(device: str) -> dict[str, Any]:
     result: dict[str, Any] = {"gpu_name": None, "sm_clock_mhz": None,
                               "temperature_c": None, "power_w_snapshot": None,
@@ -107,13 +118,14 @@ def gpu_snapshot(device: str) -> dict[str, Any]:
     return result
 
 
-def measure_vanilla(model, tokenizer, prompt: str, max_new_tokens: int,
+def measure_vanilla(model, tokenizer, prompt: str | torch.Tensor, max_new_tokens: int,
                     device: str) -> dict[str, Any]:
     """Vanilla reference using the same static KV path; separates prefill/decode."""
     from zassd.cache.kv_cache import TargetKVCache
 
-    ids = tokenizer(prompt, return_tensors="pt")["input_ids"].to(device)
-    cache = TargetKVCache(backend="static")
+    ids = (prompt if isinstance(prompt, torch.Tensor)
+           else tokenizer(prompt, return_tensors="pt")["input_ids"]).to(device)
+    cache = TargetKVCache(backend="static", max_capacity=max(2048, int(ids.shape[-1]) + max_new_tokens + 8))
     torch.cuda.synchronize(device)
     start = time.perf_counter()
     with torch.no_grad():
@@ -149,13 +161,15 @@ def append_jsonl(path: Path, row: dict[str, Any]) -> None:
         f.flush()
 
 
-def run_action(model, tokenizer, manager, prompt: str, action: dict[str, Any],
+def run_action(model, tokenizer, manager, prompt: str | torch.Tensor, action: dict[str, Any],
                k: int, max_new_tokens: int, device: str) -> dict[str, Any]:
     _, metrics = self_speculative_generate(
         model=model, tokenizer=tokenizer, layer_mgr=manager,
         skip_indices=action["skip_indices"], prompt=prompt, k=k,
         max_new_tokens=max_new_tokens, temperature=0.0, device=device,
         kv_cache_backend="static", config_name=action["config"],
+        kv_cache_max_capacity=max(2048, int(prompt.shape[-1]) + max_new_tokens + max(K_VALUES) + 8)
+        if isinstance(prompt, torch.Tensor) else 2048,
     )
     decode_s = max(1e-9, metrics.total_time_s - metrics.prefill_time_s)
     cycles = max(1, metrics.num_verification_cycles)

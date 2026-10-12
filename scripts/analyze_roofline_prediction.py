@@ -32,11 +32,18 @@ def feasibility(rows: list[dict[str, Any]]) -> dict[str, Any]:
     pred = np.asarray([r["prediction"]["speedup_vs_calibration_vanilla"] > 1.0 for r in rows], dtype=bool)
     tp = int(np.sum(pred & actual)); fp = int(np.sum(pred & ~actual))
     fn = int(np.sum(~pred & actual)); tn = int(np.sum(~pred & ~actual))
+    precision = float(tp / max(1, tp + fp))
+    recall = float(tp / max(1, tp + fn))
+    specificity = float(tn / max(1, tn + fp))
     return {
         "n_action_prompt_pairs": int(len(rows)), "threshold": "speedup > 1.0",
         "accuracy": float((tp + tn) / max(1, len(rows))),
-        "precision_profitable": float(tp / max(1, tp + fp)),
-        "recall_profitable": float(tp / max(1, tp + fn)),
+        "balanced_accuracy": float((recall + specificity) / 2.0),
+        "precision_profitable": precision,
+        "recall_profitable": recall,
+        "specificity": specificity,
+        "predicted_profitable_fraction": float(np.mean(pred)) if len(pred) else None,
+        "measured_profitable_fraction": float(np.mean(actual)) if len(actual) else None,
         "false_positive_rate": float(fp / max(1, fp + tn)),
         "confusion": {"tp": tp, "fp": fp, "fn": fn, "tn": tn},
     }
@@ -75,6 +82,8 @@ def summarize(rows: list[dict[str, Any]], split: str, baseline_tps: float) -> di
     tpc_a = [r["measured"]["generated_tokens_per_cycle"] for r in actions]
     tps_p = [r["prediction"]["decode_tps"] for r in actions]
     tps_a = [r["measured"]["decode_tps"] for r in actions]
+    acc_p = [r["prediction"]["acceptance_rate"] for r in actions]
+    acc_a = [r["measured"]["acceptance_rate"] for r in actions]
     result: dict[str, Any] = {
         "split": split,
         "n_prompts": len({(r["task"], r["prompt_id"]) for r in actions}),
@@ -85,6 +94,7 @@ def summarize(rows: list[dict[str, Any]], split: str, baseline_tps: float) -> di
             "verify_ms_per_cycle": mae_mape(verify_p, verify_a),
             "total_cycle_ms": mae_mape(cycle_p, cycle_a),
             "tokens_per_cycle": mae_mape(tpc_p, tpc_a),
+            "acceptance_rate": mae_mape(acc_p, acc_a),
             "decode_tps": mae_mape(tps_p, tps_a),
         },
         "feasibility": feasibility(actions) if actions and all(
@@ -104,6 +114,44 @@ def summarize(rows: list[dict[str, Any]], split: str, baseline_tps: float) -> di
                 r["measured_speedup_vs_prompt_vanilla"]
             ) for r in rs]))
         )
+        result["mean_measured_speedup_ci95_prompt_bootstrap"] = prompt_bootstrap_ci(
+            actions, lambda rs: float(np.mean([r["measured_speedup_vs_prompt_vanilla"] for r in rs]))
+        )
+        by_action: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        by_context: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for row in actions:
+            by_action[f"{row['action']}_K{row['k']}"].append(row)
+            by_context[str(row.get("context_length", row.get("context_bucket", "unknown")))].append(row)
+        result["by_action"] = {
+            name: {
+                "n_pairs": len(group),
+                "draft_ms_mae": mae_mape(
+                    [r["prediction"]["draft_ms_per_cycle"] for r in group],
+                    [r["measured"]["draft_ms_per_cycle"] for r in group],
+                )["mae"],
+                "verify_ms_mae": mae_mape(
+                    [r["prediction"]["verify_ms_per_cycle"] for r in group],
+                    [r["measured"]["verify_ms_per_cycle"] for r in group],
+                )["mae"],
+                "predicted_decode_tps": float(np.mean([r["prediction"]["decode_tps"] for r in group])),
+                "measured_decode_tps": float(np.mean([r["measured"]["decode_tps"] for r in group])),
+                "mean_paired_speedup": float(np.mean([r["measured_speedup_vs_prompt_vanilla"] for r in group])),
+                "measured_profitable_fraction": float(np.mean([
+                    r["measured_speedup_vs_prompt_vanilla"] > 1.0 for r in group
+                ])),
+            } for name, group in by_action.items()
+        }
+        result["by_context_bucket"] = {
+            name: {
+                "n_pairs": len(group),
+                "n_prompts": len({r["prompt_id"] for r in group}),
+                "context_tokens_median": float(np.median([r["prompt_tokens"] for r in group])),
+                "mean_paired_speedup": float(np.mean([r["measured_speedup_vs_prompt_vanilla"] for r in group])),
+                "measured_profitable_fraction": float(np.mean([
+                    r["measured_speedup_vs_prompt_vanilla"] > 1.0 for r in group
+                ])),
+            } for name, group in by_context.items()
+        }
     return result
 
 
@@ -121,16 +169,18 @@ def make_figures(rows: list[dict[str, Any]], baseline_tps: float, figures: Path)
     ax.grid(alpha=0.25); ax.legend(); fig.tight_layout()
     fig.savefig(figures / "predicted_vs_measured_throughput.pdf"); plt.close(fig)
 
-    x = np.asarray([r["prediction"]["total_cycle_ms"] for r in actions])
-    y = np.asarray([r["measured"]["generated_tokens_per_cycle"] for r in actions])
-    profitable = np.asarray([r["measured_speedup_vs_prompt_vanilla"] > 1.0 for r in actions])
-    line_x = np.linspace(0, max(float(x.max()) * 1.08, 1.0), 100)
+    x = np.asarray([r["prediction"]["speedup_vs_calibration_vanilla"] for r in actions])
+    y = np.asarray([r["measured_speedup_vs_prompt_vanilla"] for r in actions])
+    profitable = y > 1.0
+    upper = max(float(x.max()), float(y.max()), 1.0) * 1.08
     fig, ax = plt.subplots(figsize=(6.2, 5.2))
     ax.scatter(x[~profitable], y[~profitable], alpha=0.8, s=32, label="Measured slower", marker="x", c="#c44336")
     ax.scatter(x[profitable], y[profitable], alpha=0.8, s=32, label="Measured faster", marker="o", c="#27835c")
-    ax.plot(line_x, line_x * baseline_tps / 1000.0, "k--", label="Frozen model break-even")
-    ax.set(xlabel="Predicted cycle cost (ms)", ylabel="Measured emitted tokens / cycle",
-           title="Held-out feasibility map")
+    ax.plot([0, upper], [0, upper], "k--", linewidth=1, label="Predicted = measured")
+    ax.axvline(1.0, color="#777", linestyle=":", linewidth=1)
+    ax.axhline(1.0, color="#777", linestyle=":", linewidth=1)
+    ax.set(xlim=(0, upper), ylim=(0, upper), xlabel="Predicted speedup vs calibration vanilla",
+           ylabel="Measured paired speedup vs prompt vanilla", title="Held-out feasibility map")
     ax.grid(alpha=0.25); ax.legend(); fig.tight_layout()
     fig.savefig(figures / "heldout_feasibility_map.pdf"); plt.close(fig)
 
@@ -145,7 +195,11 @@ def main() -> None:
     baseline = json.loads((run_dir / "calibration/baseline.json").read_text())
     cal = load_jsonl(run_dir / "calibration/raw_measurements.jsonl")
     held = load_jsonl(run_dir / "heldout/raw_measurements.jsonl")
-    baseline_tps = float(baseline["baseline_tps_decode"])
+    if "baseline_tps_decode_by_context" in baseline:
+        baselines = {str(k): float(v) for k, v in baseline["baseline_tps_decode_by_context"].items()}
+        baseline_tps = float(np.mean(list(baselines.values())))
+    else:
+        baseline_tps = float(baseline["baseline_tps_decode"])
     result = {
         "calibration": summarize(cal, "calibration", baseline_tps),
         "heldout": summarize(held, "heldout", baseline_tps),
@@ -156,6 +210,12 @@ def main() -> None:
             "feasibility_definition": "faster iff per-prompt paired decode TPS ratio > 1.0",
         },
     }
+    if "baseline_tps_decode_by_context" in baseline:
+        result["calibrated_baseline_tps_by_context"] = baselines
+        result["heldout_by_context"] = {}
+        for context, value in baselines.items():
+            context_rows = [r for r in held if str(r.get("context_length")) == context]
+            result["heldout_by_context"][context] = summarize(context_rows, "heldout", value)
     (run_dir / "prediction_errors.json").write_text(json.dumps(result, indent=2))
     make_figures(held, baseline_tps, run_dir / "figures")
     print(json.dumps(result["heldout"], indent=2))
