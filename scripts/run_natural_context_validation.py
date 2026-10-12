@@ -205,7 +205,10 @@ def main() -> None:
     ap.add_argument("--per-bucket", type=int, default=3)
     ap.add_argument("--max-new-tokens", type=int, default=16)
     ap.add_argument("--seed", type=int, default=2026)
+    ap.add_argument("--order-seed", type=int,
+                    help="Independent seed for per-prompt method order; defaults to --seed")
     args = ap.parse_args()
+    order_seed = args.seed if args.order_seed is None else args.order_seed
     if not torch.cuda.is_available():
         raise RuntimeError("A working CUDA device is required")
     out = Path(args.output_dir)
@@ -237,6 +240,7 @@ def main() -> None:
         "compute_dtype": "float16", "attention_implementation": "sdpa",
         "max_new_tokens": args.max_new_tokens, "per_context_bucket": args.per_bucket,
         "context_target_tokens": [384, 768, 1536, 3072], "seed": args.seed,
+        "method_order_seed": order_seed,
         "execution_commit": base_sha, "dataset_manifest": source_manifest,
         "roofline": "Frozen action coefficients and baseline from run_rtx4050_frozen_b2bfb01/calibration/baseline.json",
         "fit_policy": "No fitting or threshold selection on natural-context pilot",
@@ -266,7 +270,7 @@ def main() -> None:
         candidate_source="prompt+generated",
         kv_cache_max_capacity=int(warm.shape[-1]) + min(8, args.max_new_tokens) + 8,
     )
-    rng = random.Random(args.seed)
+    rng = random.Random(order_seed)
     raw_path = out / "raw_measurements.jsonl"
     raw_rows: list[dict[str, Any]] = []
     for record in records:
