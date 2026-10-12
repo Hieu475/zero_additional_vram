@@ -137,6 +137,15 @@ both. This is a repeated candidate regime, not a validated lossless speedup.
 At the other lengths, paired session changes were small and their confidence
 intervals included zero.
 
+The exactness mismatches were fully repeatable on these same prompts: PLD had
+the same 7 mismatching prompts in both sessions, with the same first divergent
+token position for all 7. CKA90/K2 and K4 each repeated the same 16 mismatching
+prompts and first divergent positions in both sessions. This points to
+prompt-specific deterministic divergence under the fixed runtime/configuration,
+not run-to-run sampling noise. It still does not identify the mechanism; the
+first-divergence and KV diagnostics remain necessary to attribute numerical or
+cache causes.
+
 The repeat does not establish thermal control: temperature reached 88°C in both
 sessions, SM clock ranged about 1920–2550 MHz, and telemetry recorded GPU
 utilization from 57% to 100% during the first session and 53% to 100% in the

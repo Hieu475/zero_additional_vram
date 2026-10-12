@@ -45,6 +45,8 @@ def summarize(a: dict, b: dict, seed: int) -> dict:
         exact = [[], []]
         diffs = []
         buckets: dict[str, list[float]] = defaultdict(list)
+        mismatch_ids = [set(), set()]
+        divergence_positions: list[dict[str, int]] = [{}, {}]
         for prompt in sorted(prompts_a):
             ratios = []
             for rows, idx in ((a, 0), (b, 1)):
@@ -52,10 +54,16 @@ def summarize(a: dict, b: dict, seed: int) -> dict:
                 action_tps = rows[(prompt, method)]["measured"]["decode_tps"]
                 ratio = action_tps / max(vanilla_tps, 1e-12)
                 session_speedups[idx].append(ratio)
-                exact[idx].append(
-                    rows[(prompt, method)]["measured"].get("token_ids", [])
-                    == rows[(prompt, "vanilla")]["measured"].get("token_ids", [])
-                )
+                action_ids = rows[(prompt, method)]["measured"].get("token_ids", [])
+                vanilla_ids = rows[(prompt, "vanilla")]["measured"].get("token_ids", [])
+                is_exact = action_ids == vanilla_ids
+                exact[idx].append(is_exact)
+                if not is_exact:
+                    mismatch_ids[idx].add(prompt)
+                    divergence_positions[idx][prompt] = next(
+                        (i for i, (x, y) in enumerate(zip(action_ids, vanilla_ids)) if x != y),
+                        min(len(action_ids), len(vanilla_ids)),
+                    )
                 ratios.append(ratio)
             diffs.append(ratios[1] - ratios[0])
             bucket = b[(prompt, method)]["context_bucket"]
@@ -68,6 +76,20 @@ def summarize(a: dict, b: dict, seed: int) -> dict:
             "paired_mean_speedup_change_session2_minus_session1": sum(diffs) / len(diffs),
             "paired_prompt_bootstrap_95ci_change": ci_mean(diffs, rng),
             "prompt_level_speedup_correlation": _correlation(*session_speedups),
+            "exactness_repeatability": {
+                "session1_mismatch_count": len(mismatch_ids[0]),
+                "session2_mismatch_count": len(mismatch_ids[1]),
+                "mismatch_prompt_intersection_count": len(mismatch_ids[0] & mismatch_ids[1]),
+                "mismatch_prompt_union_count": len(mismatch_ids[0] | mismatch_ids[1]),
+                "mismatch_prompt_jaccard": (
+                    len(mismatch_ids[0] & mismatch_ids[1]) / len(mismatch_ids[0] | mismatch_ids[1])
+                    if mismatch_ids[0] | mismatch_ids[1] else 1.0
+                ),
+                "shared_mismatch_same_first_divergence_count": sum(
+                    divergence_positions[0][p] == divergence_positions[1][p]
+                    for p in mismatch_ids[0] & mismatch_ids[1]
+                ),
+            },
             "by_context_bucket_change": {
                 bucket: {"n": len(values), "mean_change": sum(values) / len(values),
                          "prompt_bootstrap_95ci": ci_mean(values, rng)}
