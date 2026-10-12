@@ -1,0 +1,76 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "quantization": "NF4",
+  "compute_dtype": "float16",
+  "attention_implementation": "sdpa",
+  "max_new_tokens": 16,
+  "per_context_bucket": 3,
+  "context_target_tokens": [
+    384,
+    768,
+    1536,
+    3072
+  ],
+  "seed": 2026,
+  "execution_commit": "f87c1d17b7a44dd3434e66dce758286c9ce237d6",
+  "dataset_manifest": {
+    "source": "THUDM/LongBench",
+    "source_url": "https://github.com/THUDM/LongBench",
+    "source_repo": "THUDM/LongBench",
+    "source_revision": "5e628be450b7e67fb7ae6e201bd6d8f7056f7672",
+    "source_archive": "data.zip",
+    "source_archive_sha256": "cb45b11a4133c6bc1d6a44b0f8e701335ff1e543195db1103472e575857f7f64",
+    "tokenizer_model": "Qwen/Qwen2.5-3B-Instruct",
+    "tokenizer_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "seed": 2026,
+    "targets_tokens": [
+      384,
+      768,
+      1536,
+      3072
+    ],
+    "examples_per_bucket": 3,
+    "selection": "deterministic shuffled source rows; unique source IDs; natural context prefix; no repetition",
+    "prompt_format": "fixed header + document prefix + task/question suffix",
+    "stored_prompt_content": "token IDs only; source text not redistributed",
+    "prepared_sha256": "96a5e6323202d8532dfd49f393dd2b49d1afd4623e1da790a0538bb7d6da8833",
+    "n_examples": 12,
+    "bucket_counts": {
+      "384": 3,
+      "768": 3,
+      "1536": 3,
+      "3072": 3
+    }
+  },
+  "roofline": "Frozen action coefficients and baseline from run_rtx4050_frozen_b2bfb01/calibration/baseline.json",
+  "fit_policy": "No fitting or threshold selection on natural-context pilot",
+  "actions": [
+    {
+      "config": "cka_60",
+      "kept_layers": 22,
+      "k": [
+        2,
+        4
+      ]
+    },
+    {
+      "config": "cka_67",
+      "kept_layers": 24,
+      "k": [
+        2,
+        4
+      ]
+    },
+    {
+      "config": "cka_90",
+      "kept_layers": 32,
+      "k": [
+        2,
+        4
+      ]
+    }
+  ],
+  "measurement": "one paired observation per prompt and action; within-prompt order randomized",
+  "limitations": "exploratory pilot; prompt bootstrap does not capture between-session thermal variance"
+}
