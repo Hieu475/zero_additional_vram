@@ -86,6 +86,7 @@ class SpeculativeMetrics:
     peak_vram_mb: float = 0.0
     speedup_vs_vanilla: float = 0.0
     k_value: int = 4
+    sync_mode: str = "reference"
     per_iteration_stats: list[dict] = field(default_factory=list)
     generated_token_ids: list[int] = field(default_factory=list)
     diagnostic_prefill: dict = field(default_factory=dict)
@@ -115,6 +116,7 @@ def self_speculative_generate(
     margin_fallback_threshold: Optional[float] = None,
     collect_acceptance_cycles: bool = False,
     profile_nvtx: bool = False,
+    reduced_sync: bool = False,
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Zero-Additional-VRAM self-speculative decoding.
 
@@ -142,11 +144,14 @@ def self_speculative_generate(
         collect_acceptance_cycles: Include pre-cycle context/confidence and survival labels in
             per_iteration_stats. Intended for offline predictor evaluation.
         profile_nvtx: Add stage labels for Nsight Systems profiling; use only for profiling runs.
+        reduced_sync: Conservative variant that omits unused entropy extraction and removes
+            explicit synchronization calls already implied by greedy token scalar reads.
 
     Returns:
         Tuple of (generated_text, SpeculativeMetrics).
     """
     metrics = SpeculativeMetrics(k_value=k)
+    metrics.sync_mode = "reduced_sync_conservative" if reduced_sync else "reference"
     if (canonical_verify or margin_fallback_threshold is not None) and temperature != 0.0:
         raise ValueError("canonical verification and margin fallback currently support greedy decoding only")
     if canonical_verify and margin_fallback_threshold is not None:
@@ -184,6 +189,9 @@ def self_speculative_generate(
 
     generated_token_ids: list[int] = []
     current_prefix_len = prompt_len
+    _need_entropy = (not reduced_sync or controller is not None
+                     or (draft_mode == "routed" and router is not None)
+                     or collect_acceptance_cycles)
     if temperature == 0.0:
         curr_target_tok_tensor = prefill_out.logits[:, -1:, :].argmax(dim=-1)
         curr_target_tok = int(curr_target_tok_tensor.item())
@@ -192,7 +200,8 @@ def self_speculative_generate(
         curr_target_tok = int(torch.multinomial(probs, num_samples=1).item())
         curr_target_tok_tensor = torch.tensor([[curr_target_tok]], device=device)
 
-    curr_entropy = float(compute_entropy(target_prefix_logit.float()).item())
+    curr_entropy = (float(compute_entropy(target_prefix_logit.float()).item())
+                    if _need_entropy else None)
     _need_margin = router is not None and draft_mode == "routed"
     curr_margin: float | None = (
         _logit_margin(target_prefix_logit) if (_need_margin or collect_acceptance_cycles) else None
@@ -273,7 +282,8 @@ def self_speculative_generate(
             metrics.num_verification_cycles += 1
 
             target_logit = out.logits[0, -1, :].float()
-            curr_entropy = float(compute_entropy(target_logit).item())
+            curr_entropy = (float(compute_entropy(target_logit).item())
+                            if _need_entropy else None)
             if _need_margin or collect_acceptance_cycles:
                 curr_margin = _logit_margin(target_logit)
             if _need_margin and router is not None:
@@ -417,7 +427,11 @@ def self_speculative_generate(
                         if d_next == tokenizer.eos_token_id:
                             break
 
-        torch.cuda.synchronize()
+        # In the conservative reduced-sync path, greedy draft token extraction
+        # above already waits for each argmax result (and is needed for EOS and
+        # draft-history control). The extra phase-end device wait is redundant.
+        if not reduced_sync:
+            torch.cuda.synchronize()
         if profile_nvtx:
             torch.cuda.nvtx.range_pop()
         t_draft_end = time.perf_counter()
@@ -446,7 +460,8 @@ def self_speculative_generate(
             metrics.num_verification_cycles += 1
 
             target_logit = out.logits[0, -1, :].float()
-            curr_entropy = float(compute_entropy(target_logit).item())
+            curr_entropy = (float(compute_entropy(target_logit).item())
+                            if _need_entropy else None)
             if _need_margin or collect_acceptance_cycles:
                 curr_margin = _logit_margin(target_logit)
             if temperature == 0.0:
@@ -627,7 +642,11 @@ def self_speculative_generate(
                 curr_target_tok = bonus_tok
                 curr_target_tok_tensor = torch.tensor([[curr_target_tok]], device=device)
 
-        torch.cuda.synchronize()
+        # Greedy verification has already materialized the acceptance decision
+        # and next pending token via scalar reads above. The final device wait
+        # would only repeat that wait in the conservative mode.
+        if not reduced_sync:
+            torch.cuda.synchronize()
         if profile_nvtx:
             torch.cuda.nvtx.range_pop()
         t_commit_end = time.perf_counter()
@@ -637,12 +656,14 @@ def self_speculative_generate(
 
         if rejected_at is not None:
             _rej_logit = v_logits[0, rejected_at, :].float()
-            curr_entropy = float(compute_entropy(_rej_logit).item())
+            curr_entropy = (float(compute_entropy(_rej_logit).item())
+                            if _need_entropy else None)
             if _need_margin or collect_acceptance_cycles:
                 curr_margin = _logit_margin(_rej_logit)
         else:
             _ok_logit = v_logits[0, actual_k, :].float()
-            curr_entropy = float(compute_entropy(_ok_logit).item())
+            curr_entropy = (float(compute_entropy(_ok_logit).item())
+                            if _need_entropy else None)
             if _need_margin or collect_acceptance_cycles:
                 curr_margin = _logit_margin(_ok_logit)
 

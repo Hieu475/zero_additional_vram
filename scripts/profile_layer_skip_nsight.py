@@ -70,6 +70,10 @@ def main() -> None:
     parser.add_argument("--k", type=int, default=2)
     parser.add_argument("--max-new-tokens", type=int, default=24)
     parser.add_argument("--prompt-id", default="1")
+    parser.add_argument("--sync-variant", choices=("reference", "reduced_sync_conservative"),
+                        default="reference")
+    parser.add_argument("--collect-acceptance-cycles", action="store_true",
+                        help="Collect entropy/survival metadata; adds synchronization overhead")
     parser.add_argument("--output-json", required=True)
     args = parser.parse_args()
     if not torch.cuda.is_available():
@@ -97,7 +101,8 @@ def main() -> None:
         self_speculative_generate(
             model, tokenizer, manager, CONFIGS[args.config], prompt, k=args.k,
             max_new_tokens=min(8, args.max_new_tokens), temperature=0.0,
-            device=args.device, kv_cache_backend="static", config_name=args.config)
+            device=args.device, kv_cache_backend="static", config_name=args.config,
+            reduced_sync=args.sync_variant == "reduced_sync_conservative")
     torch.cuda.synchronize(args.device)
     torch.cuda.reset_peak_memory_stats(args.device)
 
@@ -109,7 +114,8 @@ def main() -> None:
             model, tokenizer, manager, CONFIGS[args.config], prompt, k=args.k,
             max_new_tokens=args.max_new_tokens, temperature=0.0,
             device=args.device, kv_cache_backend="static", config_name=args.config,
-            collect_acceptance_cycles=True, profile_nvtx=True)
+            collect_acceptance_cycles=args.collect_acceptance_cycles, profile_nvtx=True,
+            reduced_sync=args.sync_variant == "reduced_sync_conservative")
         measured = asdict(metrics)
     torch.cuda.synchronize(args.device)
     torch.cuda.profiler.stop()
@@ -119,7 +125,9 @@ def main() -> None:
         output = ROOT / output
     output.parent.mkdir(parents=True, exist_ok=True)
     payload = {
-        "mode": args.mode, "config": args.config, "k": args.k,
+        "mode": args.mode, "sync_variant": args.sync_variant,
+        "collect_acceptance_cycles": args.collect_acceptance_cycles,
+        "config": args.config, "k": args.k,
         "prompt_id": args.prompt_id, "prompt_tokens": len(tokenizer(prompt)["input_ids"]),
         "model": args.model, "model_revision": args.revision,
         "gpu_name": torch.cuda.get_device_name(args.device),
