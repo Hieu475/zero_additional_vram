@@ -1,0 +1,382 @@
+{
+  "commit_sha": "02702b8d0df27a909047ba6f1353414c57badb60",
+  "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "precision": "NF4 weights, float16 compute",
+  "n_prompts": 3,
+  "vanilla_repeat_deterministic": true,
+  "methods": {
+    "batched": {
+      "exact_sequences": 1,
+      "n_sequences": 3,
+      "first_divergences": [
+        {
+          "prompt_id": "qasper_191_ctx3072",
+          "position": 6
+        },
+        {
+          "prompt_id": "qmsum_123_ctx3072",
+          "position": 15
+        }
+      ]
+    },
+    "sequential": {
+      "exact_sequences": 3,
+      "n_sequences": 3,
+      "first_divergences": []
+    }
+  },
+  "rows": [
+    {
+      "prompt_id": "narrativeqa_147_ctx3072",
+      "prompt_tokens": 3072,
+      "vanilla_repeat_exact": true,
+      "vanilla_output_tokens": 16,
+      "methods": {
+        "batched": {
+          "first_divergence": null,
+          "sequence_exact_match": true,
+          "total_time_s_diagnostic_only": 3.0349896830011858,
+          "verify_time_s_diagnostic_only": 0.2529294359992491,
+          "cache_length_before_verify": 3085,
+          "reference_cache_length_at_cycle_start": null,
+          "cache_digest_matches_reference_at_cycle_start": null,
+          "reference_margin_at_first_divergence": null,
+          "cache_prefix_comparisons": [
+            {
+              "output_start": 0,
+              "cache_length": 3072,
+              "reference_cache_length": 3072,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 1,
+              "cache_length": 3073,
+              "reference_cache_length": 3073,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 3,
+              "cache_length": 3075,
+              "reference_cache_length": 3075,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 6,
+              "cache_length": 3078,
+              "reference_cache_length": 3078,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 9,
+              "cache_length": 3081,
+              "reference_cache_length": 3081,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 10,
+              "cache_length": 3082,
+              "reference_cache_length": 3082,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 13,
+              "cache_length": 3085,
+              "reference_cache_length": 3085,
+              "cache_digest_matches": false
+            }
+          ],
+          "first_cache_prefix_divergence": {
+            "output_start": 1,
+            "cache_length": 3073,
+            "reference_cache_length": 3073,
+            "cache_digest_matches": false
+          }
+        },
+        "sequential": {
+          "first_divergence": null,
+          "sequence_exact_match": true,
+          "total_time_s_diagnostic_only": 3.117200316002709,
+          "verify_time_s_diagnostic_only": 0.37356673600152135,
+          "cache_length_before_verify": 3085,
+          "reference_cache_length_at_cycle_start": null,
+          "cache_digest_matches_reference_at_cycle_start": null,
+          "reference_margin_at_first_divergence": null,
+          "cache_prefix_comparisons": [
+            {
+              "output_start": 0,
+              "cache_length": 3072,
+              "reference_cache_length": 3072,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 1,
+              "cache_length": 3073,
+              "reference_cache_length": 3073,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 3,
+              "cache_length": 3075,
+              "reference_cache_length": 3075,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 6,
+              "cache_length": 3078,
+              "reference_cache_length": 3078,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 9,
+              "cache_length": 3081,
+              "reference_cache_length": 3081,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 10,
+              "cache_length": 3082,
+              "reference_cache_length": 3082,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 13,
+              "cache_length": 3085,
+              "reference_cache_length": 3085,
+              "cache_digest_matches": true
+            }
+          ],
+          "first_cache_prefix_divergence": null
+        }
+      }
+    },
+    {
+      "prompt_id": "qasper_191_ctx3072",
+      "prompt_tokens": 3072,
+      "vanilla_repeat_exact": true,
+      "vanilla_output_tokens": 16,
+      "methods": {
+        "batched": {
+          "first_divergence": 6,
+          "sequence_exact_match": false,
+          "total_time_s_diagnostic_only": 2.7906918010048685,
+          "verify_time_s_diagnostic_only": 0.20378847000392852,
+          "cache_length_before_verify": 3085,
+          "reference_cache_length_at_cycle_start": 3078,
+          "cache_digest_matches_reference_at_cycle_start": false,
+          "reference_margin_at_first_divergence": 0.0,
+          "cache_prefix_comparisons": [
+            {
+              "output_start": 0,
+              "cache_length": 3072,
+              "reference_cache_length": 3072,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 3,
+              "cache_length": 3075,
+              "reference_cache_length": 3075,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 6,
+              "cache_length": 3078,
+              "reference_cache_length": 3078,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 9,
+              "cache_length": 3081,
+              "reference_cache_length": 3081,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 12,
+              "cache_length": 3084,
+              "reference_cache_length": 3084,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 13,
+              "cache_length": 3085,
+              "reference_cache_length": 3085,
+              "cache_digest_matches": false
+            }
+          ],
+          "first_cache_prefix_divergence": {
+            "output_start": 3,
+            "cache_length": 3075,
+            "reference_cache_length": 3075,
+            "cache_digest_matches": false
+          }
+        },
+        "sequential": {
+          "first_divergence": null,
+          "sequence_exact_match": true,
+          "total_time_s_diagnostic_only": 2.8895701660003397,
+          "verify_time_s_diagnostic_only": 0.3795747939948342,
+          "cache_length_before_verify": 3087,
+          "reference_cache_length_at_cycle_start": null,
+          "cache_digest_matches_reference_at_cycle_start": null,
+          "reference_margin_at_first_divergence": null,
+          "cache_prefix_comparisons": [
+            {
+              "output_start": 0,
+              "cache_length": 3072,
+              "reference_cache_length": 3072,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 3,
+              "cache_length": 3075,
+              "reference_cache_length": 3075,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 6,
+              "cache_length": 3078,
+              "reference_cache_length": 3078,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 9,
+              "cache_length": 3081,
+              "reference_cache_length": 3081,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 12,
+              "cache_length": 3084,
+              "reference_cache_length": 3084,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 15,
+              "cache_length": 3087,
+              "reference_cache_length": 3087,
+              "cache_digest_matches": true
+            }
+          ],
+          "first_cache_prefix_divergence": null
+        }
+      }
+    },
+    {
+      "prompt_id": "qmsum_123_ctx3072",
+      "prompt_tokens": 3072,
+      "vanilla_repeat_exact": true,
+      "vanilla_output_tokens": 16,
+      "methods": {
+        "batched": {
+          "first_divergence": 15,
+          "sequence_exact_match": false,
+          "total_time_s_diagnostic_only": 2.727562994004984,
+          "verify_time_s_diagnostic_only": 0.19977752299018903,
+          "cache_length_before_verify": 3086,
+          "reference_cache_length_at_cycle_start": 3086,
+          "cache_digest_matches_reference_at_cycle_start": false,
+          "reference_margin_at_first_divergence": 0.125,
+          "cache_prefix_comparisons": [
+            {
+              "output_start": 0,
+              "cache_length": 3072,
+              "reference_cache_length": 3072,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 2,
+              "cache_length": 3074,
+              "reference_cache_length": 3074,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 5,
+              "cache_length": 3077,
+              "reference_cache_length": 3077,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 8,
+              "cache_length": 3080,
+              "reference_cache_length": 3080,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 11,
+              "cache_length": 3083,
+              "reference_cache_length": 3083,
+              "cache_digest_matches": false
+            },
+            {
+              "output_start": 14,
+              "cache_length": 3086,
+              "reference_cache_length": 3086,
+              "cache_digest_matches": false
+            }
+          ],
+          "first_cache_prefix_divergence": {
+            "output_start": 2,
+            "cache_length": 3074,
+            "reference_cache_length": 3074,
+            "cache_digest_matches": false
+          }
+        },
+        "sequential": {
+          "first_divergence": null,
+          "sequence_exact_match": true,
+          "total_time_s_diagnostic_only": 3.107624622993171,
+          "verify_time_s_diagnostic_only": 0.38698398500855546,
+          "cache_length_before_verify": 3087,
+          "reference_cache_length_at_cycle_start": null,
+          "cache_digest_matches_reference_at_cycle_start": null,
+          "reference_margin_at_first_divergence": null,
+          "cache_prefix_comparisons": [
+            {
+              "output_start": 0,
+              "cache_length": 3072,
+              "reference_cache_length": 3072,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 2,
+              "cache_length": 3074,
+              "reference_cache_length": 3074,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 5,
+              "cache_length": 3077,
+              "reference_cache_length": 3077,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 8,
+              "cache_length": 3080,
+              "reference_cache_length": 3080,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 11,
+              "cache_length": 3083,
+              "reference_cache_length": 3083,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 14,
+              "cache_length": 3086,
+              "reference_cache_length": 3086,
+              "cache_digest_matches": true
+            },
+            {
+              "output_start": 15,
+              "cache_length": 3087,
+              "reference_cache_length": 3087,
+              "cache_digest_matches": true
+            }
+          ],
+          "first_cache_prefix_divergence": null
+        }
+      }
+    }
+  ],
+  "interpretation": "Sequential verification matched vanilla on this three-prompt trace. Batched mismatches coincided with a cache-prefix digest difference at the cycle start; one occurred at a zero-margin vanilla decision. This is prompt-specific evidence of batch/cache numerical path dependence, not a general precision-level guarantee."
+}

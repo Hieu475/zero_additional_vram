@@ -61,3 +61,38 @@ is small and has one measured run per prompt/action; its bootstrap interval
 captures prompt variation only, not session or thermal variation. Expand to at
 least 20 examples per context bucket and include a paired PLD baseline before
 using this result as a paper claim.
+
+## 3072-token NF4 exactness trace
+
+`pilot_rtx4050/exactness_trace_3072.json` and
+`exactness_summary_3072.json` trace the three longest prompts under the same
+Qwen revision, NF4 weights, FP16 compute, SDPA backend, static cache and CKA90/K2
+action. Vanilla was repeated once per prompt as a determinism control. All
+three vanilla repetitions matched their references. Batched verification
+matched vanilla on 1/3 prompts; sequential target verification matched 3/3.
+
+The active KV digest first differed from vanilla after the first speculative
+cycle for NarrativeQA, after cycle start 3 for Qasper, and after cycle start 2
+for QMSum. Cache lengths still agreed at those points. The Qasper sequence first
+diverged at generated token 6, where the vanilla top-1 margin was zero; QMSum
+first diverged at token 15 with a 0.125 margin. Sequential verification had no
+cache-prefix digest divergence in these three traces and reproduced the vanilla
+sequences. This is prompt-specific evidence that batched verification changes
+the numerical KV path even before an output token necessarily changes. The
+trace does not isolate whether the cache drift comes from batch-shaped kernels
+or another implementation detail, and three prompts do not establish a general
+NF4 guarantee. Its diagnostic timings include cache hashing and must not be
+used as a performance comparison.
+
+Reproduce the diagnostic with:
+
+```bash
+python scripts/trace_natural_context_exactness.py \
+  --inputs experiments/natural_context_validation/pilot_rtx4050/prepared_inputs.jsonl \
+  --prompt-tokens 3072 --max-new-tokens 16 \
+  --output experiments/natural_context_validation/my_run/exactness_trace_3072.json
+
+python scripts/summarize_natural_context_exactness.py \
+  --trace experiments/natural_context_validation/my_run/exactness_trace_3072.json \
+  --output experiments/natural_context_validation/my_run/exactness_summary_3072.json
+```
