@@ -37,9 +37,13 @@ def main() -> None:
         red = pair["reduced_sync_conservative"]["measurement"]
         if pair["reference"]["input_token_ids_sha256"] != pair["reduced_sync_conservative"]["input_token_ids_sha256"]:
             raise ValueError(f"Input IDs differ for {prompt_id}/{repeat}")
+        ref_decode_s = max(ref["total_time_s"] - ref["prefill_time_s"], 1e-12)
+        red_decode_s = max(red["total_time_s"] - red["prefill_time_s"], 1e-12)
+        ref_decode_tps = max(ref["total_tokens"] - 1, 0) / ref_decode_s
+        red_decode_tps = max(red["total_tokens"] - 1, 0) / red_decode_s
         grouped[prompt_id].append({
             "e2e_speedup": ref["total_time_s"] / max(red["total_time_s"], 1e-12),
-            "decode_speedup": red["tokens_per_second"] / max(ref["tokens_per_second"], 1e-12),
+            "decode_speedup": red_decode_tps / max(ref_decode_tps, 1e-12),
             "reference_total_s": ref["total_time_s"], "reduced_total_s": red["total_time_s"],
             "reference_draft_s": ref["draft_time_s"], "reduced_draft_s": red["draft_time_s"],
             "reference_verify_s": ref["verify_time_s"], "reduced_verify_s": red["verify_time_s"],

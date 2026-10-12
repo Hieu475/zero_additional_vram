@@ -1,0 +1,121 @@
+{
+  "capture_protocol": {
+    "trace": [
+      "cuda",
+      "nvtx",
+      "osrt"
+    ],
+    "cpu_sampling": "disabled by host environment",
+    "repeats_per_variant": 1,
+    "prompt_id": "1",
+    "config": "cka_90",
+    "k": 2,
+    "max_new_tokens": 24
+  },
+  "variants": {
+    "reference": {
+      "commit_sha": "0ec3c78366e3dac34fa81f4c5d280be0e6d12bd0",
+      "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "generated_token_ids": [
+        10956,
+        22160,
+        47116,
+        374,
+        264,
+        14762,
+        1483,
+        304,
+        3460,
+        4128,
+        4119,
+        320,
+        4086,
+        21634,
+        8,
+        311,
+        4628,
+        705,
+        279,
+        44378,
+        1882,
+        2041,
+        75000,
+        279
+      ],
+      "end_to_end_seconds_under_nsys": 0.8147873400012031,
+      "stage_seconds_under_nsys": {
+        "prefill": 0.04215938500419725,
+        "draft": 0.469948618010676,
+        "verify": 0.29914388500037603,
+        "cache_commit": 0.0018676969775697216
+      },
+      "synchronization_api": {
+        "cudaDeviceSynchronize": {
+          "calls": 28,
+          "host_api_time_ms": 37.865405
+        },
+        "cudaStreamSynchronize": {
+          "calls": 45,
+          "host_api_time_ms": 52.967391
+        }
+      },
+      "cuda_launch_kernel_calls": 47779
+    },
+    "reduced_sync_conservative": {
+      "commit_sha": "0ec3c78366e3dac34fa81f4c5d280be0e6d12bd0",
+      "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "generated_token_ids": [
+        10956,
+        22160,
+        47116,
+        374,
+        264,
+        14762,
+        1483,
+        304,
+        3460,
+        4128,
+        4119,
+        320,
+        4086,
+        21634,
+        8,
+        311,
+        4628,
+        705,
+        279,
+        44378,
+        1882,
+        2041,
+        75000,
+        279
+      ],
+      "end_to_end_seconds_under_nsys": 0.7967943979965639,
+      "stage_seconds_under_nsys": {
+        "prefill": 0.03973340700031258,
+        "draft": 0.46826953700656304,
+        "verify": 0.2859792390227085,
+        "cache_commit": 0.0019571499942685477
+      },
+      "synchronization_api": {
+        "cudaDeviceSynchronize": {
+          "calls": 12,
+          "host_api_time_ms": 35.771885
+        },
+        "cudaStreamSynchronize": {
+          "calls": 36,
+          "host_api_time_ms": 53.149224
+        }
+      },
+      "cuda_launch_kernel_calls": 47733
+    }
+  },
+  "comparison": {
+    "tokens_identical": true,
+    "synchronize_calls_total_reference": 73,
+    "synchronize_calls_total_reduced": 48,
+    "synchronize_api_time_ms_reference": 90.832796,
+    "synchronize_api_time_ms_reduced": 88.921109,
+    "limitation": "Single Nsight capture per variant; CPU sampling unavailable. API durations are not independent repeated-session estimates."
+  }
+}
