@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -27,16 +28,17 @@ def mae_mape(pred: list[float], actual: list[float]) -> dict[str, float | None]:
             "mape_pct": float(np.mean(np.abs(p - a) / np.maximum(np.abs(a), 1e-9)) * 100.0)}
 
 
-def feasibility(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    actual = np.asarray([r["measured_speedup_vs_prompt_vanilla"] > 1.0 for r in rows], dtype=bool)
-    pred = np.asarray([r["prediction"]["speedup_vs_calibration_vanilla"] > 1.0 for r in rows], dtype=bool)
+def feasibility(rows: list[dict[str, Any]], threshold: float = 1.0,
+                 prediction_field: str = "speedup_vs_calibration_vanilla") -> dict[str, Any]:
+    actual = np.asarray([r["measured_speedup_vs_prompt_vanilla"] > threshold for r in rows], dtype=bool)
+    pred = np.asarray([r["prediction"][prediction_field] > threshold for r in rows], dtype=bool)
     tp = int(np.sum(pred & actual)); fp = int(np.sum(pred & ~actual))
     fn = int(np.sum(~pred & actual)); tn = int(np.sum(~pred & ~actual))
     precision = float(tp / max(1, tp + fp))
     recall = float(tp / max(1, tp + fn))
     specificity = float(tn / max(1, tn + fp))
     return {
-        "n_action_prompt_pairs": int(len(rows)), "threshold": "speedup > 1.0",
+        "n_action_prompt_pairs": int(len(rows)), "threshold": f"speedup > {threshold:.2f}",
         "accuracy": float((tp + tn) / max(1, len(rows))),
         "balanced_accuracy": float((recall + specificity) / 2.0),
         "precision_profitable": precision,
@@ -46,6 +48,12 @@ def feasibility(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "measured_profitable_fraction": float(np.mean(actual)) if len(actual) else None,
         "false_positive_rate": float(fp / max(1, fp + tn)),
         "confusion": {"tp": tp, "fp": fp, "fn": fn, "tn": tn},
+        "false_negative_pairs": [
+            {"task": r["task"], "prompt_id": str(r["prompt_id"]), "action": r["action"],
+             "k": int(r["k"]), "measured_speedup": float(r["measured_speedup_vs_prompt_vanilla"]),
+             "predicted_speedup": float(r["prediction"][prediction_field])}
+            for r, is_actual, is_pred in zip(rows, actual, pred) if is_actual and not is_pred
+        ],
     }
 
 
@@ -84,6 +92,17 @@ def summarize(rows: list[dict[str, Any]], split: str, baseline_tps: float) -> di
     tps_a = [r["measured"]["decode_tps"] for r in actions]
     acc_p = [r["prediction"]["acceptance_rate"] for r in actions]
     acc_a = [r["measured"]["acceptance_rate"] for r in actions]
+    paired_vanilla = {
+        (r["task"], str(r["prompt_id"]), str(r.get("context_length", ""))): r
+        for r in rows if r.get("method") == "vanilla"
+    }
+    for action_row in actions:
+        action_row["prediction"]["speedup_vs_measured_prompt_vanilla"] = None
+        baseline_row = paired_vanilla.get((action_row["task"], str(action_row["prompt_id"]),
+                                           str(action_row.get("context_length", ""))))
+        if baseline_row and baseline_row.get("decode_tps", 0) > 0:
+            action_row["prediction"]["speedup_vs_measured_prompt_vanilla"] = (
+                action_row["prediction"]["decode_tps"] / baseline_row["decode_tps"])
     result: dict[str, Any] = {
         "split": split,
         "n_prompts": len({(r["task"], r["prompt_id"]) for r in actions}),
@@ -96,6 +115,12 @@ def summarize(rows: list[dict[str, Any]], split: str, baseline_tps: float) -> di
             "tokens_per_cycle": mae_mape(tpc_p, tpc_a),
             "acceptance_rate": mae_mape(acc_p, acc_a),
             "decode_tps": mae_mape(tps_p, tps_a),
+            "vanilla_baseline_tps": mae_mape(
+                [baseline_tps] * len([r for r in actions if (r["task"], str(r["prompt_id"]),
+                 str(r.get("context_length", ""))) in paired_vanilla]),
+                [paired_vanilla[(r["task"], str(r["prompt_id"]), str(r.get("context_length", "")))]["decode_tps"]
+                 for r in actions if (r["task"], str(r["prompt_id"]), str(r.get("context_length", ""))) in paired_vanilla],
+            ),
         },
         "feasibility": feasibility(actions) if actions and all(
             r.get("measured_speedup_vs_prompt_vanilla") is not None for r in actions) else None,
@@ -104,6 +129,15 @@ def summarize(rows: list[dict[str, Any]], split: str, baseline_tps: float) -> di
         ])) if actions and all(r.get("measured_speedup_vs_prompt_vanilla") is not None for r in actions) else None),
     }
     if actions and all(r.get("measured_speedup_vs_prompt_vanilla") is not None for r in actions):
+        result["feasibility_threshold_sensitivity"] = {
+            f"{threshold:.2f}": feasibility(actions, threshold)
+            for threshold in (1.0, 1.03, 1.05)
+        }
+        if all(r["prediction"].get("speedup_vs_measured_prompt_vanilla") is not None for r in actions):
+            result["feasibility_measured_vanilla_diagnostic"] = {
+                f"{threshold:.2f}": feasibility(actions, threshold, "speedup_vs_measured_prompt_vanilla")
+                for threshold in (1.0, 1.03, 1.05)
+            }
         result["speedup_error_mae"] = float(np.mean(np.abs(
             np.asarray([r["prediction"]["speedup_vs_calibration_vanilla"] for r in actions]) -
             np.asarray([r["measured_speedup_vs_prompt_vanilla"] for r in actions])
@@ -188,10 +222,16 @@ def make_figures(rows: list[dict[str, Any]], baseline_tps: float, figures: Path)
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-dir", required=True, help="Run directory created by runner")
+    parser.add_argument("--output-dir", default=None,
+                        help="Write derived analysis here; defaults to --run-dir for legacy behavior")
     args = parser.parse_args()
     run_dir = Path(args.run_dir)
     if not run_dir.is_absolute():
         run_dir = Path.cwd() / run_dir
+    output_dir = Path(args.output_dir) if args.output_dir else run_dir
+    if not output_dir.is_absolute():
+        output_dir = Path.cwd() / output_dir
+    output_dir.mkdir(parents=True, exist_ok=True)
     baseline = json.loads((run_dir / "calibration/baseline.json").read_text())
     cal = load_jsonl(run_dir / "calibration/raw_measurements.jsonl")
     held = load_jsonl(run_dir / "heldout/raw_measurements.jsonl")
@@ -201,6 +241,13 @@ def main() -> None:
     else:
         baseline_tps = float(baseline["baseline_tps_decode"])
     result = {
+        "analysis_metadata": {
+            "source_run_dir": str(run_dir),
+            "analyzer_commit_sha": subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=Path(__file__).resolve().parents[1],
+                capture_output=True, text=True, check=True).stdout.strip(),
+            "measured_vanilla_diagnostic": "uses per-prompt held-out vanilla TPS; unavailable to a runtime policy",
+        },
         "calibration": summarize(cal, "calibration", baseline_tps),
         "heldout": summarize(held, "heldout", baseline_tps),
         "interpretation": {
@@ -216,10 +263,10 @@ def main() -> None:
         for context, value in baselines.items():
             context_rows = [r for r in held if str(r.get("context_length")) == context]
             result["heldout_by_context"][context] = summarize(context_rows, "heldout", value)
-    (run_dir / "prediction_errors.json").write_text(json.dumps(result, indent=2))
-    make_figures(held, baseline_tps, run_dir / "figures")
+    (output_dir / "prediction_errors.json").write_text(json.dumps(result, indent=2))
+    make_figures(held, baseline_tps, output_dir / "figures")
     print(json.dumps(result["heldout"], indent=2))
-    print(f"Figures and prediction errors written to {run_dir}")
+    print(f"Figures and prediction errors written to {output_dir}")
 
 
 if __name__ == "__main__":
