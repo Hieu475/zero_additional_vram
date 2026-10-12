@@ -114,6 +114,7 @@ def self_speculative_generate(
     canonical_verify: bool = False,
     margin_fallback_threshold: Optional[float] = None,
     collect_acceptance_cycles: bool = False,
+    profile_nvtx: bool = False,
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Zero-Additional-VRAM self-speculative decoding.
 
@@ -140,6 +141,7 @@ def self_speculative_generate(
             top-1 margin in a cycle is at or below this value (greedy only).
         collect_acceptance_cycles: Include pre-cycle context/confidence and survival labels in
             per_iteration_stats. Intended for offline predictor evaluation.
+        profile_nvtx: Add stage labels for Nsight Systems profiling; use only for profiling runs.
 
     Returns:
         Tuple of (generated_text, SpeculativeMetrics).
@@ -168,11 +170,15 @@ def self_speculative_generate(
     # Canonical Prefill: Populate Target KV Cache
     # -----------------------------------------------------------------------
     t_prefill_start = time.perf_counter()
+    if profile_nvtx:
+        torch.cuda.nvtx.range_push("target_prefill")
     target_kv = TargetKVCache(backend=kv_cache_backend, max_capacity=kv_cache_max_capacity)
     with torch.no_grad():
         prefill_out = model(prompt_ids, past_key_values=target_kv.cache, use_cache=True)
     target_prefix_logit = prefill_out.logits[0, -1, :]
     torch.cuda.synchronize()
+    if profile_nvtx:
+        torch.cuda.nvtx.range_pop()
     t_prefill_end = time.perf_counter()
     metrics.prefill_time_s = (t_prefill_end - t_prefill_start)
 
@@ -254,9 +260,13 @@ def self_speculative_generate(
             trace_output_start = len(generated_token_ids)
             t_v_start = time.perf_counter()
             curr_tensor = curr_target_tok_tensor
+            if profile_nvtx:
+                torch.cuda.nvtx.range_push("vanilla_fallback")
             with torch.no_grad():
                 out = model(curr_tensor, past_key_values=target_kv.cache, use_cache=True)
             torch.cuda.synchronize()
+            if profile_nvtx:
+                torch.cuda.nvtx.range_pop()
             t_v_end = time.perf_counter()
             verify_elapsed = t_v_end - t_v_start
             metrics.verify_time_s += verify_elapsed
@@ -329,6 +339,8 @@ def self_speculative_generate(
         draft_token_tensors: list[torch.Tensor] = []
         draft_probs_list: list[torch.Tensor] = []
 
+        if profile_nvtx:
+            torch.cuda.nvtx.range_push("draft_forward")
         t_draft_start = time.perf_counter()
 
         # Routed mode: cost-aware choice between PLD and layer-skip (Huong 1)
@@ -406,6 +418,8 @@ def self_speculative_generate(
                             break
 
         torch.cuda.synchronize()
+        if profile_nvtx:
+            torch.cuda.nvtx.range_pop()
         t_draft_end = time.perf_counter()
         draft_elapsed = t_draft_end - t_draft_start
         metrics.draft_time_s += draft_elapsed
@@ -419,9 +433,13 @@ def self_speculative_generate(
             trace_cache_digest = diagnostic_cache_digest(target_kv) if diagnostic_hash_kv else None
             trace_output_start = len(generated_token_ids)
             t_v_start = time.perf_counter()
+            if profile_nvtx:
+                torch.cuda.nvtx.range_push("vanilla_fallback")
             with torch.no_grad():
                 out = model(curr_target_tok_tensor, past_key_values=target_kv.cache, use_cache=True)
             torch.cuda.synchronize()
+            if profile_nvtx:
+                torch.cuda.nvtx.range_pop()
             t_v_end = time.perf_counter()
             verify_elapsed = t_v_end - t_v_start
             metrics.verify_time_s += verify_elapsed
@@ -485,6 +503,8 @@ def self_speculative_generate(
         cand_tensor = torch.cat([curr_target_tok_tensor] + draft_token_tensors, dim=-1)
 
         t_verify_start = time.perf_counter()
+        if profile_nvtx:
+            torch.cuda.nvtx.range_push("target_verify")
         margin_fallback_triggered = False
         minimum_batch_margin: Optional[float] = None
         cycle_replay_s = 0.0
@@ -533,6 +553,8 @@ def self_speculative_generate(
                     v_logits = torch.stack(step_logits).unsqueeze(0)
 
         torch.cuda.synchronize()
+        if profile_nvtx:
+            torch.cuda.nvtx.range_pop()
         t_verify_end = time.perf_counter()
         verify_elapsed = t_verify_end - t_verify_start - cycle_replay_s
         metrics.verify_time_s += verify_elapsed
@@ -543,6 +565,8 @@ def self_speculative_generate(
         # Vectorized GPU decision for greedy decoding eliminates per-token CPU stalls.
         # -------------------------------------------------------------------
         t_commit_start = time.perf_counter()
+        if profile_nvtx:
+            torch.cuda.nvtx.range_push("cache_commit_crop")
         cycle_emitted = [curr_target_tok]
         rejected_at: Optional[int] = None
         num_accepted_draft = 0
@@ -604,6 +628,8 @@ def self_speculative_generate(
                 curr_target_tok_tensor = torch.tensor([[curr_target_tok]], device=device)
 
         torch.cuda.synchronize()
+        if profile_nvtx:
+            torch.cuda.nvtx.range_pop()
         t_commit_end = time.perf_counter()
         commit_elapsed = t_commit_end - t_commit_start
         cache_cycle_s += commit_elapsed
