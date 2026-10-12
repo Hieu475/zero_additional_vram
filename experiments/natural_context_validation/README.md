@@ -115,6 +115,50 @@ result as a candidate regime for a repeated, thermally controlled validation.
 The 91.2% sequence identity also means performance must be reported with the
 correctness trade-off; this does not support a lossless-output claim.
 
+## Independent-order repeat
+
+`repeat2_n20_pld_rtx4050/` repeats the same 80 prompt IDs and methods, keeps
+sample seed 2027, and uses method-order seed 2028. It has a separate 640-row
+raw file, environment record and summary. `session_comparison_rtx4050.json`
+contains paired prompt-level session deltas and bootstrap intervals; reproduce
+it with `scripts/analyze_natural_context_sessions.py`.
+
+| Action | First session mean | Repeat mean | Repeat prompt bootstrap 95% CI | Exact match, both sessions |
+| --- | ---: | ---: | ---: | ---: |
+| PLD K=4 | 1.031x | 1.043x | 0.996–1.093 | 91.25% |
+| CKA90 K=2 | 0.847x | 0.855x | 0.836–0.875 | 80.0% |
+| CKA90 K=4 | 0.732x | 0.744x | 0.717–0.772 | 80.0% |
+
+For PLD, the repeat-minus-first paired mean change was +0.012x (prompt
+bootstrap 95% CI -0.002–0.027), and per-prompt speedups were strongly correlated
+across sessions (r=0.957). At 384 input tokens PLD remained above break-even in
+both individual sessions (1.129x and 1.120x); its exact-match rate was 90% in
+both. This is a repeated candidate regime, not a validated lossless speedup.
+At the other lengths, paired session changes were small and their confidence
+intervals included zero.
+
+The repeat does not establish thermal control: temperature reached 88°C in both
+sessions, SM clock ranged about 1920–2550 MHz, and telemetry recorded GPU
+utilization from 57% to 100% during the first session and 53% to 100% in the
+repeat. Initial snapshots were cooler (53°C and 54°C), but system load varied.
+The intervals above resample prompts, not independent sessions; there are only
+two sessions on the same RTX 4050. Thus this strengthens prompt-level
+repeatability but does not show thermal robustness or cross-device
+generalization.
+
+Reproduce the repeat with:
+
+```bash
+python scripts/run_natural_context_validation.py \
+  --output-dir experiments/natural_context_validation/repeat2_n20_pld_rtx4050 \
+  --per-bucket 20 --max-new-tokens 16 --seed 2027 --order-seed 2028
+
+python scripts/analyze_natural_context_sessions.py \
+  --session1 experiments/natural_context_validation/full_n20_pld_rtx4050/raw_measurements.jsonl \
+  --session2 experiments/natural_context_validation/repeat2_n20_pld_rtx4050/raw_measurements.jsonl \
+  --output experiments/natural_context_validation/session_comparison_rtx4050.json
+```
+
 Reproduction:
 
 ```bash
