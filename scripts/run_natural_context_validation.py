@@ -43,7 +43,9 @@ def summarize(raw_rows: list[dict[str, Any]], seed: int) -> dict[str, Any]:
     rng = random.Random(seed)
     report: dict[str, Any] = {"n_prompts": len(pairs), "actions": {}}
     for action in actions:
-        speedups, token_mae_parts, measured_profitable, predicted_profitable = [], [], [], []
+        speedups, token_mae_parts, tps_abs_errors, tps_pct_errors = [], [], [], []
+        draft_ms, verify_ms, cache_ms = [], [], []
+        measured_profitable, predicted_profitable = [], []
         for pair in pairs.values():
             if "vanilla" not in pair or action not in pair:
                 continue
@@ -54,6 +56,23 @@ def summarize(raw_rows: list[dict[str, Any]], seed: int) -> dict[str, Any]:
                 pair[action]["measured"]["generated_tokens_per_cycle"]
                 - pair[action]["prediction"]["tokens_per_cycle"]
             ))
+            measured_tps = pair[action]["measured"]["decode_tps"]
+            predicted_tps = pair[action]["prediction"]["decode_tps"]
+            tps_abs_errors.append(abs(measured_tps - predicted_tps))
+            tps_pct_errors.append(abs(measured_tps - predicted_tps) / max(measured_tps, 1e-9))
+            draft_ms.append(pair[action]["measured"]["draft_ms_per_cycle"])
+            verify_ms.append(pair[action]["measured"]["verify_ms_per_cycle"])
+            cache_ms.append(pair[action]["measured"]["cache_ms_per_cycle"])
+            vanilla_ids = pair["vanilla"]["measured"].get("token_ids", [])
+            action_ids = pair[action]["measured"].get("token_ids", [])
+            first_divergence = next(
+                (i for i, (a, b) in enumerate(zip(vanilla_ids, action_ids)) if a != b),
+                min(len(vanilla_ids), len(action_ids)),
+            )
+            pair[action]["sequence_exact_match"] = vanilla_ids == action_ids
+            pair[action]["first_divergence_position"] = (
+                None if vanilla_ids == action_ids else first_divergence
+            )
         if not speedups:
             continue
         boot = []
@@ -76,6 +95,25 @@ def summarize(raw_rows: list[dict[str, Any]], seed: int) -> dict[str, Any]:
                                       "profitable_recall": tp / max(1, tp + fn),
                                       "false_positive_rate": fp / max(1, fp + tn)},
             "tokens_per_cycle_mae": sum(token_mae_parts) / len(token_mae_parts),
+            "decode_tps_mae": sum(tps_abs_errors) / len(tps_abs_errors),
+            "decode_tps_mape": sum(tps_pct_errors) / len(tps_pct_errors),
+            "measured_stage_ms_per_cycle_mean": {
+                "draft": sum(draft_ms) / len(draft_ms),
+                "verify": sum(verify_ms) / len(verify_ms),
+                "cache": sum(cache_ms) / len(cache_ms),
+            },
+            "sequence_exact_match_count": sum(
+                bool(p[action]["sequence_exact_match"]) for p in pairs.values()
+                if action in p and "vanilla" in p
+            ),
+            "sequence_exact_match_rate": sum(
+                bool(p[action]["sequence_exact_match"]) for p in pairs.values()
+                if action in p and "vanilla" in p
+            ) / len(speedups),
+            "first_divergence_positions": [
+                p[action]["first_divergence_position"] for p in pairs.values()
+                if action in p and "vanilla" in p and not p[action]["sequence_exact_match"]
+            ],
         }
     by_bucket: dict[str, Any] = {}
     for bucket in sorted({key[1] for key in pairs}):
@@ -87,6 +125,9 @@ def summarize(raw_rows: list[dict[str, Any]], seed: int) -> dict[str, Any]:
                 by_bucket[bucket][action] = {
                     "n": len(ratios), "mean_speedup": sum(ratios) / len(ratios),
                     "median_speedup": sorted(ratios)[len(ratios) // 2],
+                    "sequence_exact_match_rate": sum(
+                        bool(p[action]["sequence_exact_match"]) for p in bucket_rows if action in p
+                    ) / len(ratios),
                 }
     report["by_context_bucket"] = by_bucket
     return report

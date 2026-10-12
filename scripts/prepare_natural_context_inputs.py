@@ -74,7 +74,10 @@ def prepare(output: Path, model: str, model_revision: str, per_bucket: int,
     used: set[tuple[str, str]] = set()
     selected: list[dict[str, Any]] = []
     for target in targets:
-        bucket = f"{target // 2}-{target}" if target in (384, 768, 1536, 3072) else str(target)
+        bucket = {
+            384: "128-512", 768: "512-1024",
+            1536: "1024-2048", 3072: "2048-4096",
+        }.get(target, str(target))
         bucket_rows = 0
         for row in candidates:
             key = (row["task"], row["source_id"])
