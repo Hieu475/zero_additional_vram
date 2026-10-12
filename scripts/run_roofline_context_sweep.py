@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 from run_heldout_roofline_validation import (  # noqa: E402
-    ACTIONS, BENCHMARKS, K_VALUES, append_jsonl, context_token_ids,
+    ACTIONS, BENCHMARKS, K_VALUES, append_jsonl, context_token_ids, package_version,
     gpu_snapshot, load_records, measure_vanilla, run_action, sha256,
 )
 from zassd.models.layer_manager import LayerManager  # noqa: E402
@@ -87,8 +87,13 @@ def main() -> None:
     }
     (out / "config.json").write_text(json.dumps(cfg, indent=2))
     (out / "environment.json").write_text(json.dumps({
-        "commit_sha": base_sha, "gpu_name": torch.cuda.get_device_name(args.device),
-        "torch": torch.__version__, "cuda": torch.version.cuda,
+        "commit_sha": base_sha, "python": sys.version.split()[0],
+        "gpu_name": torch.cuda.get_device_name(args.device),
+        "torch": torch.__version__, "transformers": package_version("transformers"),
+        "bitsandbytes": package_version("bitsandbytes"), "cuda": torch.version.cuda,
+        "driver_version": subprocess.run(
+            ["nvidia-smi", "--query-gpu=driver_version", "--format=csv,noheader"],
+            capture_output=True, text=True, check=False).stdout.strip(),
         "initial_telemetry": gpu_snapshot(args.device),
     }, indent=2))
 
