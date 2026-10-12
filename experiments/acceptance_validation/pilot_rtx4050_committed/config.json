@@ -1,0 +1,50 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "quantization": "NF4",
+  "compute_dtype": "float16",
+  "attention_implementation": "sdpa",
+  "max_new_tokens": 32,
+  "samples_per_task": 6,
+  "calibration_tasks": [
+    "gsm8k",
+    "humaneval"
+  ],
+  "heldout_tasks": [
+    "cnndm"
+  ],
+  "actions": [
+    {
+      "config": "cka_60",
+      "kept_layers": 22,
+      "k": [
+        2,
+        4
+      ]
+    },
+    {
+      "config": "cka_67",
+      "kept_layers": 24,
+      "k": [
+        2,
+        4
+      ]
+    },
+    {
+      "config": "cka_90",
+      "kept_layers": 32,
+      "k": [
+        2,
+        4
+      ]
+    }
+  ],
+  "predictor_policy": "Frozen MeasuredActionCostModel profile; only baseline_tps is calibrated from calibration vanilla decode throughput. No heldout fitting.",
+  "seed": 42,
+  "execution_commit": "bb5c0e1c860c125309d9298a36460c684b687d8e",
+  "dataset_sha256": {
+    "gsm8k": "a267e7a2e196949177bff46c9c2d9d50c39c66724b8fd0b868f7a042b7b1b0f6",
+    "humaneval": "3d5d2f3f5d6ce32547732cb27b9d483f177be4e6dcd82bd98a10610e3af5db04",
+    "cnndm": "11b5e9db9851878491854f6e166c513aa0ed6668d635ccb49d97592032d02096"
+  }
+}

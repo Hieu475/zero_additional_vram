@@ -1,0 +1,118 @@
+{
+  "calibration_prompts": 12,
+  "calibration_train_prompts": 8,
+  "calibration_dev_prompts": 4,
+  "heldout_prompts": 6,
+  "n_heldout_cycles": 446,
+  "development_tokens_per_cycle_mae": {
+    "global_mean": 1.0723756324666023,
+    "global": 0.9517922317643333,
+    "action": 0.7579371568824372,
+    "context": 0.9517922317643333,
+    "entropy": 0.95365127711241,
+    "combined": 0.7925337574993883
+  },
+  "selected_predictor": "action",
+  "heldout_predictor_errors": {
+    "global_mean": {
+      "tokens_per_cycle_mae": 1.1143084112393653,
+      "survival_probability_mae": 0.4809334468789907,
+      "survival_probability_brier": 0.29065427208684935,
+      "ci95_prompt_bootstrap": [
+        1.0286250481098689,
+        1.2162290391713662
+      ]
+    },
+    "global": {
+      "tokens_per_cycle_mae": 0.9797709527825714,
+      "survival_probability_mae": 0.4400802219898444,
+      "survival_probability_brier": 0.22049718578572172,
+      "ci95_prompt_bootstrap": [
+        0.9263034637099273,
+        1.0491513422187861
+      ]
+    },
+    "action": {
+      "tokens_per_cycle_mae": 0.8327713874727686,
+      "survival_probability_mae": 0.3760190999228772,
+      "survival_probability_brier": 0.19872377080242565,
+      "ci95_prompt_bootstrap": [
+        0.7626938648098843,
+        0.926742111191671
+      ]
+    },
+    "context": {
+      "tokens_per_cycle_mae": 0.9797709527825714,
+      "survival_probability_mae": 0.4400802219898444,
+      "survival_probability_brier": 0.22049718578572172,
+      "ci95_prompt_bootstrap": [
+        0.9263034637099273,
+        1.0491513422187861
+      ]
+    },
+    "entropy": {
+      "tokens_per_cycle_mae": 0.9759007178486391,
+      "survival_probability_mae": 0.4373672646638769,
+      "survival_probability_brier": 0.2193755571784959,
+      "ci95_prompt_bootstrap": [
+        0.9303739753805821,
+        1.0325989983874488
+      ]
+    },
+    "combined": {
+      "tokens_per_cycle_mae": 0.8644887636224057,
+      "survival_probability_mae": 0.38664850709040466,
+      "survival_probability_brier": 0.1994575507975704,
+      "ci95_prompt_bootstrap": [
+        0.7850818591312299,
+        0.9756548516282919
+      ]
+    },
+    "online_ema": {
+      "tokens_per_cycle_mae": 0.9249014094719653,
+      "survival_probability_mae": 0.4135680586790522,
+      "survival_probability_brier": 0.21897006677927072,
+      "ci95_prompt_bootstrap": [
+        0.8617824144928579,
+        1.0070469233837027
+      ]
+    }
+  },
+  "feasibility_using_measured_latency_diagnostic_only": {
+    "1.0": {
+      "tp": 0,
+      "fp": 1,
+      "tn": 34,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "specificity": 0.9714285714285714,
+      "balanced_accuracy": 0.4857142857142857
+    },
+    "1.03": {
+      "tp": 0,
+      "fp": 0,
+      "tn": 35,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "specificity": 1.0,
+      "balanced_accuracy": 0.5
+    },
+    "1.05": {
+      "tp": 0,
+      "fp": 0,
+      "tn": 36,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "specificity": 1.0,
+      "balanced_accuracy": 0.5
+    }
+  },
+  "limitations": [
+    "Held-out feasibility isolates acceptance quality by using measured cycle latency and measured prompt-matched vanilla TPS.",
+    "Expected emitted count is 1 + sum survival probabilities; EOS and output-budget truncation can reduce it.",
+    "Online EMA updates only after each held-out cycle and resets for each prompt."
+  ]
+}
