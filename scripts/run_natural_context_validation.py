@@ -36,6 +36,21 @@ from zassd.models.model_adapter import ModelAdapter  # noqa: E402
 from zassd.profiling.action_cost_model import MeasuredActionCostModel  # noqa: E402
 
 
+def _median(values: list[float]) -> float:
+    ordered = sorted(values)
+    middle = len(ordered) // 2
+    return ordered[middle] if len(ordered) % 2 else (ordered[middle - 1] + ordered[middle]) / 2
+
+
+def _bootstrap_ci(values: list[float], rng: random.Random) -> list[float]:
+    estimates = []
+    for _ in range(5000):
+        sample = [values[rng.randrange(len(values))] for _ in values]
+        estimates.append(sum(sample) / len(sample))
+    estimates.sort()
+    return [estimates[int(.025 * len(estimates))], estimates[int(.975 * len(estimates))]]
+
+
 def summarize(raw_rows: list[dict[str, Any]], seed: int) -> dict[str, Any]:
     pairs: dict[tuple[str, str], dict[str, Any]] = {}
     for row in raw_rows:
@@ -48,6 +63,8 @@ def summarize(raw_rows: list[dict[str, Any]], seed: int) -> dict[str, Any]:
         draft_ms, verify_ms, cache_ms = [], [], []
         measured_profitable, predicted_profitable = [], []
         exact_matches, candidate_hit_rates = [], []
+        total_draft_tokens, total_accepted_tokens = 0, 0
+        total_candidate_cycles, total_cycles = 0, 0
         for pair in pairs.values():
             if "vanilla" not in pair or action not in pair:
                 continue
@@ -74,23 +91,24 @@ def summarize(raw_rows: list[dict[str, Any]], seed: int) -> dict[str, Any]:
             )
             pair[action]["sequence_exact_match"] = vanilla_ids == action_ids
             exact_matches.append(vanilla_ids == action_ids)
-            if "candidate_hit_rate" in pair[action]["measured"]:
-                candidate_hit_rates.append(pair[action]["measured"]["candidate_hit_rate"])
+            cycle_rows = (pair[action].get("acceptance_cycles")
+                          or pair[action]["measured"].get("cycle_stats", []))
+            proposed = sum(int(c.get("k", 0)) for c in cycle_rows)
+            accepted = sum(int(c.get("accepted", 0)) for c in cycle_rows)
+            total_draft_tokens += proposed
+            total_accepted_tokens += accepted
+            total_cycles += len(cycle_rows)
+            total_candidate_cycles += sum(int(c.get("k", 0)) > 0 for c in cycle_rows)
             pair[action]["first_divergence_position"] = (
                 None if vanilla_ids == action_ids else first_divergence
             )
         if not speedups:
             continue
-        boot = []
-        for _ in range(5000):
-            sample = [speedups[rng.randrange(len(speedups))] for _ in speedups]
-            boot.append(sum(sample) / len(sample))
-        boot.sort()
         method_result = {
             "n_paired_prompts": len(speedups),
             "mean_speedup": sum(speedups) / len(speedups),
-            "median_speedup": sorted(speedups)[len(speedups) // 2],
-            "bootstrap_prompt_mean_95ci": [boot[int(.025 * len(boot))], boot[int(.975 * len(boot))]],
+            "median_speedup": _median(speedups),
+            "bootstrap_prompt_mean_95ci": _bootstrap_ci(speedups, rng),
             "measured_profitable_count": sum(measured_profitable),
             "predicted_profitable_count": (
                 sum(predicted_profitable) if predicted_profitable else None
@@ -102,8 +120,18 @@ def summarize(raw_rows: list[dict[str, Any]], seed: int) -> dict[str, Any]:
                 "verify": sum(verify_ms) / len(verify_ms),
                 "cache": sum(cache_ms) / len(cache_ms),
             },
-            "mean_candidate_hit_rate": (
-                sum(candidate_hit_rates) / len(candidate_hit_rates) if candidate_hit_rates else None
+            "speculation_cycle_rate": total_candidate_cycles / total_cycles if total_cycles else None,
+            "lookup_hit_rate": (
+                total_candidate_cycles / total_cycles
+                if action.startswith("pld_") and total_cycles else None
+            ),
+            "draft_tokens_total": total_draft_tokens,
+            "accepted_tokens_total": total_accepted_tokens,
+            "observed_token_acceptance_rate": (
+                total_accepted_tokens / total_draft_tokens if total_draft_tokens else None
+            ),
+            "mean_accepted_tokens_per_cycle": (
+                total_accepted_tokens / total_cycles if total_cycles else None
             ),
             "first_divergence_positions": [
                 p[action]["first_divergence_position"] for p in pairs.values()
@@ -133,11 +161,37 @@ def summarize(raw_rows: list[dict[str, Any]], seed: int) -> dict[str, Any]:
             if ratios:
                 by_bucket[bucket][action] = {
                     "n": len(ratios), "mean_speedup": sum(ratios) / len(ratios),
-                    "median_speedup": sorted(ratios)[len(ratios) // 2],
+                    "median_speedup": _median(ratios),
+                    "bootstrap_prompt_mean_95ci": _bootstrap_ci(ratios, rng),
                     "sequence_exact_match_rate": sum(
                         bool(p[action]["sequence_exact_match"]) for p in bucket_rows if action in p
                     ) / len(ratios),
+                    "candidate_cycle_rate": (
+                        sum(
+                            sum(int(c.get("k", 0)) > 0 for c in (
+                                p[action].get("acceptance_cycles")
+                                or p[action]["measured"].get("cycle_stats", [])
+                            ))
+                            for p in bucket_rows if action in p
+                        ) / max(1, sum(
+                            len(p[action].get("acceptance_cycles")
+                                or p[action]["measured"].get("cycle_stats", []))
+                            for p in bucket_rows if action in p
+                        ))
+                    ),
+                    "mean_accepted_tokens_per_cycle": (
+                        sum(int(c.get("accepted", 0)) for p in bucket_rows if action in p
+                            for c in (p[action].get("acceptance_cycles")
+                                      or p[action]["measured"].get("cycle_stats", [])))
+                        / max(1, sum(len(p[action].get("acceptance_cycles")
+                                      or p[action]["measured"].get("cycle_stats", []))
+                                     for p in bucket_rows if action in p))
+                    ),
                 }
+                if action.startswith("pld_"):
+                    by_bucket[bucket][action]["lookup_hit_rate"] = (
+                        by_bucket[bucket][action]["candidate_cycle_rate"]
+                    )
     report["by_context_bucket"] = by_bucket
     return report
 
