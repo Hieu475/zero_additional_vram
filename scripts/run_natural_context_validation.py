@@ -30,6 +30,7 @@ from run_heldout_roofline_validation import (  # noqa: E402
     ACTIONS, K_VALUES, append_jsonl, gpu_snapshot, measure_vanilla, package_version,
     run_action,
 )
+from zassd.baselines.prompt_lookup import prompt_lookup_generate  # noqa: E402
 from zassd.models.layer_manager import LayerManager  # noqa: E402
 from zassd.models.model_adapter import ModelAdapter  # noqa: E402
 from zassd.profiling.action_cost_model import MeasuredActionCostModel  # noqa: E402
@@ -46,20 +47,22 @@ def summarize(raw_rows: list[dict[str, Any]], seed: int) -> dict[str, Any]:
         speedups, token_mae_parts, tps_abs_errors, tps_pct_errors = [], [], [], []
         draft_ms, verify_ms, cache_ms = [], [], []
         measured_profitable, predicted_profitable = [], []
+        exact_matches, candidate_hit_rates = [], []
         for pair in pairs.values():
             if "vanilla" not in pair or action not in pair:
                 continue
             speedups.append(pair[action]["measured_speedup"])
             measured_profitable.append(pair[action]["measured_speedup"] > 1.0)
-            predicted_profitable.append(pair[action]["prediction"]["speedup"] > 1.0)
-            token_mae_parts.append(abs(
-                pair[action]["measured"]["generated_tokens_per_cycle"]
-                - pair[action]["prediction"]["tokens_per_cycle"]
-            ))
-            measured_tps = pair[action]["measured"]["decode_tps"]
-            predicted_tps = pair[action]["prediction"]["decode_tps"]
-            tps_abs_errors.append(abs(measured_tps - predicted_tps))
-            tps_pct_errors.append(abs(measured_tps - predicted_tps) / max(measured_tps, 1e-9))
+            if "prediction" in pair[action]:
+                predicted_profitable.append(pair[action]["prediction"]["speedup"] > 1.0)
+                token_mae_parts.append(abs(
+                    pair[action]["measured"]["generated_tokens_per_cycle"]
+                    - pair[action]["prediction"]["tokens_per_cycle"]
+                ))
+                measured_tps = pair[action]["measured"]["decode_tps"]
+                predicted_tps = pair[action]["prediction"]["decode_tps"]
+                tps_abs_errors.append(abs(measured_tps - predicted_tps))
+                tps_pct_errors.append(abs(measured_tps - predicted_tps) / max(measured_tps, 1e-9))
             draft_ms.append(pair[action]["measured"]["draft_ms_per_cycle"])
             verify_ms.append(pair[action]["measured"]["verify_ms_per_cycle"])
             cache_ms.append(pair[action]["measured"]["cache_ms_per_cycle"])
@@ -70,6 +73,9 @@ def summarize(raw_rows: list[dict[str, Any]], seed: int) -> dict[str, Any]:
                 min(len(vanilla_ids), len(action_ids)),
             )
             pair[action]["sequence_exact_match"] = vanilla_ids == action_ids
+            exact_matches.append(vanilla_ids == action_ids)
+            if "candidate_hit_rate" in pair[action]["measured"]:
+                candidate_hit_rates.append(pair[action]["measured"]["candidate_hit_rate"])
             pair[action]["first_divergence_position"] = (
                 None if vanilla_ids == action_ids else first_divergence
             )
@@ -80,41 +86,44 @@ def summarize(raw_rows: list[dict[str, Any]], seed: int) -> dict[str, Any]:
             sample = [speedups[rng.randrange(len(speedups))] for _ in speedups]
             boot.append(sum(sample) / len(sample))
         boot.sort()
-        tp = sum(p and m for p, m in zip(predicted_profitable, measured_profitable))
-        fp = sum(p and not m for p, m in zip(predicted_profitable, measured_profitable))
-        fn = sum(not p and m for p, m in zip(predicted_profitable, measured_profitable))
-        tn = sum(not p and not m for p, m in zip(predicted_profitable, measured_profitable))
-        report["actions"][action] = {
+        method_result = {
             "n_paired_prompts": len(speedups),
             "mean_speedup": sum(speedups) / len(speedups),
             "median_speedup": sorted(speedups)[len(speedups) // 2],
             "bootstrap_prompt_mean_95ci": [boot[int(.025 * len(boot))], boot[int(.975 * len(boot))]],
             "measured_profitable_count": sum(measured_profitable),
-            "predicted_profitable_count": sum(predicted_profitable),
-            "feasibility_confusion": {"tp": tp, "fp": fp, "fn": fn, "tn": tn,
-                                      "profitable_recall": tp / max(1, tp + fn),
-                                      "false_positive_rate": fp / max(1, fp + tn)},
-            "tokens_per_cycle_mae": sum(token_mae_parts) / len(token_mae_parts),
-            "decode_tps_mae": sum(tps_abs_errors) / len(tps_abs_errors),
-            "decode_tps_mape": sum(tps_pct_errors) / len(tps_pct_errors),
+            "predicted_profitable_count": (
+                sum(predicted_profitable) if predicted_profitable else None
+            ),
+            "sequence_exact_match_count": sum(exact_matches),
+            "sequence_exact_match_rate": sum(exact_matches) / len(exact_matches),
             "measured_stage_ms_per_cycle_mean": {
                 "draft": sum(draft_ms) / len(draft_ms),
                 "verify": sum(verify_ms) / len(verify_ms),
                 "cache": sum(cache_ms) / len(cache_ms),
             },
-            "sequence_exact_match_count": sum(
-                bool(p[action]["sequence_exact_match"]) for p in pairs.values()
-                if action in p and "vanilla" in p
+            "mean_candidate_hit_rate": (
+                sum(candidate_hit_rates) / len(candidate_hit_rates) if candidate_hit_rates else None
             ),
-            "sequence_exact_match_rate": sum(
-                bool(p[action]["sequence_exact_match"]) for p in pairs.values()
-                if action in p and "vanilla" in p
-            ) / len(speedups),
             "first_divergence_positions": [
                 p[action]["first_divergence_position"] for p in pairs.values()
                 if action in p and "vanilla" in p and not p[action]["sequence_exact_match"]
             ],
         }
+        if predicted_profitable:
+            tp = sum(p and m for p, m in zip(predicted_profitable, measured_profitable))
+            fp = sum(p and not m for p, m in zip(predicted_profitable, measured_profitable))
+            fn = sum(not p and m for p, m in zip(predicted_profitable, measured_profitable))
+            tn = sum(not p and not m for p, m in zip(predicted_profitable, measured_profitable))
+            method_result.update({
+                "feasibility_confusion": {"tp": tp, "fp": fp, "fn": fn, "tn": tn,
+                                          "profitable_recall": tp / max(1, tp + fn),
+                                          "false_positive_rate": fp / max(1, fp + tn)},
+                "tokens_per_cycle_mae": sum(token_mae_parts) / len(token_mae_parts),
+                "decode_tps_mae": sum(tps_abs_errors) / len(tps_abs_errors),
+                "decode_tps_mape": sum(tps_pct_errors) / len(tps_pct_errors),
+            })
+        report["actions"][action] = method_result
     by_bucket: dict[str, Any] = {}
     for bucket in sorted({key[1] for key in pairs}):
         bucket_rows = [pair for (prompt_id, b), pair in pairs.items() if b == bucket]
@@ -178,6 +187,7 @@ def main() -> None:
         "roofline": "Frozen action coefficients and baseline from run_rtx4050_frozen_b2bfb01/calibration/baseline.json",
         "fit_policy": "No fitting or threshold selection on natural-context pilot",
         "actions": [{"config": a["config"], "kept_layers": a["kept_layers"], "k": list(K_VALUES)} for a in ACTIONS],
+        "methods": ["vanilla", "prompt_lookup_K4_prompt_plus_generated", "six_layer_skip_actions"],
         "measurement": "one paired observation per prompt and action; within-prompt order randomized",
         "limitations": "exploratory pilot; prompt bootstrap does not capture between-session thermal variance",
     }
@@ -196,12 +206,18 @@ def main() -> None:
     for action in ACTIONS:
         run_action(model, tokenizer, manager, warm, action, 2,
                    min(8, args.max_new_tokens), args.device)
+    prompt_lookup_generate(
+        model, tokenizer, warm, k=4, max_new_tokens=min(8, args.max_new_tokens),
+        temperature=0.0, device=args.device, kv_cache_backend="static",
+        candidate_source="prompt+generated",
+        kv_cache_max_capacity=int(warm.shape[-1]) + min(8, args.max_new_tokens) + 8,
+    )
     rng = random.Random(args.seed)
     raw_path = out / "raw_measurements.jsonl"
     raw_rows: list[dict[str, Any]] = []
     for record in records:
         prompt = torch.tensor([record["input_ids"]], dtype=torch.long, device=args.device)
-        jobs: list[tuple[str, Any, int | None]] = [("vanilla", None, None)]
+        jobs: list[tuple[str, Any, int | None]] = [("vanilla", None, None), ("pld", None, 4)]
         jobs.extend(("action", action, k) for action in ACTIONS for k in K_VALUES)
         rng.shuffle(jobs)
         vanilla_tps: float | None = None
@@ -215,6 +231,41 @@ def main() -> None:
                        "context_bucket": record["context_bucket"], "prompt_tokens": record["prompt_tokens"],
                        "method_key": "vanilla", "method": "vanilla", "measured": measured,
                        "telemetry_before": before, "telemetry_after": gpu_snapshot(args.device)}
+            elif kind == "pld":
+                _, metrics = prompt_lookup_generate(
+                    model, tokenizer, prompt, k=int(k), max_new_tokens=args.max_new_tokens,
+                    temperature=0.0, device=args.device, kv_cache_backend="static",
+                    candidate_source="prompt+generated",
+                    kv_cache_max_capacity=int(prompt.shape[-1]) + args.max_new_tokens + 8,
+                )
+                cycles = max(1, metrics.num_verification_cycles)
+                decode_s = max(1e-9, metrics.total_time_s - metrics.prefill_time_s)
+                cycle_stats = metrics.per_iteration_stats
+                candidate_hits = sum(int(c.get("k", 0)) > 0 for c in cycle_stats)
+                measured = {
+                    "output_tokens": metrics.total_tokens,
+                    "decode_tokens": max(0, metrics.total_tokens - 1),
+                    "prefill_ms": metrics.prefill_time_s * 1000.0,
+                    "decode_ms": decode_s * 1000.0,
+                    "decode_tps": max(0, metrics.total_tokens - 1) / decode_s,
+                    "generated_tokens_per_cycle": metrics.total_tokens / cycles,
+                    "verification_cycles": metrics.num_verification_cycles,
+                    "draft_ms_per_cycle": metrics.draft_time_s * 1000.0 / cycles,
+                    "verify_ms_per_cycle": metrics.verify_time_s * 1000.0 / cycles,
+                    "cache_ms_per_cycle": metrics.cache_time_s * 1000.0 / cycles,
+                    "acceptance_rate": metrics.acceptance_rate,
+                    "candidate_hit_rate": candidate_hits / max(1, len(cycle_stats)),
+                    "pld_cycles": metrics.pld_cycles,
+                    "peak_vram_mb": metrics.peak_vram_mb,
+                    "token_ids": metrics.generated_token_ids,
+                    "cycle_stats": cycle_stats,
+                }
+                row = {"prompt_id": record["prompt_id"], "source_task": record["source_task"],
+                       "context_bucket": record["context_bucket"], "prompt_tokens": record["prompt_tokens"],
+                       "method_key": f"pld_K{k}", "method": "pld", "k": k,
+                       "measured": measured,
+                       "telemetry_before": before, "telemetry_after": gpu_snapshot(args.device)}
+                pending.append(row)
             else:
                 prediction = cost_model.evaluate_action(action["config"], int(k))
                 measured = run_action(model, tokenizer, manager, prompt, action, int(k),
@@ -242,6 +293,7 @@ def main() -> None:
             row["measured_speedup"] = row["measured"]["decode_tps"] / max(vanilla_tps, 1e-9)
             append_jsonl(raw_path, row)
             raw_rows.append(row)
+        print(f"completed {record['prompt_id']} ({record['context_bucket']} tokens)", flush=True)
         # Vanilla row appears once in raw; update in-memory row for pairing only.
         for row in raw_rows:
             if row["prompt_id"] == record["prompt_id"] and row["method_key"] == "vanilla":

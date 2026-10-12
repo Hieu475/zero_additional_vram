@@ -45,6 +45,7 @@ def prompt_lookup_generate(
     candidate_source: str = "history",
     adaptive_profile: dict | None = None,
     force_miss: bool = False,
+    kv_cache_max_capacity: int = 2048,
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Prompt Lookup Decoding (PLD).
 
@@ -58,6 +59,7 @@ def prompt_lookup_generate(
         temperature: Sampling temperature (0.0 = greedy).
         device: Execution device.
         kv_cache_backend: Cache backend ('static' or 'dynamic').
+        kv_cache_max_capacity: Static-cache capacity for long prompts plus decode.
 
     Returns:
         Tuple of (generated text, SpeculativeMetrics).
@@ -77,7 +79,8 @@ def prompt_lookup_generate(
 
     # 1. Prefill Target KV Cache
     t_prefill_start = time.perf_counter()
-    target_kv = TargetKVCache(backend=kv_cache_backend)
+    target_kv = TargetKVCache(backend=kv_cache_backend,
+                              max_capacity=kv_cache_max_capacity)
     with torch.no_grad():
         prefill_out = model(prompt_ids, past_key_values=target_kv.cache, use_cache=True)
     target_prefix_logit = prefill_out.logits[0, -1, :]
