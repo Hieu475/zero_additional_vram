@@ -1,0 +1,58 @@
+{
+  "source_commit": "be533cfbd8ac5e2344c19d329629cf199a731801",
+  "hardware": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "quantization": "NF4, FP16 compute, SDPA",
+  "prompt_id": "1",
+  "prompt_tokens": 22,
+  "max_new_tokens": 24,
+  "layer_skip": {
+    "action": "cka_90_K2",
+    "cycles": 8,
+    "draft_tokens": 16,
+    "accepted_tokens": 16,
+    "output_tokens": 24,
+    "metrics_ms": {
+      "prefill": 39.065,
+      "draft": 511.260,
+      "verify": 312.634,
+      "cache_commit_crop": 2.269,
+      "other": 30.557,
+      "total": 895.786
+    },
+    "nvtx_ranges": {
+      "draft_forward": {"instances": 8, "mean_ms": 63.904, "share_of_named_ranges_pct": 59.1},
+      "target_verify": {"instances": 8, "mean_ms": 39.071, "share_of_named_ranges_pct": 36.1},
+      "cache_commit_crop": {"instances": 8, "mean_ms": 0.251, "share_of_named_ranges_pct": 0.2},
+      "target_prefill": {"instances": 1, "mean_ms": 38.933, "share_of_named_ranges_pct": 4.5}
+    },
+    "cuda_api": {
+      "cudaLaunchKernel_calls": 47969,
+      "cudaStreamSynchronize_calls": 54,
+      "cudaStreamSynchronize_total_ms": 54.356,
+      "cudaDeviceSynchronize_calls": 28,
+      "cudaDeviceSynchronize_total_ms": 37.387,
+      "device_to_host_copy_count": 52,
+      "device_to_host_gpu_time_us": 47.136
+    }
+  },
+  "vanilla": {
+    "output_tokens": 24,
+    "nvtx_generation_range_ms": 805.288,
+    "cuda_api": {
+      "cudaLaunchKernel_calls": 47183,
+      "cudaStreamSynchronize_calls": 25,
+      "cudaStreamSynchronize_total_ms": 91.156,
+      "cudaDeviceSynchronize_calls": 2,
+      "device_to_host_copy_count": 24,
+      "device_to_host_gpu_time_us": 21.728
+    }
+  },
+  "limitations": [
+    "Single prompt and one profiled repetition; diagnostic timing only.",
+    "Nsight CPU IP/backtrace sampling and context-switch tracing were unavailable.",
+    "Extra scalar copies are observed; attribution to individual .item() callsites is not proven.",
+    "Do not infer benchmark speedup from these profiled timings."
+  ]
+}
