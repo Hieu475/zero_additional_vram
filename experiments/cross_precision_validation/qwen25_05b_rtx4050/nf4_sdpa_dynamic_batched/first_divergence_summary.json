@@ -1,0 +1,13 @@
+{
+  "input": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/experiments/cross_precision_validation/qwen25_05b_rtx4050/nf4_sdpa_dynamic_batched/traces.json",
+  "n_prompts": 4,
+  "n_token_divergence_within_budget": 1,
+  "sequence_exact_match_rate_within_budget": 0.75,
+  "n_first_kv_divergence_observed": 4,
+  "n_first_logit_divergence_observed": 4,
+  "causal_classification_counts": {
+    "batch_execution_difference_persists_with_canonical_kv": 1,
+    "no_token_divergence_within_budget": 3
+  },
+  "interpretation": "Canonical replay uses prompt prefill followed by token-at-a-time cache construction. At the first output divergence, the canonical cache is replayed with the same batched candidate inputs. A restored vanilla argmax supports a cache-history contribution; a remaining difference shows that canonical KV alone does not explain the flip."
+}

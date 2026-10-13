@@ -1,0 +1,2774 @@
+{
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_revision": null,
+  "precision": "fp16",
+  "backend": "static",
+  "attention_implementation": "sdpa",
+  "verification_mode": "batched",
+  "k": 4,
+  "benchmark": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl",
+  "environment": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "prompts": [
+    {
+      "prompt_id": "qasper_119_ctx384",
+      "prompt_length": 384,
+      "token_ids": [
+        715,
+        6262,
+        510,
+        11526,
+        279,
+        5335,
+        504,
+        264,
+        3151,
+        7947,
+        30,
+        715,
+        6262,
+        510,
+        11526,
+        279
+      ],
+      "vanilla_token_ids": [
+        715,
+        6262,
+        510,
+        11526,
+        279,
+        5335,
+        504,
+        264,
+        3151,
+        7947,
+        30,
+        715,
+        6262,
+        510,
+        11526,
+        279
+      ],
+      "first_kv_divergence_cycle": 3,
+      "first_logit_divergence_cycle": 3,
+      "first_token_divergence_index": null,
+      "first_token_divergence_cycle": null,
+      "first_token_divergence_logit_row": null,
+      "argmax_agreement_at_first_divergence": null,
+      "vanilla_top1_margin_at_divergence": null,
+      "cycles": [
+        {
+          "cycle_index": 0,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 384,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            715
+          ],
+          "emitted_tokens": [
+            715
+          ],
+          "rejected_at": null,
+          "cache_length_before": 384,
+          "cache_length_after": 385,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.7734375,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              6262
+            ],
+            "canonical_kv_argmax": [
+              6262
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            6262
+          ],
+          "observed_batch_token_ids": [
+            6262
+          ],
+          "vanilla_next_token_ids": [
+            6262
+          ]
+        },
+        {
+          "cycle_index": 1,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 385,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            6262
+          ],
+          "emitted_tokens": [
+            6262
+          ],
+          "rejected_at": null,
+          "cache_length_before": 385,
+          "cache_length_after": 386,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.28125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              510
+            ],
+            "canonical_kv_argmax": [
+              510
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            510
+          ],
+          "observed_batch_token_ids": [
+            510
+          ],
+          "vanilla_next_token_ids": [
+            510
+          ]
+        },
+        {
+          "cycle_index": 2,
+          "verification_mode": "batched",
+          "prefix_length": 386,
+          "draft_k": 4,
+          "accepted_count": 4,
+          "candidate_tokens": [
+            510,
+            11526,
+            279,
+            5335,
+            504
+          ],
+          "emitted_tokens": [
+            510,
+            11526,
+            279,
+            5335,
+            504
+          ],
+          "rejected_at": null,
+          "cache_length_before": 386,
+          "cache_length_after": 391,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 1.046875,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              11526,
+              279,
+              5335,
+              504,
+              264
+            ],
+            "canonical_kv_argmax": [
+              11526,
+              279,
+              5335,
+              504,
+              264
+            ],
+            "active_matches_vanilla": [
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "argmax_restored": [
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            11526,
+            279,
+            5335,
+            504,
+            264
+          ],
+          "observed_batch_token_ids": [
+            11526,
+            279,
+            5335,
+            504,
+            264
+          ],
+          "vanilla_next_token_ids": [
+            11526,
+            279,
+            5335,
+            504,
+            264
+          ]
+        },
+        {
+          "cycle_index": 3,
+          "verification_mode": "batched",
+          "prefix_length": 391,
+          "draft_k": 3,
+          "accepted_count": 3,
+          "candidate_tokens": [
+            264,
+            3151,
+            7947,
+            30
+          ],
+          "emitted_tokens": [
+            264,
+            3151,
+            7947,
+            30
+          ],
+          "rejected_at": null,
+          "cache_length_before": 391,
+          "cache_length_after": 395,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 244140624.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.029296875,
+          "vanilla_top1_margin": 2.75,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              3151,
+              7947,
+              30,
+              715
+            ],
+            "canonical_kv_argmax": [
+              3151,
+              7947,
+              30,
+              715
+            ],
+            "active_matches_vanilla": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "argmax_restored": [
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            3151,
+            7947,
+            30,
+            715
+          ],
+          "observed_batch_token_ids": [
+            3151,
+            7947,
+            30,
+            715
+          ],
+          "vanilla_next_token_ids": [
+            3151,
+            7947,
+            30,
+            715
+          ]
+        },
+        {
+          "cycle_index": 4,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 395,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            715
+          ],
+          "emitted_tokens": [
+            715
+          ],
+          "rejected_at": null,
+          "cache_length_before": 395,
+          "cache_length_after": 396,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 244140624.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.029296875,
+          "vanilla_top1_margin": 2.578125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              6262
+            ],
+            "canonical_kv_argmax": [
+              6262
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            6262
+          ],
+          "observed_batch_token_ids": [
+            6262
+          ],
+          "vanilla_next_token_ids": [
+            6262
+          ]
+        },
+        {
+          "cycle_index": 5,
+          "verification_mode": "batched",
+          "prefix_length": 396,
+          "draft_k": 3,
+          "accepted_count": 3,
+          "candidate_tokens": [
+            6262,
+            510,
+            11526,
+            279
+          ],
+          "emitted_tokens": [
+            6262,
+            510,
+            11526,
+            279
+          ],
+          "rejected_at": null,
+          "cache_length_before": 396,
+          "cache_length_after": 400,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 366210944.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.03125,
+          "vanilla_top1_margin": 2.125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              510,
+              11526,
+              279,
+              5335
+            ],
+            "canonical_kv_argmax": [
+              510,
+              11526,
+              279,
+              5335
+            ],
+            "active_matches_vanilla": [
+              true,
+              true,
+              true,
+              false
+            ],
+            "canonical_matches_vanilla": [
+              true,
+              true,
+              true,
+              false
+            ],
+            "argmax_restored": [
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            510,
+            11526,
+            279,
+            5335
+          ],
+          "observed_batch_token_ids": [
+            510,
+            11526,
+            279,
+            5335
+          ],
+          "vanilla_next_token_ids": [
+            510,
+            11526,
+            279,
+            null
+          ]
+        }
+      ]
+    },
+    {
+      "prompt_id": "qasper_109_ctx384",
+      "prompt_length": 384,
+      "token_ids": [
+        715,
+        16141,
+        510,
+        1249,
+        4226,
+        419,
+        3405,
+        11,
+        358,
+        686,
+        1401,
+        369,
+        279,
+        9760,
+        1995,
+        304
+      ],
+      "vanilla_token_ids": [
+        715,
+        16141,
+        510,
+        1249,
+        4226,
+        419,
+        3405,
+        11,
+        358,
+        686,
+        1401,
+        369,
+        279,
+        9760,
+        1995,
+        304
+      ],
+      "first_kv_divergence_cycle": 12,
+      "first_logit_divergence_cycle": 12,
+      "first_token_divergence_index": null,
+      "first_token_divergence_cycle": null,
+      "first_token_divergence_logit_row": null,
+      "argmax_agreement_at_first_divergence": null,
+      "vanilla_top1_margin_at_divergence": null,
+      "cycles": [
+        {
+          "cycle_index": 0,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 384,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            715
+          ],
+          "emitted_tokens": [
+            715
+          ],
+          "rejected_at": null,
+          "cache_length_before": 384,
+          "cache_length_after": 385,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.0859375,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              16141
+            ],
+            "canonical_kv_argmax": [
+              16141
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            16141
+          ],
+          "observed_batch_token_ids": [
+            16141
+          ],
+          "vanilla_next_token_ids": [
+            16141
+          ]
+        },
+        {
+          "cycle_index": 1,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 385,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            16141
+          ],
+          "emitted_tokens": [
+            16141
+          ],
+          "rejected_at": null,
+          "cache_length_before": 385,
+          "cache_length_after": 386,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 1.953125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              510
+            ],
+            "canonical_kv_argmax": [
+              510
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            510
+          ],
+          "observed_batch_token_ids": [
+            510
+          ],
+          "vanilla_next_token_ids": [
+            510
+          ]
+        },
+        {
+          "cycle_index": 2,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 386,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            510
+          ],
+          "emitted_tokens": [
+            510
+          ],
+          "rejected_at": null,
+          "cache_length_before": 386,
+          "cache_length_after": 387,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.890625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              1249
+            ],
+            "canonical_kv_argmax": [
+              1249
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            1249
+          ],
+          "observed_batch_token_ids": [
+            1249
+          ],
+          "vanilla_next_token_ids": [
+            1249
+          ]
+        },
+        {
+          "cycle_index": 3,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 387,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            1249
+          ],
+          "emitted_tokens": [
+            1249
+          ],
+          "rejected_at": null,
+          "cache_length_before": 387,
+          "cache_length_after": 388,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.453125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              4226
+            ],
+            "canonical_kv_argmax": [
+              4226
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            4226
+          ],
+          "observed_batch_token_ids": [
+            4226
+          ],
+          "vanilla_next_token_ids": [
+            4226
+          ]
+        },
+        {
+          "cycle_index": 4,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 388,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            4226
+          ],
+          "emitted_tokens": [
+            4226
+          ],
+          "rejected_at": null,
+          "cache_length_before": 388,
+          "cache_length_after": 389,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.578125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              419
+            ],
+            "canonical_kv_argmax": [
+              419
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            419
+          ],
+          "observed_batch_token_ids": [
+            419
+          ],
+          "vanilla_next_token_ids": [
+            419
+          ]
+        },
+        {
+          "cycle_index": 5,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 389,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            419
+          ],
+          "emitted_tokens": [
+            419
+          ],
+          "rejected_at": null,
+          "cache_length_before": 389,
+          "cache_length_after": 390,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 3.140625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              3405
+            ],
+            "canonical_kv_argmax": [
+              3405
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            3405
+          ],
+          "observed_batch_token_ids": [
+            3405
+          ],
+          "vanilla_next_token_ids": [
+            3405
+          ]
+        },
+        {
+          "cycle_index": 6,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 390,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            3405
+          ],
+          "emitted_tokens": [
+            3405
+          ],
+          "rejected_at": null,
+          "cache_length_before": 390,
+          "cache_length_after": 391,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 6.59375,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              11
+            ],
+            "canonical_kv_argmax": [
+              11
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            11
+          ],
+          "observed_batch_token_ids": [
+            11
+          ],
+          "vanilla_next_token_ids": [
+            11
+          ]
+        },
+        {
+          "cycle_index": 7,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 391,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            11
+          ],
+          "emitted_tokens": [
+            11
+          ],
+          "rejected_at": null,
+          "cache_length_before": 391,
+          "cache_length_after": 392,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 1.140625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              358
+            ],
+            "canonical_kv_argmax": [
+              358
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            358
+          ],
+          "observed_batch_token_ids": [
+            358
+          ],
+          "vanilla_next_token_ids": [
+            358
+          ]
+        },
+        {
+          "cycle_index": 8,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 392,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            358
+          ],
+          "emitted_tokens": [
+            358
+          ],
+          "rejected_at": null,
+          "cache_length_before": 392,
+          "cache_length_after": 393,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 1.296875,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              686
+            ],
+            "canonical_kv_argmax": [
+              686
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            686
+          ],
+          "observed_batch_token_ids": [
+            686
+          ],
+          "vanilla_next_token_ids": [
+            686
+          ]
+        },
+        {
+          "cycle_index": 9,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 393,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            686
+          ],
+          "emitted_tokens": [
+            686
+          ],
+          "rejected_at": null,
+          "cache_length_before": 393,
+          "cache_length_after": 394,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.25,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              1401
+            ],
+            "canonical_kv_argmax": [
+              1401
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            1401
+          ],
+          "observed_batch_token_ids": [
+            1401
+          ],
+          "vanilla_next_token_ids": [
+            1401
+          ]
+        },
+        {
+          "cycle_index": 10,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 394,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            1401
+          ],
+          "emitted_tokens": [
+            1401
+          ],
+          "rejected_at": null,
+          "cache_length_before": 394,
+          "cache_length_after": 395,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 1.21875,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              369
+            ],
+            "canonical_kv_argmax": [
+              369
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            369
+          ],
+          "observed_batch_token_ids": [
+            369
+          ],
+          "vanilla_next_token_ids": [
+            369
+          ]
+        },
+        {
+          "cycle_index": 11,
+          "verification_mode": "batched",
+          "prefix_length": 395,
+          "draft_k": 4,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            369,
+            11799,
+            1948,
+            23150,
+            8482
+          ],
+          "emitted_tokens": [
+            369
+          ],
+          "rejected_at": 0,
+          "cache_length_before": 395,
+          "cache_length_after": 396,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 1.734375,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              279,
+              304,
+              23150,
+              8482,
+              12418
+            ],
+            "canonical_kv_argmax": [
+              279,
+              304,
+              23150,
+              8482,
+              12418
+            ],
+            "active_matches_vanilla": [
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "canonical_matches_vanilla": [
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "argmax_restored": [
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            279,
+            304,
+            23150,
+            8482,
+            12418
+          ],
+          "observed_batch_token_ids": [
+            279,
+            304,
+            23150,
+            8482,
+            12418
+          ],
+          "vanilla_next_token_ids": [
+            279,
+            9760,
+            1995,
+            304,
+            null
+          ]
+        },
+        {
+          "cycle_index": 12,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 396,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            279
+          ],
+          "emitted_tokens": [
+            279
+          ],
+          "rejected_at": null,
+          "cache_length_before": 396,
+          "cache_length_after": 397,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.125,
+          "kv_relative_error": 3.6226139068603516,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0234375,
+          "vanilla_top1_margin": 0.828125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              9760
+            ],
+            "canonical_kv_argmax": [
+              9760
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            9760
+          ],
+          "observed_batch_token_ids": [
+            9760
+          ],
+          "vanilla_next_token_ids": [
+            9760
+          ]
+        },
+        {
+          "cycle_index": 13,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 397,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            9760
+          ],
+          "emitted_tokens": [
+            9760
+          ],
+          "rejected_at": null,
+          "cache_length_before": 397,
+          "cache_length_after": 398,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.125,
+          "kv_relative_error": 5.730627536773682,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.02734375,
+          "vanilla_top1_margin": 0.3125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              1995
+            ],
+            "canonical_kv_argmax": [
+              1995
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            1995
+          ],
+          "observed_batch_token_ids": [
+            1995
+          ],
+          "vanilla_next_token_ids": [
+            1995
+          ]
+        },
+        {
+          "cycle_index": 14,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 398,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            1995
+          ],
+          "emitted_tokens": [
+            1995
+          ],
+          "rejected_at": null,
+          "cache_length_before": 398,
+          "cache_length_after": 399,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.125,
+          "kv_relative_error": 732421888.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.03125,
+          "vanilla_top1_margin": 3.5,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              304
+            ],
+            "canonical_kv_argmax": [
+              304
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            304
+          ],
+          "observed_batch_token_ids": [
+            304
+          ],
+          "vanilla_next_token_ids": [
+            304
+          ]
+        },
+        {
+          "cycle_index": 15,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 399,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            304
+          ],
+          "emitted_tokens": [
+            304
+          ],
+          "rejected_at": null,
+          "cache_length_before": 399,
+          "cache_length_after": 400,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.125,
+          "kv_relative_error": 732421888.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.03125,
+          "vanilla_top1_margin": 7.4140625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              279
+            ],
+            "canonical_kv_argmax": [
+              279
+            ],
+            "active_matches_vanilla": [
+              false
+            ],
+            "canonical_matches_vanilla": [
+              false
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            279
+          ],
+          "observed_batch_token_ids": [
+            279
+          ],
+          "vanilla_next_token_ids": [
+            null
+          ]
+        }
+      ]
+    },
+    {
+      "prompt_id": "gov_report_98_ctx384",
+      "prompt_length": 384,
+      "token_ids": [
+        715,
+        6262,
+        25,
+        8116,
+        5612,
+        551,
+        279,
+        2197,
+        624,
+        28715,
+        389,
+        279,
+        3897,
+        2197,
+        11,
+        1588
+      ],
+      "vanilla_token_ids": [
+        715,
+        6262,
+        25,
+        8116,
+        5612,
+        551,
+        279,
+        2197,
+        624,
+        28715,
+        389,
+        279,
+        1995,
+        3897,
+        304,
+        279
+      ],
+      "first_kv_divergence_cycle": 6,
+      "first_logit_divergence_cycle": 6,
+      "first_token_divergence_index": 12,
+      "first_token_divergence_cycle": 9,
+      "first_token_divergence_logit_row": 0,
+      "argmax_agreement_at_first_divergence": false,
+      "vanilla_top1_margin_at_divergence": 0.0,
+      "cycles": [
+        {
+          "cycle_index": 0,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 384,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            715
+          ],
+          "emitted_tokens": [
+            715
+          ],
+          "rejected_at": null,
+          "cache_length_before": 384,
+          "cache_length_after": 385,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.25,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              6262
+            ],
+            "canonical_kv_argmax": [
+              6262
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            6262
+          ],
+          "observed_batch_token_ids": [
+            6262
+          ],
+          "vanilla_next_token_ids": [
+            6262
+          ]
+        },
+        {
+          "cycle_index": 1,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 385,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            6262
+          ],
+          "emitted_tokens": [
+            6262
+          ],
+          "rejected_at": null,
+          "cache_length_before": 385,
+          "cache_length_after": 386,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              25
+            ],
+            "canonical_kv_argmax": [
+              25
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            25
+          ],
+          "observed_batch_token_ids": [
+            25
+          ],
+          "vanilla_next_token_ids": [
+            25
+          ]
+        },
+        {
+          "cycle_index": 2,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 386,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            25
+          ],
+          "emitted_tokens": [
+            25
+          ],
+          "rejected_at": null,
+          "cache_length_before": 386,
+          "cache_length_after": 387,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 3.28125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              8116
+            ],
+            "canonical_kv_argmax": [
+              8116
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            8116
+          ],
+          "observed_batch_token_ids": [
+            8116
+          ],
+          "vanilla_next_token_ids": [
+            8116
+          ]
+        },
+        {
+          "cycle_index": 3,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 387,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            8116
+          ],
+          "emitted_tokens": [
+            8116
+          ],
+          "rejected_at": null,
+          "cache_length_before": 387,
+          "cache_length_after": 388,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 8.703125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              5612
+            ],
+            "canonical_kv_argmax": [
+              5612
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            5612
+          ],
+          "observed_batch_token_ids": [
+            5612
+          ],
+          "vanilla_next_token_ids": [
+            5612
+          ]
+        },
+        {
+          "cycle_index": 4,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 388,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            5612
+          ],
+          "emitted_tokens": [
+            5612
+          ],
+          "rejected_at": null,
+          "cache_length_before": 388,
+          "cache_length_after": 389,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 7.328125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              551
+            ],
+            "canonical_kv_argmax": [
+              551
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            551
+          ],
+          "observed_batch_token_ids": [
+            551
+          ],
+          "vanilla_next_token_ids": [
+            551
+          ]
+        },
+        {
+          "cycle_index": 5,
+          "verification_mode": "batched",
+          "prefix_length": 389,
+          "draft_k": 3,
+          "accepted_count": 2,
+          "candidate_tokens": [
+            551,
+            279,
+            2197,
+            13
+          ],
+          "emitted_tokens": [
+            551,
+            279,
+            2197
+          ],
+          "rejected_at": 2,
+          "cache_length_before": 389,
+          "cache_length_after": 392,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 3.09375,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              279,
+              2197,
+              624,
+              715
+            ],
+            "canonical_kv_argmax": [
+              279,
+              2197,
+              624,
+              715
+            ],
+            "active_matches_vanilla": [
+              true,
+              true,
+              true,
+              false
+            ],
+            "canonical_matches_vanilla": [
+              true,
+              true,
+              true,
+              false
+            ],
+            "argmax_restored": [
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            279,
+            2197,
+            624,
+            715
+          ],
+          "observed_batch_token_ids": [
+            279,
+            2197,
+            624,
+            715
+          ],
+          "vanilla_next_token_ids": [
+            279,
+            2197,
+            624,
+            28715
+          ]
+        },
+        {
+          "cycle_index": 6,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 392,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            624
+          ],
+          "emitted_tokens": [
+            624
+          ],
+          "rejected_at": null,
+          "cache_length_before": 392,
+          "cache_length_after": 393,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 24.904035568237305,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0390625,
+          "vanilla_top1_margin": 1.59375,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              28715
+            ],
+            "canonical_kv_argmax": [
+              28715
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            28715
+          ],
+          "observed_batch_token_ids": [
+            28715
+          ],
+          "vanilla_next_token_ids": [
+            28715
+          ]
+        },
+        {
+          "cycle_index": 7,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 393,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            28715
+          ],
+          "emitted_tokens": [
+            28715
+          ],
+          "rejected_at": null,
+          "cache_length_before": 393,
+          "cache_length_after": 394,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 24.904035568237305,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.03515625,
+          "vanilla_top1_margin": 7.359375,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              389
+            ],
+            "canonical_kv_argmax": [
+              389
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            389
+          ],
+          "observed_batch_token_ids": [
+            389
+          ],
+          "vanilla_next_token_ids": [
+            389
+          ]
+        },
+        {
+          "cycle_index": 8,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 394,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            389
+          ],
+          "emitted_tokens": [
+            389
+          ],
+          "rejected_at": null,
+          "cache_length_before": 394,
+          "cache_length_after": 395,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 24.904035568237305,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0390625,
+          "vanilla_top1_margin": 6.484375,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              279
+            ],
+            "canonical_kv_argmax": [
+              279
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            279
+          ],
+          "observed_batch_token_ids": [
+            279
+          ],
+          "vanilla_next_token_ids": [
+            279
+          ]
+        },
+        {
+          "cycle_index": 9,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 395,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            279
+          ],
+          "emitted_tokens": [
+            279
+          ],
+          "rejected_at": null,
+          "cache_length_before": 395,
+          "cache_length_after": 396,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 24.904035568237305,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0390625,
+          "vanilla_top1_margin": 0.0,
+          "argmax_equal": false,
+          "kv_substitution_argmax_equal": false,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              3897
+            ],
+            "canonical_kv_argmax": [
+              1995
+            ],
+            "active_matches_vanilla": [
+              false
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              true
+            ]
+          },
+          "first_argmax_difference_in_cycle": 0,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            1995
+          ],
+          "observed_batch_token_ids": [
+            3897
+          ],
+          "vanilla_next_token_ids": [
+            1995
+          ]
+        },
+        {
+          "cycle_index": 10,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 396,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            3897
+          ],
+          "emitted_tokens": [
+            3897
+          ],
+          "rejected_at": null,
+          "cache_length_before": 396,
+          "cache_length_after": 397,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 24.904035568237305,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0390625,
+          "vanilla_top1_margin": 2.0625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              2197
+            ],
+            "canonical_kv_argmax": [
+              2197
+            ],
+            "active_matches_vanilla": [
+              false
+            ],
+            "canonical_matches_vanilla": [
+              false
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": false,
+          "canonical_replay_token_ids": [
+            2197
+          ],
+          "observed_batch_token_ids": [
+            2197
+          ],
+          "vanilla_next_token_ids": [
+            3897
+          ]
+        },
+        {
+          "cycle_index": 11,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 397,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            2197
+          ],
+          "emitted_tokens": [
+            2197
+          ],
+          "rejected_at": null,
+          "cache_length_before": 397,
+          "cache_length_after": 398,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 24.904035568237305,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0537109375,
+          "vanilla_top1_margin": 5.046875,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": false,
+            "active_kv_argmax": [
+              11
+            ],
+            "canonical_kv_argmax": [
+              11
+            ],
+            "active_matches_vanilla": [
+              false
+            ],
+            "canonical_matches_vanilla": [
+              false
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": false,
+          "emitted_matches_vanilla": false,
+          "canonical_replay_token_ids": [
+            11
+          ],
+          "observed_batch_token_ids": [
+            11
+          ],
+          "vanilla_next_token_ids": [
+            304
+          ]
+        },
+        {
+          "cycle_index": 12,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 398,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            11
+          ],
+          "emitted_tokens": [
+            11
+          ],
+          "rejected_at": null,
+          "cache_length_before": 398,
+          "cache_length_after": 399,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 24.904035568237305,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0703125,
+          "vanilla_top1_margin": 0.15625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": false,
+            "active_kv_argmax": [
+              1588
+            ],
+            "canonical_kv_argmax": [
+              1588
+            ],
+            "active_matches_vanilla": [
+              false
+            ],
+            "canonical_matches_vanilla": [
+              false
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": false,
+          "emitted_matches_vanilla": false,
+          "canonical_replay_token_ids": [
+            1588
+          ],
+          "observed_batch_token_ids": [
+            1588
+          ],
+          "vanilla_next_token_ids": [
+            279
+          ]
+        },
+        {
+          "cycle_index": 13,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 399,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            1588
+          ],
+          "emitted_tokens": [
+            1588
+          ],
+          "rejected_at": null,
+          "cache_length_before": 399,
+          "cache_length_after": 400,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 24.904035568237305,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.025390625,
+          "vanilla_top1_margin": 1.703125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": false,
+            "active_kv_argmax": [
+              374
+            ],
+            "canonical_kv_argmax": [
+              374
+            ],
+            "active_matches_vanilla": [
+              false
+            ],
+            "canonical_matches_vanilla": [
+              false
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": false,
+          "emitted_matches_vanilla": false,
+          "canonical_replay_token_ids": [
+            374
+          ],
+          "observed_batch_token_ids": [
+            374
+          ],
+          "vanilla_next_token_ids": [
+            null
+          ]
+        }
+      ]
+    },
+    {
+      "prompt_id": "qmsum_2_ctx384",
+      "prompt_length": 384,
+      "token_ids": [
+        21794,
+        434,
+        25,
+        3393,
+        16448,
+        4133,
+        5236,
+        479,
+        25,
+        10402,
+        16448,
+        47020,
+        425,
+        25,
+        6771,
+        364
+      ],
+      "vanilla_token_ids": [
+        21794,
+        434,
+        25,
+        3393,
+        16448,
+        4133,
+        5236,
+        479,
+        25,
+        10402,
+        16448,
+        47020,
+        425,
+        25,
+        6771,
+        364
+      ],
+      "first_kv_divergence_cycle": 3,
+      "first_logit_divergence_cycle": 3,
+      "first_token_divergence_index": null,
+      "first_token_divergence_cycle": null,
+      "first_token_divergence_logit_row": null,
+      "argmax_agreement_at_first_divergence": null,
+      "vanilla_top1_margin_at_divergence": null,
+      "cycles": [
+        {
+          "cycle_index": 0,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 384,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            21794
+          ],
+          "emitted_tokens": [
+            21794
+          ],
+          "rejected_at": null,
+          "cache_length_before": 384,
+          "cache_length_after": 385,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.8125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              434
+            ],
+            "canonical_kv_argmax": [
+              434
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            434
+          ],
+          "observed_batch_token_ids": [
+            434
+          ],
+          "vanilla_next_token_ids": [
+            434
+          ]
+        },
+        {
+          "cycle_index": 1,
+          "verification_mode": "vanilla_fallback",
+          "prefix_length": 385,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            434
+          ],
+          "emitted_tokens": [
+            434
+          ],
+          "rejected_at": null,
+          "cache_length_before": 385,
+          "cache_length_after": 386,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 2.6875,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              25
+            ],
+            "canonical_kv_argmax": [
+              25
+            ],
+            "active_matches_vanilla": [
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true
+            ],
+            "argmax_restored": [
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            25
+          ],
+          "observed_batch_token_ids": [
+            25
+          ],
+          "vanilla_next_token_ids": [
+            25
+          ]
+        },
+        {
+          "cycle_index": 2,
+          "verification_mode": "batched",
+          "prefix_length": 386,
+          "draft_k": 4,
+          "accepted_count": 1,
+          "candidate_tokens": [
+            25,
+            3393,
+            1273,
+            16448,
+            3357
+          ],
+          "emitted_tokens": [
+            25,
+            3393
+          ],
+          "rejected_at": 1,
+          "cache_length_before": 386,
+          "cache_length_after": 388,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 1.9140625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              3393,
+              16448,
+              16448,
+              4133,
+              35
+            ],
+            "canonical_kv_argmax": [
+              3393,
+              16448,
+              16448,
+              4133,
+              35
+            ],
+            "active_matches_vanilla": [
+              true,
+              true,
+              false,
+              false,
+              false
+            ],
+            "canonical_matches_vanilla": [
+              true,
+              true,
+              false,
+              false,
+              false
+            ],
+            "argmax_restored": [
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            3393,
+            16448,
+            16448,
+            4133,
+            35
+          ],
+          "observed_batch_token_ids": [
+            3393,
+            16448,
+            16448,
+            4133,
+            35
+          ],
+          "vanilla_next_token_ids": [
+            3393,
+            16448,
+            4133,
+            5236,
+            479
+          ]
+        },
+        {
+          "cycle_index": 3,
+          "verification_mode": "batched",
+          "prefix_length": 388,
+          "draft_k": 4,
+          "accepted_count": 4,
+          "candidate_tokens": [
+            16448,
+            4133,
+            5236,
+            479,
+            25
+          ],
+          "emitted_tokens": [
+            16448,
+            4133,
+            5236,
+            479,
+            25
+          ],
+          "rejected_at": null,
+          "cache_length_before": 388,
+          "cache_length_after": 393,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 2.574561357498169,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.04296875,
+          "vanilla_top1_margin": 3.828125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              4133,
+              5236,
+              479,
+              25,
+              10402
+            ],
+            "canonical_kv_argmax": [
+              4133,
+              5236,
+              479,
+              25,
+              10402
+            ],
+            "active_matches_vanilla": [
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "argmax_restored": [
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            4133,
+            5236,
+            479,
+            25,
+            10402
+          ],
+          "observed_batch_token_ids": [
+            4133,
+            5236,
+            479,
+            25,
+            10402
+          ],
+          "vanilla_next_token_ids": [
+            4133,
+            5236,
+            479,
+            25,
+            10402
+          ]
+        },
+        {
+          "cycle_index": 4,
+          "verification_mode": "batched",
+          "prefix_length": 393,
+          "draft_k": 4,
+          "accepted_count": 4,
+          "candidate_tokens": [
+            10402,
+            16448,
+            47020,
+            425,
+            25
+          ],
+          "emitted_tokens": [
+            10402,
+            16448,
+            47020,
+            425,
+            25
+          ],
+          "rejected_at": null,
+          "cache_length_before": 393,
+          "cache_length_after": 398,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 976562496.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0390625,
+          "vanilla_top1_margin": 2.40625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              16448,
+              47020,
+              425,
+              25,
+              6771
+            ],
+            "canonical_kv_argmax": [
+              16448,
+              47020,
+              425,
+              25,
+              6771
+            ],
+            "active_matches_vanilla": [
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "canonical_matches_vanilla": [
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "argmax_restored": [
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            16448,
+            47020,
+            425,
+            25,
+            6771
+          ],
+          "observed_batch_token_ids": [
+            16448,
+            47020,
+            425,
+            25,
+            6771
+          ],
+          "vanilla_next_token_ids": [
+            16448,
+            47020,
+            425,
+            25,
+            6771
+          ]
+        },
+        {
+          "cycle_index": 5,
+          "verification_mode": "batched",
+          "prefix_length": 398,
+          "draft_k": 1,
+          "accepted_count": 1,
+          "candidate_tokens": [
+            6771,
+            364
+          ],
+          "emitted_tokens": [
+            6771,
+            364
+          ],
+          "rejected_at": null,
+          "cache_length_before": 398,
+          "cache_length_after": 400,
+          "first_kv_different_layer": 0,
+          "kv_max_abs_error": 0.03125,
+          "kv_relative_error": 1953124992.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.037109375,
+          "vanilla_top1_margin": 2.765625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "kv_intervention": {
+            "same_token_prefix": true,
+            "active_kv_argmax": [
+              364,
+              82
+            ],
+            "canonical_kv_argmax": [
+              364,
+              82
+            ],
+            "active_matches_vanilla": [
+              true,
+              false
+            ],
+            "canonical_matches_vanilla": [
+              true,
+              false
+            ],
+            "argmax_restored": [
+              false,
+              false
+            ]
+          },
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            364,
+            82
+          ],
+          "observed_batch_token_ids": [
+            364,
+            82
+          ],
+          "vanilla_next_token_ids": [
+            364,
+            null
+          ]
+        }
+      ]
+    }
+  ]
+}

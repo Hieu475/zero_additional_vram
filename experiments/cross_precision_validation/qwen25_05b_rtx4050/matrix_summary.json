@@ -1,0 +1,187 @@
+{
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "scope_note": "Small-model mechanism validation does not establish Qwen2.5-3B behavior.",
+  "protocol": {
+    "prompts": 4,
+    "max_new_tokens": 16,
+    "k": 4,
+    "verification_modes": [
+      "batched",
+      "sequential"
+    ]
+  },
+  "results": [
+    {
+      "label": "nf4_sdpa_static_batched",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 4,
+      "logit_drift": 4,
+      "token_divergences": 1,
+      "exact_match_rate": 0.75,
+      "classification": {
+        "batch_execution_difference_persists_with_canonical_kv": 1,
+        "no_token_divergence_within_budget": 3
+      }
+    },
+    {
+      "label": "nf4_sdpa_static_sequential",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 0,
+      "logit_drift": 0,
+      "token_divergences": 0,
+      "exact_match_rate": 1.0,
+      "classification": {
+        "no_token_divergence_within_budget": 4
+      }
+    },
+    {
+      "label": "nf4_eager_static_batched",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 4,
+      "logit_drift": 4,
+      "token_divergences": 2,
+      "exact_match_rate": 0.5,
+      "classification": {
+        "batch_execution_difference_persists_with_canonical_kv": 2,
+        "no_token_divergence_within_budget": 2
+      }
+    },
+    {
+      "label": "nf4_eager_static_sequential",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 0,
+      "logit_drift": 0,
+      "token_divergences": 0,
+      "exact_match_rate": 1.0,
+      "classification": {
+        "no_token_divergence_within_budget": 4
+      }
+    },
+    {
+      "label": "nf4_sdpa_dynamic_batched",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 4,
+      "logit_drift": 4,
+      "token_divergences": 1,
+      "exact_match_rate": 0.75,
+      "classification": {
+        "batch_execution_difference_persists_with_canonical_kv": 1,
+        "no_token_divergence_within_budget": 3
+      }
+    },
+    {
+      "label": "nf4_sdpa_dynamic_sequential",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 0,
+      "logit_drift": 0,
+      "token_divergences": 0,
+      "exact_match_rate": 1.0,
+      "classification": {
+        "no_token_divergence_within_budget": 4
+      }
+    },
+    {
+      "label": "fp16_sdpa_static_batched",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 4,
+      "logit_drift": 4,
+      "token_divergences": 1,
+      "exact_match_rate": 0.75,
+      "classification": {
+        "no_token_divergence_within_budget": 3,
+        "canonical_kv_substitution_restores_vanilla_argmax": 1
+      }
+    },
+    {
+      "label": "fp16_sdpa_static_sequential",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 0,
+      "logit_drift": 0,
+      "token_divergences": 0,
+      "exact_match_rate": 1.0,
+      "classification": {
+        "no_token_divergence_within_budget": 4
+      }
+    },
+    {
+      "label": "bf16_sdpa_static_batched",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 4,
+      "logit_drift": 4,
+      "token_divergences": 0,
+      "exact_match_rate": 1.0,
+      "classification": {
+        "no_token_divergence_within_budget": 4
+      }
+    },
+    {
+      "label": "bf16_sdpa_static_sequential",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 0,
+      "logit_drift": 0,
+      "token_divergences": 0,
+      "exact_match_rate": 1.0,
+      "classification": {
+        "no_token_divergence_within_budget": 4
+      }
+    },
+    {
+      "label": "fp32_eager_static_batched",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 4,
+      "logit_drift": 4,
+      "token_divergences": 0,
+      "exact_match_rate": 1.0,
+      "classification": {
+        "no_token_divergence_within_budget": 4
+      }
+    },
+    {
+      "label": "fp32_eager_static_sequential",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 0,
+      "logit_drift": 0,
+      "token_divergences": 0,
+      "exact_match_rate": 1.0,
+      "classification": {
+        "no_token_divergence_within_budget": 4
+      }
+    },
+    {
+      "label": "fp32_sdpa_static_batched",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 4,
+      "logit_drift": 4,
+      "token_divergences": 0,
+      "exact_match_rate": 1.0,
+      "classification": {
+        "no_token_divergence_within_budget": 4
+      }
+    },
+    {
+      "label": "fp32_sdpa_static_sequential",
+      "status": "complete",
+      "n_prompts": 4,
+      "kv_drift": 0,
+      "logit_drift": 0,
+      "token_divergences": 0,
+      "exact_match_rate": 1.0,
+      "classification": {
+        "no_token_divergence_within_budget": 4
+      }
+    }
+  ]
+}
