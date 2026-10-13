@@ -151,7 +151,7 @@ def main() -> None:
                if "input_ids" in row else
                tokenizer(row["prompt"], return_tensors="pt")["input_ids"].to(args.device))
         result = audit_prefix(model, ids, [k for k in (1, 2, 4) if k <= args.max_k], args.cache_backend)
-        result["id"] = row.get("id")
+        result["id"] = row.get("id", row.get("prompt_id", index))
         results.append(result)
         print(f"{row.get('id')}: " + ", ".join(
             f"K={k}, first differing KV layer={v['first_kv_differing_layer']}"
