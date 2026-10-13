@@ -110,8 +110,9 @@ class AcceptanceSurvivalPredictor:
             ema[position] = (1.0 - rate) * old + rate * accepted
 
     def predict_online(self, row: dict[str, Any], ema: dict[int, float]) -> list[float]:
+        horizon = int(row.get("prediction_horizon", row.get("draft_tokens", row.get("k", 0))))
         survival = [ema.get(i, self.global_rates.get(i, 0.0))
-                    for i in range(1, int(row.get("draft_tokens", row.get("k", 0))) + 1)]
+                    for i in range(1, horizon + 1)]
         for i in range(1, len(survival)):
             survival[i] = min(survival[i], survival[i - 1])
         return survival

@@ -256,9 +256,11 @@ def self_speculative_generate(
             step_k = k
             active_skip = skip_indices
 
+        requested_step_k = step_k
         # The pending target token already occupies one output position.
         # Do not draft tokens that cannot be emitted within the budget.
         step_k = min(step_k, max(0, rem_tokens - 1))
+        truncated_by_budget = step_k < requested_step_k
         if step_k <= 0 and rem_tokens <= 0:
             break
 
@@ -440,6 +442,8 @@ def self_speculative_generate(
         metrics.total_draft_tokens += len(draft_tokens)
 
         actual_k = len(draft_tokens)
+        truncated_by_eos = bool(draft_tokens and draft_tokens[-1] == tokenizer.eos_token_id)
+        draft_complete = actual_k == step_k or truncated_by_eos
 
         if actual_k == 0:
             # Fallback to single-token vanilla step with Target KV
@@ -480,6 +484,12 @@ def self_speculative_generate(
                 "k": 0, "accepted": 0, "rejected_at": None,
                 "emitted_count": 1, "draft_time_ms": draft_elapsed * 1000,
                 "verify_time_ms": verify_elapsed * 1000, "cache_time_ms": 0.0,
+                "k_configured": requested_step_k, "k_attempted": 0,
+                "accepted_prefix_length": 0, "remaining_token_budget": rem_tokens,
+                "truncated_by_eos": False, "truncated_by_budget": truncated_by_budget,
+                "draft_complete": False, "verify_complete": False,
+                "eos_encountered": curr_target_tok == tokenizer.eos_token_id,
+                "emitted_token_ids": [curr_target_tok],
                 "skip_indices": active_skip, "entropy": curr_entropy,
                 "router_source": getattr(getattr(router, "_pending_decision", None), "source", "vanilla"),
                 "oracle_source": (getattr(router, "_pending_oracle", None) or {}).get("source"),
@@ -702,9 +712,20 @@ def self_speculative_generate(
 
         iter_stat = {
             "k": actual_k,
+            "k_configured": requested_step_k,
+            "k_attempted": actual_k,
             "accepted": num_accepted_draft,
+            "accepted_prefix_length": num_accepted_draft,
             "rejected_at": rejected_at,
             "emitted_count": len(cycle_emitted),
+            "emitted_token_ids": list(cycle_emitted),
+            "remaining_token_budget": rem_tokens,
+            "truncated_by_eos": truncated_by_eos,
+            "truncated_by_budget": truncated_by_budget,
+            "draft_complete": draft_complete,
+            "verify_complete": actual_k > 0,
+            "eos_encountered": (truncated_by_eos or tokenizer.eos_token_id in cycle_emitted
+                                 or curr_target_tok == tokenizer.eos_token_id),
             "draft_time_ms": draft_elapsed * 1000,
             "verify_time_ms": verify_elapsed * 1000,
             "cache_time_ms": cache_cycle_s * 1000,
