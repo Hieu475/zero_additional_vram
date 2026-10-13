@@ -1,0 +1,76 @@
+{
+  "execution_commit": "b20faddbefc930b903dfa376e9dc66de54d54182",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "quantization": "NF4",
+  "compute_dtype": "float16",
+  "attention": "sdpa",
+  "max_new_tokens": 16,
+  "seed": 4171,
+  "split_rule": "sha256(task:prompt_id) % 5; buckets 0=dev, 1=in-domain heldout, 2-4=train; CNN/DM cross-task heldout",
+  "prompt_counts": {
+    "train": 44,
+    "development": 17,
+    "heldout_in_domain": 27,
+    "heldout_cross_task": 44
+  },
+  "calibration_tasks": [
+    "gsm8k",
+    "humaneval"
+  ],
+  "excluded_prior_pilot_prompt_ids": [
+    "cnndm:cnndm_000",
+    "cnndm:cnndm_010",
+    "cnndm:cnndm_020",
+    "cnndm:cnndm_029",
+    "cnndm:cnndm_039",
+    "cnndm:cnndm_049",
+    "gsm8k:gsm8k_000",
+    "gsm8k:gsm8k_010",
+    "gsm8k:gsm8k_020",
+    "gsm8k:gsm8k_029",
+    "gsm8k:gsm8k_039",
+    "gsm8k:gsm8k_049",
+    "humaneval:HumanEval/0",
+    "humaneval:HumanEval/10",
+    "humaneval:HumanEval/20",
+    "humaneval:HumanEval/29",
+    "humaneval:HumanEval/39",
+    "humaneval:HumanEval/49"
+  ],
+  "cross_task_heldout": [
+    "cnndm"
+  ],
+  "actions": [
+    {
+      "config": "cka_60",
+      "kept_layers": 22,
+      "k": [
+        2,
+        4
+      ]
+    },
+    {
+      "config": "cka_67",
+      "kept_layers": 24,
+      "k": [
+        2,
+        4
+      ]
+    },
+    {
+      "config": "cka_90",
+      "kept_layers": 32,
+      "k": [
+        2,
+        4
+      ]
+    }
+  ],
+  "dataset_sha256": {
+    "gsm8k": "a267e7a2e196949177bff46c9c2d9d50c39c66724b8fd0b868f7a042b7b1b0f6",
+    "humaneval": "3d5d2f3f5d6ce32547732cb27b9d483f177be4e6dcd82bd98a10610e3af5db04",
+    "cnndm": "11b5e9db9851878491854f6e166c513aa0ed6668d635ccb49d97592032d02096"
+  },
+  "limits": "Repository snapshots cap each task at 50 prompts; calibration train/dev and in-domain heldout are smaller than the proposed 100/40/50 targets."
+}
