@@ -31,6 +31,20 @@ def force_candidate_miss(match):
     return type(match)([], "forced_miss", match.ngram_size, 0, 0.0)
 
 
+def _snapshot_active_kv(cache) -> list[tuple[torch.Tensor, torch.Tensor, int]]:
+    """Copy active cache prefixes to CPU for opt-in numerical diagnosis."""
+    snapshots = []
+    for layer in cache.layers:
+        length = int(layer.get_seq_length())
+        if getattr(layer, "is_initialized", False):
+            keys = layer.keys[:, :, :length, :].detach().to(device="cpu", copy=True)
+            values = layer.values[:, :, :length, :].detach().to(device="cpu", copy=True)
+        else:
+            keys = values = torch.empty(0)
+        snapshots.append((keys, values, length))
+    return snapshots
+
+
 def prompt_lookup_generate(
     model: PreTrainedModel,
     tokenizer: PreTrainedTokenizer,
@@ -47,6 +61,7 @@ def prompt_lookup_generate(
     force_miss: bool = False,
     sequential_verify: bool = False,
     kv_cache_max_capacity: int = 2048,
+    numerical_trace: list[dict] | None = None,
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Prompt Lookup Decoding (PLD).
 
@@ -188,9 +203,16 @@ def prompt_lookup_generate(
 
         if actual_k == 0:
             # Fallback single-token forward pass
+            trace_prefix = list(full_history) if numerical_trace is not None else None
+            trace_cache_before = (_snapshot_active_kv(target_kv.cache)
+                                  if numerical_trace is not None else None)
             t_v_start = time.perf_counter()
             with torch.no_grad():
                 out = model(curr_target_tok_tensor, past_key_values=target_kv.cache, use_cache=True)
+            trace_logits = (out.logits.detach().float().cpu().clone()
+                            if numerical_trace is not None else None)
+            trace_argmax = (out.logits[0].argmax(dim=-1).detach().cpu().tolist()
+                            if numerical_trace is not None else None)
             t_sync_start = time.perf_counter()
             torch.cuda.synchronize()
             t_sync_end = time.perf_counter()
@@ -223,6 +245,20 @@ def prompt_lookup_generate(
                 "match_confidence": match.confidence,
                 "context_len": current_prefix_len,
             })
+            if numerical_trace is not None:
+                numerical_trace.append({
+                    "cycle_index": len(numerical_trace),
+                    "prefix_tokens": trace_prefix,
+                    "candidate_tokens": [curr_target_tok],
+                    "accepted_count": 0,
+                    "emitted_tokens": [curr_target_tok],
+                    "rejected_at": None,
+                    "cache_before": trace_cache_before,
+                    "cache_after": _snapshot_active_kv(target_kv.cache),
+                    "verify_logits": trace_logits,
+                    "verify_argmax": trace_argmax,
+                    "verification_mode": "vanilla_fallback",
+                })
             generated_token_ids.append(curr_target_tok)
             full_history.append(curr_target_tok)
             current_prefix_len += 1
@@ -237,6 +273,7 @@ def prompt_lookup_generate(
         # Parallel verification with TargetKVCache
         cand_ids = [curr_target_tok] + candidate_tokens
         cand_tensor = torch.tensor([cand_ids], device=device)
+        trace_before = _snapshot_active_kv(target_kv.cache) if numerical_trace is not None else None
 
         t_verify_start = time.perf_counter()
         if sequential_verify:
@@ -259,6 +296,8 @@ def prompt_lookup_generate(
             with torch.no_grad():
                 v_out = model(cand_tensor, past_key_values=target_kv.cache, use_cache=True)
             verify_logits = v_out.logits
+        trace_logits = (verify_logits.detach().float().to(device="cpu")
+                        if numerical_trace is not None else None)
         t_sync_start = time.perf_counter()
         torch.cuda.synchronize()
         t_sync_end = time.perf_counter()
@@ -342,6 +381,20 @@ def prompt_lookup_generate(
             "verification_mode": "sequential" if sequential_verify else "batched",
             "context_len": current_prefix_len - len(cycle_emitted),
         })
+        if numerical_trace is not None:
+            numerical_trace.append({
+                "cycle_index": len(numerical_trace),
+                "prefix_tokens": list(full_history[:-len(cycle_emitted)]),
+                "candidate_tokens": list(cand_ids),
+                "accepted_count": num_accepted_draft,
+                "emitted_tokens": list(cycle_emitted),
+                "rejected_at": rejected_at,
+                "cache_before": trace_before,
+                "cache_after": _snapshot_active_kv(target_kv.cache),
+                "verify_logits": trace_logits,
+                "verify_argmax": verify_logits[0].argmax(dim=-1).detach().cpu().tolist(),
+                "verification_mode": "sequential" if sequential_verify else "batched",
+            })
 
         if any(t == tokenizer.eos_token_id for t in cycle_emitted):
             break

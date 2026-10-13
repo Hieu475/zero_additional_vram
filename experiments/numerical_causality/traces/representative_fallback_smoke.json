@@ -1,0 +1,1212 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "precision": "NF4/FP16 compute",
+  "backend": "static",
+  "k": 4,
+  "benchmark": "experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl",
+  "environment": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "prompts": [
+    {
+      "prompt_id": "qasper_119_ctx384",
+      "prompt_length": 384,
+      "token_ids": [
+        1416,
+        9834,
+        11,
+        10542,
+        279,
+        7947,
+        624,
+        785,
+        2197,
+        1558,
+        537,
+        3410,
+        894,
+        1995,
+        911,
+        279,
+        5335,
+        1660,
+        504,
+        264,
+        3151,
+        7947,
+        13,
+        576,
+        1467,
+        374,
+        10735,
+        389,
+        279,
+        3383,
+        315,
+        2168
+      ],
+      "vanilla_token_ids": [
+        1416,
+        9834,
+        11,
+        10542,
+        279,
+        7947,
+        624,
+        785,
+        2197,
+        1558,
+        537,
+        3410,
+        894,
+        1995,
+        911,
+        279,
+        5335,
+        1660,
+        504,
+        264,
+        3151,
+        7947,
+        13,
+        1084,
+        1172,
+        33845,
+        429,
+        2168,
+        17256,
+        287,
+        646,
+        387
+      ],
+      "first_kv_divergence_cycle": 8,
+      "first_logit_divergence_cycle": 8,
+      "first_token_divergence_index": 23,
+      "first_token_divergence_cycle": 21,
+      "vanilla_top1_margin_at_divergence": 0.125,
+      "cycles": [
+        {
+          "cycle_index": 0,
+          "prefix_length": 384,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            1416
+          ],
+          "emitted_tokens": [
+            1416
+          ],
+          "rejected_at": null,
+          "cache_length_before": 384,
+          "cache_length_after": 385,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.875,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            9834
+          ],
+          "observed_batch_token_ids": [
+            9834
+          ]
+        },
+        {
+          "cycle_index": 1,
+          "prefix_length": 385,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            9834
+          ],
+          "emitted_tokens": [
+            9834
+          ],
+          "rejected_at": null,
+          "cache_length_before": 385,
+          "cache_length_after": 386,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 9.0,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            11
+          ],
+          "observed_batch_token_ids": [
+            11
+          ]
+        },
+        {
+          "cycle_index": 2,
+          "prefix_length": 386,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            11
+          ],
+          "emitted_tokens": [
+            11
+          ],
+          "rejected_at": null,
+          "cache_length_before": 386,
+          "cache_length_after": 387,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.75,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            10542
+          ],
+          "observed_batch_token_ids": [
+            10542
+          ]
+        },
+        {
+          "cycle_index": 3,
+          "prefix_length": 387,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            10542
+          ],
+          "emitted_tokens": [
+            10542
+          ],
+          "rejected_at": null,
+          "cache_length_before": 387,
+          "cache_length_after": 388,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 3.375,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            279
+          ],
+          "observed_batch_token_ids": [
+            279
+          ]
+        },
+        {
+          "cycle_index": 4,
+          "prefix_length": 388,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            279
+          ],
+          "emitted_tokens": [
+            279
+          ],
+          "rejected_at": null,
+          "cache_length_before": 388,
+          "cache_length_after": 389,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 5.625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            7947
+          ],
+          "observed_batch_token_ids": [
+            7947
+          ]
+        },
+        {
+          "cycle_index": 5,
+          "prefix_length": 389,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            7947
+          ],
+          "emitted_tokens": [
+            7947
+          ],
+          "rejected_at": null,
+          "cache_length_before": 389,
+          "cache_length_after": 390,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 1.0,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            624
+          ],
+          "observed_batch_token_ids": [
+            624
+          ]
+        },
+        {
+          "cycle_index": 6,
+          "prefix_length": 390,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            624
+          ],
+          "emitted_tokens": [
+            624
+          ],
+          "rejected_at": null,
+          "cache_length_before": 390,
+          "cache_length_after": 391,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 1.625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            785
+          ],
+          "observed_batch_token_ids": [
+            785
+          ]
+        },
+        {
+          "cycle_index": 7,
+          "prefix_length": 391,
+          "draft_k": 4,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            785,
+            56816,
+            4815,
+            1493,
+            16460
+          ],
+          "emitted_tokens": [
+            785
+          ],
+          "rejected_at": 0,
+          "cache_length_before": 391,
+          "cache_length_after": 392,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 1.5,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            2197,
+            4815,
+            1493,
+            16460,
+            16734
+          ],
+          "observed_batch_token_ids": [
+            2197,
+            4815,
+            1493,
+            16460,
+            16734
+          ]
+        },
+        {
+          "cycle_index": 8,
+          "prefix_length": 392,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            2197
+          ],
+          "emitted_tokens": [
+            2197
+          ],
+          "rejected_at": null,
+          "cache_length_before": 392,
+          "cache_length_after": 393,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.125,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.25,
+          "vanilla_top1_margin": 3.0,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            1558
+          ],
+          "observed_batch_token_ids": [
+            1558
+          ]
+        },
+        {
+          "cycle_index": 9,
+          "prefix_length": 393,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            1558
+          ],
+          "emitted_tokens": [
+            1558
+          ],
+          "rejected_at": null,
+          "cache_length_before": 393,
+          "cache_length_after": 394,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.25,
+          "vanilla_top1_margin": 10.5,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            537
+          ],
+          "observed_batch_token_ids": [
+            537
+          ]
+        },
+        {
+          "cycle_index": 10,
+          "prefix_length": 394,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            537
+          ],
+          "emitted_tokens": [
+            537
+          ],
+          "rejected_at": null,
+          "cache_length_before": 394,
+          "cache_length_after": 395,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.25,
+          "vanilla_top1_margin": 0.375,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            3410
+          ],
+          "observed_batch_token_ids": [
+            3410
+          ]
+        },
+        {
+          "cycle_index": 11,
+          "prefix_length": 395,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            3410
+          ],
+          "emitted_tokens": [
+            3410
+          ],
+          "rejected_at": null,
+          "cache_length_before": 395,
+          "cache_length_after": 396,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.265625,
+          "vanilla_top1_margin": 0.5,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            894
+          ],
+          "observed_batch_token_ids": [
+            894
+          ]
+        },
+        {
+          "cycle_index": 12,
+          "prefix_length": 396,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            894
+          ],
+          "emitted_tokens": [
+            894
+          ],
+          "rejected_at": null,
+          "cache_length_before": 396,
+          "cache_length_after": 397,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.255859375,
+          "vanilla_top1_margin": 0.75,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            1995
+          ],
+          "observed_batch_token_ids": [
+            1995
+          ]
+        },
+        {
+          "cycle_index": 13,
+          "prefix_length": 397,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            1995
+          ],
+          "emitted_tokens": [
+            1995
+          ],
+          "rejected_at": null,
+          "cache_length_before": 397,
+          "cache_length_after": 398,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.173828125,
+          "vanilla_top1_margin": 2.875,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            911
+          ],
+          "observed_batch_token_ids": [
+            911
+          ]
+        },
+        {
+          "cycle_index": 14,
+          "prefix_length": 398,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            911
+          ],
+          "emitted_tokens": [
+            911
+          ],
+          "rejected_at": null,
+          "cache_length_before": 398,
+          "cache_length_after": 399,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.25,
+          "vanilla_top1_margin": 1.875,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            279
+          ],
+          "observed_batch_token_ids": [
+            279
+          ]
+        },
+        {
+          "cycle_index": 15,
+          "prefix_length": 399,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            279
+          ],
+          "emitted_tokens": [
+            279
+          ],
+          "rejected_at": null,
+          "cache_length_before": 399,
+          "cache_length_after": 400,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.1875,
+          "vanilla_top1_margin": 0.625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            5335
+          ],
+          "observed_batch_token_ids": [
+            5335
+          ]
+        },
+        {
+          "cycle_index": 16,
+          "prefix_length": 400,
+          "draft_k": 4,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            5335,
+            504,
+            264,
+            3151,
+            7947
+          ],
+          "emitted_tokens": [
+            5335
+          ],
+          "rejected_at": 0,
+          "cache_length_before": 400,
+          "cache_length_after": 401,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.28125,
+          "vanilla_top1_margin": 2.0,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            1660,
+            264,
+            3151,
+            7947,
+            13
+          ],
+          "observed_batch_token_ids": [
+            1660,
+            264,
+            3151,
+            7947,
+            13
+          ]
+        },
+        {
+          "cycle_index": 17,
+          "prefix_length": 401,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            1660
+          ],
+          "emitted_tokens": [
+            1660
+          ],
+          "rejected_at": null,
+          "cache_length_before": 401,
+          "cache_length_after": 402,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.25,
+          "vanilla_top1_margin": 4.375,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            504
+          ],
+          "observed_batch_token_ids": [
+            504
+          ]
+        },
+        {
+          "cycle_index": 18,
+          "prefix_length": 402,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            504
+          ],
+          "emitted_tokens": [
+            504
+          ],
+          "rejected_at": null,
+          "cache_length_before": 402,
+          "cache_length_after": 403,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.25,
+          "vanilla_top1_margin": 6.875,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            264
+          ],
+          "observed_batch_token_ids": [
+            264
+          ]
+        },
+        {
+          "cycle_index": 19,
+          "prefix_length": 403,
+          "draft_k": 3,
+          "accepted_count": 2,
+          "candidate_tokens": [
+            264,
+            3151,
+            7947,
+            30
+          ],
+          "emitted_tokens": [
+            264,
+            3151,
+            7947
+          ],
+          "rejected_at": 2,
+          "cache_length_before": 403,
+          "cache_length_after": 406,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.3125,
+          "vanilla_top1_margin": 6.75,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            3151,
+            7947,
+            13,
+            15277
+          ],
+          "observed_batch_token_ids": [
+            3151,
+            7947,
+            13,
+            15277
+          ]
+        },
+        {
+          "cycle_index": 20,
+          "prefix_length": 406,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            13
+          ],
+          "emitted_tokens": [
+            13
+          ],
+          "rejected_at": null,
+          "cache_length_before": 406,
+          "cache_length_after": 407,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.3125,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.2265625,
+          "vanilla_top1_margin": 0.125,
+          "argmax_equal": false,
+          "kv_substitution_argmax_equal": false,
+          "first_argmax_difference_in_cycle": 0,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            1084
+          ],
+          "observed_batch_token_ids": [
+            576
+          ]
+        }
+      ]
+    },
+    {
+      "prompt_id": "qasper_109_ctx384",
+      "prompt_length": 384,
+      "token_ids": [
+        2014,
+        4226,
+        419,
+        3405,
+        11,
+        582,
+        1184,
+        311,
+        8649,
+        279,
+        7982,
+        3059,
+        504,
+        279,
+        2197,
+        13,
+        576,
+        2197,
+        5302,
+        429,
+        279,
+        12014,
+        1730,
+        5089,
+        11799,
+        389,
+        279,
+        7982,
+        315,
+        20119,
+        11,
+        279
+      ],
+      "vanilla_token_ids": [
+        2014,
+        4226,
+        419,
+        3405,
+        11,
+        582,
+        1184,
+        311,
+        8649,
+        279,
+        9760,
+        1995,
+        504,
+        279,
+        2197,
+        13,
+        576,
+        2197,
+        5302,
+        429,
+        279,
+        12014,
+        10660,
+        458,
+        6358,
+        389,
+        23150,
+        429,
+        3937,
+        28862,
+        11,
+        323
+      ],
+      "first_kv_divergence_cycle": 6,
+      "first_logit_divergence_cycle": 6,
+      "first_token_divergence_index": 10,
+      "first_token_divergence_cycle": 10,
+      "vanilla_top1_margin_at_divergence": 0.125,
+      "cycles": [
+        {
+          "cycle_index": 0,
+          "prefix_length": 384,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            2014
+          ],
+          "emitted_tokens": [
+            2014
+          ],
+          "rejected_at": null,
+          "cache_length_before": 384,
+          "cache_length_after": 385,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.25,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            4226
+          ],
+          "observed_batch_token_ids": [
+            4226
+          ]
+        },
+        {
+          "cycle_index": 1,
+          "prefix_length": 385,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            4226
+          ],
+          "emitted_tokens": [
+            4226
+          ],
+          "rejected_at": null,
+          "cache_length_before": 385,
+          "cache_length_after": 386,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.25,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            419
+          ],
+          "observed_batch_token_ids": [
+            419
+          ]
+        },
+        {
+          "cycle_index": 2,
+          "prefix_length": 386,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            419
+          ],
+          "emitted_tokens": [
+            419
+          ],
+          "rejected_at": null,
+          "cache_length_before": 386,
+          "cache_length_after": 387,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 1.5,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            3405
+          ],
+          "observed_batch_token_ids": [
+            3405
+          ]
+        },
+        {
+          "cycle_index": 3,
+          "prefix_length": 387,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            3405
+          ],
+          "emitted_tokens": [
+            3405
+          ],
+          "rejected_at": null,
+          "cache_length_before": 387,
+          "cache_length_after": 388,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 3.5,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            11
+          ],
+          "observed_batch_token_ids": [
+            11
+          ]
+        },
+        {
+          "cycle_index": 4,
+          "prefix_length": 388,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            11
+          ],
+          "emitted_tokens": [
+            11
+          ],
+          "rejected_at": null,
+          "cache_length_before": 388,
+          "cache_length_after": 389,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 0.625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            582
+          ],
+          "observed_batch_token_ids": [
+            582
+          ]
+        },
+        {
+          "cycle_index": 5,
+          "prefix_length": 389,
+          "draft_k": 4,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            582,
+            2736,
+            1039,
+            6358,
+            1172
+          ],
+          "emitted_tokens": [
+            582
+          ],
+          "rejected_at": 0,
+          "cache_length_before": 389,
+          "cache_length_after": 390,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 3.25,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            1184,
+            264,
+            6358,
+            1172,
+            389
+          ],
+          "observed_batch_token_ids": [
+            1184,
+            264,
+            6358,
+            1172,
+            389
+          ]
+        },
+        {
+          "cycle_index": 6,
+          "prefix_length": 390,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            1184
+          ],
+          "emitted_tokens": [
+            1184
+          ],
+          "rejected_at": null,
+          "cache_length_before": 390,
+          "cache_length_after": 391,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.15625,
+          "kv_relative_error": 7812499968.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.28125,
+          "vanilla_top1_margin": 8.25,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            311
+          ],
+          "observed_batch_token_ids": [
+            311
+          ]
+        },
+        {
+          "cycle_index": 7,
+          "prefix_length": 391,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            311
+          ],
+          "emitted_tokens": [
+            311
+          ],
+          "rejected_at": null,
+          "cache_length_before": 391,
+          "cache_length_after": 392,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.2265625,
+          "kv_relative_error": 11718750208.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.1875,
+          "vanilla_top1_margin": 0.375,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            8649
+          ],
+          "observed_batch_token_ids": [
+            8649
+          ]
+        },
+        {
+          "cycle_index": 8,
+          "prefix_length": 392,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            8649
+          ],
+          "emitted_tokens": [
+            8649
+          ],
+          "rejected_at": null,
+          "cache_length_before": 392,
+          "cache_length_after": 393,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.2265625,
+          "kv_relative_error": 21484376064.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.1875,
+          "vanilla_top1_margin": 1.625,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            279
+          ],
+          "observed_batch_token_ids": [
+            279
+          ]
+        },
+        {
+          "cycle_index": 9,
+          "prefix_length": 393,
+          "draft_k": 0,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            279
+          ],
+          "emitted_tokens": [
+            279
+          ],
+          "rejected_at": null,
+          "cache_length_before": 393,
+          "cache_length_after": 394,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.2265625,
+          "kv_relative_error": 21484376064.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.25,
+          "vanilla_top1_margin": 0.125,
+          "argmax_equal": false,
+          "kv_substitution_argmax_equal": false,
+          "first_argmax_difference_in_cycle": 0,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            9760
+          ],
+          "observed_batch_token_ids": [
+            7982
+          ]
+        }
+      ]
+    }
+  ]
+}

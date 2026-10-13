@@ -1,0 +1,298 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "precision": "NF4/FP16 compute",
+  "backend": "static",
+  "k": 4,
+  "benchmark": "experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl",
+  "environment": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "device": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "prompts": [
+    {
+      "prompt_id": "qasper_119_ctx384",
+      "prompt_length": 384,
+      "token_ids": [
+        1416,
+        9834,
+        11,
+        10542,
+        279,
+        7947,
+        624,
+        785,
+        2197,
+        1558,
+        537,
+        3410,
+        894,
+        1995,
+        911,
+        279,
+        5335,
+        1660,
+        504,
+        264,
+        3151,
+        7947,
+        13,
+        576,
+        1467,
+        374,
+        10735,
+        389,
+        279,
+        3383,
+        315,
+        2168
+      ],
+      "vanilla_token_ids": [
+        1416,
+        9834,
+        11,
+        10542,
+        279,
+        7947,
+        624,
+        785,
+        2197,
+        1558,
+        537,
+        3410,
+        894,
+        1995,
+        911,
+        279,
+        5335,
+        1660,
+        504,
+        264,
+        3151,
+        7947,
+        13,
+        1084,
+        1172,
+        33845,
+        429,
+        2168,
+        17256,
+        287,
+        646,
+        387
+      ],
+      "first_kv_divergence_cycle": 1,
+      "first_logit_divergence_cycle": 1,
+      "first_token_divergence_index": 23,
+      "first_token_divergence_cycle": 2,
+      "vanilla_top1_margin_at_divergence": 0.125,
+      "cycles": [
+        {
+          "cycle_index": 0,
+          "prefix_length": 391,
+          "draft_k": 4,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            785,
+            56816,
+            4815,
+            1493,
+            16460
+          ],
+          "emitted_tokens": [
+            785
+          ],
+          "rejected_at": 0,
+          "cache_length_before": 391,
+          "cache_length_after": 392,
+          "first_kv_different_layer": null,
+          "kv_max_abs_error": 0.0,
+          "kv_relative_error": 0.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.0,
+          "vanilla_top1_margin": 1.5,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            2197,
+            4815,
+            1493,
+            16460,
+            16734
+          ],
+          "observed_batch_token_ids": [
+            2197,
+            4815,
+            1493,
+            16460,
+            16734
+          ]
+        },
+        {
+          "cycle_index": 1,
+          "prefix_length": 400,
+          "draft_k": 4,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            5335,
+            504,
+            264,
+            3151,
+            7947
+          ],
+          "emitted_tokens": [
+            5335
+          ],
+          "rejected_at": 0,
+          "cache_length_before": 400,
+          "cache_length_after": 401,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.28125,
+          "vanilla_top1_margin": 2.0,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            1660,
+            264,
+            3151,
+            7947,
+            13
+          ],
+          "observed_batch_token_ids": [
+            1660,
+            264,
+            3151,
+            7947,
+            13
+          ]
+        },
+        {
+          "cycle_index": 2,
+          "prefix_length": 403,
+          "draft_k": 3,
+          "accepted_count": 2,
+          "candidate_tokens": [
+            264,
+            3151,
+            7947,
+            30
+          ],
+          "emitted_tokens": [
+            264,
+            3151,
+            7947
+          ],
+          "rejected_at": 2,
+          "cache_length_before": 403,
+          "cache_length_after": 406,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.25,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.3125,
+          "vanilla_top1_margin": 6.75,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": true,
+          "emitted_matches_vanilla": true,
+          "canonical_replay_token_ids": [
+            3151,
+            7947,
+            13,
+            15277
+          ],
+          "observed_batch_token_ids": [
+            3151,
+            7947,
+            13,
+            15277
+          ]
+        },
+        {
+          "cycle_index": 3,
+          "prefix_length": 413,
+          "draft_k": 2,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            3383,
+            382,
+            7524
+          ],
+          "emitted_tokens": [
+            3383
+          ],
+          "rejected_at": 0,
+          "cache_length_before": 413,
+          "cache_length_after": 414,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.3125,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.34375,
+          "vanilla_top1_margin": 3.125,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": false,
+          "emitted_matches_vanilla": false,
+          "canonical_replay_token_ids": [
+            315,
+            7524,
+            510
+          ],
+          "observed_batch_token_ids": [
+            315,
+            7524,
+            510
+          ]
+        },
+        {
+          "cycle_index": 4,
+          "prefix_length": 414,
+          "draft_k": 1,
+          "accepted_count": 0,
+          "candidate_tokens": [
+            315,
+            23839
+          ],
+          "emitted_tokens": [
+            315
+          ],
+          "rejected_at": 0,
+          "cache_length_before": 414,
+          "cache_length_after": 415,
+          "first_kv_different_layer": 1,
+          "kv_max_abs_error": 0.3125,
+          "kv_relative_error": 25390624768.0,
+          "cache_length_mismatch_count": 0,
+          "logits_max_abs_error": 0.25,
+          "vanilla_top1_margin": 1.0,
+          "argmax_equal": true,
+          "kv_substitution_argmax_equal": true,
+          "first_argmax_difference_in_cycle": null,
+          "prefix_matches_vanilla": false,
+          "emitted_matches_vanilla": false,
+          "canonical_replay_token_ids": [
+            2168,
+            2734
+          ],
+          "observed_batch_token_ids": [
+            2168,
+            2734
+          ]
+        }
+      ]
+    }
+  ]
+}
