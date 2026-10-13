@@ -6,7 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -120,6 +120,40 @@ def summarize(runs: list[Path]) -> dict[str, Any]:
             "mismatch_prompts_in_any_session": len(all_mismatch),
             "mismatches_with_same_first_position_all_sessions": repeatable_positions,
         }
+    fixed_k_methods = [m for m in methods if m.startswith("PLD_prompt_plus_generated_K")]
+    prompt_means: dict[str, dict[str, float]] = {}
+    for prompt in sorted(common):
+        prompt_means[prompt] = {}
+        for method in fixed_k_methods:
+            values = []
+            for rows, _ in loaded:
+                pair = rows[prompt]
+                values.append(pair[method]["measured"]["decode_tps"] /
+                              max(pair["vanilla"]["measured"]["decode_tps"], 1e-9))
+            prompt_means[prompt][method] = sum(values) / len(values)
+    fixed_action_means = {
+        method: sum(values[method] for values in prompt_means.values()) / len(prompt_means)
+        for method in fixed_k_methods
+    }
+    best_fixed = max(fixed_action_means, key=fixed_action_means.get)
+    oracle_values = {prompt: max(values.values()) for prompt, values in prompt_means.items()}
+    oracle_actions = Counter(max(values, key=values.get) for values in prompt_means.values())
+    oracle_mean = sum(oracle_values.values()) / len(oracle_values)
+    report["fixed_action_and_prompt_oracle"] = {
+        "mean_decode_speedup_by_fixed_k": fixed_action_means,
+        "best_fixed_action_in_this_dataset": best_fixed,
+        "best_fixed_action_mean_decode_speedup": fixed_action_means[best_fixed],
+        "full_prompt_oracle_mean_decode_speedup": oracle_mean,
+        "oracle_gain_over_best_fixed": oracle_mean - fixed_action_means[best_fixed],
+        "oracle_action_count_by_prompt": dict(oracle_actions),
+        "mean_oracle_regret_vs_k4": oracle_mean - fixed_action_means.get(
+            "PLD_prompt_plus_generated_K4", 0.0),
+        "definition": (
+            "Diagnostic only: choose one measured K per full prompt after observing its complete "
+            "trajectory. This is not an implementable runtime policy or cycle-level oracle; "
+            "different K values can produce different token trajectories."
+        ),
+    }
     return report
 
 
