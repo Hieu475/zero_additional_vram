@@ -45,6 +45,7 @@ def prompt_lookup_generate(
     candidate_source: str = "history",
     adaptive_profile: dict | None = None,
     force_miss: bool = False,
+    sequential_verify: bool = False,
     kv_cache_max_capacity: int = 2048,
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Prompt Lookup Decoding (PLD).
@@ -90,6 +91,8 @@ def prompt_lookup_generate(
 
     if k_policy not in {"fixed", "confidence_cost"}:
         raise ValueError("k_policy must be 'fixed' or 'confidence_cost'")
+    if sequential_verify and temperature != 0.0:
+        raise ValueError("sequential verification currently supports greedy decoding only")
     if candidate_source not in {"history", "prompt", "prompt+generated"}:
         raise ValueError("candidate_source must be 'history', 'prompt', or 'prompt+generated'")
     generated_token_ids: list[int] = []
@@ -236,8 +239,26 @@ def prompt_lookup_generate(
         cand_tensor = torch.tensor([cand_ids], device=device)
 
         t_verify_start = time.perf_counter()
-        with torch.no_grad():
-            v_out = model(cand_tensor, past_key_values=target_kv.cache, use_cache=True)
+        if sequential_verify:
+            # Advance the target cache one token at a time. Each row's argmax
+            # is then computed from the exact canonical prefix, and a rejected
+            # candidate is never committed to the cache.
+            sequential_logits = []
+            with torch.no_grad():
+                for index, token in enumerate(cand_ids):
+                    token_tensor = torch.tensor([[token]], device=device)
+                    sequential_out = model(token_tensor, past_key_values=target_kv.cache,
+                                           use_cache=True)
+                    sequential_logits.append(sequential_out.logits[:, -1:, :])
+                    if index < actual_k:
+                        observed_next = int(sequential_out.logits[:, -1, :].argmax(dim=-1).item())
+                        if observed_next != candidate_tokens[index]:
+                            break
+            verify_logits = torch.cat(sequential_logits, dim=1)
+        else:
+            with torch.no_grad():
+                v_out = model(cand_tensor, past_key_values=target_kv.cache, use_cache=True)
+            verify_logits = v_out.logits
         t_sync_start = time.perf_counter()
         torch.cuda.synchronize()
         t_sync_end = time.perf_counter()
@@ -256,14 +277,14 @@ def prompt_lookup_generate(
         num_accepted_draft = 0
 
         if temperature == 0.0:
-            v_preds = v_out.logits[0, :actual_k, :].argmax(dim=-1)
+            v_preds = verify_logits[0, :actual_k, :].argmax(dim=-1)
             d_preds = torch.tensor(candidate_tokens, device=device)
             matches = (v_preds == d_preds)
 
             if bool(matches.all().item()):
                 num_accepted_draft = actual_k
                 cycle_emitted.extend(candidate_tokens)
-                bonus_tok_tensor = v_out.logits[:, actual_k:, :].argmax(dim=-1)
+                bonus_tok_tensor = verify_logits[:, actual_k:, :].argmax(dim=-1)
                 curr_target_tok_tensor = bonus_tok_tensor
                 curr_target_tok = int(bonus_tok_tensor.item())
             else:
@@ -279,7 +300,7 @@ def prompt_lookup_generate(
                 curr_target_tok = int(rej_tok_tensor.item())
                 rejected_at = mismatch_idx
         else:
-            target_probs_tensor = F.softmax(v_out.logits[0, :actual_k, :] / temperature, dim=-1)
+            target_probs_tensor = F.softmax(verify_logits[0, :actual_k, :] / temperature, dim=-1)
             for i in range(actual_k):
                 t_prob = target_probs_tensor[i]
                 tok_id = candidate_tokens[i]
@@ -298,7 +319,7 @@ def prompt_lookup_generate(
                     break
 
             if rejected_at is None:
-                b_probs = F.softmax(v_out.logits[0, actual_k, :] / temperature, dim=-1)
+                b_probs = F.softmax(verify_logits[0, actual_k, :] / temperature, dim=-1)
                 bonus_tok = int(torch.multinomial(b_probs, num_samples=1).item())
                 curr_target_tok = bonus_tok
                 curr_target_tok_tensor = torch.tensor([[curr_target_tok]], device=device)
@@ -316,6 +337,7 @@ def prompt_lookup_generate(
             "match_order": match.ngram_size,
             "match_repetitions": match.repetitions,
             "match_confidence": match.confidence,
+            "verification_mode": "sequential" if sequential_verify else "batched",
             "context_len": current_prefix_len - len(cycle_emitted),
         })
 

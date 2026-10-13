@@ -52,11 +52,13 @@ def speculative_core(model, tokenizer, prompt: torch.Tensor, max_new_tokens: int
 
 
 def measure_pld(model, tokenizer, prompt: torch.Tensor, k: int, max_new_tokens: int,
-                device: str, force_miss: bool = False) -> dict[str, Any]:
+                device: str, force_miss: bool = False,
+                sequential_verify: bool = False) -> dict[str, Any]:
     _, metrics = prompt_lookup_generate(
         model, tokenizer, prompt, k=k, max_new_tokens=max_new_tokens, temperature=0.0,
         device=device, kv_cache_backend="static", candidate_source="prompt+generated",
         force_miss=force_miss,
+        sequential_verify=sequential_verify,
         kv_cache_max_capacity=int(prompt.shape[-1]) + max_new_tokens + k + 16,
     )
     decode_s = max(1e-9, metrics.total_time_s - metrics.prefill_time_s)
@@ -72,6 +74,7 @@ def measure_pld(model, tokenizer, prompt: torch.Tensor, k: int, max_new_tokens: 
         "lookup_hit_rate": metrics.pld_cycles / max(1, metrics.num_verification_cycles),
         "accepted_tokens": sum(int(c.get("accepted", 0)) for c in cycles),
         "draft_tokens": sum(int(c.get("k", 0)) for c in cycles),
+        "verification_mode": "sequential" if sequential_verify else "batched",
         "accepted_tokens_per_cycle": sum(int(c.get("accepted", 0)) for c in cycles)
                                     / max(1, metrics.num_verification_cycles),
         "cycle_stats": cycles,
@@ -132,6 +135,8 @@ def main() -> None:
     parser.add_argument("--order-seed", type=int, default=20261014)
     parser.add_argument("--prepared-inputs", type=Path, default=None,
                         help="Reuse a previously prepared independent prompt file for a session repeat")
+    parser.add_argument("--sequential-only", action="store_true",
+                        help="Compare vanilla, batched PLD K=4 and sequential PLD K=4")
     args = parser.parse_args()
     if not torch.cuda.is_available():
         raise RuntimeError("A working CUDA device is required")
@@ -173,8 +178,10 @@ def main() -> None:
         "quantization": "NF4", "compute_dtype": "float16", "attention": "sdpa",
         "kv_backend": "static", "max_new_tokens": args.max_new_tokens,
         "context_tokens": 384, "sample_seed": args.seed, "method_order_seed": args.order_seed,
-        "methods": ["vanilla", "vanilla_speculative_core_K0", "PLD_forced_miss_K4",
-                    *[f"PLD_prompt_plus_generated_K{k}" for k in PLD_K_VALUES]],
+        "methods": (["vanilla", "PLD_prompt_plus_generated_K4", "PLD_sequential_K4"]
+                    if args.sequential_only else
+                    ["vanilla", "vanilla_speculative_core_K0", "PLD_forced_miss_K4",
+                     *[f"PLD_prompt_plus_generated_K{k}" for k in PLD_K_VALUES]]),
         "source_manifest": source_manifest,
         "excluded_source_files": [str(p.relative_to(ROOT)) for p in OLD_INPUTS if p.exists()],
         "measurement": "one paired observation per prompt; shuffled method order; separate prefill/decode/e2e",
@@ -189,18 +196,25 @@ def main() -> None:
 
     warm = torch.tensor([records[0]["input_ids"]], dtype=torch.long, device=args.device)
     measure_vanilla(model, tokenizer, warm, min(8, args.max_new_tokens), args.device)
-    speculative_core(model, tokenizer, warm, min(8, args.max_new_tokens), args.device)
-    measure_pld(model, tokenizer, warm, 4, min(8, args.max_new_tokens), args.device, force_miss=True)
-    for k in PLD_K_VALUES:
-        measure_pld(model, tokenizer, warm, k, min(8, args.max_new_tokens), args.device)
+    if args.sequential_only:
+        measure_pld(model, tokenizer, warm, 4, min(8, args.max_new_tokens), args.device)
+        measure_pld(model, tokenizer, warm, 4, min(8, args.max_new_tokens), args.device,
+                    sequential_verify=True)
+    else:
+        speculative_core(model, tokenizer, warm, min(8, args.max_new_tokens), args.device)
+        measure_pld(model, tokenizer, warm, 4, min(8, args.max_new_tokens), args.device, force_miss=True)
+        for k in PLD_K_VALUES:
+            measure_pld(model, tokenizer, warm, k, min(8, args.max_new_tokens), args.device)
 
     rng = random.Random(args.order_seed)
     raw_path = out / "raw_measurements.jsonl"
     rows: list[dict[str, Any]] = []
     for record in records:
         prompt = torch.tensor([record["input_ids"]], dtype=torch.long, device=args.device)
-        jobs = ["vanilla", "vanilla_speculative_core_K0", "PLD_forced_miss_K4",
-                *[f"PLD_prompt_plus_generated_K{k}" for k in PLD_K_VALUES]]
+        jobs = (["vanilla", "PLD_prompt_plus_generated_K4", "PLD_sequential_K4"]
+                if args.sequential_only else
+                ["vanilla", "vanilla_speculative_core_K0", "PLD_forced_miss_K4",
+                 *[f"PLD_prompt_plus_generated_K{k}" for k in PLD_K_VALUES]])
         rng.shuffle(jobs)
         pending = []
         for method in jobs:
@@ -213,6 +227,9 @@ def main() -> None:
             elif method == "PLD_forced_miss_K4":
                 measured = measure_pld(model, tokenizer, prompt, 4, args.max_new_tokens,
                                        args.device, force_miss=True)
+            elif method == "PLD_sequential_K4":
+                measured = measure_pld(model, tokenizer, prompt, 4, args.max_new_tokens,
+                                       args.device, sequential_verify=True)
             else:
                 k = int(method.rsplit("K", 1)[1])
                 measured = measure_pld(model, tokenizer, prompt, k, args.max_new_tokens,
