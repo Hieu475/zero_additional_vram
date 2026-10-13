@@ -1,0 +1,36 @@
+{
+  "commit_sha": "6149a670b983a3870fa88769da1bfb19dd94305d",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "precision": "NF4 / FP16 compute",
+  "attention": "SDPA",
+  "kv_backend": "static",
+  "prompt_source": "experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl",
+  "source_sha256": "6bc016b39bc280ea519cf2ca120643a16dcf138697f4d5fb17e0fb21e37d6a3a",
+  "n_prompts": 12,
+  "prompt_ids": [
+    "gov_report_52_ctx384",
+    "multi_news_143_ctx384",
+    "narrativeqa_55_ctx384",
+    "qasper_63_ctx384",
+    "qmsum_54_ctx384",
+    "gov_report_23_ctx384",
+    "multi_news_161_ctx384",
+    "narrativeqa_137_ctx384",
+    "qasper_33_ctx384",
+    "qmsum_196_ctx384",
+    "gov_report_80_ctx384",
+    "multi_news_85_ctx384"
+  ],
+  "max_new_tokens": 32,
+  "methods": [
+    "vanilla",
+    "pld_forced_miss_k4",
+    "pld_k4",
+    "pld_k8"
+  ],
+  "order_seed": 20261017,
+  "telemetry_interval_s": 1.0,
+  "power_or_clock_intervention": false,
+  "design": "paired prompt measurements, randomized method order within prompt; temperature bins diagnostic only"
+}
