@@ -1,0 +1,153 @@
+{
+  "configurations": [
+    {
+      "input_file": "experiments/natural_context_validation/independent_pld_short_context/nf4_batch_audit_sdpa_static_retry1.json",
+      "attention_backend": "sdpa",
+      "cache_backend": "static",
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "prompt_ids": [
+        "qasper_119_ctx384",
+        "multi_news_189_ctx384",
+        "qasper_109_ctx384"
+      ],
+      "horizons": {
+        "1": {
+          "n_prompts": 3,
+          "prefill_logits_bitwise_equal_all": true,
+          "prefill_kv_bitwise_equal_all": true,
+          "first_differing_kv_layer_counts": {
+            "1": 3
+          },
+          "argmax_flip_count": 0,
+          "argmax_flips": [],
+          "max_abs_logit_error": 0.5
+        },
+        "2": {
+          "n_prompts": 3,
+          "prefill_logits_bitwise_equal_all": true,
+          "prefill_kv_bitwise_equal_all": true,
+          "first_differing_kv_layer_counts": {
+            "1": 3
+          },
+          "argmax_flip_count": 0,
+          "argmax_flips": [],
+          "max_abs_logit_error": 0.5
+        },
+        "4": {
+          "n_prompts": 3,
+          "prefill_logits_bitwise_equal_all": true,
+          "prefill_kv_bitwise_equal_all": true,
+          "first_differing_kv_layer_counts": {
+            "1": 3
+          },
+          "argmax_flip_count": 0,
+          "argmax_flips": [],
+          "max_abs_logit_error": 0.46875
+        }
+      }
+    },
+    {
+      "input_file": "experiments/natural_context_validation/independent_pld_short_context/nf4_batch_audit_eager_static.json",
+      "attention_backend": "eager",
+      "cache_backend": "static",
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "prompt_ids": [
+        "qasper_119_ctx384",
+        "multi_news_189_ctx384",
+        "qasper_109_ctx384"
+      ],
+      "horizons": {
+        "1": {
+          "n_prompts": 3,
+          "prefill_logits_bitwise_equal_all": true,
+          "prefill_kv_bitwise_equal_all": true,
+          "first_differing_kv_layer_counts": {
+            "1": 1,
+            "3": 1,
+            "4": 1
+          },
+          "argmax_flip_count": 0,
+          "argmax_flips": [],
+          "max_abs_logit_error": 0.5625
+        },
+        "2": {
+          "n_prompts": 3,
+          "prefill_logits_bitwise_equal_all": true,
+          "prefill_kv_bitwise_equal_all": true,
+          "first_differing_kv_layer_counts": {
+            "1": 1,
+            "3": 1,
+            "2": 1
+          },
+          "argmax_flip_count": 0,
+          "argmax_flips": [],
+          "max_abs_logit_error": 0.75
+        },
+        "4": {
+          "n_prompts": 3,
+          "prefill_logits_bitwise_equal_all": true,
+          "prefill_kv_bitwise_equal_all": true,
+          "first_differing_kv_layer_counts": {
+            "1": 3
+          },
+          "argmax_flip_count": 0,
+          "argmax_flips": [],
+          "max_abs_logit_error": 0.6591796875
+        }
+      }
+    },
+    {
+      "input_file": "experiments/natural_context_validation/independent_pld_short_context/nf4_batch_audit_sdpa_dynamic.json",
+      "attention_backend": "sdpa",
+      "cache_backend": "dynamic",
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "prompt_ids": [
+        "qasper_119_ctx384",
+        "multi_news_189_ctx384",
+        "qasper_109_ctx384"
+      ],
+      "horizons": {
+        "1": {
+          "n_prompts": 3,
+          "prefill_logits_bitwise_equal_all": true,
+          "prefill_kv_bitwise_equal_all": true,
+          "first_differing_kv_layer_counts": {
+            "1": 3
+          },
+          "argmax_flip_count": 0,
+          "argmax_flips": [],
+          "max_abs_logit_error": 0.5
+        },
+        "2": {
+          "n_prompts": 3,
+          "prefill_logits_bitwise_equal_all": true,
+          "prefill_kv_bitwise_equal_all": true,
+          "first_differing_kv_layer_counts": {
+            "1": 3
+          },
+          "argmax_flip_count": 0,
+          "argmax_flips": [],
+          "max_abs_logit_error": 0.5
+        },
+        "4": {
+          "n_prompts": 3,
+          "prefill_logits_bitwise_equal_all": true,
+          "prefill_kv_bitwise_equal_all": true,
+          "first_differing_kv_layer_counts": {
+            "1": 3
+          },
+          "argmax_flip_count": 0,
+          "argmax_flips": [],
+          "max_abs_logit_error": 0.46875
+        }
+      }
+    }
+  ],
+  "interpretation": [
+    "Bitwise KV differences are not by themselves evidence of a token error; argmax flips are reported separately.",
+    "Three prompts and K<=4 are a targeted diagnosis, not a prevalence estimate."
+  ]
+}

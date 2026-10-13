@@ -59,6 +59,31 @@ cover all-accepted candidates and forced rejection at positions zero and one.
 This establishes token identity on the tested path; the experiment does not
 claim bitwise-equal cache tensors across different batched implementations.
 
+## Targeted NF4 numerical audit
+
+For three prompts whose PLD mismatches repeated in all sessions, the audit
+compared same-prefix, target-generated candidate continuations at K=1/2/4.
+Across SDPA+static KV, eager+static KV, and SDPA+dynamic KV, prefill logits
+and active-prefix KV were bitwise equal for all three prompts. Batched and
+one-token sequential verification then produced different KV values; the
+first differing layer was layer 1 for every SDPA case. Eager also differed,
+with first layers 1–4 depending on prompt and K. No top-1 argmax flips occurred
+in these single verification horizons. Maximum absolute logit error ranged
+from 0.47 to 0.66 for K=4 across the backend/cache configurations.
+
+Changing static to dynamic KV did not change this targeted SDPA result; using
+eager did not remove the batch/sequential mismatch. Together with the
+repeatable multi-cycle PLD divergence and exact sequential recovery, this is
+consistent with numerical KV drift accumulating across batched cycles. It
+does not prove that mechanism: this audit covers three prompts, one precision
+(NF4 with FP16 compute), and K<=4, and saw no immediate argmax flip. The
+causal source of the later sequence mismatch remains unresolved.
+
+The source audits are `nf4_batch_audit_sdpa_static_retry1.json`,
+`nf4_batch_audit_eager_static.json`, and
+`nf4_batch_audit_sdpa_dynamic.json`; their reproducible aggregate is
+`nf4_batch_audit_summary.json`.
+
 ## Interpretation
 
 There is a reproducible short-context PLD speedup under the current NF4/FP16/
@@ -95,6 +120,18 @@ python scripts/run_independent_pld_short_context.py \
   --output-dir experiments/natural_context_validation/independent_pld_short_context/sequential_verify_rtx4050_retry1 \
   --prepared-inputs experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl \
   --per-bucket 60 --max-new-tokens 32 --seed 20261013 --order-seed 20261017 --sequential-only
+
+python scripts/audit_nf4_batch_equivalence.py \
+  --prepared-inputs experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl \
+  --ids qasper_119_ctx384 multi_news_189_ctx384 qasper_109_ctx384 \
+  --max-k 4 --attention-backend sdpa --cache-backend static \
+  --output experiments/natural_context_validation/independent_pld_short_context/nf4_batch_audit_sdpa_static_retry1.json
+
+python scripts/summarize_nf4_batch_audit.py \
+  --input experiments/natural_context_validation/independent_pld_short_context/nf4_batch_audit_sdpa_static_retry1.json \
+  --input experiments/natural_context_validation/independent_pld_short_context/nf4_batch_audit_eager_static.json \
+  --input experiments/natural_context_validation/independent_pld_short_context/nf4_batch_audit_sdpa_dynamic.json \
+  --output experiments/natural_context_validation/independent_pld_short_context/nf4_batch_audit_summary.json
 ```
 
 The first sequential-verification launch stopped after two prompts due to an
