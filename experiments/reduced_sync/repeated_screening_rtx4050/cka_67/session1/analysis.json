@@ -1,0 +1,42 @@
+{
+  "n_prompts": 30,
+  "n_paired_runs": 30,
+  "actions": {
+    "e2e_speedup": {
+      "mean_prompt_level": 1.0123867376429563,
+      "prompt_bootstrap_95ci": [
+        0.9927407314351958,
+        1.0320342567962182
+      ],
+      "median_prompt_level": 1.0203445071309485
+    },
+    "decode_speedup": {
+      "mean_prompt_level": 1.016169346776248,
+      "prompt_bootstrap_95ci": [
+        0.9967246540081295,
+        1.0350941227209611
+      ],
+      "median_prompt_level": 1.0216546021498687
+    }
+  },
+  "sequence_exact_match_rate": 1.0,
+  "mean_stage_seconds": {
+    "total": {
+      "reference": 1.1181208712989852,
+      "reduced_sync": 1.107800738600781
+    },
+    "draft": {
+      "reference": 0.5915188938660625,
+      "reduced_sync": 0.5828894031985935
+    },
+    "verify": {
+      "reference": 0.47272116933988095,
+      "reduced_sync": 0.47026250056223945
+    },
+    "cache": {
+      "reference": 0.004280361802860473,
+      "reduced_sync": 0.00358280822110828
+    }
+  },
+  "interpretation_note": "Bootstrap resamples prompts; repeated runs within a prompt are averaged. Nsight synchronization counts/host-wait durations must be analyzed separately."
+}

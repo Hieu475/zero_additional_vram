@@ -1,0 +1,147 @@
+{
+  "protocol": {
+    "prompts": 30,
+    "independent_sessions_per_config": 3,
+    "max_new_tokens": 32,
+    "k": 2,
+    "repeats_per_process": 1,
+    "configs": [
+      "cka_90",
+      "cka_67"
+    ],
+    "methods": [
+      "reference",
+      "reduced_sync_conservative"
+    ],
+    "profiling_instrumentation": false
+  },
+  "interpretation": "Each session used the same 30 prompts and one repeat per process, with independent seeds/processes. Per-session prompt bootstrap CIs are primary. Across-session mean and t interval are descriptive only (n=3 sessions).",
+  "configs": {
+    "cka_90": {
+      "sessions": [
+        {
+          "session": 1,
+          "e2e_speedup": 1.007200382540163,
+          "e2e_prompt_bootstrap_95ci": [
+            0.9974542278054827,
+            1.0194272354401213
+          ],
+          "decode_speedup": 1.0026477024190477,
+          "decode_prompt_bootstrap_95ci": [
+            0.9952630011938336,
+            1.0101663359248314
+          ],
+          "sequence_exact_match_rate": 1.0
+        },
+        {
+          "session": 2,
+          "e2e_speedup": 0.9950239733339659,
+          "e2e_prompt_bootstrap_95ci": [
+            0.9840006563731908,
+            1.0047678152313704
+          ],
+          "decode_speedup": 0.9999121661894489,
+          "decode_prompt_bootstrap_95ci": [
+            0.9911376620368206,
+            1.0082349702111084
+          ],
+          "sequence_exact_match_rate": 1.0
+        },
+        {
+          "session": 3,
+          "e2e_speedup": 0.9961260503685009,
+          "e2e_prompt_bootstrap_95ci": [
+            0.9789826854402116,
+            1.014492626669966
+          ],
+          "decode_speedup": 0.9917195807313628,
+          "decode_prompt_bootstrap_95ci": [
+            0.9766361211993428,
+            1.006613092268698
+          ],
+          "sequence_exact_match_rate": 1.0
+        }
+      ],
+      "aggregate": {
+        "e2e_speedup": {
+          "mean_session_ratio": 0.9994501354142099,
+          "t95ci_across_3_sessions": [
+            0.9827193779954596,
+            1.01618089283296
+          ]
+        },
+        "decode_speedup": {
+          "mean_session_ratio": 0.9980931497799531,
+          "t95ci_across_3_sessions": [
+            0.9839656778584669,
+            1.0122206217014393
+          ]
+        }
+      },
+      "token_exactness_all_sessions": true
+    },
+    "cka_67": {
+      "sessions": [
+        {
+          "session": 1,
+          "e2e_speedup": 1.0123867376429563,
+          "e2e_prompt_bootstrap_95ci": [
+            0.9927407314351958,
+            1.0320342567962182
+          ],
+          "decode_speedup": 1.016169346776248,
+          "decode_prompt_bootstrap_95ci": [
+            0.9967246540081295,
+            1.0350941227209611
+          ],
+          "sequence_exact_match_rate": 1.0
+        },
+        {
+          "session": 2,
+          "e2e_speedup": 0.9910417502063039,
+          "e2e_prompt_bootstrap_95ci": [
+            0.9761804202463176,
+            1.0060358674523449
+          ],
+          "decode_speedup": 0.9864435550995313,
+          "decode_prompt_bootstrap_95ci": [
+            0.9719478740838532,
+            1.0010615612852736
+          ],
+          "sequence_exact_match_rate": 1.0
+        },
+        {
+          "session": 3,
+          "e2e_speedup": 1.0042067216160466,
+          "e2e_prompt_bootstrap_95ci": [
+            0.9851302113838398,
+            1.0242128348838648
+          ],
+          "decode_speedup": 1.0088573507136185,
+          "decode_prompt_bootstrap_95ci": [
+            0.9903656503476768,
+            1.027741963271464
+          ],
+          "sequence_exact_match_rate": 1.0
+        }
+      ],
+      "aggregate": {
+        "e2e_speedup": {
+          "mean_session_ratio": 1.0025450698217688,
+          "t95ci_across_3_sessions": [
+            0.9757910498495175,
+            1.0292990897940202
+          ]
+        },
+        "decode_speedup": {
+          "mean_session_ratio": 1.0038234175297993,
+          "t95ci_across_3_sessions": [
+            0.9653433495104733,
+            1.0423034855491253
+          ]
+        }
+      },
+      "token_exactness_all_sessions": true
+    }
+  }
+}
