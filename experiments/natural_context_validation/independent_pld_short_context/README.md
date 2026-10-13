@@ -36,6 +36,15 @@ controls were exact but about 3% slower than direct vanilla on average,
 exposing framework/lookup overhead. The K=4 lookup-cycle hit rate averaged
 19.6%, with 0.212 accepted candidate tokens per verification cycle.
 
+As an offline diagnostic, the best fixed K in these same 60 prompts was K=8
+(1.116x mean across sessions). A full-prompt oracle that picks the fastest
+measured K after observing each complete run reaches 1.158x, a 0.043x gain over
+that best fixed action; its mean gap against fixed K=4 is 0.081x. This is an
+in-sample, future-informed ceiling, not an implementable policy or a held-out
+oracle-regret result. Different K values can also produce different token
+trajectories. The result motivates a genuinely held-out policy dataset before
+introducing adaptive K as a contribution.
+
 PLD K=4 cleared break-even in all three process sessions, but its exactness
 result did not improve: the same 16 prompts mismatched vanilla in every
 session, with the same first-divergence position. K=2 and K=8 had 16 repeated

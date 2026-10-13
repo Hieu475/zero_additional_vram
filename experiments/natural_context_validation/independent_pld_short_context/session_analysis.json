@@ -314,5 +314,25 @@
       "mismatches_with_same_first_position_all_sessions": 0
     }
   },
-  "inference": "Session-level 95% t intervals use three session means (df=2); prompt repeats are not counted as independent sessions."
+  "inference": "Session-level 95% t intervals use three session means (df=2); prompt repeats are not counted as independent sessions.",
+  "fixed_action_and_prompt_oracle": {
+    "mean_decode_speedup_by_fixed_k": {
+      "PLD_prompt_plus_generated_K2": 1.1092650944674716,
+      "PLD_prompt_plus_generated_K4": 1.077616691656825,
+      "PLD_prompt_plus_generated_K6": 1.099682599348593,
+      "PLD_prompt_plus_generated_K8": 1.1156480277667984
+    },
+    "best_fixed_action_in_this_dataset": "PLD_prompt_plus_generated_K8",
+    "best_fixed_action_mean_decode_speedup": 1.1156480277667984,
+    "full_prompt_oracle_mean_decode_speedup": 1.1583312011106024,
+    "oracle_gain_over_best_fixed": 0.042683173343804004,
+    "oracle_action_count_by_prompt": {
+      "PLD_prompt_plus_generated_K6": 11,
+      "PLD_prompt_plus_generated_K2": 27,
+      "PLD_prompt_plus_generated_K8": 16,
+      "PLD_prompt_plus_generated_K4": 6
+    },
+    "mean_oracle_regret_vs_k4": 0.08071450945377734,
+    "definition": "Diagnostic only: choose one measured K per full prompt after observing its complete trajectory. This is not an implementable runtime policy or cycle-level oracle; different K values can produce different token trajectories."
+  }
 }
