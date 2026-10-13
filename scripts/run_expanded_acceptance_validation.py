@@ -36,6 +36,23 @@ from zassd.profiling.action_cost_model import MeasuredActionCostModel  # noqa: E
 
 CALIBRATION_TASKS = ("gsm8k", "humaneval")
 SPLITS = ("train", "development", "heldout_in_domain", "heldout_cross_task")
+PRIOR_PILOT_DIR = ROOT / "experiments/acceptance_validation/pilot_rtx4050_committed"
+
+
+def prior_pilot_ids() -> set[tuple[str, str]]:
+    """Exclude every prompt previously used for fitting or evaluation."""
+    used: set[tuple[str, str]] = set()
+    for path in (PRIOR_PILOT_DIR / "calibration/raw_measurements.jsonl",
+                 PRIOR_PILOT_DIR / "heldout/raw_measurements.jsonl"):
+        if not path.exists():
+            continue
+        for line in path.read_text().splitlines():
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            if row.get("task") and row.get("prompt_id") is not None:
+                used.add((str(row["task"]), str(row["prompt_id"])))
+    return used
 
 
 def prompt_split(task: str, prompt_id: str) -> str:
@@ -99,9 +116,12 @@ def main() -> None:
     (out / "acceptance_cycles").mkdir(parents=True, exist_ok=True)
 
     records_by_split: dict[str, list[dict[str, Any]]] = {split: [] for split in SPLITS}
+    excluded_pilot_ids = prior_pilot_ids()
     for task in (*CALIBRATION_TASKS, "cnndm"):
         for row in read_task(task):
             prompt_id = str(row.get("id", row.get("prompt_id", "")))
+            if (task, prompt_id) in excluded_pilot_ids:
+                continue
             split = prompt_split(task, prompt_id)
             records_by_split[split].append({"task": task, **row, "prompt_id": prompt_id})
     for rows in records_by_split.values():
@@ -127,6 +147,8 @@ def main() -> None:
         "max_new_tokens": args.max_new_tokens, "seed": args.seed,
         "split_rule": "sha256(task:prompt_id) % 5; buckets 0=dev, 1=in-domain heldout, 2-4=train; CNN/DM cross-task heldout",
         "prompt_counts": counts, "calibration_tasks": list(CALIBRATION_TASKS),
+        "excluded_prior_pilot_prompt_ids": sorted(
+            f"{task}:{prompt_id}" for task, prompt_id in excluded_pilot_ids),
         "cross_task_heldout": ["cnndm"], "actions": [
             {"config": a["config"], "kept_layers": a["kept_layers"], "k": list(K_VALUES)} for a in ACTIONS],
         "dataset_sha256": {task: sha256(path) for task, path in BENCHMARKS.items()},
