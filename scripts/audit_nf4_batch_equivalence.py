@@ -146,14 +146,14 @@ def main() -> None:
         rows = [r for r in rows if str(r.get("id", r.get("prompt_id"))) in wanted]
     rows = rows[:args.samples]
     results = []
-    for row in rows:
+    for index, row in enumerate(rows):
         ids = (torch.tensor([row["input_ids"]], dtype=torch.long, device=args.device)
                if "input_ids" in row else
                tokenizer(row["prompt"], return_tensors="pt")["input_ids"].to(args.device))
         result = audit_prefix(model, ids, [k for k in (1, 2, 4) if k <= args.max_k], args.cache_backend)
         result["id"] = row.get("id", row.get("prompt_id", index))
         results.append(result)
-        print(f"{row.get('id')}: " + ", ".join(
+        print(f"{result['id']}: " + ", ".join(
             f"K={k}, first differing KV layer={v['first_kv_differing_layer']}"
             for k, v in result["horizons"].items()), flush=True)
     output = Path(args.output)
