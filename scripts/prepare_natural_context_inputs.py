@@ -37,7 +37,8 @@ def sha256_file(path: Path) -> str:
 
 
 def prepare(output: Path, model: str, model_revision: str, per_bucket: int,
-            targets: tuple[int, ...], seed: int) -> dict[str, Any]:
+            targets: tuple[int, ...], seed: int,
+            exclude_prompt_files: tuple[Path, ...] = ()) -> dict[str, Any]:
     archive = Path(hf_hub_download(
         repo_id=SOURCE_REPO, filename=SOURCE_ARCHIVE,
         repo_type="dataset", revision=SOURCE_REVISION,
@@ -71,7 +72,15 @@ def prepare(output: Path, model: str, model_revision: str, per_bucket: int,
                     })
 
     rng.shuffle(candidates)
-    used: set[tuple[str, str]] = set()
+    excluded: set[tuple[str, str]] = set()
+    for path in exclude_prompt_files:
+        for line in path.read_text().splitlines():
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            if record.get("source_task") is not None and record.get("source_id") is not None:
+                excluded.add((str(record["source_task"]), str(record["source_id"])))
+    used: set[tuple[str, str]] = set(excluded)
     selected: list[dict[str, Any]] = []
     for target in targets:
         bucket = {
@@ -120,6 +129,8 @@ def prepare(output: Path, model: str, model_revision: str, per_bucket: int,
         "seed": seed,
         "targets_tokens": list(targets),
         "examples_per_bucket": per_bucket,
+        "excluded_source_ids": len(excluded),
+        "excluded_input_files": [str(path) for path in exclude_prompt_files],
         "selection": "deterministic shuffled source rows; unique source IDs; natural context prefix; no repetition",
         "prompt_format": "fixed header + document prefix + task/question suffix",
         "stored_prompt_content": "token IDs only; source text not redistributed",
@@ -137,9 +148,10 @@ def main() -> None:
     parser.add_argument("--per-bucket", type=int, default=3)
     parser.add_argument("--targets", type=int, nargs="+", default=list(DEFAULT_TARGETS))
     parser.add_argument("--seed", type=int, default=2026)
+    parser.add_argument("--exclude-prompt-files", type=Path, nargs="*", default=())
     args = parser.parse_args()
     manifest = prepare(args.output, args.model, args.model_revision, args.per_bucket,
-                       tuple(args.targets), args.seed)
+                       tuple(args.targets), args.seed, tuple(args.exclude_prompt_files))
     print(json.dumps(manifest, indent=2))
 
 
