@@ -1,0 +1,58 @@
+{
+  "execution_commit": "1e7e300e0766f68970a642fe8bd575d977ad5d26",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "quantization": "NF4",
+  "compute_dtype": "float16",
+  "attention": "sdpa",
+  "kv_backend": "static",
+  "max_new_tokens": 32,
+  "context_tokens": 384,
+  "sample_seed": 20261013,
+  "method_order_seed": 20261014,
+  "methods": [
+    "vanilla",
+    "vanilla_speculative_core_K0",
+    "PLD_forced_miss_K4",
+    "PLD_prompt_plus_generated_K2",
+    "PLD_prompt_plus_generated_K4",
+    "PLD_prompt_plus_generated_K6",
+    "PLD_prompt_plus_generated_K8"
+  ],
+  "source_manifest": {
+    "source": "THUDM/LongBench",
+    "source_url": "https://github.com/THUDM/LongBench",
+    "source_repo": "THUDM/LongBench",
+    "source_revision": "5e628be450b7e67fb7ae6e201bd6d8f7056f7672",
+    "source_archive": "data.zip",
+    "source_archive_sha256": "cb45b11a4133c6bc1d6a44b0f8e701335ff1e543195db1103472e575857f7f64",
+    "tokenizer_model": "Qwen/Qwen2.5-3B-Instruct",
+    "tokenizer_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "seed": 20261013,
+    "targets_tokens": [
+      384
+    ],
+    "examples_per_bucket": 60,
+    "excluded_source_ids": 91,
+    "excluded_input_files": [
+      "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/experiments/natural_context_validation/pilot_rtx4050/prepared_inputs.jsonl",
+      "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/experiments/natural_context_validation/full_n20_pld_rtx4050/prepared_inputs.jsonl",
+      "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/experiments/natural_context_validation/repeat2_n20_pld_rtx4050/prepared_inputs.jsonl"
+    ],
+    "selection": "deterministic shuffled source rows; unique source IDs; natural context prefix; no repetition",
+    "prompt_format": "fixed header + document prefix + task/question suffix",
+    "stored_prompt_content": "token IDs only; source text not redistributed",
+    "prepared_sha256": "6bc016b39bc280ea519cf2ca120643a16dcf138697f4d5fb17e0fb21e37d6a3a",
+    "n_examples": 60,
+    "bucket_counts": {
+      "384": 60
+    }
+  },
+  "excluded_source_files": [
+    "experiments/natural_context_validation/pilot_rtx4050/prepared_inputs.jsonl",
+    "experiments/natural_context_validation/full_n20_pld_rtx4050/prepared_inputs.jsonl",
+    "experiments/natural_context_validation/repeat2_n20_pld_rtx4050/prepared_inputs.jsonl"
+  ],
+  "measurement": "one paired observation per prompt; shuffled method order; separate prefill/decode/e2e",
+  "prior_pilot_policy": "All LongBench source IDs from pilot and both previous full sessions excluded"
+}

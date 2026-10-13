@@ -1,0 +1,33 @@
+{
+  "execution_commit": "92f31e3df5d84da1c0c0ab83ff144d814419d468",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "quantization": "NF4",
+  "compute_dtype": "float16",
+  "attention": "sdpa",
+  "kv_backend": "static",
+  "max_new_tokens": 32,
+  "context_tokens": 384,
+  "sample_seed": 20261013,
+  "method_order_seed": 20261017,
+  "methods": [
+    "vanilla",
+    "PLD_prompt_plus_generated_K4",
+    "PLD_sequential_K4"
+  ],
+  "source_manifest": {
+    "reused_prepared_inputs": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl",
+    "prepared_sha256": "6bc016b39bc280ea519cf2ca120643a16dcf138697f4d5fb17e0fb21e37d6a3a",
+    "n_examples": 60,
+    "bucket_counts": {
+      "384": 60
+    }
+  },
+  "excluded_source_files": [
+    "experiments/natural_context_validation/pilot_rtx4050/prepared_inputs.jsonl",
+    "experiments/natural_context_validation/full_n20_pld_rtx4050/prepared_inputs.jsonl",
+    "experiments/natural_context_validation/repeat2_n20_pld_rtx4050/prepared_inputs.jsonl"
+  ],
+  "measurement": "one paired observation per prompt; shuffled method order; separate prefill/decode/e2e",
+  "prior_pilot_policy": "All LongBench source IDs from pilot and both previous full sessions excluded"
+}
