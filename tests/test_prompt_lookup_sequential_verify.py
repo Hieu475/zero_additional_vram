@@ -9,7 +9,8 @@ from zassd.decoding.ngram import NgramMatch
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="sequential PLD test requires CUDA")
-def test_sequential_pld_verification_matches_vanilla(session_pipeline, monkeypatch):
+@pytest.mark.parametrize("reject_position", [None, 0, 1])
+def test_sequential_pld_verification_matches_vanilla(session_pipeline, monkeypatch, reject_position):
     model, tokenizer, _, _ = session_pipeline
     device = "cuda:0"
     prompt = "The capital of France is"
@@ -34,6 +35,8 @@ def test_sequential_pld_verification_matches_vanilla(session_pipeline, monkeypat
         candidates = reference[start:start + max_candidates]
         if not candidates:
             return NgramMatch([], "forced_test_miss", 0, 0, 0.0)
+        if reject_position is not None and reject_position < len(candidates):
+            candidates[reject_position] = (candidates[reject_position] + 1) % len(tokenizer)
         return NgramMatch(candidates, "forced_test_match", ngram_size, 1, 1.0)
 
     monkeypatch.setattr(prompt_lookup, "find_candidate_match", exact_reference_candidates)

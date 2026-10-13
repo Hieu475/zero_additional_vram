@@ -279,7 +279,9 @@ def prompt_lookup_generate(
         if temperature == 0.0:
             v_preds = verify_logits[0, :actual_k, :].argmax(dim=-1)
             d_preds = torch.tensor(candidate_tokens, device=device)
-            matches = (v_preds == d_preds)
+            # Sequential verification stops at the first rejection, so only
+            # the candidate prefix that was actually evaluated has logits.
+            matches = (v_preds == d_preds[:v_preds.shape[0]])
 
             if bool(matches.all().item()):
                 num_accepted_draft = actual_k
