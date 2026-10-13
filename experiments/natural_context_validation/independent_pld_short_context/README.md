@@ -83,6 +83,8 @@ The source audits are `nf4_batch_audit_sdpa_static_retry1.json`,
 `nf4_batch_audit_eager_static.json`, and
 `nf4_batch_audit_sdpa_dynamic.json`; their reproducible aggregate is
 `nf4_batch_audit_summary.json`.
+The earlier `nf4_batch_audit_sdpa_static.json` has null prompt IDs due to a
+serialization bug and is retained only as an audit trail; do not use it.
 
 ## Interpretation
 
