@@ -117,7 +117,10 @@ def audit_prefix(model, prompt_ids: torch.Tensor, k_values: list[int], backend: 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--model", default="Qwen/Qwen2.5-3B-Instruct")
+    ap.add_argument("--revision", default="aa8e72537993ba99e69dfaafa59ed015b17504d1")
     ap.add_argument("--benchmark", default="data/benchmarks/cnndm_eval.jsonl")
+    ap.add_argument("--prepared-inputs", default=None,
+                    help="Use exact token-ID prompts from a prepared JSONL artifact")
     ap.add_argument("--ids", nargs="*", default=None)
     ap.add_argument("--samples", type=int, default=3)
     ap.add_argument("--max-k", type=int, default=4)
@@ -128,22 +131,25 @@ def main() -> None:
     args = ap.parse_args()
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA is required for this NF4 numerical audit")
-    tokenizer = AutoTokenizer.from_pretrained(args.model)
+    tokenizer = AutoTokenizer.from_pretrained(args.model, revision=args.revision)
     quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
                                bnb_4bit_compute_dtype=torch.float16)
     model = AutoModelForCausalLM.from_pretrained(
-        args.model, quantization_config=quant, device_map=args.device,
+        args.model, revision=args.revision, quantization_config=quant, device_map=args.device,
         attn_implementation=args.attention_backend)
     model.eval()
-    with open(args.benchmark, encoding="utf-8") as stream:
+    input_path = args.prepared_inputs or args.benchmark
+    with open(input_path, encoding="utf-8") as stream:
         rows = [json.loads(line) for line in stream if line.strip()]
     if args.ids is not None:
         wanted = set(args.ids)
-        rows = [r for r in rows if str(r.get("id")) in wanted]
+        rows = [r for r in rows if str(r.get("id", r.get("prompt_id"))) in wanted]
     rows = rows[:args.samples]
     results = []
     for row in rows:
-        ids = tokenizer(row["prompt"], return_tensors="pt")["input_ids"].to(args.device)
+        ids = (torch.tensor([row["input_ids"]], dtype=torch.long, device=args.device)
+               if "input_ids" in row else
+               tokenizer(row["prompt"], return_tensors="pt")["input_ids"].to(args.device))
         result = audit_prefix(model, ids, [k for k in (1, 2, 4) if k <= args.max_k], args.cache_backend)
         result["id"] = row.get("id")
         results.append(result)
@@ -153,7 +159,8 @@ def main() -> None:
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps({
-        "model": args.model, "attention_backend": args.attention_backend,
+        "model": args.model, "model_revision": args.revision,
+        "attention_backend": args.attention_backend,
         "cache_backend": args.cache_backend, "results": results,
     }, indent=2), encoding="utf-8")
     print(f"Saved {output}")
