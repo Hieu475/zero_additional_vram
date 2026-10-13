@@ -1,0 +1,63 @@
+{
+  "n_prompts": 12,
+  "paired_speedup": {
+    "pld_forced_miss_k4": {
+      "n_prompts": 12,
+      "mean_decode_speedup": 0.9675860031952329,
+      "prompt_bootstrap_95ci": [
+        0.9577119753879616,
+        0.9779717608772747
+      ],
+      "median_speedup": 0.970903226193107,
+      "exact_match_count": 12,
+      "exact_match_rate": 1.0
+    },
+    "pld_k4": {
+      "n_prompts": 12,
+      "mean_decode_speedup": 1.0546771075668953,
+      "prompt_bootstrap_95ci": [
+        0.9591730276676995,
+        1.1635771044098944
+      ],
+      "median_speedup": 0.9776360607409873,
+      "exact_match_count": 7,
+      "exact_match_rate": 0.5833333333333334
+    },
+    "pld_k8": {
+      "n_prompts": 12,
+      "mean_decode_speedup": 1.0889296992720563,
+      "prompt_bootstrap_95ci": [
+        0.9553355180294356,
+        1.2481352043920848
+      ],
+      "median_speedup": 0.9808969248322608,
+      "exact_match_count": 7,
+      "exact_match_rate": 0.5833333333333334
+    }
+  },
+  "thermal_bins_diagnostic": {
+    "<70C": {
+      "n_method_runs": 40,
+      "temperature_mean_c": 64.7,
+      "sm_clock_mean_mhz": 2552.25,
+      "methods": {
+        "pld_forced_miss_k4": 801.7641667029238,
+        "pld_k4": 767.3875153035624,
+        "pld_k8": 770.7471814996097,
+        "vanilla": 776.4649187971372
+      }
+    },
+    "70-79C": {
+      "n_method_runs": 8,
+      "temperature_mean_c": 70.375,
+      "sm_clock_mean_mhz": 2546.25,
+      "methods": {
+        "pld_forced_miss_k4": 840.1065989964991,
+        "pld_k4": 719.5545110080275,
+        "pld_k8": 649.1172345049563,
+        "vanilla": 807.790393504547
+      }
+    }
+  },
+  "telemetry_sample_count": 48
+}

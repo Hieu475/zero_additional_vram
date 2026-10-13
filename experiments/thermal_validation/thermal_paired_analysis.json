@@ -1,0 +1,134 @@
+{
+  "design": "one cool-start session versus one heat-soaked session; same 12 prompt IDs",
+  "sessions": {
+    "cool": {
+      "n_prompts": 12,
+      "methods": {
+        "pld_forced_miss_k4": {
+          "mean_prompt_speedup": 0.9675860031952329,
+          "prompt_bootstrap_95ci": [
+            0.9574397212228228,
+            0.977960640542824
+          ],
+          "median_prompt_speedup": 0.970903226193107,
+          "exact_match_count": 12,
+          "n_prompts": 12
+        },
+        "pld_k4": {
+          "mean_prompt_speedup": 1.0546771075668953,
+          "prompt_bootstrap_95ci": [
+            0.9609915167148091,
+            1.1639403816749063
+          ],
+          "median_prompt_speedup": 0.9776360607409873,
+          "exact_match_count": 7,
+          "n_prompts": 12
+        },
+        "pld_k8": {
+          "mean_prompt_speedup": 1.0889296992720563,
+          "prompt_bootstrap_95ci": [
+            0.9544358802336328,
+            1.2497369894199124
+          ],
+          "median_prompt_speedup": 0.9808969248322608,
+          "exact_match_count": 7,
+          "n_prompts": 12
+        }
+      },
+      "telemetry": {
+        "n_samples": 48,
+        "temperature_min_c": 51,
+        "temperature_mean_c": 65.33333333333333,
+        "temperature_max_c": 73,
+        "sm_clock_mean_mhz": 2549.0625,
+        "sm_clock_min_mhz": 2505,
+        "sm_clock_max_mhz": 2565
+      }
+    },
+    "hot": {
+      "n_prompts": 12,
+      "methods": {
+        "pld_forced_miss_k4": {
+          "mean_prompt_speedup": 0.9698027988540029,
+          "prompt_bootstrap_95ci": [
+            0.93728134152771,
+            1.004361680133689
+          ],
+          "median_prompt_speedup": 0.9687135182206082,
+          "exact_match_count": 12,
+          "n_prompts": 12
+        },
+        "pld_k4": {
+          "mean_prompt_speedup": 1.0382931712237682,
+          "prompt_bootstrap_95ci": [
+            0.9401648696180324,
+            1.1453426430832143
+          ],
+          "median_prompt_speedup": 0.9780512470598641,
+          "exact_match_count": 7,
+          "n_prompts": 12
+        },
+        "pld_k8": {
+          "mean_prompt_speedup": 1.0893529958289536,
+          "prompt_bootstrap_95ci": [
+            0.9623749782338679,
+            1.241716230538807
+          ],
+          "median_prompt_speedup": 1.0031472193750917,
+          "exact_match_count": 7,
+          "n_prompts": 12
+        }
+      },
+      "telemetry": {
+        "n_samples": 189,
+        "temperature_min_c": 52,
+        "temperature_mean_c": 74.22222222222223,
+        "temperature_max_c": 84,
+        "sm_clock_mean_mhz": 2529.7619047619046,
+        "sm_clock_min_mhz": 2385,
+        "sm_clock_max_mhz": 2565
+      }
+    }
+  },
+  "paired_thermal_comparison": {
+    "pld_forced_miss_k4": {
+      "n_same_prompts": 12,
+      "cool_mean_speedup": 0.9675860031952329,
+      "hot_mean_speedup": 0.9698027988540029,
+      "hot_minus_cool_speedup": 0.0022167956587700413,
+      "paired_prompt_bootstrap_95ci_difference": [
+        -0.031172421159947672,
+        0.03982500777606223
+      ],
+      "fraction_prompts_hot_speedup_below_cool": 0.5833333333333334
+    },
+    "pld_k4": {
+      "n_same_prompts": 12,
+      "cool_mean_speedup": 1.0546771075668953,
+      "hot_mean_speedup": 1.0382931712237682,
+      "hot_minus_cool_speedup": -0.016383936343127115,
+      "paired_prompt_bootstrap_95ci_difference": [
+        -0.05560959590052084,
+        0.022064039967956545
+      ],
+      "fraction_prompts_hot_speedup_below_cool": 0.5833333333333334
+    },
+    "pld_k8": {
+      "n_same_prompts": 12,
+      "cool_mean_speedup": 1.0889296992720563,
+      "hot_mean_speedup": 1.0893529958289536,
+      "hot_minus_cool_speedup": 0.000423296556897453,
+      "paired_prompt_bootstrap_95ci_difference": [
+        -0.03349313517414265,
+        0.03773045915613198
+      ],
+      "fraction_prompts_hot_speedup_below_cool": 0.5
+    }
+  },
+  "limitations": [
+    "Only one session per thermal condition; CI resamples prompts, not independent sessions.",
+    "Temperature condition is confounded with session/order and time-of-day.",
+    "The hot session targeted 78 C; few or no measurements may exceed 80 C.",
+    "PLD exactness remains separate from speedup: token sequence mismatch is not a valid lossless claim."
+  ]
+}
