@@ -172,8 +172,8 @@ def main() -> None:
                     continue
                 prediction = (cost_model.evaluate_action(action["config"], int(k))
                               if cost_model is not None else None)
-                _, metrics = run_action(model, tokenizer, manager, prompt, action, int(k),
-                                        args.max_new_tokens, args.device)
+                metrics = run_action(model, tokenizer, manager, prompt, action, int(k),
+                                     args.max_new_tokens, args.device)
                 cycles = metrics.pop("acceptance_cycles")
                 for cycle_index, cycle in enumerate(cycles):
                     append_jsonl(cycle_path, cycle_row(
