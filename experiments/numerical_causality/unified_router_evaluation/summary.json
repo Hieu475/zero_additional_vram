@@ -1,0 +1,1626 @@
+{
+  "n_prompts": 30,
+  "development_prompt_ids": [
+    "gov_report_80_ctx384",
+    "gov_report_98_ctx384",
+    "multi_news_143_ctx384",
+    "multi_news_189_ctx384",
+    "narrativeqa_155_ctx384",
+    "qasper_119_ctx384",
+    "qasper_163_ctx384",
+    "qmsum_2_ctx384"
+  ],
+  "heldout_prompt_ids": [
+    "gov_report_23_ctx384",
+    "gov_report_54_ctx384",
+    "gov_report_87_ctx384",
+    "multi_news_129_ctx384",
+    "multi_news_85_ctx384",
+    "narrativeqa_137_ctx384",
+    "narrativeqa_22_ctx384",
+    "qasper_100_ctx384",
+    "qasper_47_ctx384",
+    "qasper_73_ctx384",
+    "qmsum_107_ctx384",
+    "qmsum_149_ctx384",
+    "qmsum_157_ctx384",
+    "qmsum_41_ctx384"
+  ],
+  "best_fixed_method": "pld_k2",
+  "development_mean_decode_tps": {
+    "pld_k2": 41.31562228417908,
+    "pld_k4": 39.67193443395708,
+    "pld_k8": 40.855523491213916,
+    "cka90_k2": 34.75011696139854
+  },
+  "direct_vanilla_agreement_with_wp3_reference": {
+    "n_equal": 30,
+    "n_prompts": 30,
+    "mismatched_prompt_ids": []
+  },
+  "splits": {
+    "all": {
+      "methods": {
+        "direct_vanilla": {
+          "method": "direct_vanilla",
+          "n": 30,
+          "mean_decode_tps": 38.28915968259407,
+          "mean_end_to_end_latency_s": 0.9781405316999952,
+          "mean_verification_latency_s": 0.8109389198666577,
+          "mean_paired_speedup_vs_vanilla": 1.0,
+          "paired_speedup_95ci": [
+            1.0,
+            1.0
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.05874718552532157,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.1029162911540483,
+            -0.017585289998208697
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9557085811597623,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.9188435918506106,
+            0.9912999814700516
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 5.435441669561915,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.11210670571881988,
+          "regret_fraction_95ci": [
+            0.07737208090539617,
+            0.14968100589551936
+          ],
+          "sequence_exact_match_count": 30.0,
+          "sequence_exact_match_rate": 1.0,
+          "slowdown_count": 0.0,
+          "slowdown_frequency": 0.0,
+          "mean_peak_vram_mb": 2107.42529296875,
+          "mean_acceptance_rate": null,
+          "first_divergence_positions": []
+        },
+        "vanilla_speculative_core_k0": {
+          "method": "vanilla_speculative_core_k0",
+          "n": 30,
+          "mean_decode_tps": 37.010401590181544,
+          "mean_end_to_end_latency_s": 1.0049749729000022,
+          "mean_verification_latency_s": 0.8312873722000006,
+          "mean_paired_speedup_vs_vanilla": 0.9678469889329261,
+          "paired_speedup_95ci": [
+            0.951703465606107,
+            0.9840209072088855
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.0909001965923955,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.1353820562355711,
+            -0.04943096489121144
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9241472883259548,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.8878172025151417,
+            0.9607492040946666
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 6.565472882421363,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.1374631644882252,
+          "regret_fraction_95ci": [
+            0.1002930160375977,
+            0.1762156221102189
+          ],
+          "sequence_exact_match_count": 30.0,
+          "sequence_exact_match_rate": 1.0,
+          "slowdown_count": 21.0,
+          "slowdown_frequency": 0.7,
+          "mean_peak_vram_mb": 2108.53564453125,
+          "mean_acceptance_rate": 0.0,
+          "first_divergence_positions": []
+        },
+        "pld_k2": {
+          "method": "pld_k2",
+          "n": 30,
+          "mean_decode_tps": 41.88919414986988,
+          "mean_end_to_end_latency_s": 0.9154014591666756,
+          "mean_verification_latency_s": 0.7415344726666926,
+          "mean_paired_speedup_vs_vanilla": 1.0952726848740326,
+          "paired_speedup_95ci": [
+            1.0540066114084774,
+            1.1389576521871319
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.03652549934871098,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.011101204476147953,
+            0.061578345026484606
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0369535121536355,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.0125942922208264,
+            1.060709035465487
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 1.5764972411501144,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.03182083066493988,
+          "regret_fraction_95ci": [
+            0.015786525430790326,
+            0.05147834295061071
+          ],
+          "sequence_exact_match_count": 18.0,
+          "sequence_exact_match_rate": 0.6,
+          "slowdown_count": 7.0,
+          "slowdown_frequency": 0.23333333333333334,
+          "mean_peak_vram_mb": 2110.4101725260416,
+          "mean_acceptance_rate": 0.39328703703703705,
+          "first_divergence_positions": [
+            5,
+            20,
+            17,
+            14,
+            7,
+            30,
+            30,
+            19,
+            28,
+            26,
+            22,
+            16
+          ]
+        },
+        "pld_k4": {
+          "method": "pld_k4",
+          "n": 30,
+          "mean_decode_tps": 40.496770191762515,
+          "mean_end_to_end_latency_s": 0.9418875082666621,
+          "mean_verification_latency_s": 0.7678020121999604,
+          "mean_paired_speedup_vs_vanilla": 1.0587471855253214,
+          "paired_speedup_95ci": [
+            1.0178176192249853,
+            1.1029226569829655
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.0,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.0,
+            0.0
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.0,
+            1.0
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 2.968921199257475,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.06447505791572461,
+          "regret_fraction_95ci": [
+            0.047412175677639425,
+            0.08153417540512997
+          ],
+          "sequence_exact_match_count": 14.0,
+          "sequence_exact_match_rate": 0.4666666666666667,
+          "slowdown_count": 11.0,
+          "slowdown_frequency": 0.36666666666666664,
+          "mean_peak_vram_mb": 2111.138362630208,
+          "mean_acceptance_rate": 0.2693062888101588,
+          "first_divergence_positions": [
+            23,
+            26,
+            14,
+            17,
+            21,
+            21,
+            11,
+            30,
+            30,
+            19,
+            28,
+            22,
+            19,
+            22,
+            29,
+            21
+          ]
+        },
+        "pld_k8": {
+          "method": "pld_k8",
+          "n": 30,
+          "mean_decode_tps": 42.03553408558544,
+          "mean_end_to_end_latency_s": 0.920837485466662,
+          "mean_verification_latency_s": 0.7481278212333261,
+          "mean_paired_speedup_vs_vanilla": 1.0985401772467065,
+          "paired_speedup_95ci": [
+            1.0396225585436742,
+            1.162796048981004
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.03979299172138488,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.013147167200632536,
+            0.06731866878401992
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0340379803093527,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.0109972416120947,
+            1.0573812905485516
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 1.4301573054345507,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.0348276418958835,
+          "regret_fraction_95ci": [
+            0.020688938355532736,
+            0.05113574872196005
+          ],
+          "sequence_exact_match_count": 14.0,
+          "sequence_exact_match_rate": 0.4666666666666667,
+          "slowdown_count": 9.0,
+          "slowdown_frequency": 0.3,
+          "mean_peak_vram_mb": 2112.520784505208,
+          "mean_acceptance_rate": 0.2127144653482067,
+          "first_divergence_positions": [
+            23,
+            26,
+            14,
+            17,
+            21,
+            18,
+            21,
+            11,
+            30,
+            30,
+            28,
+            22,
+            19,
+            22,
+            29,
+            21
+          ]
+        },
+        "cka90_k2": {
+          "method": "cka90_k2",
+          "n": 30,
+          "mean_decode_tps": 34.504815037563006,
+          "mean_end_to_end_latency_s": 1.0707345160000008,
+          "mean_verification_latency_s": 0.3481755278333651,
+          "mean_paired_speedup_vs_vanilla": 0.902221172227795,
+          "paired_speedup_95ci": [
+            0.874688841501461,
+            0.9286580853667329
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.1565260132975266,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.20444924014715682,
+            -0.11068686737806328
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.8610411608982563,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.8224278035853106,
+            0.898917760833877
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 8.960876353456989,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.19415831402552403,
+          "regret_fraction_95ci": [
+            0.15564931377280364,
+            0.23357861535961674
+          ],
+          "sequence_exact_match_count": 16.0,
+          "sequence_exact_match_rate": 0.5333333333333333,
+          "slowdown_count": 27.0,
+          "slowdown_frequency": 0.9,
+          "mean_peak_vram_mb": 2111.5323567708333,
+          "mean_acceptance_rate": 0.8721814417466592,
+          "first_divergence_positions": [
+            23,
+            26,
+            11,
+            1,
+            14,
+            25,
+            7,
+            18,
+            19,
+            28,
+            22,
+            22,
+            29,
+            17
+          ]
+        },
+        "hybrid_router": {
+          "method": "hybrid_router",
+          "n": 30,
+          "mean_decode_tps": 39.94836868405791,
+          "mean_end_to_end_latency_s": 0.9524997870000088,
+          "mean_verification_latency_s": 0.7679831056999793,
+          "mean_paired_speedup_vs_vanilla": 1.0445408715209064,
+          "paired_speedup_95ci": [
+            1.0009989925225486,
+            1.0903081986468146
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.014206314004415096,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.031153514599966806,
+            0.0028133913721315315
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9866919520530896,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.9701938314232623,
+            1.003079507343691
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 3.5817801641697846,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.07882327704341621,
+          "regret_fraction_95ci": [
+            0.058934792422441734,
+            0.09897774759042047
+          ],
+          "sequence_exact_match_count": 16.0,
+          "sequence_exact_match_rate": 0.5333333333333333,
+          "slowdown_count": 13.0,
+          "slowdown_frequency": 0.43333333333333335,
+          "mean_peak_vram_mb": 2112.6326985677083,
+          "mean_acceptance_rate": 0.26072898560089525,
+          "first_divergence_positions": [
+            23,
+            26,
+            14,
+            17,
+            21,
+            21,
+            30,
+            30,
+            19,
+            28,
+            19,
+            22,
+            29,
+            21
+          ]
+        },
+        "best_fixed_selected_on_development": {
+          "method": "pld_k2",
+          "n": 30,
+          "mean_decode_tps": 41.88919414986988,
+          "mean_end_to_end_latency_s": 0.9154014591666756,
+          "mean_verification_latency_s": 0.7415344726666926,
+          "mean_paired_speedup_vs_vanilla": 1.0952726848740326,
+          "paired_speedup_95ci": [
+            1.0548317956144817,
+            1.139287936619251
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.03652549934871098,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.010510674992725455,
+            0.0610878642900063
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0369535121536355,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.0131365362996827,
+            1.0609853476421696
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 1.5764972411501144,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.03182083066493988,
+          "regret_fraction_95ci": [
+            0.015554205477961556,
+            0.051464965846713964
+          ],
+          "sequence_exact_match_count": 18.0,
+          "sequence_exact_match_rate": 0.6,
+          "slowdown_count": 7.0,
+          "slowdown_frequency": 0.23333333333333334,
+          "mean_peak_vram_mb": 2110.4101725260416,
+          "mean_acceptance_rate": 0.39328703703703705,
+          "first_divergence_positions": [
+            5,
+            20,
+            17,
+            14,
+            7,
+            30,
+            30,
+            19,
+            28,
+            26,
+            22,
+            16
+          ],
+          "selected_fixed_method": "pld_k2"
+        },
+        "offline_best_fixed_per_prompt": {
+          "method": "offline_best_fixed_per_prompt",
+          "n": 30,
+          "mean_decode_tps": 43.46569139101999,
+          "mean_end_to_end_latency_s": 0.8928006256666738,
+          "mean_verification_latency_s": 0.7191528078333287,
+          "mean_paired_speedup_vs_vanilla": 1.1362391823291214,
+          "paired_speedup_95ci": [
+            1.0836729285824902,
+            1.1940783064591813
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.07749199680379987,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.05536340971614702,
+            0.10060314734835442
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0717572694107764,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.0520582802966436,
+            1.0920640126816994
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 0.0,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.0,
+          "regret_fraction_95ci": [
+            0.0,
+            0.0
+          ],
+          "sequence_exact_match_count": 15.0,
+          "sequence_exact_match_rate": 0.5,
+          "slowdown_count": 4.0,
+          "slowdown_frequency": 0.13333333333333333,
+          "mean_peak_vram_mb": 2111.3690592447915,
+          "mean_acceptance_rate": 0.3234585522680152,
+          "first_divergence_positions": [
+            5,
+            14,
+            17,
+            21,
+            18,
+            21,
+            7,
+            30,
+            30,
+            19,
+            28,
+            22,
+            19,
+            22,
+            16
+          ],
+          "oracle_methods_selected": {
+            "pld_k2": 15,
+            "pld_k8": 12,
+            "pld_k4": 3
+          }
+        }
+      },
+      "router_action_distribution": {
+        "vanilla": 653,
+        "pld": 153
+      }
+    },
+    "heldout": {
+      "methods": {
+        "direct_vanilla": {
+          "method": "direct_vanilla",
+          "n": 14,
+          "mean_decode_tps": 38.54318996195225,
+          "mean_end_to_end_latency_s": 0.9716062219285756,
+          "mean_verification_latency_s": 0.8054230456428522,
+          "mean_paired_speedup_vs_vanilla": 1.0,
+          "paired_speedup_95ci": [
+            1.0,
+            1.0
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.0833569275574205,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.14181748014300716,
+            -0.03288902487124079
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9312178188308895,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.8855483500216609,
+            0.97281341367551
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 7.300039485266254,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.14962527187657773,
+          "regret_fraction_95ci": [
+            0.10295785311521792,
+            0.19954529026825224
+          ],
+          "sequence_exact_match_count": 14.0,
+          "sequence_exact_match_rate": 1.0,
+          "slowdown_count": 0.0,
+          "slowdown_frequency": 0.0,
+          "mean_peak_vram_mb": 2107.42529296875,
+          "mean_acceptance_rate": null,
+          "first_divergence_positions": []
+        },
+        "vanilla_speculative_core_k0": {
+          "method": "vanilla_speculative_core_k0",
+          "n": 14,
+          "mean_decode_tps": 36.67504069533429,
+          "mean_end_to_end_latency_s": 1.0121728562857097,
+          "mean_verification_latency_s": 0.8388516687856793,
+          "mean_paired_speedup_vs_vanilla": 0.9530701541915511,
+          "paired_speedup_95ci": [
+            0.9253885702373866,
+            0.9792703301718252
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.13028677336586952,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.179161039730144,
+            -0.08057572916421128
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.8855623140931118,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.8477773041871643,
+            0.927150466544359
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 9.168188751884216,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.1912266532701538,
+          "regret_fraction_95ci": [
+            0.1462511061730843,
+            0.23550717771664728
+          ],
+          "sequence_exact_match_count": 14.0,
+          "sequence_exact_match_rate": 1.0,
+          "slowdown_count": 10.0,
+          "slowdown_frequency": 0.7142857142857143,
+          "mean_peak_vram_mb": 2108.53564453125,
+          "mean_acceptance_rate": 0.0,
+          "first_divergence_positions": []
+        },
+        "pld_k2": {
+          "method": "pld_k2",
+          "n": 14,
+          "mean_decode_tps": 43.63490509331948,
+          "mean_end_to_end_latency_s": 0.8816056627857165,
+          "mean_verification_latency_s": 0.7094371150714746,
+          "mean_paired_speedup_vs_vanilla": 1.1340035389781005,
+          "paired_speedup_95ci": [
+            1.0813978651453469,
+            1.1939646649075293
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.050646611420680006,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.00757386814361558,
+            0.08760924972769003
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.049157406174916,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.0115851776492384,
+            1.084967115180744
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 2.2083243538990263,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.0437687018898742,
+          "regret_fraction_95ci": [
+            0.0144622737680974,
+            0.08026671814658981
+          ],
+          "sequence_exact_match_count": 11.0,
+          "sequence_exact_match_rate": 0.7857142857142857,
+          "slowdown_count": 1.0,
+          "slowdown_frequency": 0.07142857142857142,
+          "mean_peak_vram_mb": 2110.4193987165177,
+          "mean_acceptance_rate": 0.479421768707483,
+          "first_divergence_positions": [
+            5,
+            20,
+            14
+          ]
+        },
+        "pld_k4": {
+          "method": "pld_k4",
+          "n": 14,
+          "mean_decode_tps": 41.686969288582894,
+          "mean_end_to_end_latency_s": 0.9165424324999988,
+          "mean_verification_latency_s": 0.7427496472857342,
+          "mean_paired_speedup_vs_vanilla": 1.0833569275574206,
+          "paired_speedup_95ci": [
+            1.0311668587745368,
+            1.1416230699959369
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.0,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.0,
+            0.0
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.0,
+            1.0
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 4.156260158635612,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.08798032547218794,
+          "regret_fraction_95ci": [
+            0.06960645276990009,
+            0.10625239360629522
+          ],
+          "sequence_exact_match_count": 14.0,
+          "sequence_exact_match_rate": 1.0,
+          "slowdown_count": 3.0,
+          "slowdown_frequency": 0.21428571428571427,
+          "mean_peak_vram_mb": 2111.1882672991073,
+          "mean_acceptance_rate": 0.346274789478571,
+          "first_divergence_positions": []
+        },
+        "pld_k8": {
+          "method": "pld_k8",
+          "n": 14,
+          "mean_decode_tps": 44.9813099450393,
+          "mean_end_to_end_latency_s": 0.8658963134285703,
+          "mean_verification_latency_s": 0.6934594197142749,
+          "mean_paired_speedup_vs_vanilla": 1.1687867215977474,
+          "paired_speedup_95ci": [
+            1.0926910691212512,
+            1.253073621239144
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.08542979404032681,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.056451504861513076,
+            0.11636977613761294
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0759377257566005,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.051461851414961,
+            1.1015041853477034
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 0.8619195021792052,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.01997922361893429,
+          "regret_fraction_95ci": [
+            0.00701206860356345,
+            0.03532159543466352
+          ],
+          "sequence_exact_match_count": 13.0,
+          "sequence_exact_match_rate": 0.9285714285714286,
+          "slowdown_count": 1.0,
+          "slowdown_frequency": 0.07142857142857142,
+          "mean_peak_vram_mb": 2112.6420549665177,
+          "mean_acceptance_rate": 0.2747951944243163,
+          "first_divergence_positions": [
+            18
+          ]
+        },
+        "cka90_k2": {
+          "method": "cka90_k2",
+          "n": 14,
+          "mean_decode_tps": 35.2815859585644,
+          "mean_end_to_end_latency_s": 1.0487971649285686,
+          "mean_verification_latency_s": 0.340511354857134,
+          "mean_paired_speedup_vs_vanilla": 0.9168695034316409,
+          "paired_speedup_95ci": [
+            0.8795856477634548,
+            0.9556794593985298
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.16648742412577963,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.22562547955846105,
+            -0.10767508851007408
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.8524343116735603,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.8034936876033135,
+            0.9016206646311182
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 10.561643488654104,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.2210091872614504,
+          "regret_fraction_95ci": [
+            0.16609899800643846,
+            0.2730423395734898
+          ],
+          "sequence_exact_match_count": 12.0,
+          "sequence_exact_match_rate": 0.8571428571428571,
+          "slowdown_count": 12.0,
+          "slowdown_frequency": 0.8571428571428571,
+          "mean_peak_vram_mb": 2111.507393973214,
+          "mean_acceptance_rate": 0.8866694899303595,
+          "first_divergence_positions": [
+            11,
+            25
+          ]
+        },
+        "hybrid_router": {
+          "method": "hybrid_router",
+          "n": 14,
+          "mean_decode_tps": 41.476636036043246,
+          "mean_end_to_end_latency_s": 0.919697201928569,
+          "mean_verification_latency_s": 0.7358945385000523,
+          "mean_paired_speedup_vs_vanilla": 1.078454199738514,
+          "paired_speedup_95ci": [
+            1.0216262387663055,
+            1.1417606009665646
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.004902727818906526,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.02706901503267411,
+            0.020491542028997795
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9952516270185894,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.9753322017087342,
+            1.0171826623614044
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 4.36659341117526,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.09237434963472697,
+          "regret_fraction_95ci": [
+            0.06724304066364147,
+            0.11860921723066388
+          ],
+          "sequence_exact_match_count": 14.0,
+          "sequence_exact_match_rate": 1.0,
+          "slowdown_count": 3.0,
+          "slowdown_frequency": 0.21428571428571427,
+          "mean_peak_vram_mb": 2112.768380301339,
+          "mean_acceptance_rate": 0.3192017963341493,
+          "first_divergence_positions": []
+        },
+        "best_fixed_selected_on_development": {
+          "method": "pld_k2",
+          "n": 14,
+          "mean_decode_tps": 43.63490509331948,
+          "mean_end_to_end_latency_s": 0.8816056627857165,
+          "mean_verification_latency_s": 0.7094371150714746,
+          "mean_paired_speedup_vs_vanilla": 1.1340035389781005,
+          "paired_speedup_95ci": [
+            1.0802723042878206,
+            1.192475603897207
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.050646611420680006,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.009556202267276073,
+            0.08859082693165095
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.049157406174916,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.010416181140741,
+            1.0835315044620468
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 2.2083243538990263,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.0437687018898742,
+          "regret_fraction_95ci": [
+            0.014024624904877539,
+            0.07976376870021465
+          ],
+          "sequence_exact_match_count": 11.0,
+          "sequence_exact_match_rate": 0.7857142857142857,
+          "slowdown_count": 1.0,
+          "slowdown_frequency": 0.07142857142857142,
+          "mean_peak_vram_mb": 2110.4193987165177,
+          "mean_acceptance_rate": 0.479421768707483,
+          "first_divergence_positions": [
+            5,
+            20,
+            14
+          ],
+          "selected_fixed_method": "pld_k2"
+        },
+        "offline_best_fixed_per_prompt": {
+          "method": "offline_best_fixed_per_prompt",
+          "n": 14,
+          "mean_decode_tps": 45.843229447218505,
+          "mean_end_to_end_latency_s": 0.8503418239285817,
+          "mean_verification_latency_s": 0.6784080491428556,
+          "mean_paired_speedup_vs_vanilla": 1.1913067037362886,
+          "paired_speedup_95ci": [
+            1.1233284268173092,
+            1.2705410280758218
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.10794977617886822,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.08130913124632266,
+            0.13425695475215485
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.098079005705608,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.0766137154108957,
+            1.1199503833293252
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 0.0,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.0,
+          "regret_fraction_95ci": [
+            0.0,
+            0.0
+          ],
+          "sequence_exact_match_count": 12.0,
+          "sequence_exact_match_rate": 0.8571428571428571,
+          "slowdown_count": 0.0,
+          "slowdown_frequency": 0.0,
+          "mean_peak_vram_mb": 2111.572928292411,
+          "mean_acceptance_rate": 0.3771423641920536,
+          "first_divergence_positions": [
+            5,
+            18
+          ],
+          "oracle_methods_selected": {
+            "pld_k2": 7,
+            "pld_k8": 7
+          }
+        }
+      },
+      "router_action_distribution": {
+        "vanilla": 285,
+        "pld": 76
+      }
+    },
+    "diagnostic": {
+      "methods": {
+        "direct_vanilla": {
+          "method": "direct_vanilla",
+          "n": 16,
+          "mean_decode_tps": 38.06688318815566,
+          "mean_end_to_end_latency_s": 0.9838580527499872,
+          "mean_verification_latency_s": 0.8157653098124875,
+          "mean_paired_speedup_vs_vanilla": 1.0,
+          "paired_speedup_95ci": [
+            1.0,
+            1.0
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.03721366124723502,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.10167169133525555,
+            0.020884975566570554
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9771379981975261,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.9220156420716843,
+            1.029456960114432
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 3.803918580820621,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.07927796033078177,
+          "regret_fraction_95ci": [
+            0.036864415383021806,
+            0.13008472863069684
+          ],
+          "sequence_exact_match_count": 16.0,
+          "sequence_exact_match_rate": 1.0,
+          "slowdown_count": 0.0,
+          "slowdown_frequency": 0.0,
+          "mean_peak_vram_mb": 2107.42529296875,
+          "mean_acceptance_rate": null,
+          "first_divergence_positions": []
+        },
+        "vanilla_speculative_core_k0": {
+          "method": "vanilla_speculative_core_k0",
+          "n": 16,
+          "mean_decode_tps": 37.30384237317289,
+          "mean_end_to_end_latency_s": 0.9986768249375082,
+          "mean_verification_latency_s": 0.8246686126875318,
+          "mean_paired_speedup_vs_vanilla": 0.9807767193316294,
+          "paired_speedup_95ci": [
+            0.9638873228466862,
+            0.9983161857599668
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.05643694191560571,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.12419619859908435,
+            0.00125929654870114
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9579091407796926,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.9030947484346,
+            1.0067555411117572
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 4.2880964966413675,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.09042011180403768,
+          "regret_fraction_95ci": [
+            0.046505647704046284,
+            0.14364403578304175
+          ],
+          "sequence_exact_match_count": 16.0,
+          "sequence_exact_match_rate": 1.0,
+          "slowdown_count": 11.0,
+          "slowdown_frequency": 0.6875,
+          "mean_peak_vram_mb": 2108.53564453125,
+          "mean_acceptance_rate": 0.0,
+          "first_divergence_positions": []
+        },
+        "pld_k2": {
+          "method": "pld_k2",
+          "n": 16,
+          "mean_decode_tps": 40.36169707435147,
+          "mean_end_to_end_latency_s": 0.9449727810000148,
+          "mean_verification_latency_s": 0.7696196605625083,
+          "mean_paired_speedup_vs_vanilla": 1.0613831875329731,
+          "paired_speedup_95ci": [
+            1.0075618829309456,
+            1.124016170939304
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.02416952628573809,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.006024764522005635,
+            0.056571229675362426
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.026275104885015,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.9972535130149934,
+            1.058368971631371
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 1.0236485174948164,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.021366443343122356,
+          "regret_fraction_95ci": [
+            0.007627065622083141,
+            0.03713491542429914
+          ],
+          "sequence_exact_match_count": 7.0,
+          "sequence_exact_match_rate": 0.4375,
+          "slowdown_count": 6.0,
+          "slowdown_frequency": 0.375,
+          "mean_peak_vram_mb": 2110.402099609375,
+          "mean_acceptance_rate": 0.31791914682539685,
+          "first_divergence_positions": [
+            17,
+            7,
+            30,
+            30,
+            19,
+            28,
+            26,
+            22,
+            16
+          ]
+        },
+        "pld_k4": {
+          "method": "pld_k4",
+          "n": 16,
+          "mean_decode_tps": 39.45534598204468,
+          "mean_end_to_end_latency_s": 0.9640644495624926,
+          "mean_verification_latency_s": 0.7897228314999083,
+          "mean_paired_speedup_vs_vanilla": 1.0372136612472351,
+          "paired_speedup_95ci": [
+            0.9797305431055945,
+            1.1031986784612615
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.0,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.0,
+            0.0
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.0,
+            1.0
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 1.9299996098016061,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.04390794880381919,
+          "regret_fraction_95ci": [
+            0.02198376450677092,
+            0.06930080369059897
+          ],
+          "sequence_exact_match_count": 0.0,
+          "sequence_exact_match_rate": 0.0,
+          "slowdown_count": 8.0,
+          "slowdown_frequency": 0.5,
+          "mean_peak_vram_mb": 2111.094696044922,
+          "mean_acceptance_rate": 0.2019588507252981,
+          "first_divergence_positions": [
+            23,
+            26,
+            14,
+            17,
+            21,
+            21,
+            11,
+            30,
+            30,
+            19,
+            28,
+            22,
+            19,
+            22,
+            29,
+            21
+          ]
+        },
+        "pld_k8": {
+          "method": "pld_k8",
+          "n": 16,
+          "mean_decode_tps": 39.45798020856331,
+          "mean_end_to_end_latency_s": 0.9689110109999923,
+          "mean_verification_latency_s": 0.7959626725624958,
+          "mean_paired_speedup_vs_vanilla": 1.0370744509395458,
+          "paired_speedup_95ci": [
+            0.9647971678710029,
+            1.1272467496563294
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.00013921030768931225,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.031109970928291104,
+            0.03483443078710028
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9973757030430108,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.972046398077753,
+            1.0260952897649442
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 1.9273653832829778,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.047820007888214056,
+          "regret_fraction_95ci": [
+            0.025598924709784577,
+            0.07338245527938399
+          ],
+          "sequence_exact_match_count": 1.0,
+          "sequence_exact_match_rate": 0.0625,
+          "slowdown_count": 8.0,
+          "slowdown_frequency": 0.5,
+          "mean_peak_vram_mb": 2112.4146728515625,
+          "mean_acceptance_rate": 0.1583938274066108,
+          "first_divergence_positions": [
+            23,
+            26,
+            14,
+            17,
+            21,
+            21,
+            11,
+            30,
+            30,
+            28,
+            22,
+            19,
+            22,
+            29,
+            21
+          ]
+        },
+        "cka90_k2": {
+          "method": "cka90_k2",
+          "n": 16,
+          "mean_decode_tps": 33.82514048168677,
+          "mean_end_to_end_latency_s": 1.089929698187504,
+          "mean_verification_latency_s": 0.3548816791875673,
+          "mean_paired_speedup_vs_vanilla": 0.8894038824244298,
+          "paired_speedup_95ci": [
+            0.85172712917771,
+            0.9244532342685551
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.14780977882280522,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.2198862457380556,
+            -0.080389775237697
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.8685721539698653,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.8086513312634873,
+            0.9239346818888463
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 7.560205110159511,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.1706637999440884,
+          "regret_fraction_95ci": [
+            0.11934366836098403,
+            0.22445530328539634
+          ],
+          "sequence_exact_match_count": 4.0,
+          "sequence_exact_match_rate": 0.25,
+          "slowdown_count": 15.0,
+          "slowdown_frequency": 0.9375,
+          "mean_peak_vram_mb": 2111.55419921875,
+          "mean_acceptance_rate": 0.8595043995859213,
+          "first_divergence_positions": [
+            23,
+            26,
+            1,
+            14,
+            7,
+            18,
+            19,
+            28,
+            22,
+            22,
+            29,
+            17
+          ]
+        },
+        "hybrid_router": {
+          "method": "hybrid_router",
+          "n": 16,
+          "mean_decode_tps": 38.61113475107076,
+          "mean_end_to_end_latency_s": 0.9812020489375186,
+          "mean_verification_latency_s": 0.7960606019999155,
+          "mean_paired_speedup_vs_vanilla": 1.0148667093305,
+          "paired_speedup_95ci": [
+            0.9557713084659525,
+            1.0769754124471371
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.022346951916735094,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.04711853743606408,
+            0.002200448735934779
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9792022364582773,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.9552143468179941,
+            1.002670091597533
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 2.8950685730399934,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.06696608852601929,
+          "regret_fraction_95ci": [
+            0.039098558278787915,
+            0.09762579559944473
+          ],
+          "sequence_exact_match_count": 2.0,
+          "sequence_exact_match_rate": 0.125,
+          "slowdown_count": 10.0,
+          "slowdown_frequency": 0.625,
+          "mean_peak_vram_mb": 2112.5139770507812,
+          "mean_acceptance_rate": 0.20956527620929793,
+          "first_divergence_positions": [
+            23,
+            26,
+            14,
+            17,
+            21,
+            21,
+            30,
+            30,
+            19,
+            28,
+            19,
+            22,
+            29,
+            21
+          ]
+        },
+        "best_fixed_selected_on_development": {
+          "method": "pld_k2",
+          "n": 16,
+          "mean_decode_tps": 40.36169707435147,
+          "mean_end_to_end_latency_s": 0.9449727810000148,
+          "mean_verification_latency_s": 0.7696196605625083,
+          "mean_paired_speedup_vs_vanilla": 1.0613831875329731,
+          "paired_speedup_95ci": [
+            1.0075920641941765,
+            1.1231645980951912
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.02416952628573809,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.005659026217230079,
+            0.056203699115980756
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.026275104885015,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.9971091660162018,
+            1.058605977080738
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 1.0236485174948164,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.021366443343122356,
+          "regret_fraction_95ci": [
+            0.007825828878870393,
+            0.03747537143847314
+          ],
+          "sequence_exact_match_count": 7.0,
+          "sequence_exact_match_rate": 0.4375,
+          "slowdown_count": 6.0,
+          "slowdown_frequency": 0.375,
+          "mean_peak_vram_mb": 2110.402099609375,
+          "mean_acceptance_rate": 0.31791914682539685,
+          "first_divergence_positions": [
+            17,
+            7,
+            30,
+            30,
+            19,
+            28,
+            26,
+            22,
+            16
+          ],
+          "selected_fixed_method": "pld_k2"
+        },
+        "offline_best_fixed_per_prompt": {
+          "method": "offline_best_fixed_per_prompt",
+          "n": 16,
+          "mean_decode_tps": 41.38534559184629,
+          "mean_end_to_end_latency_s": 0.9299520771875045,
+          "mean_verification_latency_s": 0.7548044716874927,
+          "mean_paired_speedup_vs_vanilla": 1.08805510109785,
+          "paired_speedup_95ci": [
+            1.0223704282561823,
+            1.1691725090681342
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.050841439850615046,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.022810949614896874,
+            0.08309952560102672
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0487257501527987,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.0236049606704465,
+            1.078050815531671
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 0.0,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.0,
+          "regret_fraction_95ci": [
+            0.0,
+            0.0
+          ],
+          "sequence_exact_match_count": 3.0,
+          "sequence_exact_match_rate": 0.1875,
+          "slowdown_count": 4.0,
+          "slowdown_frequency": 0.25,
+          "mean_peak_vram_mb": 2111.190673828125,
+          "mean_acceptance_rate": 0.2764852168344815,
+          "first_divergence_positions": [
+            14,
+            17,
+            21,
+            21,
+            7,
+            30,
+            30,
+            19,
+            28,
+            22,
+            19,
+            22,
+            16
+          ],
+          "oracle_methods_selected": {
+            "pld_k2": 8,
+            "pld_k8": 5,
+            "pld_k4": 3
+          }
+        }
+      },
+      "router_action_distribution": {
+        "vanilla": 368,
+        "pld": 77
+      }
+    },
+    "diagnostic_evaluation": {
+      "methods": {
+        "direct_vanilla": {
+          "method": "direct_vanilla",
+          "n": 8,
+          "mean_decode_tps": 37.554394829457564,
+          "mean_end_to_end_latency_s": 0.9967609387499792,
+          "mean_verification_latency_s": 0.8270916334999825,
+          "mean_paired_speedup_vs_vanilla": 1.0,
+          "paired_speedup_95ci": [
+            1.0,
+            1.0
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.04552038247200281,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.13071431211687745,
+            0.028035436232860714
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9674916289953688,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.8992624238019251,
+            1.0342116942619992
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 3.441059808755739,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.07838065882705954,
+          "regret_fraction_95ci": [
+            0.030464845354259168,
+            0.13010947776252554
+          ],
+          "sequence_exact_match_count": 8.0,
+          "sequence_exact_match_rate": 1.0,
+          "slowdown_count": 0.0,
+          "slowdown_frequency": 0.0,
+          "mean_peak_vram_mb": 2107.42529296875,
+          "mean_acceptance_rate": null,
+          "first_divergence_positions": []
+        },
+        "vanilla_speculative_core_k0": {
+          "method": "vanilla_speculative_core_k0",
+          "n": 8,
+          "mean_decode_tps": 37.39824573056737,
+          "mean_end_to_end_latency_s": 0.9957828348750084,
+          "mean_verification_latency_s": 0.8219844712500759,
+          "mean_paired_speedup_vs_vanilla": 0.9972886759068517,
+          "paired_speedup_95ci": [
+            0.9696844417730262,
+            1.0228624041136614
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.04823170656515119,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.13744716301314397,
+            0.02286636405940795
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9644594693116633,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.8876064514570252,
+            1.0252117939020955
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 3.265217694192642,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.07290972936785636,
+          "regret_fraction_95ci": [
+            0.025678007088806562,
+            0.13449385870865418
+          ],
+          "sequence_exact_match_count": 8.0,
+          "sequence_exact_match_rate": 1.0,
+          "slowdown_count": 3.0,
+          "slowdown_frequency": 0.375,
+          "mean_peak_vram_mb": 2108.53564453125,
+          "mean_acceptance_rate": 0.0,
+          "first_divergence_positions": []
+        },
+        "pld_k2": {
+          "method": "pld_k2",
+          "n": 8,
+          "mean_decode_tps": 39.40777186452386,
+          "mean_end_to_end_latency_s": 0.9622140908750083,
+          "mean_verification_latency_s": 0.785590946374974,
+          "mean_paired_speedup_vs_vanilla": 1.0507171416858196,
+          "paired_speedup_95ci": [
+            0.9856930588714131,
+            1.1134438838925393
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.005196759213816821,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.0378556630691934,
+            0.06128848600890517
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0091103768279492,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.9693589404405409,
+            1.0648168630215287
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 0.9485132847493691,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.021911612147012628,
+          "regret_fraction_95ci": [
+            0.007777888655445224,
+            0.03791930476314406
+          ],
+          "sequence_exact_match_count": 4.0,
+          "sequence_exact_match_rate": 0.5,
+          "slowdown_count": 3.0,
+          "slowdown_frequency": 0.375,
+          "mean_peak_vram_mb": 2110.384521484375,
+          "mean_acceptance_rate": 0.2890128968253968,
+          "first_divergence_positions": [
+            30,
+            19,
+            28,
+            16
+          ]
+        },
+        "pld_k4": {
+          "method": "pld_k4",
+          "n": 8,
+          "mean_decode_tps": 39.23875753013228,
+          "mean_end_to_end_latency_s": 0.9676233238749958,
+          "mean_verification_latency_s": 0.7928494718748382,
+          "mean_paired_speedup_vs_vanilla": 1.0455203824720027,
+          "paired_speedup_95ci": [
+            0.9714867149988788,
+            1.1278530522041672
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.0,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.0,
+            0.0
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.0,
+            1.0
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 1.1175276191409456,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.02735555100085571,
+          "regret_fraction_95ci": [
+            0.0030891505393400415,
+            0.06604372520074504
+          ],
+          "sequence_exact_match_count": 0.0,
+          "sequence_exact_match_rate": 0.0,
+          "slowdown_count": 3.0,
+          "slowdown_frequency": 0.375,
+          "mean_peak_vram_mb": 2111.04931640625,
+          "mean_acceptance_rate": 0.20755321067821067,
+          "first_divergence_positions": [
+            14,
+            21,
+            30,
+            19,
+            28,
+            22,
+            29,
+            21
+          ]
+        },
+        "pld_k8": {
+          "method": "pld_k8",
+          "n": 8,
+          "mean_decode_tps": 38.060436925912704,
+          "mean_end_to_end_latency_s": 0.9892979513749864,
+          "mean_verification_latency_s": 0.8164782777499084,
+          "mean_paired_speedup_vs_vanilla": 1.0146429775253376,
+          "paired_speedup_95ci": [
+            0.9421742804402758,
+            1.0851782663232414
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.030877404946665202,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.06334083878791828,
+            -0.001446616918072574
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9716549031009916,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.9442545937451522,
+            0.9980704446304743
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 2.2958482233605295,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.05509698743093976,
+          "regret_fraction_95ci": [
+            0.01685784008102824,
+            0.09913164671944391
+          ],
+          "sequence_exact_match_count": 1.0,
+          "sequence_exact_match_rate": 0.125,
+          "slowdown_count": 3.0,
+          "slowdown_frequency": 0.375,
+          "mean_peak_vram_mb": 2112.1478881835938,
+          "mean_acceptance_rate": 0.1458367139530065,
+          "first_divergence_positions": [
+            14,
+            21,
+            30,
+            28,
+            22,
+            29,
+            21
+          ]
+        },
+        "cka90_k2": {
+          "method": "cka90_k2",
+          "n": 8,
+          "mean_decode_tps": 32.900164001975014,
+          "mean_end_to_end_latency_s": 1.11803925225,
+          "mean_verification_latency_s": 0.363167948125124,
+          "mean_paired_speedup_vs_vanilla": 0.8780079604856358,
+          "paired_speedup_95ci": [
+            0.8122917216691545,
+            0.9394889915127238
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.167512421986367,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.2599251805724082,
+            -0.07847961933331143
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.847594158340776,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.767531992741193,
+            0.9260167046991271
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 7.456121147298218,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.17971326418639683,
+          "regret_fraction_95ci": [
+            0.12359207126144378,
+            0.24099938429722473
+          ],
+          "sequence_exact_match_count": 1.0,
+          "sequence_exact_match_rate": 0.125,
+          "slowdown_count": 7.0,
+          "slowdown_frequency": 0.875,
+          "mean_peak_vram_mb": 2111.5907592773438,
+          "mean_acceptance_rate": 0.8273750705815923,
+          "first_divergence_positions": [
+            1,
+            18,
+            19,
+            28,
+            22,
+            29,
+            17
+          ]
+        },
+        "hybrid_router": {
+          "method": "hybrid_router",
+          "n": 8,
+          "mean_decode_tps": 38.085176001335114,
+          "mean_end_to_end_latency_s": 0.991663800500028,
+          "mean_verification_latency_s": 0.8062763217499693,
+          "mean_paired_speedup_vs_vanilla": 1.0141576804723897,
+          "paired_speedup_95ci": [
+            0.9436900595525092,
+            1.1057829698598949
+          ],
+          "mean_speedup_difference_vs_pld_k4": -0.03136270199961298,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.06813152839890203,
+            0.005399801979256172
+          ],
+          "paired_tps_ratio_vs_pld_k4": 0.9708287857371191,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.9369780619735039,
+            1.0056502050271499
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 2.512824612467038,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.06218614132787636,
+          "regret_fraction_95ci": [
+            0.026066787906692968,
+            0.10088372535025811
+          ],
+          "sequence_exact_match_count": 1.0,
+          "sequence_exact_match_rate": 0.125,
+          "slowdown_count": 5.0,
+          "slowdown_frequency": 0.625,
+          "mean_peak_vram_mb": 2112.48681640625,
+          "mean_acceptance_rate": 0.20324851778656125,
+          "first_divergence_positions": [
+            14,
+            21,
+            30,
+            19,
+            28,
+            29,
+            21
+          ]
+        },
+        "best_fixed_selected_on_development": {
+          "method": "pld_k2",
+          "n": 8,
+          "mean_decode_tps": 39.40777186452386,
+          "mean_end_to_end_latency_s": 0.9622140908750083,
+          "mean_verification_latency_s": 0.785590946374974,
+          "mean_paired_speedup_vs_vanilla": 1.0507171416858196,
+          "paired_speedup_95ci": [
+            0.9837571659977563,
+            1.115183179368487
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.005196759213816821,
+          "speedup_difference_vs_pld_k4_95ci": [
+            -0.036409480459766705,
+            0.0590486586650434
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0091103768279492,
+          "tps_ratio_vs_pld_k4_95ci": [
+            0.9683195506161753,
+            1.0649523892446133
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 0.9485132847493691,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.021911612147012628,
+          "regret_fraction_95ci": [
+            0.007777888655445224,
+            0.03758433950956966
+          ],
+          "sequence_exact_match_count": 4.0,
+          "sequence_exact_match_rate": 0.5,
+          "slowdown_count": 3.0,
+          "slowdown_frequency": 0.375,
+          "mean_peak_vram_mb": 2110.384521484375,
+          "mean_acceptance_rate": 0.2890128968253968,
+          "first_divergence_positions": [
+            30,
+            19,
+            28,
+            16
+          ],
+          "selected_fixed_method": "pld_k2"
+        },
+        "offline_best_fixed_per_prompt": {
+          "method": "offline_best_fixed_per_prompt",
+          "n": 8,
+          "mean_decode_tps": 40.35628514927323,
+          "mean_end_to_end_latency_s": 0.9455124559999959,
+          "mean_verification_latency_s": 0.769402262749864,
+          "mean_paired_speedup_vs_vanilla": 1.0760521967990007,
+          "paired_speedup_95ci": [
+            0.9995958962466778,
+            1.1510219560554873
+          ],
+          "mean_speedup_difference_vs_pld_k4": 0.030531814326997905,
+          "speedup_difference_vs_pld_k4_95ci": [
+            0.003080630299030551,
+            0.07498511370971515
+          ],
+          "paired_tps_ratio_vs_pld_k4": 1.0311232989949992,
+          "tps_ratio_vs_pld_k4_95ci": [
+            1.0031724639787838,
+            1.076962240731468
+          ],
+          "mean_regret_tps_vs_offline_best_fixed": 0.0,
+          "mean_regret_fraction_vs_offline_best_fixed": 0.0,
+          "regret_fraction_95ci": [
+            0.0,
+            0.0
+          ],
+          "sequence_exact_match_count": 1.0,
+          "sequence_exact_match_rate": 0.125,
+          "slowdown_count": 2.0,
+          "slowdown_frequency": 0.25,
+          "mean_peak_vram_mb": 2111.3756713867188,
+          "mean_acceptance_rate": 0.2347908701768996,
+          "first_divergence_positions": [
+            14,
+            21,
+            30,
+            19,
+            28,
+            22,
+            16
+          ],
+          "oracle_methods_selected": {
+            "pld_k8": 3,
+            "pld_k4": 3,
+            "pld_k2": 2
+          }
+        }
+      },
+      "router_action_distribution": {
+        "vanilla": 194,
+        "pld": 33
+      }
+    }
+  }
+}

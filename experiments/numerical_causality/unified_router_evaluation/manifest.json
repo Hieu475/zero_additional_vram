@@ -1,0 +1,87 @@
+{
+  "execution_commit": "19bcc9d7827b2cc47969b8ad867c6c22e51dddeb",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "tokenizer_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "quantization": {
+    "type": "NF4",
+    "compute_dtype": "float16",
+    "double_quant": true
+  },
+  "attention": "sdpa",
+  "kv_backend": "static",
+  "max_new_tokens": 32,
+  "K_values": {
+    "pld": [
+      2,
+      4,
+      8
+    ],
+    "cka90": 2,
+    "router_pld_max": 4
+  },
+  "candidate_source": "prompt+generated",
+  "methods": [
+    "direct_vanilla",
+    "vanilla_speculative_core_k0",
+    "pld_k2",
+    "pld_k4",
+    "pld_k8",
+    "cka90_k2",
+    "hybrid_router"
+  ],
+  "method_order_seed": 20261015,
+  "randomized_order": "per prompt, seeded Python RNG",
+  "tracing": false,
+  "input_path": "experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl",
+  "input_sha256": "6bc016b39bc280ea519cf2ca120643a16dcf138697f4d5fb17e0fb21e37d6a3a",
+  "diagnostic_ids": [
+    "qasper_119_ctx384",
+    "multi_news_189_ctx384",
+    "qasper_109_ctx384",
+    "gov_report_98_ctx384",
+    "gov_report_134_ctx384",
+    "gov_report_80_ctx384",
+    "qmsum_2_ctx384",
+    "narrativeqa_6_ctx384",
+    "multi_news_143_ctx384",
+    "qmsum_4_ctx384",
+    "qmsum_196_ctx384",
+    "qmsum_54_ctx384",
+    "narrativeqa_155_ctx384",
+    "qasper_163_ctx384",
+    "narrativeqa_139_ctx384",
+    "narrativeqa_55_ctx384"
+  ],
+  "cohort_counts": {
+    "diagnostic": 16,
+    "heldout": 14
+  },
+  "development_split": [
+    "gov_report_80_ctx384",
+    "gov_report_98_ctx384",
+    "multi_news_143_ctx384",
+    "multi_news_189_ctx384",
+    "narrativeqa_155_ctx384",
+    "qasper_119_ctx384",
+    "qasper_163_ctx384",
+    "qmsum_2_ctx384"
+  ],
+  "selection_rule": "choose fixed method by mean decode TPS on the 8 diagnostic development IDs; held-out is never used to select",
+  "fixed_method_candidates": [
+    "pld_k2",
+    "pld_k4",
+    "pld_k8",
+    "cka90_k2"
+  ],
+  "limitations": "WP3 prepared-input heldout subset is 14 prompts; development prompt IDs are mismatch-diagnostic and may not represent natural traffic.",
+  "python": "3.12.13",
+  "torch": "2.11.0+cu128",
+  "transformers": "5.14.1",
+  "bitsandbytes": "0.50.0",
+  "cuda": "12.8",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "raw_file": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/experiments/numerical_causality/unified_router_evaluation/raw_measurements.jsonl",
+  "raw_sha256": "0ecfc53182437a05011378b5ceccbb1e906a60ebf95724af5bc5408c36522011",
+  "record_count": 210
+}
