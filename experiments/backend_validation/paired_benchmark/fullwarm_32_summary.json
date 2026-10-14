@@ -1,0 +1,111 @@
+{
+  "scope": "one prompt, one repetition per backend and method; 32-token warmup and output; diagnostic only",
+  "prompt_id": "qasper_119_ctx384",
+  "prompt_tokens": 384,
+  "prompt_token_ids_sha256": "e617342159463f01ca6f06e54a06f40887d8f37f42b8930e7b1f5350d1dae479",
+  "max_new_tokens": 32,
+  "backends": {
+    "hf_bnb_nf4": {
+      "vanilla": {
+        "decode_tokens_per_second": 37.155831065273865,
+        "internal_speedup": 1.0,
+        "end_to_end_seconds": 1.041880923000008,
+        "prefill_seconds": 0.20755696600008378,
+        "within_backend_exact_vs_vanilla": true,
+        "first_divergence_vs_vanilla": null,
+        "peak_allocated_mb": 2107.2841796875,
+        "peak_reserved_mb": 2206.0,
+        "acceptance_rate": null,
+        "execution_order": [
+          "pld_k4",
+          "vanilla",
+          "cka90_k2"
+        ]
+      },
+      "pld_k4": {
+        "decode_tokens_per_second": 33.446553838158486,
+        "internal_speedup": 0.9001697143955932,
+        "end_to_end_seconds": 1.137969806000001,
+        "prefill_seconds": 0.21111796500008495,
+        "within_backend_exact_vs_vanilla": false,
+        "first_divergence_vs_vanilla": 23,
+        "peak_allocated_mb": 2111.06884765625,
+        "peak_reserved_mb": 2206.0,
+        "acceptance_rate": 0.21052631578947367,
+        "execution_order": [
+          "pld_k4",
+          "vanilla",
+          "cka90_k2"
+        ]
+      },
+      "cka90_k2": {
+        "decode_tokens_per_second": 33.634701196376064,
+        "internal_speedup": 0.9052334514409859,
+        "end_to_end_seconds": 1.1210711590000528,
+        "prefill_seconds": 0.19940398500000356,
+        "within_backend_exact_vs_vanilla": false,
+        "first_divergence_vs_vanilla": 23,
+        "peak_allocated_mb": 2110.865234375,
+        "peak_reserved_mb": 2206.0,
+        "acceptance_rate": 1.0,
+        "execution_order": [
+          "pld_k4",
+          "vanilla",
+          "cka90_k2"
+        ]
+      }
+    },
+    "hqq_gemlite_w4a16": {
+      "vanilla": {
+        "decode_tokens_per_second": 23.66184306841715,
+        "internal_speedup": 1.0,
+        "end_to_end_seconds": 1.5683222449999903,
+        "prefill_seconds": 0.2581960679999611,
+        "within_backend_exact_vs_vanilla": true,
+        "first_divergence_vs_vanilla": null,
+        "peak_allocated_mb": 2224.44775390625,
+        "peak_reserved_mb": 2796.0,
+        "acceptance_rate": null,
+        "execution_order": [
+          "pld_k4",
+          "vanilla",
+          "cka90_k2"
+        ]
+      },
+      "pld_k4": {
+        "decode_tokens_per_second": 20.921802863985647,
+        "internal_speedup": 0.8842000516819929,
+        "end_to_end_seconds": 1.7264579740000272,
+        "prefill_seconds": 0.2447501020000118,
+        "within_backend_exact_vs_vanilla": true,
+        "first_divergence_vs_vanilla": null,
+        "peak_allocated_mb": 2228.34716796875,
+        "peak_reserved_mb": 2796.0,
+        "acceptance_rate": 0.0625,
+        "execution_order": [
+          "pld_k4",
+          "vanilla",
+          "cka90_k2"
+        ]
+      },
+      "cka90_k2": {
+        "decode_tokens_per_second": 20.184614737104997,
+        "internal_speedup": 0.8530449077336071,
+        "end_to_end_seconds": 1.7859347739999976,
+        "prefill_seconds": 0.25011155400000007,
+        "within_backend_exact_vs_vanilla": true,
+        "first_divergence_vs_vanilla": null,
+        "peak_allocated_mb": 2228.00537109375,
+        "peak_reserved_mb": 2796.0,
+        "acceptance_rate": 1.0,
+        "execution_order": [
+          "pld_k4",
+          "vanilla",
+          "cka90_k2"
+        ]
+      }
+    }
+  },
+  "cross_backend_vanilla_exact": false,
+  "cross_backend_vanilla_first_difference": 3
+}

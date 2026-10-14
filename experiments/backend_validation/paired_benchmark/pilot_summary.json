@@ -1,0 +1,83 @@
+{
+  "scope": "diagnostic pilot only; one prompt, one repetition, 8 output tokens, 8-token warmup",
+  "prompt_id": "qasper_119_ctx384",
+  "prompt_tokens": 384,
+  "prompt_token_ids_sha256": "e617342159463f01ca6f06e54a06f40887d8f37f42b8930e7b1f5350d1dae479",
+  "max_new_tokens": 8,
+  "backends": {
+    "hf_bnb_nf4": {
+      "vanilla": {
+        "decode_tokens_per_second": 38.45043642618989,
+        "end_to_end_seconds": 0.3487906639999778,
+        "ttft_prefill_seconds": 0.1667381139999975,
+        "internal_decode_speedup": 1.0,
+        "within_backend_exact_vs_vanilla": true,
+        "first_divergence_vs_vanilla": null,
+        "peak_allocated_mb": 2107.2841796875,
+        "peak_reserved_mb": 2206.0,
+        "acceptance_rate": null
+      },
+      "pld_k4": {
+        "decode_tokens_per_second": 32.90391839602969,
+        "end_to_end_seconds": 0.3846852720000129,
+        "ttft_prefill_seconds": 0.17194465200003606,
+        "internal_decode_speedup": 0.8557488927126382,
+        "within_backend_exact_vs_vanilla": true,
+        "first_divergence_vs_vanilla": null,
+        "peak_allocated_mb": 2107.2841796875,
+        "peak_reserved_mb": 2206.0,
+        "acceptance_rate": 0.0
+      },
+      "cka90_k2": {
+        "decode_tokens_per_second": 35.10313846178453,
+        "end_to_end_seconds": 0.3650331700000038,
+        "ttft_prefill_seconds": 0.16562080099998866,
+        "internal_decode_speedup": 0.9129451242814659,
+        "within_backend_exact_vs_vanilla": true,
+        "first_divergence_vs_vanilla": null,
+        "peak_allocated_mb": 2110.771484375,
+        "peak_reserved_mb": 2206.0,
+        "acceptance_rate": 1.0
+      }
+    },
+    "hqq_gemlite_w4a16": {
+      "vanilla": {
+        "decode_tokens_per_second": 28.4438787887056,
+        "end_to_end_seconds": 0.41374854599996524,
+        "ttft_prefill_seconds": 0.16764990199999374,
+        "internal_decode_speedup": 1.0,
+        "within_backend_exact_vs_vanilla": true,
+        "first_divergence_vs_vanilla": null,
+        "peak_allocated_mb": 2224.44775390625,
+        "peak_reserved_mb": 2796.0,
+        "acceptance_rate": null
+      },
+      "pld_k4": {
+        "decode_tokens_per_second": 21.666860956506003,
+        "end_to_end_seconds": 0.4949175129999617,
+        "ttft_prefill_seconds": 0.17184348699998964,
+        "internal_decode_speedup": 0.7617407287331504,
+        "within_backend_exact_vs_vanilla": true,
+        "first_divergence_vs_vanilla": null,
+        "peak_allocated_mb": 2224.44775390625,
+        "peak_reserved_mb": 2796.0,
+        "acceptance_rate": 0.0
+      },
+      "cka90_k2": {
+        "decode_tokens_per_second": 22.35001107123659,
+        "end_to_end_seconds": 0.48247680100001844,
+        "ttft_prefill_seconds": 0.16927785100000392,
+        "internal_decode_speedup": 0.7857582025736679,
+        "within_backend_exact_vs_vanilla": true,
+        "first_divergence_vs_vanilla": null,
+        "peak_allocated_mb": 2228.00537109375,
+        "peak_reserved_mb": 2796.0,
+        "acceptance_rate": 1.0
+      }
+    }
+  },
+  "cross_backend_vanilla_first_token_difference": 3,
+  "cross_backend_vanilla_exact": false,
+  "excluded_cold_warmup_file": "hqq_smoke_paired.jsonl",
+  "exclusion_reason": "one-token warmup did not exercise the full CKA speculative path; measured CKA latency included cold-path setup and is not a comparable warm result"
+}
