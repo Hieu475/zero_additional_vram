@@ -1,0 +1,129 @@
+{
+  "audit_kind": "static_and_local_environment_screening",
+  "execution_commit": "4d5e54f91a973a17b9e88aee52fed03f2717d2c9",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "compute_capability": [
+      8,
+      9
+    ],
+    "cuda_available": true,
+    "total_memory_bytes": 6053232640
+  },
+  "software": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "transformers": "5.14.1",
+    "packages": {
+      "bitsandbytes": {
+        "installed": true,
+        "version": "0.50.0"
+      },
+      "hqq": {
+        "installed": true,
+        "version": "0.2.8.post1"
+      },
+      "gemlite": {
+        "installed": true,
+        "version": "0.6.0.post2"
+      },
+      "torchao": {
+        "installed": false,
+        "version": null
+      },
+      "vllm": {
+        "installed": true,
+        "version": "0.25.1"
+      },
+      "tensorrt-llm": {
+        "installed": false,
+        "version": null
+      }
+    }
+  },
+  "model_config": {
+    "available_in_local_hf_cache": true,
+    "model_type": "qwen2",
+    "architectures": [
+      "Qwen2ForCausalLM"
+    ],
+    "num_hidden_layers": 36,
+    "hidden_size": 2048
+  },
+  "current_code_interfaces": {
+    "qwen_layer_path_supported": true,
+    "layer_skip_context_manager_present": true,
+    "custom_cache_accepts_hf_cache_object": true,
+    "speculative_code_passes_custom_cache": true
+  },
+  "candidates": [
+    {
+      "backend": "HF + bitsandbytes NF4",
+      "local_status": "tested_baseline",
+      "gpu_qwen_support": "confirmed_by_existing_runs",
+      "layer_skip_custom_verification": "confirmed_in_current_code",
+      "notes": "Reference stack; 6 GB compatibility already demonstrated by WP1-WP4."
+    },
+    {
+      "backend": "HF + HQQ W4A16 + GemLite",
+      "local_status": "smoke_passed_via_manual_linear_patch",
+      "gpu_qwen_support": "RTX_4050_Qwen2.5-3B_smoke_passed",
+      "layer_skip_custom_verification": "PLD_K4_and_CKA90_K2_static_KV_smoke_passed",
+      "notes": "HQQ replaces torch.nn.Linear modules and documents FP16, 4-bit, axis=1; GemLite uses Triton low-bit kernels. Built-in Transformers HQQ loading is not implemented in Transformers 5.14.1; a manual HQQ/GemLite linear patch retained the Qwen2 module tree and passed one-prompt vanilla, PLD K4 and CKA90/K2 smoke."
+    },
+    {
+      "backend": "HF + HQQ torchao_int4 fused kernel",
+      "local_status": "dependencies_missing",
+      "gpu_qwen_support": "Ada_tested_by_HQQ_adapter_source",
+      "layer_skip_custom_verification": "architecture_should_be_preserved; runtime_unverified",
+      "notes": "HQQ's adapter says it was tested on Ada, matching RTX 4050's SM 8.9, but requires BF16 compute, axis=1, W4 and supported group sizes. This changes compute precision from the FP16 reference."
+    },
+    {
+      "backend": "HF + torch.compile on BNB NF4",
+      "local_status": "compile_not_attempted",
+      "gpu_qwen_support": "same_model_and_gpu_as_baseline",
+      "layer_skip_custom_verification": "dynamic_control_flow_and_cache_recompile_risk",
+      "notes": "Preserves weight format, but BNB custom linear ops and speculative shape changes require a compile smoke test; not selected before kernel backend audit."
+    },
+    {
+      "backend": "vLLM",
+      "local_status": "installed",
+      "gpu_qwen_support": "package_present_but_model_and_6GB_smoke_unverified",
+      "layer_skip_custom_verification": "custom_layer_skip_and_cache_intervention_not_established",
+      "notes": "Use as serving-stack comparison later; not a controlled first integration for current layer-skip path."
+    },
+    {
+      "backend": "TensorRT-LLM",
+      "local_status": "not_installed",
+      "gpu_qwen_support": "not_locally_verified",
+      "layer_skip_custom_verification": "requires_engine_level_integration",
+      "notes": "Not selected for first second-backend experiment because it would change cache and verification ownership."
+    }
+  ],
+  "runtime_smoke": {
+    "artifact": "experiments/backend_validation/compatibility/hqq_gemlite_smoke.json",
+    "sha256": "aa1ef769d7dc1dcdee8619ce04c0a17d687bbf534e6e280aad51a622539d9fa8",
+    "passed": true,
+    "loader_path": "manual_hqq_gemlite_linear_patch",
+    "hqq_version": "0.2.8.post1",
+    "gemlite_version": "0.6.0.post2",
+    "vanilla_static_kv_passed": true,
+    "pld_k4_ran_and_exact": true,
+    "cka90_k2_ran_and_exact": true,
+    "peak_allocated_mb": 2489.51123046875
+  },
+  "recommended_next_candidate": "HQQ W4A16 + GemLite linear kernels in the existing Transformers Qwen2 model",
+  "decision": "HQQ+GemLite passes the one-prompt runtime compatibility gate through its manual Transformers linear patch: Qwen2.5-3B loaded on RTX 4050, 36-layer access remained intact, static KV vanilla ran, and PLD K4 plus CKA90/K2 completed with exact token agreement against this backend's vanilla output. The built-in Transformers HQQ quantization_config route is blocked by an unimplemented get_quantize_ops() in Transformers 5.14.1; preserve the manual patch path and verify across more prompts before performance integration.",
+  "sources": {
+    "hf_hqq": "https://huggingface.co/docs/transformers/v5.13.0/en/quantization/hqq",
+    "hqq_readme": "https://github.com/dropbox/hqq/blob/master/Readme.md",
+    "hqq_torchao_adapter": "https://github.com/dropbox/hqq/blob/master/hqq/backends/torchao.py",
+    "gemlite_readme": "https://github.com/dropbox/gemlite",
+    "torchao_inference": "https://docs.pytorch.org/ao/stable/workflows/inference.html",
+    "torchao_hqq_proto": "https://github.com/pytorch/ao/tree/main/torchao/prototype/hqq",
+    "vllm_quantization": "https://docs.vllm.ai/en/stable/features/quantization/"
+  }
+}
