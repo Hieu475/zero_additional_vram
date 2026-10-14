@@ -1,0 +1,96 @@
+{
+  "execution_commit": "19bcc9d7827b2cc47969b8ad867c6c22e51dddeb",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "tokenizer_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "quantization": {
+    "type": "NF4",
+    "compute_dtype": "float16",
+    "double_quant": true
+  },
+  "max_new_tokens": 32,
+  "K": 4,
+  "ngram_size": 3,
+  "candidate_source": "prompt+generated",
+  "seed_note": "greedy decoding; no random sampling",
+  "input_file": "experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl",
+  "input_sha256": "6bc016b39bc280ea519cf2ca120643a16dcf138697f4d5fb17e0fb21e37d6a3a",
+  "trace_config_sha256": "222feddef412c21f0493235403b5154b2141d776230b7eaa32faae625c0a3e2d",
+  "cohort_counts": {
+    "diagnostic": 16,
+    "heldout": 14
+  },
+  "hardware": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "cuda": "12.8",
+  "torch": "2.11.0+cu128",
+  "transformers": "5.14.1",
+  "python": "3.12.13",
+  "configs": [
+    "sdpa_static",
+    "eager_static",
+    "sdpa_dynamic",
+    "sdpa_static_sequential"
+  ],
+  "summaries": [
+    {
+      "config": "sdpa_static",
+      "output": "experiments/numerical_causality/precision_validation_final/sdpa_static.jsonl",
+      "n": 30,
+      "cohort_counts": {
+        "diagnostic": 16,
+        "heldout": 14
+      },
+      "sequence_exact_match_rate": 0.4666666666666667,
+      "token_argmax_agreement_mean": 0.8416666666666667,
+      "first_token_divergences": 16,
+      "mean_tps": 25.75518709989872,
+      "mean_verification_latency_s": 0.8372345675335964,
+      "mean_peak_vram_mb": 2111.01689453125
+    },
+    {
+      "config": "eager_static",
+      "output": "experiments/numerical_causality/precision_validation_final/eager_static.jsonl",
+      "n": 30,
+      "cohort_counts": {
+        "diagnostic": 16,
+        "heldout": 14
+      },
+      "sequence_exact_match_rate": 0.7333333333333333,
+      "token_argmax_agreement_mean": 0.8677083333333333,
+      "first_token_divergences": 8,
+      "mean_tps": 23.36680771951431,
+      "mean_verification_latency_s": 0.9495197067629003,
+      "mean_peak_vram_mb": 2616.789518229167
+    },
+    {
+      "config": "sdpa_dynamic",
+      "output": "experiments/numerical_causality/precision_validation_final/sdpa_dynamic.jsonl",
+      "n": 30,
+      "cohort_counts": {
+        "diagnostic": 16,
+        "heldout": 14
+      },
+      "sequence_exact_match_rate": 0.4666666666666667,
+      "token_argmax_agreement_mean": 0.8416666666666667,
+      "first_token_divergences": 16,
+      "mean_tps": 26.047686339592907,
+      "mean_verification_latency_s": 0.8629245468619047,
+      "mean_peak_vram_mb": 2476.5176920572917
+    },
+    {
+      "config": "sdpa_static_sequential",
+      "output": "experiments/numerical_causality/precision_validation_final/sdpa_static_sequential.jsonl",
+      "n": 30,
+      "cohort_counts": {
+        "diagnostic": 16,
+        "heldout": 14
+      },
+      "sequence_exact_match_rate": 1.0,
+      "token_argmax_agreement_mean": 1.0,
+      "first_token_divergences": 0,
+      "mean_tps": 23.185233933078063,
+      "mean_verification_latency_s": 0.9518034078282653,
+      "mean_peak_vram_mb": 2294.9228515625
+    }
+  ]
+}
