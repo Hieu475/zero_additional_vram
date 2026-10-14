@@ -10,6 +10,8 @@ via exact n-gram matching, then verifies them in parallel with TargetKVCache.
 from __future__ import annotations
 
 import logging
+import hashlib
+import json
 import time
 from typing import Optional
 
@@ -62,6 +64,7 @@ def prompt_lookup_generate(
     sequential_verify: bool = False,
     kv_cache_max_capacity: int = 2048,
     numerical_trace: list[dict] | None = None,
+    lightweight_trace: list[dict] | None = None,
 ) -> tuple[str, SpeculativeMetrics]:
     """Generate text using Prompt Lookup Decoding (PLD).
 
@@ -203,7 +206,8 @@ def prompt_lookup_generate(
 
         if actual_k == 0:
             # Fallback single-token forward pass
-            trace_prefix = list(full_history) if numerical_trace is not None else None
+            trace_prefix = list(full_history) if numerical_trace is not None or lightweight_trace is not None else None
+            light_cache_before = int(target_kv.get_seq_length()) if lightweight_trace is not None else None
             trace_cache_before = (_snapshot_active_kv(target_kv.cache)
                                   if numerical_trace is not None else None)
             t_v_start = time.perf_counter()
@@ -257,6 +261,22 @@ def prompt_lookup_generate(
                     "cache_after": _snapshot_active_kv(target_kv.cache),
                     "verify_logits": trace_logits,
                     "verify_argmax": trace_argmax,
+                    "selected_next_token_id": next_tok,
+                    "verification_mode": "vanilla_fallback",
+                })
+            if lightweight_trace is not None:
+                lightweight_trace.append({
+                    "cycle_index": len(lightweight_trace),
+                    "prefix_token_ids_hash": hashlib.sha256(json.dumps(trace_prefix, separators=(",", ":")).encode()).hexdigest(),
+                    "draft_candidate_ids": [],
+                    "accepted_prefix_length": 0,
+                    "emitted_token_ids": [curr_target_tok],
+                    "verification_input_token_id": curr_target_tok,
+                    "selected_next_token_id": next_tok,
+                    "kv_length_before": light_cache_before,
+                    "kv_length_after": int(target_kv.get_seq_length()),
+                    "remaining_budget_before": max_new_tokens - len(generated_token_ids),
+                    "eos_reached": curr_target_tok == tokenizer.eos_token_id,
                     "verification_mode": "vanilla_fallback",
                 })
             generated_token_ids.append(curr_target_tok)
@@ -274,6 +294,8 @@ def prompt_lookup_generate(
         cand_ids = [curr_target_tok] + candidate_tokens
         cand_tensor = torch.tensor([cand_ids], device=device)
         trace_before = _snapshot_active_kv(target_kv.cache) if numerical_trace is not None else None
+        light_prefix = list(full_history) if lightweight_trace is not None else None
+        light_cache_before = int(target_kv.get_seq_length()) if lightweight_trace is not None else None
 
         t_verify_start = time.perf_counter()
         if sequential_verify:
@@ -365,6 +387,8 @@ def prompt_lookup_generate(
                 curr_target_tok = bonus_tok
                 curr_target_tok_tensor = torch.tensor([[curr_target_tok]], device=device)
 
+        selected_next_token_id = curr_target_tok
+
         metrics.total_accepted_tokens += num_accepted_draft
         generated_token_ids.extend(cycle_emitted)
         full_history.extend(cycle_emitted)
@@ -393,6 +417,22 @@ def prompt_lookup_generate(
                 "cache_after": _snapshot_active_kv(target_kv.cache),
                 "verify_logits": trace_logits,
                 "verify_argmax": verify_logits[0].argmax(dim=-1).detach().cpu().tolist(),
+                "selected_next_token_id": selected_next_token_id,
+                "verification_mode": "sequential" if sequential_verify else "batched",
+            })
+        if lightweight_trace is not None:
+            lightweight_trace.append({
+                "cycle_index": len(lightweight_trace),
+                "prefix_token_ids_hash": hashlib.sha256(json.dumps(light_prefix, separators=(",", ":")).encode()).hexdigest(),
+                "draft_candidate_ids": list(candidate_tokens),
+                "verification_input_token_id": cand_ids[0],
+                "selected_next_token_id": selected_next_token_id,
+                "accepted_prefix_length": num_accepted_draft,
+                "emitted_token_ids": list(cycle_emitted),
+                "kv_length_before": light_cache_before,
+                "kv_length_after": int(target_kv.get_seq_length()),
+                "remaining_budget_before": max_new_tokens - len(generated_token_ids) + len(cycle_emitted),
+                "eos_reached": any(t == tokenizer.eos_token_id for t in cycle_emitted),
                 "verification_mode": "sequential" if sequential_verify else "batched",
             })
 
