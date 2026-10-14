@@ -97,91 +97,123 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--backend", choices=("hf_bnb_nf4", "hqq_gemlite_w4a16"), required=True)
     ap.add_argument("--prompt-id", default="qasper_119_ctx384")
+    ap.add_argument("--prompt-ids-file", type=Path,
+                    help="optional newline-delimited cohort; overrides --prompt-id")
     ap.add_argument("--max-new-tokens", type=int, default=32)
     ap.add_argument("--capacity", type=int, default=436)
     ap.add_argument("--repeats", type=int, default=1)
     ap.add_argument("--warmup-tokens", type=int, default=32)
     ap.add_argument("--seed", type=int, default=20261014)
+    ap.add_argument("--session-id", default="session1")
     ap.add_argument("--device", default="cuda:0")
     ap.add_argument("--output", type=Path, required=True)
     args = ap.parse_args()
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA required")
     rows = [json.loads(line) for line in INPUTS.read_text().splitlines() if line.strip()]
-    row = next(item for item in rows if item["prompt_id"] == args.prompt_id)
-    ids = list(row["input_ids"])
+    row_by_id = {item["prompt_id"]: item for item in rows}
+    prompt_ids = ([line.strip() for line in args.prompt_ids_file.read_text().splitlines() if line.strip()]
+                  if args.prompt_ids_file else [args.prompt_id])
+    if not prompt_ids or len(prompt_ids) != len(set(prompt_ids)):
+        raise ValueError("prompt cohort must be nonempty and contain unique prompt IDs")
+    missing = [prompt_id for prompt_id in prompt_ids if prompt_id not in row_by_id]
+    if missing:
+        raise ValueError(f"prompt IDs missing from prepared inputs: {missing}")
     if args.warmup_tokens <= 0:
         raise ValueError("warmup token count must be positive")
-    if len(ids) + max(args.max_new_tokens, args.warmup_tokens) + 4 > args.capacity:
-        raise ValueError("KV capacity must cover prompt, generation budget, and safety margin")
     loaded = load_backend(args.backend, MODEL, REVISION, args.device, "sdpa")
     if len(ModelAdapter(loaded.model).get_layers()) != 36:
         raise RuntimeError("unexpected Qwen layer count; layer-skip compatibility gate failed")
     adapter = ModelAdapter(loaded.model)
     manager = LayerManager(adapter)
-    prompt_hash = hashlib.sha256(json.dumps(ids, separators=(",", ":")).encode()).hexdigest()
     rng = random.Random(args.seed)
     out = args.output if args.output.is_absolute() else ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
-    rows_out = []
-    for repetition in range(args.repeats):
-        # Warm each path once, outside the measured trial, to trigger lazy kernels/JIT.
-        for method in METHODS:
-            warm = invoke(method, loaded, manager, ids, args.warmup_tokens,
-                          args.capacity, args.device)
-            if not warm["token_ids"]:
-                raise RuntimeError(f"warmup emitted no tokens: {method}")
-        torch.cuda.synchronize(args.device)
-        order = list(METHODS)
-        rng.shuffle(order)
-        measured: dict[str, dict] = {}
-        for method in order:
-            torch.cuda.reset_peak_memory_stats(args.device)
-            torch.cuda.synchronize(args.device)
-            result = invoke(method, loaded, manager, ids, args.max_new_tokens,
-                            args.capacity, args.device)
-            torch.cuda.synchronize(args.device)
-            result["peak_allocated_mb"] = torch.cuda.max_memory_allocated(args.device) / 2**20
-            result["peak_reserved_mb"] = torch.cuda.max_memory_reserved(args.device) / 2**20
-            measured[method] = result
-        vanilla_ids = measured["vanilla"]["token_ids"]
-        for method in METHODS:
-            result = measured[method]
-            tokens = result["token_ids"]
-            mismatch = next((i for i, (a, b) in enumerate(zip(tokens, vanilla_ids)) if a != b), None)
-            if mismatch is None and len(tokens) != len(vanilla_ids):
-                mismatch = min(len(tokens), len(vanilla_ids))
-            rows_out.append({
-                "backend": args.backend, "backend_metadata": loaded.metadata,
-                "model": MODEL, "model_revision": REVISION,
-                "prompt_id": args.prompt_id, "prompt_token_ids_sha256": prompt_hash,
-                "prompt_tokens": len(ids), "max_new_tokens": args.max_new_tokens,
-                "kv_capacity": args.capacity, "method": method,
-                "repetition": repetition, "balanced_order_seed": args.seed,
-                "execution_order": order, "token_ids": tokens,
-                "warmup_tokens": args.warmup_tokens,
-                "within_backend_exact_vs_vanilla": tokens == vanilla_ids,
-                "first_divergence_vs_vanilla": mismatch,
-                **{k: v for k, v in result.items() if k != "token_ids"},
-            })
     runtime = {
         "torch": torch.__version__, "cuda": torch.version.cuda,
         "gpu": torch.cuda.get_device_name(args.device),
         "compute_capability": list(torch.cuda.get_device_capability(args.device)),
         "execution_commit": subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
                                             capture_output=True, text=True, check=True).stdout.strip(),
-        "measurement_scope": "single prompt/backend; full-budget warmup excluded; paired methods with randomized order; diagnostic pilot",
+        "measurement_scope": "paired methods; full-budget warmup excluded; randomized balanced order; diagnostic cohort run",
         "working_tree_dirty": subprocess.run(["git", "status", "--porcelain"], cwd=ROOT,
                                              capture_output=True, text=True, check=True).stdout.strip() != "",
     }
-    with out.open("a") as handle:
-        for record in rows_out:
-            record["runtime"] = runtime
-            handle.write(json.dumps(record) + "\n")
-    print(json.dumps({"backend": args.backend, "prompt_id": args.prompt_id,
-                      "repetitions": args.repeats, "records_written": len(rows_out),
-                      "output": str(out), "exact": {r["method"]: r["within_backend_exact_vs_vanilla"]
-                                                     for r in rows_out[-len(METHODS):]}}, indent=2))
+    # Rotate all six permutations across prompts, then shuffle their assignment.
+    import itertools
+    orders = list(itertools.permutations(METHODS))
+    rng.shuffle(orders)
+    records_written = 0
+    for prompt_index, prompt_id in enumerate(prompt_ids):
+        ids = list(row_by_id[prompt_id]["input_ids"])
+        if len(ids) + max(args.max_new_tokens, args.warmup_tokens) + 4 > args.capacity:
+            raise ValueError(f"KV capacity too small for {prompt_id}: {len(ids)} input tokens")
+        prompt_hash = hashlib.sha256(json.dumps(ids, separators=(",", ":")).encode()).hexdigest()
+        for repetition in range(args.repeats):
+            # Warm every path first to trigger lazy kernels/JIT with the full budget.
+            warmup_status: dict[str, dict] = {}
+            for method in METHODS:
+                try:
+                    warm = invoke(method, loaded, manager, ids, args.warmup_tokens,
+                                  args.capacity, args.device)
+                    warmup_status[method] = {"passed": bool(warm["token_ids"])}
+                except Exception as exc:
+                    warmup_status[method] = {"passed": False, "error_type": type(exc).__name__,
+                                             "error": str(exc)}
+                    if isinstance(exc, torch.cuda.OutOfMemoryError):
+                        torch.cuda.empty_cache()
+            torch.cuda.synchronize(args.device)
+            order = list(orders[(prompt_index * args.repeats + repetition) % len(orders)])
+            measured: dict[str, dict] = {}
+            for method in order:
+                torch.cuda.reset_peak_memory_stats(args.device)
+                torch.cuda.synchronize(args.device)
+                try:
+                    result = invoke(method, loaded, manager, ids, args.max_new_tokens,
+                                    args.capacity, args.device)
+                    torch.cuda.synchronize(args.device)
+                    result["peak_allocated_mb"] = torch.cuda.max_memory_allocated(args.device) / 2**20
+                    result["peak_reserved_mb"] = torch.cuda.max_memory_reserved(args.device) / 2**20
+                    measured[method] = result
+                except Exception as exc:
+                    measured[method] = {"status": "failed", "error_type": type(exc).__name__,
+                                        "error": str(exc)}
+                    if isinstance(exc, torch.cuda.OutOfMemoryError):
+                        torch.cuda.empty_cache()
+            vanilla_ids = measured.get("vanilla", {}).get("token_ids")
+            with out.open("a") as handle:
+                for method in METHODS:
+                    result = measured[method]
+                    tokens = result.get("token_ids", [])
+                    mismatch = None
+                    exact = None
+                    if vanilla_ids is not None and "token_ids" in result:
+                        mismatch = next((i for i, (a, b) in enumerate(zip(tokens, vanilla_ids)) if a != b), None)
+                        if mismatch is None and len(tokens) != len(vanilla_ids):
+                            mismatch = min(len(tokens), len(vanilla_ids))
+                        exact = tokens == vanilla_ids
+                    record = {
+                        "backend": args.backend, "backend_metadata": loaded.metadata,
+                        "model": MODEL, "model_revision": REVISION,
+                        "prompt_id": prompt_id, "prompt_token_ids_sha256": prompt_hash,
+                        "prompt_tokens": len(ids), "max_new_tokens": args.max_new_tokens,
+                        "kv_capacity": args.capacity, "method": method,
+                        "repetition": repetition, "session_id": args.session_id,
+                        "order_seed": args.seed, "execution_order": order,
+                        "token_ids": tokens, "warmup_tokens": args.warmup_tokens,
+                        "warmup_status": warmup_status[method],
+                        "within_backend_exact_vs_vanilla": exact,
+                        "first_divergence_vs_vanilla": mismatch,
+                        "status": result.get("status", "ok"),
+                        "runtime": runtime,
+                        **{k: v for k, v in result.items() if k not in {"token_ids", "status"}},
+                    }
+                    handle.write(json.dumps(record) + "\n")
+                handle.flush()
+            records_written += len(METHODS)
+    print(json.dumps({"backend": args.backend, "prompt_ids": prompt_ids,
+                      "repetitions": args.repeats, "session_id": args.session_id,
+                      "records_written": records_written, "output": str(out)}, indent=2))
 
 
 if __name__ == "__main__":
