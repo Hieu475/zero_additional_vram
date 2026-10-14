@@ -68,6 +68,18 @@ def main() -> None:
                 ("experiments/numerical_causality/precision_validation_final/sdpa_static_sequential.jsonl", "sequential verification raw data"),
             ],
         },
+        "WP3_exploratory_precision_backend": {
+            "claims": ["Initial 30-prompt NF4 precision/backend measurements; exploratory run superseded by precision_validation_final for reported conclusions"],
+            "scripts": ["scripts/run_qwen3b_precision_backend_validation.py", "scripts/summarize_qwen3b_precision_validation.py"],
+            "artifacts": [
+                ("experiments/numerical_causality/precision_validation/report.md", "exploratory precision/backend report"),
+                ("experiments/numerical_causality/precision_validation/manifest.json", "exploratory run environment and config"),
+                ("experiments/numerical_causality/precision_validation/sdpa_static.jsonl", "exploratory SDPA static raw data"),
+                ("experiments/numerical_causality/precision_validation/eager_static.jsonl", "exploratory eager static raw data"),
+                ("experiments/numerical_causality/precision_validation/sdpa_dynamic.jsonl", "exploratory SDPA dynamic raw data"),
+                ("experiments/numerical_causality/precision_validation/sdpa_static_sequential.jsonl", "exploratory sequential raw data"),
+            ],
+        },
         "WP4_paired_router": {
             "claims": ["Hybrid router is exact on the 14 held-out prompts but has no detected speed advantage over PLD K4", "The per-prompt fixed-method comparator is offline and non-deployable"],
             "scripts": ["scripts/run_paired_router_evaluation.py", "scripts/summarize_paired_router_evaluation.py"],

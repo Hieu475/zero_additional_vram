@@ -1,10 +1,10 @@
 {
   "manifest_version": 1,
-  "generated_at_utc": "2026-10-14T07:59:53.038511+00:00",
+  "generated_at_utc": "2026-10-14T08:53:25.156043+00:00",
   "repository": {
     "path": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram",
     "branch": "research/numerical-causality",
-    "head_commit": "19bcc9d7827b2cc47969b8ad867c6c22e51dddeb",
+    "head_commit": "5d8abc10dbdb5d9a1f9078629150e0eca564d153",
     "worktree_note": "Evidence and manuscript files are present in the current worktree; execution and source-script hashes are recorded separately."
   },
   "global_model": {
@@ -169,6 +169,63 @@
         }
       ]
     },
+    "WP3_exploratory_precision_backend": {
+      "claims": [
+        "Initial 30-prompt NF4 precision/backend measurements; exploratory run superseded by precision_validation_final for reported conclusions"
+      ],
+      "artifacts": [
+        {
+          "path": "experiments/numerical_causality/precision_validation/report.md",
+          "role": "exploratory precision/backend report",
+          "bytes": 1410,
+          "sha256": "f7f6592b8eed53ac1f575f13dbfd62e0f72cf9cdc74403035f56501cc333eccb"
+        },
+        {
+          "path": "experiments/numerical_causality/precision_validation/manifest.json",
+          "role": "exploratory run environment and config",
+          "bytes": 3210,
+          "sha256": "15e4b30a7be6265c9f030291b99ed6867052c1ce409bdd2bf60471013fed4d76"
+        },
+        {
+          "path": "experiments/numerical_causality/precision_validation/sdpa_static.jsonl",
+          "role": "exploratory SDPA static raw data",
+          "bytes": 5795094,
+          "sha256": "b673971bfc288bc52344e3efef51f0a5756076ddad6926222be6f5a3ff1ce93f"
+        },
+        {
+          "path": "experiments/numerical_causality/precision_validation/eager_static.jsonl",
+          "role": "exploratory eager static raw data",
+          "bytes": 6065115,
+          "sha256": "449592cf5a3754e0288f50a1fc73a8e683fb4e85f8f26a94eb8a004e2439fafb"
+        },
+        {
+          "path": "experiments/numerical_causality/precision_validation/sdpa_dynamic.jsonl",
+          "role": "exploratory SDPA dynamic raw data",
+          "bytes": 5795106,
+          "sha256": "aa4eaed24cd40e059f8be9a4437c23834ef12a074223632acc90b111d8f55490"
+        },
+        {
+          "path": "experiments/numerical_causality/precision_validation/sdpa_static_sequential.jsonl",
+          "role": "exploratory sequential raw data",
+          "bytes": 4915778,
+          "sha256": "27b5fbea5ed9e23a776d61f03b6adb2254b5574060901dd6210e8d760ec11027"
+        }
+      ],
+      "source_scripts": [
+        {
+          "path": "scripts/run_qwen3b_precision_backend_validation.py",
+          "role": "execution/analysis code",
+          "bytes": 17437,
+          "sha256": "6e0c101ecb91789d1707df2f1b26420c7fee534ff6f83a8ce64c1453ff3c864f"
+        },
+        {
+          "path": "scripts/summarize_qwen3b_precision_validation.py",
+          "role": "execution/analysis code",
+          "bytes": 5384,
+          "sha256": "5cefc23a33ffb8ecb25503fe87f0b9cd97c9f3240dabc29bc0ea2ddc0ab83d63"
+        }
+      ]
+    },
     "WP4_paired_router": {
       "claims": [
         "Hybrid router is exact on the 14 held-out prompts but has no detected speed advantage over PLD K4",
@@ -261,8 +318,8 @@
         {
           "path": "scripts/build_paper_artifact_manifest.py",
           "role": "execution/analysis code",
-          "bytes": 7007,
-          "sha256": "a7e82f1ad08a44aea819bac9d88c1e66ad4fcc78a80915867af1e3a5ed8e0454"
+          "bytes": 8181,
+          "sha256": "4eee5e6a7ac75f6409d306e61b1e26fffce97c403b8cc2f8c5c8919078f89cc3"
         }
       ]
     }
