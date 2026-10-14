@@ -1,0 +1,24 @@
+% Paired WP4 run; raw rows and analysis are in experiments/numerical_causality/unified_router_evaluation/.
+\begin{table*}[t]
+\centering
+\small
+\caption{Paired held-out evaluation on 14 unselected prompts from the WP3 prepared-input cohort (Qwen2.5-3B NF4 double-quant, FP16 compute, SDPA/static KV, RTX 4050, 32-token greedy budget). Methods use identical prompt token IDs and randomized balanced order; tracing is disabled. Speedup uses per-prompt decode TPS relative to direct vanilla. CIs bootstrap prompts. Exact match compares generated token IDs, including EOS. Best-fixed was selected using eight diagnostic development prompts; offline best-fixed is a non-deployable per-prompt timing upper bound.}
+\label{tab:wp4_paired_router}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Method} & \textbf{Speedup vs vanilla (95\% CI)} & \textbf{TPS ratio vs PLD K4 (95\% CI)} & \textbf{Exact match} & \textbf{Slowdown} & \textbf{VRAM MB} \\
+\midrule
+Direct vanilla & 1.000 [1.000, 1.000] & 0.931 [0.886, 0.973] & 14/14 & 0/14 & 2107 \\
+Speculative core, K=0 & 0.953 [0.925, 0.979] & 0.886 [0.848, 0.927] & 14/14 & 10/14 & 2109 \\
+PLD, K=2 & 1.134 [1.081, 1.194] & 1.049 [1.012, 1.085] & 11/14 & 1/14 & 2110 \\
+PLD, K=4 & 1.083 [1.031, 1.142] & 1.000 [1.000, 1.000] & 14/14 & 3/14 & 2111 \\
+PLD, K=8 & 1.169 [1.093, 1.253] & 1.076 [1.051, 1.102] & 13/14 & 1/14 & 2113 \\
+CKA90, K=2 & 0.917 [0.880, 0.956] & 0.852 [0.803, 0.902] & 12/14 & 12/14 & 2112 \\
+Hybrid router & 1.078 [1.022, 1.142] & 0.995 [0.975, 1.017] & 14/14 & 3/14 & 2113 \\
+Best fixed (development) & 1.134 [1.080, 1.192] & 1.049 [1.010, 1.084] & 11/14 & 1/14 & 2110 \\
+Offline best fixed / prompt & 1.191 [1.123, 1.271] & 1.098 [1.077, 1.120] & 12/14 & 0/14 & 2112 \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}

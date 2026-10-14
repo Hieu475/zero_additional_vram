@@ -1,0 +1,276 @@
+{
+  "manifest_version": 1,
+  "generated_at_utc": "2026-10-14T07:59:53.038511+00:00",
+  "repository": {
+    "path": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram",
+    "branch": "research/numerical-causality",
+    "head_commit": "19bcc9d7827b2cc47969b8ad867c6c22e51dddeb",
+    "worktree_note": "Evidence and manuscript files are present in the current worktree; execution and source-script hashes are recorded separately."
+  },
+  "global_model": {
+    "name": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1"
+  },
+  "hardware": "NVIDIA GeForce RTX 4050 Laptop GPU, 6 GB",
+  "groups": {
+    "WP1_reproduction_audit": {
+      "claims": [
+        "NF4 double-quant discrepancy reproduces the 8/16 versus 16/16 cohort result",
+        "Current production/lightweight/full trace replays agree on the diagnostic prompts"
+      ],
+      "artifacts": [
+        {
+          "path": "experiments/reproduction_audit/reproduction_report.md",
+          "role": "analysis report",
+          "bytes": 9027,
+          "sha256": "1d826bd52028e4a54c8a222c6cbf8da36939775103c02129d2f94978941a1017"
+        },
+        {
+          "path": "experiments/reproduction_audit/benchmark_manifest.json",
+          "role": "benchmark protocol",
+          "bytes": 4801,
+          "sha256": "85197ac334c84db2449ebbfbf6b51af0854af5ef3a14b8c84a69751b3ef77d62"
+        },
+        {
+          "path": "experiments/reproduction_audit/tracer_manifest.json",
+          "role": "tracer protocol",
+          "bytes": 805683,
+          "sha256": "859c1c94a323dab6f4178b7fb25460d6b143bd3d89f05fceaf4842fa4c916866"
+        },
+        {
+          "path": "experiments/reproduction_audit/prompt_comparison.json",
+          "role": "prompt and output comparison",
+          "bytes": 206504,
+          "sha256": "d5a14a4f239ed7b51ae55cbaed77d2801694a77aaa0f25c1939a12b581f488ee"
+        },
+        {
+          "path": "experiments/reproduction_audit/first_difference.json",
+          "role": "first-difference evidence",
+          "bytes": 10915,
+          "sha256": "7bf0fa291aa472b43f86746893b584b33dda532429f68fc89e3012d452ed567b"
+        },
+        {
+          "path": "experiments/reproduction_audit/live_replay.json",
+          "role": "current controlled replay",
+          "bytes": 848245,
+          "sha256": "06cbe7cfd7e27c34b97790e8b2ad0fe1b93e9cb9ac7d05dbf897d338faa8639c"
+        },
+        {
+          "path": "experiments/reproduction_audit/no_double_quant_replay.json",
+          "role": "quantization toggle replay",
+          "bytes": 838772,
+          "sha256": "4a91f99c287fd67a288a19e562788befae67078a2aa76e2aecec771be09aff6e"
+        }
+      ],
+      "source_scripts": [
+        {
+          "path": "scripts/compare_benchmark_trace_reproduction.py",
+          "role": "execution/analysis code",
+          "bytes": 24488,
+          "sha256": "6e8e9caba17345cb25e6a2ea43af4752d0613ff7b8d861a3c79dec5da5c1ce7d"
+        },
+        {
+          "path": "scripts/replay_benchmark_trace.py",
+          "role": "execution/analysis code",
+          "bytes": 11812,
+          "sha256": "bf6f4fe0330743c73724778831cd6e12083177293a2dfaf1f9a005059d38676c"
+        }
+      ]
+    },
+    "WP2_factorial_KV_verification": {
+      "claims": [
+        "Diagnostic factorial attribution: 15 KV-history-sensitive and 1 execution-sensitive"
+      ],
+      "artifacts": [
+        {
+          "path": "experiments/numerical_causality/interventions/factorial_report.md",
+          "role": "intervention report",
+          "bytes": 4717,
+          "sha256": "92b6da6a9a3e8a1db070e6b7d26686ff81227ec2ad27edc53b9a738b04f5cf8e"
+        },
+        {
+          "path": "experiments/numerical_causality/interventions/factorial_summary_final_v2.json",
+          "role": "cohort summary",
+          "bytes": 2153,
+          "sha256": "5a227c65007bfd88d0b6f9ff2b6266b392665d3cdc46140c3be1a1d45e75cbf5"
+        },
+        {
+          "path": "experiments/numerical_causality/interventions/factorial_kv_verification_final_v2.jsonl",
+          "role": "raw factorial measurements",
+          "bytes": 742431,
+          "sha256": "f963bd35bcdbe4b48a8b697152dac02790e0d1fe2336d98ac955ec4d665c6cb6"
+        }
+      ],
+      "source_scripts": [
+        {
+          "path": "scripts/run_kv_factorial_intervention.py",
+          "role": "execution/analysis code",
+          "bytes": 30723,
+          "sha256": "5933abc7fcd864ca0838bba9c29f5248233a56451081b482b510f105ce337330"
+        }
+      ]
+    },
+    "WP3_precision_backend": {
+      "claims": [
+        "30 prompts split into 16 diagnostic and 14 held-out",
+        "Sequential verification matched vanilla 30/30 for the measured NF4 run",
+        "Unquantized FP16/BF16 and FP32 remain unmeasured"
+      ],
+      "artifacts": [
+        {
+          "path": "experiments/numerical_causality/precision_validation_final/report.md",
+          "role": "precision/backend report",
+          "bytes": 3084,
+          "sha256": "973b85aadc3190f3d3a65a972873037bb7b729959389a9f319604f2e4a2b6c33"
+        },
+        {
+          "path": "experiments/numerical_causality/precision_validation_final/manifest.json",
+          "role": "run environment and config",
+          "bytes": 3233,
+          "sha256": "5ce448f36b9b8ad57c80b60309d0f6a368b08b11b5b49e47625b4f49d6daed20"
+        },
+        {
+          "path": "experiments/numerical_causality/precision_validation_final/sdpa_static.jsonl",
+          "role": "SDPA static raw data",
+          "bytes": 7210966,
+          "sha256": "ce1e33165567dbf5b1bcc138cd9af6eaaad9d512f638d894caf9b3fb3bcdd30c"
+        },
+        {
+          "path": "experiments/numerical_causality/precision_validation_final/eager_static.jsonl",
+          "role": "eager static raw data",
+          "bytes": 7547747,
+          "sha256": "d6f4abef5362847d62a7ea1cb824be68adc47dbf5ed91de5688d55a9b088c488"
+        },
+        {
+          "path": "experiments/numerical_causality/precision_validation_final/sdpa_dynamic.jsonl",
+          "role": "SDPA dynamic raw data",
+          "bytes": 7210999,
+          "sha256": "9ff3d04ac10224ab641e0a7ef21fcf806a95b9396191a5cb0c41418ee8f5147a"
+        },
+        {
+          "path": "experiments/numerical_causality/precision_validation_final/sdpa_static_sequential.jsonl",
+          "role": "sequential verification raw data",
+          "bytes": 6068832,
+          "sha256": "f5486c36058f1624f2556a207f35e10da21c65047aa8dd6abfbdb3401f480e08"
+        }
+      ],
+      "source_scripts": [
+        {
+          "path": "scripts/run_qwen3b_precision_backend_validation.py",
+          "role": "execution/analysis code",
+          "bytes": 17437,
+          "sha256": "6e0c101ecb91789d1707df2f1b26420c7fee534ff6f83a8ce64c1453ff3c864f"
+        },
+        {
+          "path": "scripts/summarize_qwen3b_precision_validation.py",
+          "role": "execution/analysis code",
+          "bytes": 5384,
+          "sha256": "5cefc23a33ffb8ecb25503fe87f0b9cd97c9f3240dabc29bc0ea2ddc0ab83d63"
+        }
+      ]
+    },
+    "WP4_paired_router": {
+      "claims": [
+        "Hybrid router is exact on the 14 held-out prompts but has no detected speed advantage over PLD K4",
+        "The per-prompt fixed-method comparator is offline and non-deployable"
+      ],
+      "artifacts": [
+        {
+          "path": "experiments/numerical_causality/unified_router_evaluation/report.md",
+          "role": "paired evaluation report",
+          "bytes": 6392,
+          "sha256": "689f509fc474af96b3fac201c939e68fbfc91e2b2c679ccb1bf4437f18b15211"
+        },
+        {
+          "path": "experiments/numerical_causality/unified_router_evaluation/config.json",
+          "role": "frozen protocol and split",
+          "bytes": 2182,
+          "sha256": "4d104a6a23ebd18157f9b32ed3cc34feaa890071fd3906acda08c097b87d6b10"
+        },
+        {
+          "path": "experiments/numerical_causality/unified_router_evaluation/environment.json",
+          "role": "runtime environment",
+          "bytes": 174,
+          "sha256": "28ff1dd7ad4663e32fb8453774b4c03a2e10a86bcc9457010d5f45c6ea320784"
+        },
+        {
+          "path": "experiments/numerical_causality/unified_router_evaluation/manifest.json",
+          "role": "run manifest with raw hash",
+          "bytes": 2612,
+          "sha256": "50e1332e1ea69664a968b703645ba0be1fd048515de1b97f5d779bdd84d2e3cf"
+        },
+        {
+          "path": "experiments/numerical_causality/unified_router_evaluation/raw_measurements.jsonl",
+          "role": "210 prompt-method paired records",
+          "bytes": 245334,
+          "sha256": "0ecfc53182437a05011378b5ceccbb1e906a60ebf95724af5bc5408c36522011"
+        },
+        {
+          "path": "experiments/numerical_causality/unified_router_evaluation/summary.json",
+          "role": "bootstrap and paired analysis",
+          "bytes": 55504,
+          "sha256": "5d8e886428fe74522b6bfb01788d937654cb72a1422f0c83b4173556147cc58f"
+        },
+        {
+          "path": "paper/tables/wp4_paired_router_table.tex",
+          "role": "paper held-out comparison table",
+          "bytes": 1793,
+          "sha256": "61b4a946f105066aba70a7034c36e1d4e11513dd4bcd2f9f10a5a3edd4d4d30f"
+        }
+      ],
+      "source_scripts": [
+        {
+          "path": "scripts/run_paired_router_evaluation.py",
+          "role": "execution/analysis code",
+          "bytes": 15057,
+          "sha256": "aa8ffe169869c7383d68464342cfd0ce241ff546a33a3c209d04c104b892af55"
+        },
+        {
+          "path": "scripts/summarize_paired_router_evaluation.py",
+          "role": "execution/analysis code",
+          "bytes": 11557,
+          "sha256": "59a870635465f540edd7fc0f6584ad3b75a60b882a18146e3d92f8b256add73e"
+        }
+      ]
+    },
+    "paper_draft": {
+      "claims": [
+        "Manuscript includes a WP4 matched-cohort result and labels router as a negative performance result"
+      ],
+      "artifacts": [
+        {
+          "path": "paper/draft/main.tex",
+          "role": "manuscript source",
+          "bytes": 38224,
+          "sha256": "0ede96c4fbeb218795cf0ae17f13e319e5cefc6a15b718000f1458ed23e35931"
+        },
+        {
+          "path": "paper/draft/main.pdf",
+          "role": "compiled manuscript",
+          "bytes": 1254513,
+          "sha256": "533259558d9ef202c037ba27118da75dee7555ff81d73f880475ba8a0fd537aa"
+        },
+        {
+          "path": "paper/draft/references.bib",
+          "role": "bibliography source",
+          "bytes": 9533,
+          "sha256": "bf9f2650012fe7886eb29b9bc47eb17e6aaeaead8c4ca19cd8c716312058b78e"
+        }
+      ],
+      "source_scripts": [
+        {
+          "path": "scripts/build_paper_artifact_manifest.py",
+          "role": "execution/analysis code",
+          "bytes": 7007,
+          "sha256": "a7e82f1ad08a44aea819bac9d88c1e66ad4fcc78a80915867af1e3a5ed8e0454"
+        }
+      ]
+    }
+  },
+  "open_limits": [
+    "Only the NF4 precision/backend matrix was run on RTX 4050.",
+    "WP4 has 14 held-out prompts and one run per method/prompt; intervals do not capture session or thermal variance.",
+    "The WP4 development subset is drawn from a diagnostic mismatch cohort.",
+    "Offline best-per-prompt results use observed future timings and are upper-bound diagnostics."
+  ]
+}

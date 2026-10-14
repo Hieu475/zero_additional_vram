@@ -229,6 +229,15 @@ An earlier rule-level ablation on GSM8K-$N{=}50$ (fresh router per config, diffe
 
 Starting from naive fallback (overall 1.002$\times$): asymmetric PLD margin (R2) + weak-hit capping (R1) reach 0.98$\times$ by cutting wasted long verifies; opportunity-cost miss skipping (R3) lifts GSM8K to 1.12$\times$ by replacing 0.88$\times$ LS cycles with 1.0$\times$ vanilla steps; adaptive PLD horizon (R4) stabilizes the mean at 1.020$\times$ ($N{=}10$ tuning runs; 1.063$\times$ at $N{=}50$). Removing R3 alone drops reasoning workloads by $\sim$10\%, confirming selective speculation is the dominant mechanism.
 
+\subsection{Matched-Cohort Router Evaluation}
+\label{sec:wp4paired}
+
+We additionally compared direct vanilla, the speculative core with $K{=}0$, PLD at $K\in\{2,4,8\}$, CKA90/$K{=}2$, and the hybrid router on the same 30 tokenized prompts used by the Qwen2.5-3B numerical validation. The 16 known mismatch prompts were split into eight development prompts for selecting one best-fixed method and eight diagnostic evaluation prompts; the 14 unselected prompts form the held-out evaluation. Every method used the same prompt token IDs and ran once per prompt in a balanced randomized order, with numerical tracing disabled. The selected development fixed method was PLD $K{=}2$.
+
+On the 14 held-out prompts, the router matched vanilla token IDs in all cases and reached $1.078\times$ decode speedup. Its paired TPS ratio against PLD $K{=}4$ was $0.995$ (95\% prompt-bootstrap CI $[0.975,1.017]$), so this cohort provides no evidence that the router is faster than PLD $K{=}4$. PLD $K{=}8$ was faster at $1.169\times$ versus vanilla but matched vanilla on 13/14 prompts. The router selected vanilla for 285 cycles and PLD for 76 cycles; it selected layer-skip zero times. This result supports retaining the router as a negative system result rather than the primary performance contribution. The held-out cohort is small and comes from the same prepared-input artifact; raw records and analysis scripts are included with the WP4 experiment artifacts.
+
+\input{../tables/wp4_paired_router_table.tex}
+
 \section{Limitations}
 \label{sec:limitations}
 
