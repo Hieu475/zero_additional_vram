@@ -1,0 +1,66 @@
+{
+  "execution_commit": "4d5e54f91a973a17b9e88aee52fed03f2717d2c9",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "tokenizer_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "hardware": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "transformers": "5.14.1",
+  "python": "3.12.13",
+  "attention": "sdpa",
+  "compute_dtype": "float16",
+  "quantization": "NF4",
+  "variants": [
+    {
+      "double_quant": true,
+      "kv_capacity": 436
+    },
+    {
+      "double_quant": true,
+      "kv_capacity": 2048
+    },
+    {
+      "double_quant": false,
+      "kv_capacity": 436
+    },
+    {
+      "double_quant": false,
+      "kv_capacity": 2048
+    }
+  ],
+  "reference_variant": {
+    "double_quant": true,
+    "kv_capacity": 436
+  },
+  "max_new_tokens": 32,
+  "prompt_source": "experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl",
+  "prompt_sha256": "6bc016b39bc280ea519cf2ca120643a16dcf138697f4d5fb17e0fb21e37d6a3a",
+  "diagnostic_ids": [
+    "qasper_119_ctx384",
+    "multi_news_189_ctx384",
+    "qasper_109_ctx384",
+    "gov_report_98_ctx384",
+    "gov_report_134_ctx384",
+    "gov_report_80_ctx384",
+    "qmsum_2_ctx384",
+    "narrativeqa_6_ctx384",
+    "multi_news_143_ctx384",
+    "qmsum_4_ctx384",
+    "qmsum_196_ctx384",
+    "qmsum_54_ctx384",
+    "narrativeqa_155_ctx384",
+    "qasper_163_ctx384",
+    "narrativeqa_139_ctx384",
+    "narrativeqa_55_ctx384"
+  ],
+  "measurement_note": "Correctness replay captures prompt-prefill active KV and same-prefix logits. Timing is a separate direct greedy model-forward pass without tracing or per-step snapshots.",
+  "raw_measurements": "experiments/backend_validation/capacity_control/raw_measurements.jsonl",
+  "trace_config_sha256": "222feddef412c21f0493235403b5154b2141d776230b7eaa32faae625c0a3e2d",
+  "runner_sha256": "3597e0495b7b5563f585178d278d2ec03a1f28258087c42775b8f537c8aad900",
+  "analysis_script_sha256": "f7a02d8167ac68b8d404d4b737758a5a9d8428f92c126fd27dbe79a026ae3844",
+  "raw_measurements_sha256": "bfc8b78b05fed0b3895a66f6d620066f8d6bd4b73397b96288b6987940af14b2",
+  "bitsandbytes": "0.50.0",
+  "worktree_was_dirty_during_run": true,
+  "run_scope": "single session; diagnostic prompts; descriptive performance only"
+}
