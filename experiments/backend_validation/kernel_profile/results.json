@@ -1,0 +1,304 @@
+{
+  "vanilla": {
+    "total_gpu_kernel_ns": 828187594,
+    "kernel_instances": 64784,
+    "bnb_4bit_gemm_ns": 312815977,
+    "bnb_4bit_gemm_instances": 7812,
+    "bnb_dequant_ns": 66474558,
+    "bnb_dequant_instances": 504,
+    "bnb_dequant_share_of_kernel_time": 0.0802650975233034,
+    "bnb_4bit_gemm_share_of_kernel_time": 0.37771149829612155,
+    "synchronization_api_ns": 378059558,
+    "synchronization_api_calls": 65,
+    "kernel_launch_api_ns": 251979141,
+    "kernel_launch_api_calls": 64784,
+    "nvtx_ranges": {
+      ":vanilla_decode": {
+        "total_ns": 1191757265,
+        "instances": 1
+      },
+      ":vanilla_prefill": {
+        "total_ns": 146636032,
+        "instances": 1
+      }
+    },
+    "gpu_mem_operation_total_ns": 155247,
+    "gpu_mem_operations": [
+      {
+        "operation": "[CUDA memset]",
+        "total_ns": 94534,
+        "count": 140
+      },
+      {
+        "operation": "[CUDA memcpy Device-to-Host]",
+        "total_ns": 38340,
+        "count": 32
+      },
+      {
+        "operation": "[CUDA memcpy Host-to-Device]",
+        "total_ns": 22373,
+        "count": 32
+      }
+    ],
+    "top_kernels": [
+      {
+        "name": "void gemm_4bit_simt<__half, (int)1>(const T1 *, const unsigned char *, const float *, const unsigned char *, const float *, const float *, T1 *, const T1 *, int, int, int, int, int)",
+        "total_ns": 312815977,
+        "instances": 7812,
+        "share": 37.8
+      },
+      {
+        "name": "std::enable_if<!T7, void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, (bool)0, (bool)1, (bool)1, (bool)0, (int)6, (bool)0, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<const __nv_bfloat16>, cublasGemvTensorStridedBatched<const __nv_bfloat16>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>>(T13)",
+        "total_ns": 198768620,
+        "instances": 31,
+        "share": 24.0
+      },
+      {
+        "name": "ampere_fp16_s1688gemm_fp16_128x128_ldg8_f2f_stages_32x1_tn",
+        "total_ns": 66138124,
+        "instances": 108,
+        "share": 8.0
+      },
+      {
+        "name": "void kDequantizeBlockwise<__half, (int)512, (int)64, (int)8, (int)2>(float *, unsigned char *, float *, T1 *, int, int)",
+        "total_ns": 65438246,
+        "instances": 252,
+        "share": 7.9
+      },
+      {
+        "name": "ampere_fp16_s1688gemm_fp16_128x128_ldg8_relu_f2f_stages_32x1_tn",
+        "total_ns": 28334340,
+        "instances": 36,
+        "share": 3.4
+      },
+      {
+        "name": "ampere_fp16_s16816gemm_fp16_256x128_ldg8_f2f_stages_32x3_tn",
+        "total_ns": 25833364,
+        "instances": 36,
+        "share": 3.1
+      },
+      {
+        "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 12)]::operator ()() const::[lambda(c10::BFloat16) (instance 1)], std::array<char *, (unsigned long)2>, (int)4, TrivialOffsetCalculator<(int)1, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithCast<(int)1>, at::native::memory::StoreWithCast<(int)1>>(int, T1, T2, T4, T5, T6, T7)",
+        "total_ns": 19756518,
+        "instances": 8064,
+        "share": 2.4
+      },
+      {
+        "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 10)]::operator ()() const::[lambda(c10::Half) (instance 1)], std::array<char *, (unsigned long)2>, (int)4, TrivialOffsetCalculator<(int)1, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithCast<(int)1>, at::native::memory::StoreWithCast<(int)1>>(int, T1, T2, T4, T5, T6, T7)",
+        "total_ns": 19655946,
+        "instances": 8064,
+        "share": 2.4
+      }
+    ]
+  },
+  "pld_k4": {
+    "total_gpu_kernel_ns": 811103300,
+    "kernel_instances": 59932,
+    "bnb_4bit_gemm_ns": 399988402,
+    "bnb_4bit_gemm_instances": 7056,
+    "bnb_dequant_ns": 54287135,
+    "bnb_dequant_instances": 504,
+    "bnb_dequant_share_of_kernel_time": 0.06692998906551113,
+    "bnb_4bit_gemm_share_of_kernel_time": 0.4931411350440813,
+    "synchronization_api_ns": 270644544,
+    "synchronization_api_calls": 91,
+    "kernel_launch_api_ns": 280183611,
+    "kernel_launch_api_calls": 59926,
+    "nvtx_ranges": {
+      ":pld_k4_total": {
+        "total_ns": 1477529851,
+        "instances": 1
+      },
+      "CCCL:cub::DeviceReduce::Sum": {
+        "total_ns": 3241361,
+        "instances": 5
+      },
+      "CCCL:cub::DeviceSelect::Flagged": {
+        "total_ns": 106692,
+        "instances": 5
+      }
+    },
+    "gpu_mem_operation_total_ns": 159696,
+    "gpu_mem_operations": [
+      {
+        "operation": "[CUDA memset]",
+        "total_ns": 92810,
+        "count": 138
+      },
+      {
+        "operation": "[CUDA memcpy Device-to-Host]",
+        "total_ns": 50020,
+        "count": 46
+      },
+      {
+        "operation": "[CUDA memcpy Host-to-Device]",
+        "total_ns": 15906,
+        "count": 13
+      },
+      {
+        "operation": "[CUDA memcpy Device-to-Device]",
+        "total_ns": 960,
+        "count": 1
+      }
+    ],
+    "top_kernels": [
+      {
+        "name": "void gemm_4bit_simt<__half, (int)1>(const T1 *, const unsigned char *, const float *, const unsigned char *, const float *, const float *, T1 *, const T1 *, int, int, int, int, int)",
+        "total_ns": 200402056,
+        "instances": 5544,
+        "share": 24.7
+      },
+      {
+        "name": "void gemm_4bit_sm80_m16n8k16<__half, (int)32, (int)128, (int)128>(const T1 *, const unsigned char *, const float *, const unsigned char *, const float *, const float *, T1 *, const T1 *, int, int, int, int, int)",
+        "total_ns": 180290305,
+        "instances": 900,
+        "share": 22.2
+      },
+      {
+        "name": "std::enable_if<!T7, void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, (bool)0, (bool)1, (bool)1, (bool)0, (int)6, (bool)0, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<const __nv_bfloat16>, cublasGemvTensorStridedBatched<const __nv_bfloat16>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>>(T13)",
+        "total_ns": 105502441,
+        "instances": 22,
+        "share": 13.0
+      },
+      {
+        "name": "ampere_fp16_s1688gemm_fp16_128x128_ldg8_f2f_stages_32x1_tn",
+        "total_ns": 55976353,
+        "instances": 108,
+        "share": 6.9
+      },
+      {
+        "name": "void kDequantizeBlockwise<__half, (int)512, (int)64, (int)8, (int)2>(float *, unsigned char *, float *, T1 *, int, int)",
+        "total_ns": 53256671,
+        "instances": 252,
+        "share": 6.6
+      },
+      {
+        "name": "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x1_tn_align8>(T1::Params)",
+        "total_ns": 28063460,
+        "instances": 6,
+        "share": 3.5
+      },
+      {
+        "name": "ampere_fp16_s16816gemm_fp16_256x128_ldg8_f2f_stages_32x3_tn",
+        "total_ns": 25925984,
+        "instances": 36,
+        "share": 3.2
+      },
+      {
+        "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 10)]::operator ()() const::[lambda(c10::Half) (instance 1)], std::array<char *, (unsigned long)2>, (int)4, TrivialOffsetCalculator<(int)1, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithCast<(int)1>, at::native::memory::StoreWithCast<(int)1>>(int, T1, T2, T4, T5, T6, T7)",
+        "total_ns": 21847365,
+        "instances": 7308,
+        "share": 2.7
+      }
+    ]
+  },
+  "cka90_k2": {
+    "total_gpu_kernel_ns": 951670520,
+    "kernel_instances": 64600,
+    "bnb_4bit_gemm_ns": 451714771,
+    "bnb_4bit_gemm_instances": 7476,
+    "bnb_dequant_ns": 40015462,
+    "bnb_dequant_instances": 504,
+    "bnb_dequant_share_of_kernel_time": 0.0420476006759146,
+    "bnb_4bit_gemm_share_of_kernel_time": 0.47465458003259364,
+    "synchronization_api_ns": 376819603,
+    "synchronization_api_calls": 95,
+    "kernel_launch_api_ns": 233518095,
+    "kernel_launch_api_calls": 64589,
+    "nvtx_ranges": {
+      ":cka90_k2_total": {
+        "total_ns": 1493431991,
+        "instances": 1
+      },
+      ":draft_forward": {
+        "total_ns": 755251149,
+        "instances": 11
+      },
+      ":target_verify": {
+        "total_ns": 527395356,
+        "instances": 11
+      },
+      ":target_prefill": {
+        "total_ns": 185914815,
+        "instances": 1
+      },
+      ":cache_commit_crop": {
+        "total_ns": 20538108,
+        "instances": 11
+      }
+    },
+    "gpu_mem_operation_total_ns": 172085,
+    "gpu_mem_operations": [
+      {
+        "operation": "[CUDA memset]",
+        "total_ns": 108238,
+        "count": 164
+      },
+      {
+        "operation": "[CUDA memcpy Device-to-Host]",
+        "total_ns": 60455,
+        "count": 57
+      },
+      {
+        "operation": "[CUDA memcpy Device-to-Device]",
+        "total_ns": 2272,
+        "count": 2
+      },
+      {
+        "operation": "[CUDA memcpy Host-to-Device]",
+        "total_ns": 1120,
+        "count": 1
+      }
+    ],
+    "top_kernels": [
+      {
+        "name": "void gemm_4bit_simt<__half, (int)3>(const T1 *, const unsigned char *, const float *, const unsigned char *, const float *, const float *, T1 *, const T1 *, int, int, int, int, int)",
+        "total_ns": 246085635,
+        "instances": 2520,
+        "share": 25.9
+      },
+      {
+        "name": "void gemm_4bit_simt<__half, (int)1>(const T1 *, const unsigned char *, const float *, const unsigned char *, const float *, const float *, T1 *, const T1 *, int, int, int, int, int)",
+        "total_ns": 185249438,
+        "instances": 4704,
+        "share": 19.5
+      },
+      {
+        "name": "std::enable_if<!T7, void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, (bool)0, (bool)1, (bool)1, (bool)0, (int)6, (bool)0, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<const __nv_bfloat16>, cublasGemvTensorStridedBatched<const __nv_bfloat16>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>>(T13)",
+        "total_ns": 125616603,
+        "instances": 21,
+        "share": 13.2
+      },
+      {
+        "name": "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x1_tn_align8>(T1::Params)",
+        "total_ns": 76406142,
+        "instances": 11,
+        "share": 8.0
+      },
+      {
+        "name": "ampere_fp16_s1688gemm_fp16_128x128_ldg8_f2f_stages_32x1_tn",
+        "total_ns": 65636338,
+        "instances": 108,
+        "share": 6.9
+      },
+      {
+        "name": "void kDequantizeBlockwise<__half, (int)512, (int)64, (int)8, (int)2>(float *, unsigned char *, float *, T1 *, int, int)",
+        "total_ns": 38963224,
+        "instances": 252,
+        "share": 4.1
+      },
+      {
+        "name": "ampere_fp16_s16816gemm_fp16_256x128_ldg8_f2f_stages_32x3_tn",
+        "total_ns": 30491394,
+        "instances": 36,
+        "share": 3.2
+      },
+      {
+        "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 12)]::operator ()() const::[lambda(c10::BFloat16) (instance 1)], std::array<char *, (unsigned long)2>, (int)4, TrivialOffsetCalculator<(int)1, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithCast<(int)1>, at::native::memory::StoreWithCast<(int)1>>(int, T1, T2, T4, T5, T6, T7)",
+        "total_ns": 20534965,
+        "instances": 7728,
+        "share": 2.2
+      }
+    ]
+  }
+}

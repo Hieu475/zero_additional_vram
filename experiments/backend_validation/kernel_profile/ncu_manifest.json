@@ -1,0 +1,23 @@
+{
+  "scope": "three targeted kernel invocations per method and kernel family; diagnostic only",
+  "device": "NVIDIA GeForce RTX 4050 Laptop GPU, compute capability 8.9",
+  "ncu_version": "NVIDIA (R) Nsight Compute Command Line Profiler\nCopyright (c) 2018-2026 NVIDIA Corporation\nVersion 2026.1.1.0 (build 37634170) (public-release)",
+  "collection": {
+    "set": "basic",
+    "profile_from_start": "off",
+    "kernel_filter": [
+      "gemm_4bit_simt",
+      "kDequantizeBlockwise"
+    ],
+    "launch_count": 3,
+    "window": "torch.cuda.profiler.start/stop; warmup excluded",
+    "workload": "qasper_119_ctx384, 384 input tokens, 32 token budget, NF4 DQ-on, FP16, SDPA, static KV=436"
+  },
+  "captures_sha256": {
+    "cka90_4bit_gemm.ncu-rep": "e5eaca6271b0e1d1a441d98ae34115d4158649d065f73c7d024fec5c03fcbd3a",
+    "cka90_dequant.ncu-rep": "bf0ddf660e4c261154ebd63e9e25bc2248adcb584482ebf8bd907edcdceb60fd",
+    "vanilla_4bit_gemm.ncu-rep": "35692ff23f6eaa096b4ec4ed2f33cce4f1c7b26a6f66cbbf70bdf0d02c408db6",
+    "vanilla_dequant.ncu-rep": "487f4e51dcf6a3aa0e6688587dfca42ce99d05d29b55950e56844e7fd9059b8a"
+  },
+  "summary_sha256": "6322f1eddb004ee161e35e88c957b0e236bb3b2f3e1afb8e41750dd7fc77cdea"
+}

@@ -1,0 +1,118 @@
+{
+  "vanilla_gemm": [
+    {
+      "kernel_name": "void gemm_4bit_simt<__half, 1>(const T1 *, const unsigned char *, const float *, const unsigned char *, const float *, const float *, T1 *, const T1 *, int, int, int, int, int)",
+      "grid_size": "(512, 1, 1)",
+      "block_size": "(128, 1, 1)",
+      "duration_us": 20.352,
+      "dram_throughput_pct_peak": 62.601866,
+      "sm_throughput_pct_peak": 40.79592,
+      "registers_per_thread": 46.0
+    },
+    {
+      "kernel_name": "void gemm_4bit_simt<__half, 1>(const T1 *, const unsigned char *, const float *, const unsigned char *, const float *, const float *, T1 *, const T1 *, int, int, int, int, int)",
+      "grid_size": "(64, 1, 1)",
+      "block_size": "(128, 1, 1)",
+      "duration_us": 6.848,
+      "dram_throughput_pct_peak": 33.117138,
+      "sm_throughput_pct_peak": 15.625147,
+      "registers_per_thread": 46.0
+    },
+    {
+      "kernel_name": "void gemm_4bit_simt<__half, 1>(const T1 *, const unsigned char *, const float *, const unsigned char *, const float *, const float *, T1 *, const T1 *, int, int, int, int, int)",
+      "grid_size": "(64, 1, 1)",
+      "block_size": "(128, 1, 1)",
+      "duration_us": 6.24,
+      "dram_throughput_pct_peak": 24.902682,
+      "sm_throughput_pct_peak": 16.06233,
+      "registers_per_thread": 46.0
+    }
+  ],
+  "vanilla_dequant": [
+    {
+      "kernel_name": "void kDequantizeBlockwise<float, 512, 64, 8, 0>(float *, unsigned char *, float *, T1 *, int, int)",
+      "grid_size": "(128, 1, 1)",
+      "block_size": "(64, 1, 1)",
+      "duration_us": 2.656,
+      "dram_throughput_pct_peak": 35.619919,
+      "sm_throughput_pct_peak": 25.641194,
+      "registers_per_thread": 40.0
+    },
+    {
+      "kernel_name": "void kDequantizeBlockwise<__half, 512, 64, 8, 2>(float *, unsigned char *, float *, T1 *, int, int)",
+      "grid_size": "(4096, 1, 1)",
+      "block_size": "(64, 1, 1)",
+      "duration_us": 38.88,
+      "dram_throughput_pct_peak": 91.011757,
+      "sm_throughput_pct_peak": 92.022835,
+      "registers_per_thread": 44.0
+    },
+    {
+      "kernel_name": "void kDequantizeBlockwise<float, 512, 64, 8, 0>(float *, unsigned char *, float *, T1 *, int, int)",
+      "grid_size": "(16, 1, 1)",
+      "block_size": "(64, 1, 1)",
+      "duration_us": 2.4,
+      "dram_throughput_pct_peak": 4.363739,
+      "sm_throughput_pct_peak": 3.524929,
+      "registers_per_thread": 40.0
+    }
+  ],
+  "cka90_k2_gemm": [
+    {
+      "kernel_name": "void gemm_4bit_simt<__half, 1>(const T1 *, const unsigned char *, const float *, const unsigned char *, const float *, const float *, T1 *, const T1 *, int, int, int, int, int)",
+      "grid_size": "(512, 1, 1)",
+      "block_size": "(128, 1, 1)",
+      "duration_us": 23.136,
+      "dram_throughput_pct_peak": 66.203704,
+      "sm_throughput_pct_peak": 36.612524,
+      "registers_per_thread": 46.0
+    },
+    {
+      "kernel_name": "void gemm_4bit_simt<__half, 1>(const T1 *, const unsigned char *, const float *, const unsigned char *, const float *, const float *, T1 *, const T1 *, int, int, int, int, int)",
+      "grid_size": "(64, 1, 1)",
+      "block_size": "(128, 1, 1)",
+      "duration_us": 6.432,
+      "dram_throughput_pct_peak": 26.919044,
+      "sm_throughput_pct_peak": 15.399667,
+      "registers_per_thread": 46.0
+    },
+    {
+      "kernel_name": "void gemm_4bit_simt<__half, 1>(const T1 *, const unsigned char *, const float *, const unsigned char *, const float *, const float *, T1 *, const T1 *, int, int, int, int, int)",
+      "grid_size": "(64, 1, 1)",
+      "block_size": "(128, 1, 1)",
+      "duration_us": 6.432,
+      "dram_throughput_pct_peak": 28.739583,
+      "sm_throughput_pct_peak": 15.454937,
+      "registers_per_thread": 46.0
+    }
+  ],
+  "cka90_k2_dequant": [
+    {
+      "kernel_name": "void kDequantizeBlockwise<float, 512, 64, 8, 0>(float *, unsigned char *, float *, T1 *, int, int)",
+      "grid_size": "(128, 1, 1)",
+      "block_size": "(64, 1, 1)",
+      "duration_us": 2.88,
+      "dram_throughput_pct_peak": 52.485795,
+      "sm_throughput_pct_peak": 23.227726,
+      "registers_per_thread": 40.0
+    },
+    {
+      "kernel_name": "void kDequantizeBlockwise<__half, 512, 64, 8, 2>(float *, unsigned char *, float *, T1 *, int, int)",
+      "grid_size": "(4096, 1, 1)",
+      "block_size": "(64, 1, 1)",
+      "duration_us": 38.592,
+      "dram_throughput_pct_peak": 90.790929,
+      "sm_throughput_pct_peak": 84.448051,
+      "registers_per_thread": 44.0
+    },
+    {
+      "kernel_name": "void kDequantizeBlockwise<float, 512, 64, 8, 0>(float *, unsigned char *, float *, T1 *, int, int)",
+      "grid_size": "(16, 1, 1)",
+      "block_size": "(64, 1, 1)",
+      "duration_us": 2.368,
+      "dram_throughput_pct_peak": 4.832176,
+      "sm_throughput_pct_peak": 3.562499,
+      "registers_per_thread": 40.0
+    }
+  ]
+}

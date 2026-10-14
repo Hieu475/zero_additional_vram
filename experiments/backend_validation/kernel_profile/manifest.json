@@ -1,0 +1,49 @@
+{
+  "scope": "single-prompt Nsight Systems diagnostic captures; not production benchmark",
+  "shared_config": {
+    "prompt_id": "qasper_119_ctx384",
+    "prompt_token_ids_sha256": "e617342159463f01ca6f06e54a06f40887d8f37f42b8930e7b1f5350d1dae479",
+    "prompt_tokens": 384,
+    "max_new_tokens": 32,
+    "kv_capacity": 436,
+    "quantization": "NF4 double_quant=True FP16 compute",
+    "attention": "SDPA",
+    "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "compute_capability": [
+      8,
+      9
+    ],
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0",
+    "execution_commit": "4d5e54f91a973a17b9e88aee52fed03f2717d2c9",
+    "capture_range": "cudaProfilerApi; warmup excluded; Nsight-instrumented diagnostics, not production timing"
+  },
+  "nsys_version": "NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0",
+  "capture_files_sha256": {
+    "experiments/backend_validation/kernel_profile/cka90_k2.json": "ca15efa8711b98ec21b19b334f83bc0707ec58293714b5d715ae61d7ace8b1c1",
+    "experiments/backend_validation/kernel_profile/cka90_k2.nsys-rep": "1a3c96966f582ee21d1d192b330abc56d7d21a29c745b31a300c91b06e2f2902",
+    "experiments/backend_validation/kernel_profile/pld_k4.json": "b8c685bfba31a2dfb9ccd07d387e34f07bd89b3101451df5828d011dc1fca13c",
+    "experiments/backend_validation/kernel_profile/pld_k4.nsys-rep": "3ee7c0baccce804fda2a805e14ee586971f708ac2ac9da51d0633682e06491ef",
+    "experiments/backend_validation/kernel_profile/results.json": "d74cb00baed6a9791b0b18898d2cf052d804e2c26794ebad1556bf63b3006389",
+    "experiments/backend_validation/kernel_profile/vanilla.json": "6d1256a64e0117841c26b57312d30f52ef31b86f72cf2572238c3954ffc6854c",
+    "experiments/backend_validation/kernel_profile/vanilla.nsys-rep": "2016518ca71685cc23de1eca9cd97ea4efb984ee8c6168a5d16aa5dfdc8e9970"
+  },
+  "exported_summary_files": [
+    "experiments/backend_validation/kernel_profile/cka90_k2_stats_cuda_api_sum.json",
+    "experiments/backend_validation/kernel_profile/cka90_k2_stats_cuda_gpu_kern_sum.json",
+    "experiments/backend_validation/kernel_profile/cka90_k2_stats_cuda_gpu_mem_time_sum.json",
+    "experiments/backend_validation/kernel_profile/cka90_k2_stats_nvtx_sum.json",
+    "experiments/backend_validation/kernel_profile/pld_k4_stats_cuda_api_sum.json",
+    "experiments/backend_validation/kernel_profile/pld_k4_stats_cuda_gpu_kern_sum.json",
+    "experiments/backend_validation/kernel_profile/pld_k4_stats_cuda_gpu_mem_time_sum.json",
+    "experiments/backend_validation/kernel_profile/pld_k4_stats_nvtx_sum.json",
+    "experiments/backend_validation/kernel_profile/vanilla_stats_cuda_api_sum.json",
+    "experiments/backend_validation/kernel_profile/vanilla_stats_cuda_gpu_kern_sum.json",
+    "experiments/backend_validation/kernel_profile/vanilla_stats_cuda_gpu_mem_time_sum.json",
+    "experiments/backend_validation/kernel_profile/vanilla_stats_nvtx_sum.json"
+  ],
+  "analysis_script": "scripts/analyze_backend_nsight.py"
+}
