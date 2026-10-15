@@ -1,0 +1,247 @@
+{
+  "protocol": {
+    "prompt_count": 20,
+    "prompt_tokens": 384,
+    "output_budget": 128,
+    "warmup_tokens": 128,
+    "kv_capacity": 520,
+    "sessions_per_backend": 1,
+    "cohort": "held out from backend selection; may have appeared in earlier ZASSD studies",
+    "interval": "95% prompt bootstrap; one session per backend, session variance not estimated"
+  },
+  "backends": {
+    "hf_bnb_nf4": {
+      "vanilla": {
+        "valid_prompts": 20,
+        "mean_decode_tps": {
+          "n": 20,
+          "mean": 31.27261582895841,
+          "ci95_prompt_bootstrap": [
+            30.742446516034992,
+            31.915511977333075
+          ]
+        },
+        "mean_e2e_s": {
+          "n": 20,
+          "mean": 4.309476381549985,
+          "ci95_prompt_bootstrap": [
+            4.234082429999989,
+            4.374745715899894
+          ]
+        },
+        "exact_vs_own_vanilla": 20,
+        "exact_n": 20,
+        "divergence_positions": {},
+        "actual_output_lengths": {
+          "128": 20
+        }
+      },
+      "pld_k4": {
+        "valid_prompts": 20,
+        "mean_decode_tps": {
+          "n": 20,
+          "mean": 35.139306508504546,
+          "ci95_prompt_bootstrap": [
+            32.83580473728327,
+            37.58732636682242
+          ]
+        },
+        "mean_e2e_s": {
+          "n": 20,
+          "mean": 3.934069836250001,
+          "ci95_prompt_bootstrap": [
+            3.696373734199983,
+            4.1565403692999325
+          ]
+        },
+        "exact_vs_own_vanilla": 7,
+        "exact_n": 20,
+        "divergence_positions": {
+          "32": 1,
+          "36": 2,
+          "41": 1,
+          "46": 1,
+          "51": 1,
+          "58": 1,
+          "62": 2,
+          "113": 1,
+          "115": 1,
+          "119": 1,
+          "123": 1
+        },
+        "actual_output_lengths": {
+          "128": 20
+        },
+        "paired_internal_speedup": {
+          "n": 20,
+          "mean": 1.1259017677324783,
+          "ci95_prompt_bootstrap": [
+            1.048932291698976,
+            1.2143554651212378
+          ]
+        },
+        "slowdown_frequency": 0.3
+      },
+      "cka90_k2": {
+        "valid_prompts": 20,
+        "mean_decode_tps": {
+          "n": 20,
+          "mean": 27.1047960877243,
+          "ci95_prompt_bootstrap": [
+            26.591214738562314,
+            27.61343557818256
+          ]
+        },
+        "mean_e2e_s": {
+          "n": 20,
+          "mean": 4.934721911800011,
+          "ci95_prompt_bootstrap": [
+            4.847701534049975,
+            5.024133140800041
+          ]
+        },
+        "exact_vs_own_vanilla": 5,
+        "exact_n": 20,
+        "divergence_positions": {
+          "11": 1,
+          "16": 1,
+          "25": 1,
+          "27": 1,
+          "32": 1,
+          "36": 1,
+          "43": 1,
+          "55": 1,
+          "58": 1,
+          "68": 1,
+          "75": 1,
+          "78": 1,
+          "90": 1,
+          "104": 1,
+          "110": 1
+        },
+        "actual_output_lengths": {
+          "128": 20
+        },
+        "paired_internal_speedup": {
+          "n": 20,
+          "mean": 0.8686852055256327,
+          "ci95_prompt_bootstrap": [
+            0.8413770528506578,
+            0.8913849836394935
+          ]
+        },
+        "slowdown_frequency": 1.0
+      }
+    },
+    "hqq_gemlite_w4a16": {
+      "vanilla": {
+        "valid_prompts": 20,
+        "mean_decode_tps": {
+          "n": 20,
+          "mean": 25.17216237271451,
+          "ci95_prompt_bootstrap": [
+            24.51209959658177,
+            25.790583954788936
+          ]
+        },
+        "mean_e2e_s": {
+          "n": 20,
+          "mean": 5.240153126149972,
+          "ci95_prompt_bootstrap": [
+            5.109618114049977,
+            5.403823683249902
+          ]
+        },
+        "exact_vs_own_vanilla": 20,
+        "exact_n": 20,
+        "divergence_positions": {},
+        "actual_output_lengths": {
+          "128": 20
+        }
+      },
+      "pld_k4": {
+        "valid_prompts": 20,
+        "mean_decode_tps": {
+          "n": 20,
+          "mean": 30.443182806221206,
+          "ci95_prompt_bootstrap": [
+            27.574503629783234,
+            33.71230058331898
+          ]
+        },
+        "mean_e2e_s": {
+          "n": 20,
+          "mean": 4.528749721199984,
+          "ci95_prompt_bootstrap": [
+            4.138431571100023,
+            4.87745017835
+          ]
+        },
+        "exact_vs_own_vanilla": 14,
+        "exact_n": 20,
+        "divergence_positions": {
+          "2": 2,
+          "28": 1,
+          "41": 1,
+          "72": 1,
+          "115": 1
+        },
+        "actual_output_lengths": {
+          "128": 20
+        },
+        "paired_internal_speedup": {
+          "n": 20,
+          "mean": 1.206724939831144,
+          "ci95_prompt_bootstrap": [
+            1.1067171913964262,
+            1.3232952969680853
+          ]
+        },
+        "slowdown_frequency": 0.1
+      },
+      "cka90_k2": {
+        "valid_prompts": 20,
+        "mean_decode_tps": {
+          "n": 20,
+          "mean": 20.11192246017378,
+          "ci95_prompt_bootstrap": [
+            18.664243465844734,
+            21.14969901378403
+          ]
+        },
+        "mean_e2e_s": {
+          "n": 20,
+          "mean": 6.7919191446500236,
+          "ci95_prompt_bootstrap": [
+            6.201004914500118,
+            7.833902910250027
+          ]
+        },
+        "exact_vs_own_vanilla": 14,
+        "exact_n": 20,
+        "divergence_positions": {
+          "2": 1,
+          "56": 1,
+          "71": 1,
+          "72": 1,
+          "97": 1,
+          "120": 1
+        },
+        "actual_output_lengths": {
+          "128": 20
+        },
+        "paired_internal_speedup": {
+          "n": 20,
+          "mean": 0.7959408601460252,
+          "ci95_prompt_bootstrap": [
+            0.7422023249102775,
+            0.8327810841785936
+          ]
+        },
+        "slowdown_frequency": 1.0
+      }
+    }
+  },
+  "cross_backend_vanilla_exact": 0,
+  "errors_or_oom": []
+}
