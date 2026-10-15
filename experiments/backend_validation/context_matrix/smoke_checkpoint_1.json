@@ -1,0 +1,128 @@
+{
+  "experiment": "one-session backend context smoke, 32 generated tokens",
+  "cohort_context_tokens": [
+    128,
+    384,
+    1024,
+    2048
+  ],
+  "prompts_per_context": 5,
+  "methods": [
+    "vanilla",
+    "pld_k4",
+    "cka90_k2"
+  ],
+  "status_by_backend_context": {
+    "bnb_128": {
+      "status": "complete",
+      "records": 15,
+      "prompt_count": 5,
+      "methods": {
+        "vanilla": 5,
+        "pld_k4": 5,
+        "cka90_k2": 5
+      }
+    },
+    "hqq_128": {
+      "status": "complete",
+      "records": 15,
+      "prompt_count": 5,
+      "methods": {
+        "vanilla": 5,
+        "pld_k4": 5,
+        "cka90_k2": 5
+      }
+    },
+    "bnb_384": {
+      "status": "complete",
+      "records": 15,
+      "prompt_count": 5,
+      "methods": {
+        "vanilla": 5,
+        "pld_k4": 5,
+        "cka90_k2": 5
+      }
+    },
+    "hqq_384": {
+      "status": "complete",
+      "records": 15,
+      "prompt_count": 5,
+      "methods": {
+        "vanilla": 5,
+        "pld_k4": 5,
+        "cka90_k2": 5
+      }
+    },
+    "bnb_1024": {
+      "status": "complete",
+      "records": 15,
+      "prompt_count": 5,
+      "methods": {
+        "vanilla": 5,
+        "pld_k4": 5,
+        "cka90_k2": 5
+      }
+    },
+    "hqq_1024": {
+      "status": "complete",
+      "records": 15,
+      "prompt_count": 5,
+      "methods": {
+        "vanilla": 5,
+        "pld_k4": 5,
+        "cka90_k2": 5
+      }
+    },
+    "bnb_2048": {
+      "status": "complete",
+      "records": 15,
+      "prompt_count": 5,
+      "methods": {
+        "vanilla": 5,
+        "pld_k4": 5,
+        "cka90_k2": 5
+      }
+    },
+    "hqq_2048": {
+      "status": "missing",
+      "records": 0
+    }
+  },
+  "observed_files": [
+    {
+      "file": "experiments/backend_validation/context_matrix/ctx128_bnb_session1.jsonl",
+      "records": 15
+    },
+    {
+      "file": "experiments/backend_validation/context_matrix/ctx128_hqq_session1_retry1.jsonl",
+      "records": 15
+    },
+    {
+      "file": "experiments/backend_validation/context_matrix/ctx384_bnb_session1.jsonl",
+      "records": 15
+    },
+    {
+      "file": "experiments/backend_validation/context_matrix/ctx384_hqq_session1.jsonl",
+      "records": 15
+    },
+    {
+      "file": "experiments/backend_validation/context_matrix/ctx1024_bnb_session1.jsonl",
+      "records": 15
+    },
+    {
+      "file": "experiments/backend_validation/context_matrix/ctx1024_hqq_session1.jsonl",
+      "records": 15
+    },
+    {
+      "file": "experiments/backend_validation/context_matrix/ctx2048_bnb_session1.jsonl",
+      "records": 15
+    }
+  ],
+  "pending": [
+    {
+      "backend": "hqq_gemlite_w4a16",
+      "context_tokens": 2048,
+      "status": "no complete JSONL output recorded; rerun pending"
+    }
+  ]
+}
