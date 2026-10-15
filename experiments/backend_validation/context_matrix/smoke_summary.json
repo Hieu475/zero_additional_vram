@@ -1,0 +1,375 @@
+{
+  "protocol": {
+    "contexts": [
+      128,
+      384,
+      1024,
+      2048
+    ],
+    "prompts_per_context": 5,
+    "sessions_per_cell": 1,
+    "output_budget": 32,
+    "warmup_tokens": 32,
+    "paired_source_documents": true,
+    "inference": "greedy, static KV, SDPA, Qwen2.5-3B-Instruct pinned revision",
+    "statistics": "descriptive only; n=5 prompts, one session per cell"
+  },
+  "cell_status": {
+    "ctx128_hf_bnb_nf4": {
+      "status": "complete",
+      "file": "ctx128_bnb_session1.jsonl",
+      "records": 15,
+      "prompts": 5,
+      "capacity": 164,
+      "input_tokens": 128,
+      "max_new_tokens": 32
+    },
+    "ctx128_hqq_gemlite_w4a16": {
+      "status": "complete",
+      "file": "ctx128_hqq_session1_retry1.jsonl",
+      "records": 15,
+      "prompts": 5,
+      "capacity": 164,
+      "input_tokens": 128,
+      "max_new_tokens": 32
+    },
+    "ctx384_hf_bnb_nf4": {
+      "status": "complete",
+      "file": "ctx384_bnb_session1.jsonl",
+      "records": 15,
+      "prompts": 5,
+      "capacity": 420,
+      "input_tokens": 384,
+      "max_new_tokens": 32
+    },
+    "ctx384_hqq_gemlite_w4a16": {
+      "status": "complete",
+      "file": "ctx384_hqq_session1.jsonl",
+      "records": 15,
+      "prompts": 5,
+      "capacity": 420,
+      "input_tokens": 384,
+      "max_new_tokens": 32
+    },
+    "ctx1024_hf_bnb_nf4": {
+      "status": "complete",
+      "file": "ctx1024_bnb_session1.jsonl",
+      "records": 15,
+      "prompts": 5,
+      "capacity": 1060,
+      "input_tokens": 1024,
+      "max_new_tokens": 32
+    },
+    "ctx1024_hqq_gemlite_w4a16": {
+      "status": "complete",
+      "file": "ctx1024_hqq_session1.jsonl",
+      "records": 15,
+      "prompts": 5,
+      "capacity": 1060,
+      "input_tokens": 1024,
+      "max_new_tokens": 32
+    },
+    "ctx2048_hf_bnb_nf4": {
+      "status": "complete",
+      "file": "ctx2048_bnb_session1.jsonl",
+      "records": 15,
+      "prompts": 5,
+      "capacity": 2084,
+      "input_tokens": 2048,
+      "max_new_tokens": 32
+    },
+    "ctx2048_hqq_gemlite_w4a16": {
+      "status": "complete",
+      "file": "ctx2048_hqq_session1_retry1.jsonl",
+      "records": 15,
+      "prompts": 5,
+      "capacity": 2084,
+      "input_tokens": 2048,
+      "max_new_tokens": 32
+    }
+  },
+  "results": {
+    "ctx128_hf_bnb_nf4": {
+      "vanilla": {
+        "decode_tps_mean": 36.432415755793194,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2022.7197265625,
+        "actual_output_lengths": [
+          32
+        ]
+      },
+      "pld_k4": {
+        "decode_tps_mean": 38.325686318021994,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2025.402734375,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 1.0496693290514651,
+        "slowdown_frequency": 0.2
+      },
+      "cka90_k2": {
+        "decode_tps_mean": 28.613058033668967,
+        "exact_count": 3,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2026.340625,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 0.7852834692451509,
+        "slowdown_frequency": 1.0
+      }
+    },
+    "ctx128_hqq_gemlite_w4a16": {
+      "vanilla": {
+        "decode_tps_mean": 28.80677424447245,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2139.44580078125,
+        "actual_output_lengths": [
+          32
+        ]
+      },
+      "pld_k4": {
+        "decode_tps_mean": 27.224688633674063,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2141.8212890625,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 0.9450550291535423,
+        "slowdown_frequency": 0.6
+      },
+      "cka90_k2": {
+        "decode_tps_mean": 21.460168983121807,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2143.356640625,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 0.7442271608070886,
+        "slowdown_frequency": 1.0
+      }
+    },
+    "ctx384_hf_bnb_nf4": {
+      "vanilla": {
+        "decode_tps_mean": 36.87744172799249,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2106.7216796875,
+        "actual_output_lengths": [
+          32
+        ]
+      },
+      "pld_k4": {
+        "decode_tps_mean": 37.16498866435589,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2110.4876953125,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 1.0045171917358948,
+        "slowdown_frequency": 0.6
+      },
+      "cka90_k2": {
+        "decode_tps_mean": 31.671726358187723,
+        "exact_count": 3,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2110.8880859375,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 0.8613702213361868,
+        "slowdown_frequency": 1.0
+      }
+    },
+    "ctx384_hqq_gemlite_w4a16": {
+      "vanilla": {
+        "decode_tps_mean": 29.304743224957797,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2223.88525390625,
+        "actual_output_lengths": [
+          32
+        ]
+      },
+      "pld_k4": {
+        "decode_tps_mean": 26.903184023861208,
+        "exact_count": 4,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2227.5466796875,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 0.9153184798696622,
+        "slowdown_frequency": 0.6
+      },
+      "cka90_k2": {
+        "decode_tps_mean": 23.079620125347752,
+        "exact_count": 4,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2227.9068359375,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 0.7890393439912963,
+        "slowdown_frequency": 1.0
+      }
+    },
+    "ctx1024_hf_bnb_nf4": {
+      "vanilla": {
+        "decode_tps_mean": 33.97223074283851,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2316.4765625,
+        "actual_output_lengths": [
+          32
+        ]
+      },
+      "pld_k4": {
+        "decode_tps_mean": 32.88690876105907,
+        "exact_count": 3,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2322.7365234375,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 0.9684007458032313,
+        "slowdown_frequency": 0.6
+      },
+      "cka90_k2": {
+        "decode_tps_mean": 29.141097813862288,
+        "exact_count": 3,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2323.11376953125,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 0.8593669230022221,
+        "slowdown_frequency": 1.0
+      }
+    },
+    "ctx1024_hqq_gemlite_w4a16": {
+      "vanilla": {
+        "decode_tps_mean": 24.355576728139795,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2434.10888671875,
+        "actual_output_lengths": [
+          32
+        ]
+      },
+      "pld_k4": {
+        "decode_tps_mean": 25.3467219951006,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2440.468359375,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 1.0433521395105247,
+        "slowdown_frequency": 0.6
+      },
+      "cka90_k2": {
+        "decode_tps_mean": 19.803471537991143,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2440.509375,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 0.8135967546009649,
+        "slowdown_frequency": 1.0
+      }
+    },
+    "ctx2048_hf_bnb_nf4": {
+      "vanilla": {
+        "decode_tps_mean": 32.57104555817137,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2663.017578125,
+        "actual_output_lengths": [
+          32
+        ]
+      },
+      "pld_k4": {
+        "decode_tps_mean": 31.34045939982818,
+        "exact_count": 3,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2673.1265625,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 0.9630518131153999,
+        "slowdown_frequency": 0.6
+      },
+      "cka90_k2": {
+        "decode_tps_mean": 27.506564642560793,
+        "exact_count": 3,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2673.54794921875,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 0.8444290223547026,
+        "slowdown_frequency": 1.0
+      }
+    },
+    "ctx2048_hqq_gemlite_w4a16": {
+      "vanilla": {
+        "decode_tps_mean": 26.315632133520307,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2788.10107421875,
+        "actual_output_lengths": [
+          32
+        ]
+      },
+      "pld_k4": {
+        "decode_tps_mean": 27.946578809464857,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2798.4943359375,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 1.0650037271325974,
+        "slowdown_frequency": 0.4
+      },
+      "cka90_k2": {
+        "decode_tps_mean": 20.130994864126095,
+        "exact_count": 5,
+        "prompt_count": 5,
+        "peak_allocated_mb_mean": 2798.750390625,
+        "actual_output_lengths": [
+          32
+        ],
+        "paired_speedup_mean": 0.7662387337968691,
+        "slowdown_frequency": 1.0
+      }
+    }
+  },
+  "cross_backend_vanilla_exact": {
+    "128": {
+      "exact": 0,
+      "n": 5
+    },
+    "384": {
+      "exact": 0,
+      "n": 5
+    },
+    "1024": {
+      "exact": 0,
+      "n": 5
+    },
+    "2048": {
+      "exact": 0,
+      "n": 5
+    }
+  }
+}
