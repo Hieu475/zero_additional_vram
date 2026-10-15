@@ -99,6 +99,8 @@ def main() -> None:
     ap.add_argument("--prompt-id", default="qasper_119_ctx384")
     ap.add_argument("--prompt-ids-file", type=Path,
                     help="optional newline-delimited cohort; overrides --prompt-id")
+    ap.add_argument("--inputs-file", type=Path, default=INPUTS,
+                    help="prepared token-ID JSONL; defaults to the short-context diagnostic artifact")
     ap.add_argument("--max-new-tokens", type=int, default=32)
     ap.add_argument("--capacity", type=int, default=436)
     ap.add_argument("--repeats", type=int, default=1)
@@ -110,7 +112,8 @@ def main() -> None:
     args = ap.parse_args()
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA required")
-    rows = [json.loads(line) for line in INPUTS.read_text().splitlines() if line.strip()]
+    inputs_path = args.inputs_file if args.inputs_file.is_absolute() else ROOT / args.inputs_file
+    rows = [json.loads(line) for line in inputs_path.read_text().splitlines() if line.strip()]
     row_by_id = {item["prompt_id"]: item for item in rows}
     prompt_ids = ([line.strip() for line in args.prompt_ids_file.read_text().splitlines() if line.strip()]
                   if args.prompt_ids_file else [args.prompt_id])
@@ -136,6 +139,7 @@ def main() -> None:
         "execution_commit": subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
                                             capture_output=True, text=True, check=True).stdout.strip(),
         "measurement_scope": "paired methods; full-budget warmup excluded; randomized balanced order; diagnostic cohort run",
+        "inputs_file": str(inputs_path.relative_to(ROOT)) if inputs_path.is_relative_to(ROOT) else str(inputs_path),
         "working_tree_dirty": subprocess.run(["git", "status", "--porcelain"], cwd=ROOT,
                                              capture_output=True, text=True, check=True).stdout.strip() != "",
     }

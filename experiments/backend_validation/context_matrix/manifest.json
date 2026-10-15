@@ -1,0 +1,77 @@
+{
+  "source": "THUDM/LongBench",
+  "source_url": "https://github.com/THUDM/LongBench",
+  "source_repo": "THUDM/LongBench",
+  "source_revision": "5e628be450b7e67fb7ae6e201bd6d8f7056f7672",
+  "source_archive": "data.zip",
+  "source_archive_sha256": "cb45b11a4133c6bc1d6a44b0f8e701335ff1e543195db1103472e575857f7f64",
+  "tokenizer_model": "Qwen/Qwen2.5-3B-Instruct",
+  "tokenizer_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "seed": 20261027,
+  "targets_tokens": [
+    128,
+    384,
+    1024,
+    2048
+  ],
+  "examples_per_bucket": 5,
+  "excluded_source_ids": 151,
+  "excluded_input_files": [
+    "experiments/natural_context_validation/full_n20_pld_rtx4050/prepared_inputs.jsonl",
+    "experiments/natural_context_validation/repeat2_n20_pld_rtx4050/prepared_inputs.jsonl",
+    "experiments/natural_context_validation/pilot_rtx4050/prepared_inputs.jsonl",
+    "experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl",
+    "experiments/natural_context_validation/independent_pld_short_context/session2_rtx4050/prepared_inputs.jsonl",
+    "experiments/natural_context_validation/independent_pld_short_context/session3_rtx4050/prepared_inputs.jsonl",
+    "experiments/natural_context_validation/independent_pld_short_context/sequential_verify_rtx4050/prepared_inputs.jsonl",
+    "experiments/natural_context_validation/independent_pld_short_context/sequential_verify_rtx4050_retry1/prepared_inputs.jsonl"
+  ],
+  "selection": "deterministic common source rows long enough for the maximum target; same document paired across context lengths",
+  "paired_contexts": true,
+  "prompt_format": "fixed header + document prefix + task/question suffix",
+  "stored_prompt_content": "token IDs only; source text not redistributed",
+  "prepared_sha256": "ed0c0f12154eafca90d8975d547d30c082bf20c644cd460d6d71bed64c7530b4",
+  "n_examples": 20,
+  "bucket_counts": {
+    "128": 5,
+    "384": 5,
+    "1024": 5,
+    "2048": 5
+  },
+  "prompt_ids_by_context": {
+    "128": [
+      "narrativeqa_127_ctx128",
+      "qasper_110_ctx128",
+      "gov_report_90_ctx128",
+      "multi_news_149_ctx128",
+      "qmsum_18_ctx128"
+    ],
+    "384": [
+      "narrativeqa_127_ctx384",
+      "qasper_110_ctx384",
+      "gov_report_90_ctx384",
+      "multi_news_149_ctx384",
+      "qmsum_18_ctx384"
+    ],
+    "1024": [
+      "narrativeqa_127_ctx1024",
+      "qasper_110_ctx1024",
+      "gov_report_90_ctx1024",
+      "multi_news_149_ctx1024",
+      "qmsum_18_ctx1024"
+    ],
+    "2048": [
+      "narrativeqa_127_ctx2048",
+      "qasper_110_ctx2048",
+      "gov_report_90_ctx2048",
+      "multi_news_149_ctx2048",
+      "qmsum_18_ctx2048"
+    ]
+  },
+  "cohort_files": {
+    "128": "experiments/backend_validation/context_matrix/cohort_ctx128.txt",
+    "384": "experiments/backend_validation/context_matrix/cohort_ctx384.txt",
+    "1024": "experiments/backend_validation/context_matrix/cohort_ctx1024.txt",
+    "2048": "experiments/backend_validation/context_matrix/cohort_ctx2048.txt"
+  }
+}

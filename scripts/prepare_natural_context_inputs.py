@@ -38,7 +38,8 @@ def sha256_file(path: Path) -> str:
 
 def prepare(output: Path, model: str, model_revision: str, per_bucket: int,
             targets: tuple[int, ...], seed: int,
-            exclude_prompt_files: tuple[Path, ...] = ()) -> dict[str, Any]:
+            exclude_prompt_files: tuple[Path, ...] = (),
+            paired_contexts: bool = False) -> dict[str, Any]:
     archive = Path(hf_hub_download(
         repo_id=SOURCE_REPO, filename=SOURCE_ARCHIVE,
         repo_type="dataset", revision=SOURCE_REVISION,
@@ -82,15 +83,42 @@ def prepare(output: Path, model: str, model_revision: str, per_bucket: int,
                 excluded.add((str(record["source_task"]), str(record["source_id"])))
     used: set[tuple[str, str]] = set(excluded)
     selected: list[dict[str, Any]] = []
+    paired_source_rows = []
+    if paired_contexts:
+        max_target = max(targets)
+        eligible_common = []
+        for row in candidates:
+            key = (row["task"], row["source_id"])
+            budget = max_target - len(row["header_ids"]) - len(row["suffix_ids"])
+            if key in excluded or budget <= 0 or len(row["context_ids"]) < budget:
+                continue
+            eligible_common.append(row)
+        per_task, remainder = divmod(per_bucket, len(TASKS))
+        for task in TASKS:
+            task_rows = [row for row in eligible_common if row["task"] == task]
+            paired_source_rows.extend(task_rows[:per_task])
+        selected_keys = {(row["task"], row["source_id"]) for row in paired_source_rows}
+        for row in eligible_common:
+            if len(paired_source_rows) >= per_task * len(TASKS) + remainder:
+                break
+            key = (row["task"], row["source_id"])
+            if key not in selected_keys:
+                paired_source_rows.append(row)
+                selected_keys.add(key)
+        if len(paired_source_rows) < per_bucket:
+            raise RuntimeError(
+                f"Only found {len(paired_source_rows)}/{per_bucket} sources long enough for all paired targets"
+            )
     for target in targets:
         bucket = {
             384: "128-512", 768: "512-1024",
             1536: "1024-2048", 3072: "2048-4096",
         }.get(target, str(target))
         bucket_rows = 0
-        for row in candidates:
+        eligible_rows = paired_source_rows if paired_contexts else candidates
+        for row in eligible_rows:
             key = (row["task"], row["source_id"])
-            if key in used:
+            if not paired_contexts and key in used:
                 continue
             context_budget = target - len(row["header_ids"]) - len(row["suffix_ids"])
             if context_budget <= 0 or len(row["context_ids"]) < context_budget:
@@ -104,7 +132,8 @@ def prepare(output: Path, model: str, model_revision: str, per_bucket: int,
                 "source_row": row["index"], "context_bucket": bucket,
                 "prompt_tokens": target, "input_ids": ids,
             })
-            used.add(key)
+            if not paired_contexts:
+                used.add(key)
             bucket_rows += 1
             if bucket_rows >= per_bucket:
                 break
@@ -131,7 +160,9 @@ def prepare(output: Path, model: str, model_revision: str, per_bucket: int,
         "examples_per_bucket": per_bucket,
         "excluded_source_ids": len(excluded),
         "excluded_input_files": [str(path) for path in exclude_prompt_files],
-        "selection": "deterministic shuffled source rows; unique source IDs; natural context prefix; no repetition",
+        "selection": ("deterministic common source rows long enough for the maximum target; same document paired across context lengths"
+                      if paired_contexts else "deterministic shuffled source rows; unique source IDs; natural context prefix; no repetition"),
+        "paired_contexts": paired_contexts,
         "prompt_format": "fixed header + document prefix + task/question suffix",
         "stored_prompt_content": "token IDs only; source text not redistributed",
         "prepared_sha256": sha256_file(output),
@@ -149,9 +180,32 @@ def main() -> None:
     parser.add_argument("--targets", type=int, nargs="+", default=list(DEFAULT_TARGETS))
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--exclude-prompt-files", type=Path, nargs="*", default=())
+    parser.add_argument("--manifest-output", type=Path,
+                        help="optional JSON file for the preparation manifest")
+    parser.add_argument("--paired-contexts", action="store_true",
+                        help="use the same source documents at every requested context length")
     args = parser.parse_args()
     manifest = prepare(args.output, args.model, args.model_revision, args.per_bucket,
-                       tuple(args.targets), args.seed, tuple(args.exclude_prompt_files))
+                       tuple(args.targets), args.seed, tuple(args.exclude_prompt_files), args.paired_contexts)
+    input_path = args.output if args.output.is_absolute() else Path.cwd() / args.output
+    prepared_rows = [json.loads(line) for line in input_path.read_text().splitlines() if line.strip()]
+    cohort_files = {}
+    for target in args.targets:
+        ids = [row["prompt_id"] for row in prepared_rows if row["prompt_tokens"] == target]
+        cohort_path = input_path.parent / f"cohort_ctx{target}.txt"
+        cohort_path.write_text("\n".join(ids) + "\n")
+        cohort_files[str(target)] = str(cohort_path.relative_to(Path.cwd()))
+    manifest["prompt_ids_by_context"] = {
+        str(target): [row["prompt_id"] for row in prepared_rows if row["prompt_tokens"] == target]
+        for target in args.targets
+    }
+    manifest["cohort_files"] = cohort_files
+    if args.manifest_output:
+        manifest_path = args.manifest_output
+        if not manifest_path.is_absolute():
+            manifest_path = Path.cwd() / manifest_path
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps(manifest, indent=2))
 
 
