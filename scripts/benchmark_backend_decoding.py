@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
 import random
+import re
 import subprocess
 import sys
 import time
+import platform
 from pathlib import Path
 from typing import Any
 
@@ -28,6 +31,75 @@ REVISION = "aa8e72537993ba99e69dfaafa59ed015b17504d1"
 INPUTS = ROOT / "experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl"
 SKIP = [4, 5, 6, 7]
 METHODS = ("vanilla", "pld_k4", "cka90_k2")
+TEMPERATURE = 0.0
+
+
+def package_version(name: str) -> str | None:
+    try:
+        return importlib.metadata.version(name)
+    except importlib.metadata.PackageNotFoundError:
+        return None
+
+
+def source_digest() -> str:
+    digest = hashlib.sha256()
+    paths = [ROOT / "scripts/benchmark_backend_decoding.py"]
+    paths += sorted((ROOT / "src/zassd").rglob("*.py"))
+    for path in paths:
+        digest.update(str(path.relative_to(ROOT)).encode())
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def git_provenance() -> dict[str, Any]:
+    commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
+                            capture_output=True, text=True, check=True).stdout.strip()
+    status = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT,
+                            capture_output=True, text=True, check=True).stdout.splitlines()
+    paths = [line[3:] for line in status if len(line) > 3]
+    source_paths = [p for p in paths if p == "scripts/benchmark_backend_decoding.py" or p.startswith("src/zassd/")]
+    return {
+        "execution_commit": commit,
+        "working_tree_dirty": bool(status),
+        "working_tree_dirty_paths": paths,
+        "source_tree_dirty": bool(source_paths),
+        "source_tree_dirty_paths": source_paths,
+        "source_files_sha256": source_digest(),
+    }
+
+
+def gpu_telemetry(device: str) -> dict[str, Any]:
+    idx = 0
+    match = re.search(r":(\d+)$", device)
+    if match:
+        idx = int(match.group(1))
+    query = "name,driver_version,temperature.gpu,clocks.current.sm,power.draw"
+    try:
+        raw = subprocess.run(
+            ["nvidia-smi", f"--id={idx}", f"--query-gpu={query}",
+             "--format=csv,noheader,nounits"],
+            capture_output=True, text=True, check=True, timeout=5,
+        ).stdout.strip().splitlines()[0]
+        fields = [field.strip() for field in raw.split(",")]
+        if len(fields) != 5:
+            raise ValueError(f"unexpected nvidia-smi fields: {raw}")
+        return {
+            "gpu_name": fields[0], "driver_version": fields[1],
+            "temperature_c": _number_or_none(fields[2]),
+            "sm_clock_mhz": _number_or_none(fields[3]),
+            "power_draw_w": _number_or_none(fields[4]),
+        }
+    except Exception as exc:
+        return {"error": f"{type(exc).__name__}: {exc}"}
+
+
+def _number_or_none(value: str) -> float | None:
+    try:
+        return float(value)
+    except ValueError:
+        return None
 
 
 def direct_vanilla(model: Any, prompt: torch.Tensor, eos_id: int | None,
@@ -68,14 +140,14 @@ def invoke(method: str, loaded: Any, manager: LayerManager, ids: list[int],
     if method == "pld_k4":
         _, metrics = prompt_lookup_generate(
             loaded.model, loaded.tokenizer, prompt, k=4, ngram_size=3,
-            max_new_tokens=budget, temperature=0.0, device=device,
+            max_new_tokens=budget, temperature=TEMPERATURE, device=device,
             kv_cache_backend="static", candidate_source="prompt+generated",
             kv_cache_max_capacity=capacity,
         )
     else:
         _, metrics = self_speculative_generate(
             loaded.model, loaded.tokenizer, manager, SKIP, prompt, k=2,
-            max_new_tokens=budget, temperature=0.0, device=device,
+            max_new_tokens=budget, temperature=TEMPERATURE, device=device,
             kv_cache_backend="static", kv_cache_max_capacity=capacity,
             draft_mode="layer_skip", config_name="cka_90",
         )
@@ -133,15 +205,21 @@ def main() -> None:
     out = args.output if args.output.is_absolute() else ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
     runtime = {
-        "torch": torch.__version__, "cuda": torch.version.cuda,
+        **git_provenance(),
+        "torch": str(torch.__version__), "cuda": torch.version.cuda,
         "gpu": torch.cuda.get_device_name(args.device),
         "compute_capability": list(torch.cuda.get_device_capability(args.device)),
-        "execution_commit": subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
-                                            capture_output=True, text=True, check=True).stdout.strip(),
+        "gpu_telemetry_at_start": gpu_telemetry(args.device),
+        "python": sys.version.split()[0], "platform": platform.platform(),
+        "packages": {
+            name: package_version(name) for name in (
+                "transformers", "bitsandbytes", "accelerate", "hqq", "gemlite",
+            )
+        },
+        "temperature": TEMPERATURE,
+        "eos_token_id": loaded.tokenizer.eos_token_id,
         "measurement_scope": "paired methods; full-budget warmup excluded; randomized balanced order; diagnostic cohort run",
         "inputs_file": str(inputs_path.relative_to(ROOT)) if inputs_path.is_relative_to(ROOT) else str(inputs_path),
-        "working_tree_dirty": subprocess.run(["git", "status", "--porcelain"], cwd=ROOT,
-                                             capture_output=True, text=True, check=True).stdout.strip() != "",
     }
     # Rotate all six permutations across prompts, then shuffle their assignment.
     import itertools
@@ -172,16 +250,28 @@ def main() -> None:
             for method in order:
                 torch.cuda.reset_peak_memory_stats(args.device)
                 torch.cuda.synchronize(args.device)
+                telemetry_before = gpu_telemetry(args.device)
                 try:
                     result = invoke(method, loaded, manager, ids, args.max_new_tokens,
                                     args.capacity, args.device)
                     torch.cuda.synchronize(args.device)
+                    telemetry_after = gpu_telemetry(args.device)
                     result["peak_allocated_mb"] = torch.cuda.max_memory_allocated(args.device) / 2**20
                     result["peak_reserved_mb"] = torch.cuda.max_memory_reserved(args.device) / 2**20
+                    result["eos_reached"] = bool(result.get("token_ids")) and result["token_ids"][-1] == loaded.tokenizer.eos_token_id
+                    result["stop_reason"] = (
+                        "eos" if result["eos_reached"] else
+                        "token_budget" if len(result.get("token_ids", [])) >= args.max_new_tokens else
+                        "early_stop_or_backend_limit"
+                    )
+                    result["gpu_telemetry_before"] = telemetry_before
+                    result["gpu_telemetry_after"] = telemetry_after
                     measured[method] = result
                 except Exception as exc:
                     measured[method] = {"status": "failed", "error_type": type(exc).__name__,
-                                        "error": str(exc)}
+                                        "error": str(exc),
+                                        "gpu_telemetry_before": telemetry_before,
+                                        "gpu_telemetry_after": gpu_telemetry(args.device)}
                     if isinstance(exc, torch.cuda.OutOfMemoryError):
                         torch.cuda.empty_cache()
             vanilla_ids = measured.get("vanilla", {}).get("token_ids")
@@ -204,6 +294,8 @@ def main() -> None:
                         "kv_capacity": args.capacity, "method": method,
                         "repetition": repetition, "session_id": args.session_id,
                         "order_seed": args.seed, "execution_order": order,
+                        "temperature": TEMPERATURE,
+                        "eos_token_id": loaded.tokenizer.eos_token_id,
                         "token_ids": tokens, "warmup_tokens": args.warmup_tokens,
                         "warmup_status": warmup_status[method],
                         "within_backend_exact_vs_vanilla": exact,
