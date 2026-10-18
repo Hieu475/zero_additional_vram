@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import argparse
 import statistics
 from pathlib import Path
 
@@ -11,7 +12,7 @@ DIR = ROOT / "experiments/backend_validation/context_matrix"
 CONTEXTS = (128, 384, 1024, 2048)
 BACKENDS = ("hf_bnb_nf4", "hqq_gemlite_w4a16")
 METHODS = ("vanilla", "pld_k4", "cka90_k2")
-FILES = {
+SMOKE_FILES = {
     (128, "hf_bnb_nf4"): "ctx128_bnb_session1.jsonl",
     (384, "hf_bnb_nf4"): "ctx384_bnb_session1.jsonl",
     (1024, "hf_bnb_nf4"): "ctx1024_bnb_session1.jsonl",
@@ -22,14 +23,31 @@ FILES = {
     (2048, "hqq_gemlite_w4a16"): "ctx2048_hqq_session1_retry1.jsonl",
 }
 
+OUT128_FILES = {
+    (128, "hf_bnb_nf4"): "ctx128_out128_bnb_session1.jsonl",
+    (384, "hf_bnb_nf4"): "ctx384_out128_bnb_session1.jsonl",
+    (1024, "hf_bnb_nf4"): "ctx1024_out128_bnb_session1.jsonl",
+    (2048, "hf_bnb_nf4"): "ctx2048_out128_bnb_session1.jsonl",
+    (128, "hqq_gemlite_w4a16"): "ctx128_out128_hqq_session1.jsonl",
+    (384, "hqq_gemlite_w4a16"): "ctx384_out128_hqq_session1.jsonl",
+    (1024, "hqq_gemlite_w4a16"): "ctx1024_out128_hqq_session1.jsonl",
+    (2048, "hqq_gemlite_w4a16"): "ctx2048_out128_hqq_session1_retry1.jsonl",
+}
+
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output-budget", type=int, choices=(32, 128), default=32)
+    args = parser.parse_args()
+    output_budget = args.output_budget
+    files = SMOKE_FILES if output_budget == 32 else OUT128_FILES
+    stem = "smoke" if output_budget == 32 else "out128"
     data = {}
     statuses = {}
     for context in CONTEXTS:
         for backend in BACKENDS:
             key = (context, backend)
-            path = DIR / FILES[key]
+            path = DIR / files[key]
             if not path.exists():
                 statuses[key] = {"status": "missing", "file": path.name, "records": 0}
                 continue
@@ -52,15 +70,15 @@ def main() -> None:
                              "max_new_tokens": rows[0]["max_new_tokens"]}
 
     summary = {"protocol": {"contexts": list(CONTEXTS), "prompts_per_context": 5,
-                             "sessions_per_cell": 1, "output_budget": 32,
-                             "warmup_tokens": 32,
+                             "sessions_per_cell": 1, "output_budget": output_budget,
+                             "warmup_tokens": output_budget,
                              "paired_source_documents": True,
-                             "inference": "greedy, static KV, SDPA, Qwen2.5-3B-Instruct pinned revision",
+                             "inference": "greedy, static KV, SDPA, Qwen2.5-3B-Instruct pinned revision; capacity=context+budget+4",
                              "statistics": "descriptive only; n=5 prompts, one session per cell"},
                "cell_status": {f"ctx{c}_{b}": v for (c,b),v in statuses.items()},
                "results": {}, "cross_backend_vanilla_exact": {}}
-    lines = ["# Paired context-length backend smoke", "",
-             "The same five LongBench source documents (one each from narrativeqa, qasper, gov_report, multi_news, qmsum) are represented at 128, 384, 1024, and 2048 input tokens. Each cell is one process/session with a 32-token full-path warmup, 32-token output budget, static capacity `context + 36`, greedy SDPA. This is a smoke run, not a performance conclusion: one session and five prompts per cell.", "",
+    lines = [f"# Paired context-length backend evaluation ({output_budget}-token output)", "",
+             f"The same five LongBench source documents (one each from narrativeqa, qasper, gov_report, multi_news, qmsum) are represented at 128, 384, 1024, and 2048 input tokens. Each cell is one process/session with a {output_budget}-token full-path warmup and output budget, static capacity `context + {output_budget + 4}`, greedy SDPA. This is exploratory, not a performance conclusion: one session and five prompts per cell.", "",
              "| Context | Backend | Cell | Method | Decode TPS mean | Internal speedup vs vanilla | Slower fraction | Exact vs own vanilla | Peak allocated MB |", "|---:|---|---|---|---:|---:|---:|---:|---:|"]
     for context in CONTEXTS:
         for backend in BACKENDS:
@@ -110,9 +128,9 @@ def main() -> None:
     lines += ["", "Cross-backend vanilla exactness by context: " + "; ".join(
         f"{c}: {x['exact']}/{x['n']}" for c, x in summary["cross_backend_vanilla_exact"].items()),
         "", "Token exactness is measured against each backend's own vanilla output. Cross-backend output differences reflect stack/quantization fidelity. Do not infer lossless acceleration from speedup alone.", ""]
-    (DIR / "smoke_summary.json").write_text(json.dumps(summary, indent=2) + "\n")
-    (DIR / "smoke_report.md").write_text("\n".join(lines))
-    print(f"wrote {DIR.name}/smoke_summary.json and smoke_report.md")
+    (DIR / f"{stem}_summary.json").write_text(json.dumps(summary, indent=2) + "\n")
+    (DIR / f"{stem}_report.md").write_text("\n".join(lines))
+    print(f"wrote {DIR.name}/{stem}_summary.json and {stem}_report.md")
 
 
 if __name__ == "__main__":
