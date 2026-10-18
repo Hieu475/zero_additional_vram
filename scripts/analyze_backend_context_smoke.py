@@ -24,14 +24,14 @@ SMOKE_FILES = {
 }
 
 OUT128_FILES = {
-    (128, "hf_bnb_nf4"): ["ctx128_out128_bnb_session1.jsonl", "ctx128_out128_bnb_session2.jsonl"],
-    (384, "hf_bnb_nf4"): ["ctx384_out128_bnb_session1.jsonl", "ctx384_out128_bnb_session2.jsonl"],
-    (1024, "hf_bnb_nf4"): ["ctx1024_out128_bnb_session1.jsonl", "ctx1024_out128_bnb_session2.jsonl"],
-    (2048, "hf_bnb_nf4"): ["ctx2048_out128_bnb_session1.jsonl", "ctx2048_out128_bnb_session2.jsonl"],
-    (128, "hqq_gemlite_w4a16"): ["ctx128_out128_hqq_session1.jsonl", "ctx128_out128_hqq_session2.jsonl"],
-    (384, "hqq_gemlite_w4a16"): ["ctx384_out128_hqq_session1.jsonl", "ctx384_out128_hqq_session2.jsonl"],
-    (1024, "hqq_gemlite_w4a16"): ["ctx1024_out128_hqq_session1.jsonl", "ctx1024_out128_hqq_session2.jsonl"],
-    (2048, "hqq_gemlite_w4a16"): ["ctx2048_out128_hqq_session1_retry1.jsonl", "ctx2048_out128_hqq_session2.jsonl"],
+    (128, "hf_bnb_nf4"): ["ctx128_out128_bnb_session1.jsonl", "ctx128_out128_bnb_session2.jsonl", "ctx128_out128_bnb_session3.jsonl"],
+    (384, "hf_bnb_nf4"): ["ctx384_out128_bnb_session1.jsonl", "ctx384_out128_bnb_session2.jsonl", "ctx384_out128_bnb_session3.jsonl"],
+    (1024, "hf_bnb_nf4"): ["ctx1024_out128_bnb_session1.jsonl", "ctx1024_out128_bnb_session2.jsonl", "ctx1024_out128_bnb_session3.jsonl"],
+    (2048, "hf_bnb_nf4"): ["ctx2048_out128_bnb_session1.jsonl", "ctx2048_out128_bnb_session2.jsonl", "ctx2048_out128_bnb_session3.jsonl"],
+    (128, "hqq_gemlite_w4a16"): ["ctx128_out128_hqq_session1.jsonl", "ctx128_out128_hqq_session2.jsonl", "ctx128_out128_hqq_session3.jsonl"],
+    (384, "hqq_gemlite_w4a16"): ["ctx384_out128_hqq_session1.jsonl", "ctx384_out128_hqq_session2.jsonl", "ctx384_out128_hqq_session3.jsonl"],
+    (1024, "hqq_gemlite_w4a16"): ["ctx1024_out128_hqq_session1.jsonl", "ctx1024_out128_hqq_session2.jsonl", "ctx1024_out128_hqq_session3.jsonl"],
+    (2048, "hqq_gemlite_w4a16"): ["ctx2048_out128_hqq_session1_retry1.jsonl", "ctx2048_out128_hqq_session2.jsonl", "ctx2048_out128_hqq_session3.jsonl"],
 }
 
 
@@ -42,7 +42,7 @@ def main() -> None:
     output_budget = args.output_budget
     files = SMOKE_FILES if output_budget == 32 else OUT128_FILES
     stem = "smoke" if output_budget == 32 else "out128"
-    sessions_per_cell = 1 if output_budget == 32 else 2
+    sessions_per_cell = 1 if output_budget == 32 else 3
     data = {}
     statuses = {}
     for context in CONTEXTS:
@@ -83,7 +83,7 @@ def main() -> None:
                              "statistics": f"descriptive only; n=5 prompts across {sessions_per_cell} sessions per cell"},
                "cell_status": {f"ctx{c}_{b}": v for (c,b),v in statuses.items()},
                "results": {}, "cross_backend_vanilla_exact": {}}
-    provenance = ("Execution provenance: session 1 used commit `7b8a398` with a clean working tree. Session 2 used commit `ad0e1d2`; runtime metadata marks its working tree dirty, so this two-session result is exploratory and does not establish clean-tree reproducibility."
+    provenance = ("Execution provenance: session 1 used commit `7b8a398` with a clean working tree. Sessions 2 and 3 used commits `ad0e1d2` and `b24e505`; runtime metadata marks their working trees dirty, so this three-session result is exploratory and does not establish clean-tree reproducibility."
                   if output_budget == 128 else
                   "Execution provenance: the recorded session used commit `7b8a398` with a clean working tree.")
     title = "Paired context-length backend smoke (32-token output)" if output_budget == 32 else "Paired context-length backend evaluation (128-token output)"
