@@ -24,14 +24,14 @@ SMOKE_FILES = {
 }
 
 OUT128_FILES = {
-    (128, "hf_bnb_nf4"): "ctx128_out128_bnb_session1.jsonl",
-    (384, "hf_bnb_nf4"): "ctx384_out128_bnb_session1.jsonl",
-    (1024, "hf_bnb_nf4"): "ctx1024_out128_bnb_session1.jsonl",
-    (2048, "hf_bnb_nf4"): "ctx2048_out128_bnb_session1.jsonl",
-    (128, "hqq_gemlite_w4a16"): "ctx128_out128_hqq_session1.jsonl",
-    (384, "hqq_gemlite_w4a16"): "ctx384_out128_hqq_session1.jsonl",
-    (1024, "hqq_gemlite_w4a16"): "ctx1024_out128_hqq_session1.jsonl",
-    (2048, "hqq_gemlite_w4a16"): "ctx2048_out128_hqq_session1_retry1.jsonl",
+    (128, "hf_bnb_nf4"): ["ctx128_out128_bnb_session1.jsonl", "ctx128_out128_bnb_session2.jsonl"],
+    (384, "hf_bnb_nf4"): ["ctx384_out128_bnb_session1.jsonl", "ctx384_out128_bnb_session2.jsonl"],
+    (1024, "hf_bnb_nf4"): ["ctx1024_out128_bnb_session1.jsonl", "ctx1024_out128_bnb_session2.jsonl"],
+    (2048, "hf_bnb_nf4"): ["ctx2048_out128_bnb_session1.jsonl", "ctx2048_out128_bnb_session2.jsonl"],
+    (128, "hqq_gemlite_w4a16"): ["ctx128_out128_hqq_session1.jsonl", "ctx128_out128_hqq_session2.jsonl"],
+    (384, "hqq_gemlite_w4a16"): ["ctx384_out128_hqq_session1.jsonl", "ctx384_out128_hqq_session2.jsonl"],
+    (1024, "hqq_gemlite_w4a16"): ["ctx1024_out128_hqq_session1.jsonl", "ctx1024_out128_hqq_session2.jsonl"],
+    (2048, "hqq_gemlite_w4a16"): ["ctx2048_out128_hqq_session1_retry1.jsonl", "ctx2048_out128_hqq_session2.jsonl"],
 }
 
 
@@ -42,43 +42,55 @@ def main() -> None:
     output_budget = args.output_budget
     files = SMOKE_FILES if output_budget == 32 else OUT128_FILES
     stem = "smoke" if output_budget == 32 else "out128"
+    sessions_per_cell = 1 if output_budget == 32 else 2
     data = {}
     statuses = {}
     for context in CONTEXTS:
         for backend in BACKENDS:
             key = (context, backend)
-            path = DIR / files[key]
-            if not path.exists():
-                statuses[key] = {"status": "missing", "file": path.name, "records": 0}
+            paths = [DIR / name for name in files[key]] if isinstance(files[key], list) else [DIR / files[key]]
+            missing = [path.name for path in paths if not path.exists()]
+            if missing:
+                statuses[key] = {"status": "missing", "file": missing, "records": 0}
                 continue
-            rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+            rows = [json.loads(line) for path in paths for line in path.read_text().splitlines() if line.strip()]
             by_prompt = {}
             for row in rows:
-                by_prompt.setdefault(row["prompt_id"], {})[row["method"]] = row
-            if len(by_prompt) != 5 or any(set(v) != set(METHODS) for v in by_prompt.values()):
-                statuses[key] = {"status": "partial", "file": path.name, "records": len(rows)}
+                session_number = row["session_id"].split("session", 1)[-1][0]
+                by_prompt.setdefault((row["prompt_id"], session_number), {})[row["method"]] = row
+            if len(by_prompt) != 5 * sessions_per_cell or any(set(v) != set(METHODS) for v in by_prompt.values()):
+                statuses[key] = {"status": "partial", "file": [path.name for path in paths], "records": len(rows)}
                 continue
             if any(r.get("status") != "ok" or not r.get("warmup_status", {}).get("passed")
                    for methods in by_prompt.values() for r in methods.values()):
-                statuses[key] = {"status": "failed_or_warmup_failed", "file": path.name, "records": len(rows)}
+                statuses[key] = {"status": "failed_or_warmup_failed", "file": [path.name for path in paths], "records": len(rows)}
                 continue
             data[key] = by_prompt
-            statuses[key] = {"status": "complete", "file": path.name, "records": len(rows),
-                             "prompts": len(by_prompt),
+            statuses[key] = {"status": "complete", "file": [path.name for path in paths], "records": len(rows),
+                             "prompts": 5, "sessions": sessions_per_cell,
+                             "execution_commits": sorted({r.get("runtime", {}).get("execution_commit", "unknown") for r in rows}),
+                             "dirty_worktree_sessions": sorted({r.get("session_id") for r in rows
+                                                                 if r.get("runtime", {}).get("working_tree_dirty")}),
                              "capacity": rows[0]["kv_capacity"],
                              "input_tokens": rows[0]["prompt_tokens"],
                              "max_new_tokens": rows[0]["max_new_tokens"]}
 
     summary = {"protocol": {"contexts": list(CONTEXTS), "prompts_per_context": 5,
-                             "sessions_per_cell": 1, "output_budget": output_budget,
+                             "sessions_per_cell": sessions_per_cell, "output_budget": output_budget,
                              "warmup_tokens": output_budget,
                              "paired_source_documents": True,
                              "inference": "greedy, static KV, SDPA, Qwen2.5-3B-Instruct pinned revision; capacity=context+budget+4",
-                             "statistics": "descriptive only; n=5 prompts, one session per cell"},
+                             "statistics": f"descriptive only; n=5 prompts across {sessions_per_cell} sessions per cell"},
                "cell_status": {f"ctx{c}_{b}": v for (c,b),v in statuses.items()},
                "results": {}, "cross_backend_vanilla_exact": {}}
-    lines = [f"# Paired context-length backend evaluation ({output_budget}-token output)", "",
-             f"The same five LongBench source documents (one each from narrativeqa, qasper, gov_report, multi_news, qmsum) are represented at 128, 384, 1024, and 2048 input tokens. Each cell is one process/session with a {output_budget}-token full-path warmup and output budget, static capacity `context + {output_budget + 4}`, greedy SDPA. This is exploratory, not a performance conclusion: one session and five prompts per cell.", "",
+    provenance = ("Execution provenance: session 1 used commit `7b8a398` with a clean working tree. Session 2 used commit `ad0e1d2`; runtime metadata marks its working tree dirty, so this two-session result is exploratory and does not establish clean-tree reproducibility."
+                  if output_budget == 128 else
+                  "Execution provenance: the recorded session used commit `7b8a398` with a clean working tree.")
+    title = "Paired context-length backend smoke (32-token output)" if output_budget == 32 else "Paired context-length backend evaluation (128-token output)"
+    lines = [f"# {title}", "",
+             f"The same five LongBench source documents (one each from narrativeqa, qasper, gov_report, multi_news, qmsum) are represented at 128, 384, 1024, and 2048 input tokens. Each session uses a {output_budget}-token full-path warmup and output budget, static capacity `context + {output_budget + 4}`, greedy SDPA. This is exploratory, not a performance conclusion: {sessions_per_cell} sessions and five prompts per cell.", "",
+             provenance,
+             "",
              "| Context | Backend | Cell | Method | Decode TPS mean | Internal speedup vs vanilla | Slower fraction | Exact vs own vanilla | Peak allocated MB |", "|---:|---|---|---|---:|---:|---:|---:|---:|"]
     for context in CONTEXTS:
         for backend in BACKENDS:

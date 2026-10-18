@@ -1,6 +1,8 @@
-# Paired context-length backend smoke
+# Paired context-length backend smoke (32-token output)
 
-The same five LongBench source documents (one each from narrativeqa, qasper, gov_report, multi_news, qmsum) are represented at 128, 384, 1024, and 2048 input tokens. Each cell is one process/session with a 32-token full-path warmup, 32-token output budget, static capacity `context + 36`, greedy SDPA. This is a smoke run, not a performance conclusion: one session and five prompts per cell.
+The same five LongBench source documents (one each from narrativeqa, qasper, gov_report, multi_news, qmsum) are represented at 128, 384, 1024, and 2048 input tokens. Each session uses a 32-token full-path warmup and output budget, static capacity `context + 36`, greedy SDPA. This is exploratory, not a performance conclusion: 1 sessions and five prompts per cell.
+
+Execution provenance: the recorded session used commit `7b8a398` with a clean working tree.
 
 | Context | Backend | Cell | Method | Decode TPS mean | Internal speedup vs vanilla | Slower fraction | Exact vs own vanilla | Peak allocated MB |
 |---:|---|---|---|---:|---:|---:|---:|---:|
