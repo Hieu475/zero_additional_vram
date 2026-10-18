@@ -2,7 +2,7 @@
 
 The same five LongBench source documents (one each from narrativeqa, qasper, gov_report, multi_news, qmsum) are represented at 128, 384, 1024, and 2048 input tokens. Each session uses a 128-token full-path warmup and output budget, static capacity `context + 132`, greedy SDPA. This is exploratory, not a performance conclusion: 3 sessions and five prompts per cell.
 
-Execution provenance: session 1 used commit `7b8a398` with a clean working tree. Sessions 2 and 3 used commits `ad0e1d2` and `b24e505`; runtime metadata marks their working trees dirty, so this three-session result is exploratory and does not establish clean-tree reproducibility.
+Execution provenance: session 1 used commit `7b8a398` with a clean working tree. Output-32 sessions 2 and 3 used commit `424a083`; output-128 sessions 2 and 3 used commits `ad0e1d2` and `b24e505`. Runtime metadata marks sessions 2 and 3 dirty, so this is exploratory and does not establish clean-tree reproducibility.
 
 | Context | Backend | Cell | Method | Decode TPS mean | Internal speedup vs vanilla | Slower fraction | Exact vs own vanilla | Peak allocated MB |
 |---:|---|---|---|---:|---:|---:|---:|---:|

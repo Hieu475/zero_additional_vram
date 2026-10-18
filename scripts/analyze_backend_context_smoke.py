@@ -13,14 +13,14 @@ CONTEXTS = (128, 384, 1024, 2048)
 BACKENDS = ("hf_bnb_nf4", "hqq_gemlite_w4a16")
 METHODS = ("vanilla", "pld_k4", "cka90_k2")
 SMOKE_FILES = {
-    (128, "hf_bnb_nf4"): "ctx128_bnb_session1.jsonl",
-    (384, "hf_bnb_nf4"): "ctx384_bnb_session1.jsonl",
-    (1024, "hf_bnb_nf4"): "ctx1024_bnb_session1.jsonl",
-    (2048, "hf_bnb_nf4"): "ctx2048_bnb_session1.jsonl",
-    (128, "hqq_gemlite_w4a16"): "ctx128_hqq_session1_retry1.jsonl",
-    (384, "hqq_gemlite_w4a16"): "ctx384_hqq_session1.jsonl",
-    (1024, "hqq_gemlite_w4a16"): "ctx1024_hqq_session1.jsonl",
-    (2048, "hqq_gemlite_w4a16"): "ctx2048_hqq_session1_retry1.jsonl",
+    (128, "hf_bnb_nf4"): ["ctx128_bnb_session1.jsonl", "ctx128_out32_bnb_session2.jsonl", "ctx128_out32_bnb_session3.jsonl"],
+    (384, "hf_bnb_nf4"): ["ctx384_bnb_session1.jsonl", "ctx384_out32_bnb_session2.jsonl", "ctx384_out32_bnb_session3.jsonl"],
+    (1024, "hf_bnb_nf4"): ["ctx1024_bnb_session1.jsonl", "ctx1024_out32_bnb_session2.jsonl", "ctx1024_out32_bnb_session3.jsonl"],
+    (2048, "hf_bnb_nf4"): ["ctx2048_bnb_session1.jsonl", "ctx2048_out32_bnb_session2.jsonl", "ctx2048_out32_bnb_session3.jsonl"],
+    (128, "hqq_gemlite_w4a16"): ["ctx128_hqq_session1_retry1.jsonl", "ctx128_out32_hqq_session2.jsonl", "ctx128_out32_hqq_session3.jsonl"],
+    (384, "hqq_gemlite_w4a16"): ["ctx384_hqq_session1.jsonl", "ctx384_out32_hqq_session2.jsonl", "ctx384_out32_hqq_session3.jsonl"],
+    (1024, "hqq_gemlite_w4a16"): ["ctx1024_hqq_session1.jsonl", "ctx1024_out32_hqq_session2.jsonl", "ctx1024_out32_hqq_session3.jsonl"],
+    (2048, "hqq_gemlite_w4a16"): ["ctx2048_hqq_session1_retry1.jsonl", "ctx2048_out32_hqq_session2.jsonl", "ctx2048_out32_hqq_session3.jsonl"],
 }
 
 OUT128_FILES = {
@@ -42,7 +42,7 @@ def main() -> None:
     output_budget = args.output_budget
     files = SMOKE_FILES if output_budget == 32 else OUT128_FILES
     stem = "smoke" if output_budget == 32 else "out128"
-    sessions_per_cell = 1 if output_budget == 32 else 3
+    sessions_per_cell = 3
     data = {}
     statuses = {}
     for context in CONTEXTS:
@@ -83,9 +83,7 @@ def main() -> None:
                              "statistics": f"descriptive only; n=5 prompts across {sessions_per_cell} sessions per cell"},
                "cell_status": {f"ctx{c}_{b}": v for (c,b),v in statuses.items()},
                "results": {}, "cross_backend_vanilla_exact": {}}
-    provenance = ("Execution provenance: session 1 used commit `7b8a398` with a clean working tree. Sessions 2 and 3 used commits `ad0e1d2` and `b24e505`; runtime metadata marks their working trees dirty, so this three-session result is exploratory and does not establish clean-tree reproducibility."
-                  if output_budget == 128 else
-                  "Execution provenance: the recorded session used commit `7b8a398` with a clean working tree.")
+    provenance = ("Execution provenance: session 1 used commit `7b8a398` with a clean working tree. Output-32 sessions 2 and 3 used commit `424a083`; output-128 sessions 2 and 3 used commits `ad0e1d2` and `b24e505`. Runtime metadata marks sessions 2 and 3 dirty, so this is exploratory and does not establish clean-tree reproducibility.")
     title = "Paired context-length backend smoke (32-token output)" if output_budget == 32 else "Paired context-length backend evaluation (128-token output)"
     lines = [f"# {title}", "",
              f"The same five LongBench source documents (one each from narrativeqa, qasper, gov_report, multi_news, qmsum) are represented at 128, 384, 1024, and 2048 input tokens. Each session uses a {output_budget}-token full-path warmup and output budget, static capacity `context + {output_budget + 4}`, greedy SDPA. This is exploratory, not a performance conclusion: {sessions_per_cell} sessions and five prompts per cell.", "",

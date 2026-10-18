@@ -7,26 +7,32 @@
       2048
     ],
     "prompts_per_context": 5,
-    "sessions_per_cell": 1,
+    "sessions_per_cell": 3,
     "output_budget": 32,
     "warmup_tokens": 32,
     "paired_source_documents": true,
     "inference": "greedy, static KV, SDPA, Qwen2.5-3B-Instruct pinned revision; capacity=context+budget+4",
-    "statistics": "descriptive only; n=5 prompts across 1 sessions per cell"
+    "statistics": "descriptive only; n=5 prompts across 3 sessions per cell"
   },
   "cell_status": {
     "ctx128_hf_bnb_nf4": {
       "status": "complete",
       "file": [
-        "ctx128_bnb_session1.jsonl"
+        "ctx128_bnb_session1.jsonl",
+        "ctx128_out32_bnb_session2.jsonl",
+        "ctx128_out32_bnb_session3.jsonl"
       ],
-      "records": 15,
+      "records": 45,
       "prompts": 5,
-      "sessions": 1,
+      "sessions": 3,
       "execution_commits": [
+        "424a08364cd8c6e999fbc2281bbab06dda15bc68",
         "736a633d5a024cfee74228da051a7df6f5574e66"
       ],
-      "dirty_worktree_sessions": [],
+      "dirty_worktree_sessions": [
+        "ctx128_out32_bnb_session2",
+        "ctx128_out32_bnb_session3"
+      ],
       "capacity": 164,
       "input_tokens": 128,
       "max_new_tokens": 32
@@ -34,16 +40,21 @@
     "ctx128_hqq_gemlite_w4a16": {
       "status": "complete",
       "file": [
-        "ctx128_hqq_session1_retry1.jsonl"
+        "ctx128_hqq_session1_retry1.jsonl",
+        "ctx128_out32_hqq_session2.jsonl",
+        "ctx128_out32_hqq_session3.jsonl"
       ],
-      "records": 15,
+      "records": 45,
       "prompts": 5,
-      "sessions": 1,
+      "sessions": 3,
       "execution_commits": [
+        "424a08364cd8c6e999fbc2281bbab06dda15bc68",
         "736a633d5a024cfee74228da051a7df6f5574e66"
       ],
       "dirty_worktree_sessions": [
-        "ctx128_hqq_session1_retry1"
+        "ctx128_hqq_session1_retry1",
+        "ctx128_out32_hqq_session2",
+        "ctx128_out32_hqq_session3"
       ],
       "capacity": 164,
       "input_tokens": 128,
@@ -52,16 +63,21 @@
     "ctx384_hf_bnb_nf4": {
       "status": "complete",
       "file": [
-        "ctx384_bnb_session1.jsonl"
+        "ctx384_bnb_session1.jsonl",
+        "ctx384_out32_bnb_session2.jsonl",
+        "ctx384_out32_bnb_session3.jsonl"
       ],
-      "records": 15,
+      "records": 45,
       "prompts": 5,
-      "sessions": 1,
+      "sessions": 3,
       "execution_commits": [
+        "424a08364cd8c6e999fbc2281bbab06dda15bc68",
         "736a633d5a024cfee74228da051a7df6f5574e66"
       ],
       "dirty_worktree_sessions": [
-        "ctx384_bnb_session1"
+        "ctx384_bnb_session1",
+        "ctx384_out32_bnb_session2",
+        "ctx384_out32_bnb_session3"
       ],
       "capacity": 420,
       "input_tokens": 384,
@@ -70,16 +86,21 @@
     "ctx384_hqq_gemlite_w4a16": {
       "status": "complete",
       "file": [
-        "ctx384_hqq_session1.jsonl"
+        "ctx384_hqq_session1.jsonl",
+        "ctx384_out32_hqq_session2.jsonl",
+        "ctx384_out32_hqq_session3.jsonl"
       ],
-      "records": 15,
+      "records": 45,
       "prompts": 5,
-      "sessions": 1,
+      "sessions": 3,
       "execution_commits": [
+        "424a08364cd8c6e999fbc2281bbab06dda15bc68",
         "736a633d5a024cfee74228da051a7df6f5574e66"
       ],
       "dirty_worktree_sessions": [
-        "ctx384_hqq_session1"
+        "ctx384_hqq_session1",
+        "ctx384_out32_hqq_session2",
+        "ctx384_out32_hqq_session3"
       ],
       "capacity": 420,
       "input_tokens": 384,
@@ -88,16 +109,21 @@
     "ctx1024_hf_bnb_nf4": {
       "status": "complete",
       "file": [
-        "ctx1024_bnb_session1.jsonl"
+        "ctx1024_bnb_session1.jsonl",
+        "ctx1024_out32_bnb_session2.jsonl",
+        "ctx1024_out32_bnb_session3.jsonl"
       ],
-      "records": 15,
+      "records": 45,
       "prompts": 5,
-      "sessions": 1,
+      "sessions": 3,
       "execution_commits": [
+        "424a08364cd8c6e999fbc2281bbab06dda15bc68",
         "736a633d5a024cfee74228da051a7df6f5574e66"
       ],
       "dirty_worktree_sessions": [
-        "ctx1024_bnb_session1"
+        "ctx1024_bnb_session1",
+        "ctx1024_out32_bnb_session2",
+        "ctx1024_out32_bnb_session3"
       ],
       "capacity": 1060,
       "input_tokens": 1024,
@@ -106,16 +132,21 @@
     "ctx1024_hqq_gemlite_w4a16": {
       "status": "complete",
       "file": [
-        "ctx1024_hqq_session1.jsonl"
+        "ctx1024_hqq_session1.jsonl",
+        "ctx1024_out32_hqq_session2.jsonl",
+        "ctx1024_out32_hqq_session3.jsonl"
       ],
-      "records": 15,
+      "records": 45,
       "prompts": 5,
-      "sessions": 1,
+      "sessions": 3,
       "execution_commits": [
+        "424a08364cd8c6e999fbc2281bbab06dda15bc68",
         "736a633d5a024cfee74228da051a7df6f5574e66"
       ],
       "dirty_worktree_sessions": [
-        "ctx1024_hqq_session1"
+        "ctx1024_hqq_session1",
+        "ctx1024_out32_hqq_session2",
+        "ctx1024_out32_hqq_session3"
       ],
       "capacity": 1060,
       "input_tokens": 1024,
@@ -124,16 +155,21 @@
     "ctx2048_hf_bnb_nf4": {
       "status": "complete",
       "file": [
-        "ctx2048_bnb_session1.jsonl"
+        "ctx2048_bnb_session1.jsonl",
+        "ctx2048_out32_bnb_session2.jsonl",
+        "ctx2048_out32_bnb_session3.jsonl"
       ],
-      "records": 15,
+      "records": 45,
       "prompts": 5,
-      "sessions": 1,
+      "sessions": 3,
       "execution_commits": [
+        "424a08364cd8c6e999fbc2281bbab06dda15bc68",
         "736a633d5a024cfee74228da051a7df6f5574e66"
       ],
       "dirty_worktree_sessions": [
-        "ctx2048_bnb_session1"
+        "ctx2048_bnb_session1",
+        "ctx2048_out32_bnb_session2",
+        "ctx2048_out32_bnb_session3"
       ],
       "capacity": 2084,
       "input_tokens": 2048,
@@ -142,15 +178,21 @@
     "ctx2048_hqq_gemlite_w4a16": {
       "status": "complete",
       "file": [
-        "ctx2048_hqq_session1_retry1.jsonl"
+        "ctx2048_hqq_session1_retry1.jsonl",
+        "ctx2048_out32_hqq_session2.jsonl",
+        "ctx2048_out32_hqq_session3.jsonl"
       ],
-      "records": 15,
+      "records": 45,
       "prompts": 5,
-      "sessions": 1,
+      "sessions": 3,
       "execution_commits": [
-        "213835eb0757b826489163c89e29dd33fc2c721d"
+        "213835eb0757b826489163c89e29dd33fc2c721d",
+        "424a08364cd8c6e999fbc2281bbab06dda15bc68"
       ],
-      "dirty_worktree_sessions": [],
+      "dirty_worktree_sessions": [
+        "ctx2048_out32_hqq_session2",
+        "ctx2048_out32_hqq_session3"
+      ],
       "capacity": 2084,
       "input_tokens": 2048,
       "max_new_tokens": 32
@@ -159,265 +201,265 @@
   "results": {
     "ctx128_hf_bnb_nf4": {
       "vanilla": {
-        "decode_tps_mean": 36.432415755793194,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 39.77573100817973,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2022.7197265625,
         "actual_output_lengths": [
           32
         ]
       },
       "pld_k4": {
-        "decode_tps_mean": 38.325686318021994,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 42.70792771915198,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2025.402734375,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 1.0496693290514651,
-        "slowdown_frequency": 0.2
+        "paired_speedup_mean": 1.0728636883793459,
+        "slowdown_frequency": 0.3333333333333333
       },
       "cka90_k2": {
-        "decode_tps_mean": 28.613058033668967,
-        "exact_count": 3,
-        "prompt_count": 5,
+        "decode_tps_mean": 32.1184471100646,
+        "exact_count": 9,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2026.340625,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 0.7852834692451509,
+        "paired_speedup_mean": 0.8066940230816996,
         "slowdown_frequency": 1.0
       }
     },
     "ctx128_hqq_gemlite_w4a16": {
       "vanilla": {
-        "decode_tps_mean": 28.80677424447245,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 26.514879536275494,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2139.44580078125,
         "actual_output_lengths": [
           32
         ]
       },
       "pld_k4": {
-        "decode_tps_mean": 27.224688633674063,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 25.057542418044328,
+        "exact_count": 14,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2141.8212890625,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 0.9450550291535423,
+        "paired_speedup_mean": 0.9459047354187428,
         "slowdown_frequency": 0.6
       },
       "cka90_k2": {
-        "decode_tps_mean": 21.460168983121807,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 20.114467475166986,
+        "exact_count": 14,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2143.356640625,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 0.7442271608070886,
+        "paired_speedup_mean": 0.7595634948460163,
         "slowdown_frequency": 1.0
       }
     },
     "ctx384_hf_bnb_nf4": {
       "vanilla": {
-        "decode_tps_mean": 36.87744172799249,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 40.550117362779744,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2106.7216796875,
         "actual_output_lengths": [
           32
         ]
       },
       "pld_k4": {
-        "decode_tps_mean": 37.16498866435589,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 41.38861420280358,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2110.4876953125,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 1.0045171917358948,
-        "slowdown_frequency": 0.6
+        "paired_speedup_mean": 1.019744545738068,
+        "slowdown_frequency": 0.4666666666666667
       },
       "cka90_k2": {
-        "decode_tps_mean": 31.671726358187723,
-        "exact_count": 3,
-        "prompt_count": 5,
+        "decode_tps_mean": 34.75605891102517,
+        "exact_count": 9,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2110.8880859375,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 0.8613702213361868,
+        "paired_speedup_mean": 0.8580750396552433,
         "slowdown_frequency": 1.0
       }
     },
     "ctx384_hqq_gemlite_w4a16": {
       "vanilla": {
-        "decode_tps_mean": 29.304743224957797,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 26.760855452494482,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2223.88525390625,
         "actual_output_lengths": [
           32
         ]
       },
       "pld_k4": {
-        "decode_tps_mean": 26.903184023861208,
-        "exact_count": 4,
-        "prompt_count": 5,
-        "peak_allocated_mb_mean": 2227.5466796875,
+        "decode_tps_mean": 25.058551633279837,
+        "exact_count": 11,
+        "prompt_count": 15,
+        "peak_allocated_mb_mean": 2227.546809895833,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 0.9153184798696622,
+        "paired_speedup_mean": 0.9366279316184075,
         "slowdown_frequency": 0.6
       },
       "cka90_k2": {
-        "decode_tps_mean": 23.079620125347752,
-        "exact_count": 4,
-        "prompt_count": 5,
+        "decode_tps_mean": 21.10575886657948,
+        "exact_count": 12,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2227.9068359375,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 0.7890393439912963,
+        "paired_speedup_mean": 0.7890353101001805,
         "slowdown_frequency": 1.0
       }
     },
     "ctx1024_hf_bnb_nf4": {
       "vanilla": {
-        "decode_tps_mean": 33.97223074283851,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 40.15550281246084,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2316.4765625,
         "actual_output_lengths": [
           32
         ]
       },
       "pld_k4": {
-        "decode_tps_mean": 32.88690876105907,
-        "exact_count": 3,
-        "prompt_count": 5,
+        "decode_tps_mean": 38.426169087616344,
+        "exact_count": 9,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2322.7365234375,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 0.9684007458032313,
-        "slowdown_frequency": 0.6
+        "paired_speedup_mean": 0.9594726311852546,
+        "slowdown_frequency": 0.6666666666666666
       },
       "cka90_k2": {
-        "decode_tps_mean": 29.141097813862288,
-        "exact_count": 3,
-        "prompt_count": 5,
+        "decode_tps_mean": 33.70183256383681,
+        "exact_count": 9,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2323.11376953125,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 0.8593669230022221,
+        "paired_speedup_mean": 0.8416249828595516,
         "slowdown_frequency": 1.0
       }
     },
     "ctx1024_hqq_gemlite_w4a16": {
       "vanilla": {
-        "decode_tps_mean": 24.355576728139795,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 24.88298084807306,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2434.10888671875,
         "actual_output_lengths": [
           32
         ]
       },
       "pld_k4": {
-        "decode_tps_mean": 25.3467219951006,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 25.318712817262817,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2440.468359375,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 1.0433521395105247,
+        "paired_speedup_mean": 1.0185458026763248,
         "slowdown_frequency": 0.6
       },
       "cka90_k2": {
-        "decode_tps_mean": 19.803471537991143,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 20.414789118026118,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2440.509375,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 0.8135967546009649,
+        "paired_speedup_mean": 0.8223032077300866,
         "slowdown_frequency": 1.0
       }
     },
     "ctx2048_hf_bnb_nf4": {
       "vanilla": {
-        "decode_tps_mean": 32.57104555817137,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 37.37092804039401,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2663.017578125,
         "actual_output_lengths": [
           32
         ]
       },
       "pld_k4": {
-        "decode_tps_mean": 31.34045939982818,
-        "exact_count": 3,
-        "prompt_count": 5,
+        "decode_tps_mean": 36.47737742878263,
+        "exact_count": 9,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2673.1265625,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 0.9630518131153999,
+        "paired_speedup_mean": 0.977618200757688,
         "slowdown_frequency": 0.6
       },
       "cka90_k2": {
-        "decode_tps_mean": 27.506564642560793,
-        "exact_count": 3,
-        "prompt_count": 5,
+        "decode_tps_mean": 31.550037422837185,
+        "exact_count": 9,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2673.54794921875,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 0.8444290223547026,
+        "paired_speedup_mean": 0.8451764964916969,
         "slowdown_frequency": 1.0
       }
     },
     "ctx2048_hqq_gemlite_w4a16": {
       "vanilla": {
-        "decode_tps_mean": 26.315632133520307,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 25.997781525634164,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2788.10107421875,
         "actual_output_lengths": [
           32
         ]
       },
       "pld_k4": {
-        "decode_tps_mean": 27.946578809464857,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 26.914141938415714,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2798.4943359375,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 1.0650037271325974,
+        "paired_speedup_mean": 1.0374309036398663,
         "slowdown_frequency": 0.4
       },
       "cka90_k2": {
-        "decode_tps_mean": 20.130994864126095,
-        "exact_count": 5,
-        "prompt_count": 5,
+        "decode_tps_mean": 20.009816839071167,
+        "exact_count": 15,
+        "prompt_count": 15,
         "peak_allocated_mb_mean": 2798.750390625,
         "actual_output_lengths": [
           32
         ],
-        "paired_speedup_mean": 0.7662387337968691,
+        "paired_speedup_mean": 0.7705672325266031,
         "slowdown_frequency": 1.0
       }
     }
@@ -425,19 +467,19 @@
   "cross_backend_vanilla_exact": {
     "128": {
       "exact": 0,
-      "n": 5
+      "n": 15
     },
     "384": {
       "exact": 0,
-      "n": 5
+      "n": 15
     },
     "1024": {
       "exact": 0,
-      "n": 5
+      "n": 15
     },
     "2048": {
       "exact": 0,
-      "n": 5
+      "n": 15
     }
   }
 }
