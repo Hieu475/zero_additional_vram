@@ -111,7 +111,8 @@ def read_cell(path: Path, backend: str, context: int, cohort: list[str],
     }
 
 
-def summarize_observations(observations: dict[tuple[str, str], float], seed: int) -> dict[str, Any]:
+def summarize_observations(observations: dict[tuple[str, str], float], seed: int,
+                           threshold: float = 1.0) -> dict[str, Any]:
     values = list(observations.values())
     return {
         "n_prompt_session_pairs": len(values),
@@ -121,8 +122,17 @@ def summarize_observations(observations: dict[tuple[str, str], float], seed: int
         "median": statistics.median(values) if values else None,
         "p10": quantile(values, 0.10),
         "p90": quantile(values, 0.90),
-        "slowdown_fraction": sum(v < 1.0 for v in values) / len(values) if values else None,
+        "below_threshold_fraction": sum(v < threshold for v in values) / len(values) if values else None,
         "ci95_two_way_bootstrap": bootstrap_mean_ci(observations, seed),
+    }
+
+
+def describe(values: list[float]) -> dict[str, Any]:
+    return {
+        "n": len(values),
+        "mean": statistics.mean(values) if values else None,
+        "median": statistics.median(values) if values else None,
+        "p90": quantile(values, 0.90),
     }
 
 
@@ -190,50 +200,85 @@ def main() -> None:
                 }
                 for method in SPECULATIVE:
                     ratios: dict[tuple[str, str], float] = {}
+                    e2e_speedups: dict[tuple[str, str], float] = {}
+                    exact_observations: dict[tuple[str, str], float] = {}
                     exact_values = []
                     tps_values = []
+                    allocated_values = []
+                    reserved_values = []
+                    acceptance_values = []
+                    divergence_positions = []
+                    output_lengths = []
                     for session, cell in selected.items():
                         for prompt in cohorts[context]:
                             pair = cell["grouped"][prompt]
                             vanilla = pair["vanilla"]
                             measure = pair[method]
+                            observation_key = (str(session), prompt)
                             v_tps = float(vanilla["decode_tokens_per_second"])
                             m_tps = float(measure["decode_tokens_per_second"])
                             if v_tps > 0:
-                                ratios[(str(session), prompt)] = m_tps / v_tps
+                                ratios[observation_key] = m_tps / v_tps
+                            v_e2e = float(vanilla["total_time_s"])
+                            m_e2e = float(measure["total_time_s"])
+                            if m_e2e > 0:
+                                e2e_speedups[observation_key] = v_e2e / m_e2e
                             tps_values.append(m_tps)
                             exact = measure.get("within_backend_exact_vs_vanilla")
                             if exact is not None:
                                 exact_values.append(bool(exact))
+                                exact_observations[observation_key] = float(bool(exact))
+                            divergence = measure.get("first_divergence_vs_vanilla")
+                            if divergence is not None:
+                                divergence_positions.append(int(divergence))
+                            output_lengths.append(len(measure.get("token_ids", [])))
+                            if measure.get("peak_allocated_mb") is not None:
+                                allocated_values.append(float(measure["peak_allocated_mb"]))
+                            if measure.get("peak_reserved_mb") is not None:
+                                reserved_values.append(float(measure["peak_reserved_mb"]))
+                            if measure.get("acceptance_rate") is not None:
+                                acceptance_values.append(float(measure["acceptance_rate"]))
                     result["per_backend_context"][key]["methods"][method] = {
                         "internal_speedup": summarize_observations(ratios, 7219 + context),
+                        "end_to_end_speedup": summarize_observations(e2e_speedups, 17129 + context),
                         "mean_decode_tps": statistics.mean(tps_values) if tps_values else None,
                         "exact_count": sum(exact_values),
                         "exact_n": len(exact_values),
                         "exact_rate": sum(exact_values) / len(exact_values) if exact_values else None,
+                        "exact_rate_ci95_two_way_bootstrap": bootstrap_mean_ci(exact_observations, 22123 + context),
+                        "first_divergence_generated_token": describe([float(x) for x in divergence_positions]),
+                        "output_length": describe([float(x) for x in output_lengths]),
+                        "peak_allocated_mb": describe(allocated_values),
+                        "peak_reserved_mb": describe(reserved_values),
+                        "acceptance_rate": describe(acceptance_values),
                     }
 
-    # Backend difference is paired on the same clean session and prompt.
+    # Backend differences are paired on the same session and prompt, with
+    # clean and exploratory provenance separated.
     for context in CONTEXTS:
-        common_sessions = [s for s in (1, 2, 3)
-                           if all((tag, context, s) in cells and cells[(tag, context, s)]["clean_provenance"]
-                                  for tag in BACKENDS)]
-        if not common_sessions:
-            continue
-        for method in SPECULATIVE:
-            deltas: dict[tuple[str, str], float] = {}
-            for session in common_sessions:
-                bnb, hqq = cells[("bnb", context, session)], cells[("hqq", context, session)]
-                for prompt in cohorts[context]:
-                    def speedup(cell: dict[str, Any]) -> float:
-                        pair = cell["grouped"][prompt]
-                        return float(pair[method]["decode_tokens_per_second"]) / float(pair["vanilla"]["decode_tokens_per_second"])
-                    deltas[(str(session), prompt)] = speedup(hqq) - speedup(bnb)
-            result["paired_backend_speedup_delta"][f"ctx{context}/{method}"] = {
-                "estimand": "HQQ internal speedup minus BNB internal speedup, paired by clean session and prompt",
-                "sessions": common_sessions,
-                **summarize_observations(deltas, 9913 + context),
-            }
+        for provenance, clean_only in (("all_complete_including_exploratory", False),
+                                       ("clean_provenance_only", True)):
+            common_sessions = [s for s in (1, 2, 3)
+                               if all((tag, context, s) in cells for tag in BACKENDS)
+                               and (not clean_only or all(cells[(tag, context, s)]["clean_provenance"]
+                                                         for tag in BACKENDS))]
+            if not common_sessions:
+                continue
+            for method in SPECULATIVE:
+                deltas: dict[tuple[str, str], float] = {}
+                for session in common_sessions:
+                    bnb, hqq = cells[("bnb", context, session)], cells[("hqq", context, session)]
+                    for prompt in cohorts[context]:
+                        def speedup(cell: dict[str, Any]) -> float:
+                            pair = cell["grouped"][prompt]
+                            return float(pair[method]["decode_tokens_per_second"]) / float(pair["vanilla"]["decode_tokens_per_second"])
+                        deltas[(str(session), prompt)] = speedup(hqq) - speedup(bnb)
+                result["paired_backend_speedup_delta"][f"{context}/{method}/{provenance}"] = {
+                    "estimand": "HQQ internal speedup minus BNB internal speedup, paired by session and prompt",
+                    "sessions": common_sessions,
+                    "provenance_scope": provenance,
+                    **summarize_observations(deltas, 9913 + context),
+                }
 
     out_json = BASE / "paired_summary.json"
     out_md = BASE / "paired_summary.md"
@@ -247,8 +292,8 @@ def main() -> None:
         "- 95% intervals resample complete sessions and prompt IDs as paired units; they are omitted with fewer than two sessions.",
         "- Cross-backend comparison is HQQ internal speedup minus BNB internal speedup. Quantized weights differ, so this is an inference-stack comparison, not a kernel-only effect.", "",
         "## Clean-provenance cells", "",
-        "| Backend | Context | Method | Session IDs | Mean speedup | 95% interval | Slowdown | Exact vs own vanilla | Mean decode TPS |",
-        "|---|---:|---|---|---:|---|---:|---:|---:|",
+        "| Backend | Context | Method | Session IDs | Decode speedup | 95% interval | Decode slowdown | E2E speedup | Exact vs own vanilla | First mismatch (median zero-based index) | Mean decode TPS | Peak allocated (MB) |",
+        "|---|---:|---|---|---:|---|---:|---:|---:|---:|---:|---:|",
     ]
     for key, cell in result["per_backend_context"].items():
         if not key.endswith("clean_provenance_only"):
@@ -258,16 +303,20 @@ def main() -> None:
             speed = metrics["internal_speedup"]
             ci = speed["ci95_two_way_bootstrap"]
             ci_text = "n/a (<2 sessions)" if ci is None else f"[{ci[0]:.3f}, {ci[1]:.3f}]"
+            e2e = metrics["end_to_end_speedup"]
+            mismatch = metrics["first_divergence_generated_token"]["median"]
+            mismatch_text = "none" if mismatch is None else f"{mismatch:.0f}"
             lines.append(
                 f"| {backend} | {ctx.removeprefix('ctx')} | {method} | {','.join(map(str, cell['sessions']))} | "
-                f"{speed['mean']:.3f}× | {ci_text} | {speed['slowdown_fraction']:.1%} | "
-                f"{metrics['exact_count']}/{metrics['exact_n']} | {metrics['mean_decode_tps']:.2f} |"
+                f"{speed['mean']:.3f}× | {ci_text} | {speed['below_threshold_fraction']:.1%} | "
+                f"{e2e['mean']:.3f}× | {metrics['exact_count']}/{metrics['exact_n']} | "
+                f"{mismatch_text} | {metrics['mean_decode_tps']:.2f} | {metrics['peak_allocated_mb']['mean']:.0f} |"
             )
     lines += [
         "", "## Complete cells including exploratory provenance", "",
         "These results include complete cells with historical dirty or missing provenance fields. Use them as sensitivity analysis, not as the clean-only result.", "",
-        "| Backend | Context | Method | Sessions | Mean speedup | 95% interval | Slowdown | Exact vs own vanilla | Mean decode TPS |",
-        "|---|---:|---|---:|---:|---|---:|---:|---:|",
+        "| Backend | Context | Method | Session count | Decode speedup | 95% interval | Decode slowdown | E2E speedup | Exact vs own vanilla | First mismatch (median zero-based index) | Mean decode TPS | Peak allocated (MB) |",
+        "|---|---:|---|---:|---:|---|---:|---:|---:|---:|---:|---:|",
     ]
     for key, cell in result["per_backend_context"].items():
         if not key.endswith("all_complete_including_exploratory"):
@@ -277,21 +326,26 @@ def main() -> None:
             speed = metrics["internal_speedup"]
             ci = speed["ci95_two_way_bootstrap"]
             ci_text = "n/a (<2 sessions)" if ci is None else f"[{ci[0]:.3f}, {ci[1]:.3f}]"
+            e2e = metrics["end_to_end_speedup"]
+            mismatch = metrics["first_divergence_generated_token"]["median"]
+            mismatch_text = "none" if mismatch is None else f"{mismatch:.0f}"
             lines.append(
                 f"| {backend} | {ctx.removeprefix('ctx')} | {method} | {len(cell['sessions'])} | "
-                f"{speed['mean']:.3f}× | {ci_text} | {speed['slowdown_fraction']:.1%} | "
-                f"{metrics['exact_count']}/{metrics['exact_n']} | {metrics['mean_decode_tps']:.2f} |"
+                f"{speed['mean']:.3f}× | {ci_text} | {speed['below_threshold_fraction']:.1%} | "
+                f"{e2e['mean']:.3f}× | {metrics['exact_count']}/{metrics['exact_n']} | "
+                f"{mismatch_text} | {metrics['mean_decode_tps']:.2f} | {metrics['peak_allocated_mb']['mean']:.0f} |"
             )
-    lines += ["", "## Paired clean backend deltas", "",
-              "Positive values mean HQQ gains more internal speedup than BNB; this does not compare cross-backend token identity.", "",
-              "| Context | Method | Common clean sessions | Mean HQQ−BNB speedup delta | 95% interval |",
-              "|---:|---|---|---:|---|"]
+    lines += ["", "## Paired backend deltas", "",
+              "Positive values mean HQQ gains more internal speedup than BNB. The matched rows use the same session and prompt; they do not compare cross-backend token identity.", "",
+              "| Context | Method | Provenance | Common session IDs | Mean HQQ−BNB speedup delta | 95% interval |",
+              "|---:|---|---|---|---:|---|"]
     if result["paired_backend_speedup_delta"]:
         for key, metrics in result["paired_backend_speedup_delta"].items():
             ci = metrics["ci95_two_way_bootstrap"]
             ci_text = "n/a (<2 sessions)" if ci is None else f"[{ci[0]:.3f}, {ci[1]:.3f}]"
-            context, method = key.split("/")
-            lines.append(f"| {context.removeprefix('ctx')} | {method} | {','.join(map(str, metrics['sessions']))} | {metrics['mean']:.3f} | {ci_text} |")
+            context, method, provenance = key.split("/")
+            provenance_label = "clean" if provenance == "clean_provenance_only" else "exploratory"
+            lines.append(f"| {context} | {method} | {provenance_label} | {','.join(map(str, metrics['sessions']))} | {metrics['mean']:.3f} | {ci_text} |")
     else:
         lines.append("| — | — | none yet | — | — |")
     lines += ["", "## Interpretation limits", "",
