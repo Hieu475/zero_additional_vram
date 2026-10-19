@@ -2,9 +2,9 @@
 
 Scope: output-128 only; frozen 20-prompt cohort at contexts 128, 384, 1024, and 2048; BNB and HQQ; vanilla, PLD K=4, and CKA90/K2.
 
-- Structurally complete session cells: **18/24**.
-- Complete cells carrying `working_tree_dirty=true`: **13/18**; clean-provenance cells: **0**.
-- Missing session files: **5**.
+- Structurally complete session cells: **24/24**.
+- Complete cells carrying `working_tree_dirty=true`: **14/24**; clean-provenance cells: **10**.
+- Missing session files: **0**.
 - A complete cell has 20 prompt triplets (60 records), matching prompt hashes, expected backend/context/capacity, successful warmups, and no recorded failures.
 
 ## Cell status
@@ -14,15 +14,15 @@ Scope: output-128 only; frozen 20-prompt cohort at contexts 128, 384, 1024, and 
 | 128 | BNB | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) |
 | 128 | HQQ | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) |
 | 384 | BNB | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) |
-| 384 | HQQ | 20/20 prompts (60 rows); dirty tree | 4/20 prompts (12 rows); dirty tree | missing |
+| 384 | HQQ | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) |
 | 1024 | BNB | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) |
-| 1024 | HQQ | 20/20 prompts (60 rows); dirty tree | missing | missing |
+| 1024 | HQQ | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) | 20/20 prompts (60 rows) |
 | 2048 | BNB | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) |
-| 2048 | HQQ | 20/20 prompts (60 rows); dirty tree | missing | missing |
+| 2048 | HQQ | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) | 20/20 prompts (60 rows) |
 
 ## Provenance findings
 
-All present session records report `working_tree_dirty=true`. Each recorded commit is present, the exact runner file at each commit is retrievable and hashed in `audit.json`, and `src/zassd` matches current HEAD across the captured revisions. This reconstructs the committed execution source, but historical dirty-file lists/source hashes were not saved; uncommitted edits at run time that were later reverted cannot be ruled out. Treat the data as reproducible against the recorded commit, with that limitation stated.
+14 complete cells include records with `working_tree_dirty=true`; 10 complete cells have consistently clean working-tree and source-tree flags, prompt hashes, and one execution commit. The HQQ/context-384 session-2 cell contains an earlier dirty partial run plus a clean append, so it is structurally complete but remains exploratory. Each recorded commit is checked against current `src/zassd` and the runner snapshot is hashed in `audit.json`. Historical dirty-file lists/source hashes were not saved, so reverted uncommitted edits cannot be ruled out for dirty records.
 
 Records preserve model/tokenizer revision, backend quantization metadata, attention backend, prompt token count/hash, output budget, KV capacity, warmup status, randomized method order/seed, torch/CUDA/GPU model/capability, latency, TPS, token IDs, exactness, and peak allocated/reserved VRAM.
 
@@ -36,9 +36,9 @@ A prompt triplet is complete only when vanilla, PLD, and CKA rows all exist. Par
 
 ## Recommended rerun order
 
-1. Preserve existing raw records unchanged as exploratory artifacts; 13 cells are structurally complete, one HQQ/context-384 cell is partial (4/20 prompts), and 10 session files are absent.
+1. Preserve raw records unchanged as exploratory artifacts. All 24 session cells are now structurally complete and no session files are missing; the HQQ/context-384 session-2 cell mixes historical dirty records with a clean append and should remain exploratory.
 2. Add missing runtime provenance to the runner and start from a clean, committed source tree.
-3. Keep structurally complete cells when their recorded source commit matches current HEAD and no source-file diff is found; rerun only the partial/missing cells under an enhanced provenance runner. Rerun previously complete cells only if source equivalence fails or a source modification is discovered.
+3. Keep clean-provenance cells as the primary subset. Rerun mixed/dirty cells only if a clean three-session confirmatory result is required; do not treat structural completeness as provenance cleanliness.
 4. After three clean sessions exist per backend/context, compute paired summaries and document/session-aware uncertainty.
 5. Decide whether output-32 or output-256 is needed after the primary output-128 matrix is valid.
 

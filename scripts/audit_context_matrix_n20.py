@@ -92,6 +92,14 @@ def main() -> None:
                 }
                 commits = sorted({row.get("runtime", {}).get("execution_commit") for row in rows})
                 dirty_values = sorted({row.get("runtime", {}).get("working_tree_dirty") for row in rows}, key=str)
+                source_dirty_values = sorted({row.get("runtime", {}).get("source_tree_dirty") for row in rows}, key=str)
+                clean_provenance = (
+                    len(rows) == EXPECTED_ROWS
+                    and dirty_values == [False]
+                    and source_dirty_values == [False]
+                    and len(commits) == 1
+                    and all(row.get("prompt_token_ids_sha256") for row in rows)
+                )
                 stat = {
                     "file": name, "exists": path.exists(), "rows": len(rows),
                     "expected_rows": EXPECTED_ROWS,
@@ -101,6 +109,8 @@ def main() -> None:
                     "incomplete_prompts": incomplete,
                     "execution_commits": commits,
                     "working_tree_dirty_values": dirty_values,
+                    "source_tree_dirty_values": source_dirty_values,
+                    "clean_provenance": clean_provenance,
                     "anomalies": anomalies,
                 }
                 files.append(stat)
@@ -155,7 +165,7 @@ def main() -> None:
         "complete_cells_with_dirty_tree_flag": dirty_complete_cells,
         "clean_provenance_cells": sum(
             s["exists"] and s["complete_prompt_triplets"] == EXPECTED_PROMPTS
-            and s["working_tree_dirty_values"] == [False] for s in files
+            and not s["anomalies"] and s["clean_provenance"] for s in files
         ),
         "missing_files": missing_files,
         "execution_source_revisions": source_revisions,
@@ -165,8 +175,8 @@ def main() -> None:
         "exploratory_exactness_counts": dict(exact),
         "telemetry_field_presence_counts": dict(telemetry),
         "important_limitations": [
-            "Every captured runtime record marks working_tree_dirty=true. Commit SHAs are compared against the current source tree for scripts/benchmark_backend_decoding.py and src/zassd; the report states whether those paths are unchanged. Historical dirty-file lists/source hashes were not saved, so uncommitted source edits later reverted cannot be ruled out absolutely.",
-            "Runtime records contain torch/CUDA/GPU/compute capability but omit driver version, Transformers/bitsandbytes/GemLite versions, temperature, SM clocks, and power telemetry.",
+            "Fourteen complete cells contain at least one record with working_tree_dirty=true; ten cells have consistent clean working-tree and source-tree flags, prompt hashes, and a single execution commit. The HQQ context-384 session-2 cell combines a partial earlier dirty run with a clean append and is complete structurally but not clean-provenance.",
+            "Historical dirty-file lists/source hashes were not saved, so uncommitted source edits later reverted cannot be ruled out for dirty records. Runtime records omit GPU driver version, Transformers/bitsandbytes/GemLite versions, temperature, SM clocks, and power telemetry.",
             "Temperature=0 is visible in the captured runner source, but is not stored in each record. EOS token ID/position and explicit stopping reason are not stored.",
             "TPS is calculated as (generated token count - 1) / decode time, excluding the first generated token; keep this definition explicit in any comparison.",
             "Output-128 alone is incomplete; output-32/256 and three independent sessions are not complete. Exactness counts here are descriptive, not prompt-level confidence intervals.",
@@ -179,7 +189,7 @@ def main() -> None:
         "# Context Matrix n=20: Provenance and Completeness Audit", "",
         "Scope: output-128 only; frozen 20-prompt cohort at contexts 128, 384, 1024, and 2048; BNB and HQQ; vanilla, PLD K=4, and CKA90/K2.", "",
         f"- Structurally complete session cells: **{complete_cells}/{expected_cells}**.",
-        f"- Complete cells carrying `working_tree_dirty=true`: **{dirty_complete_cells}/{complete_cells}**; clean-provenance cells: **0**.",
+        f"- Complete cells carrying `working_tree_dirty=true`: **{dirty_complete_cells}/{complete_cells}**; clean-provenance cells: **{report['clean_provenance_cells']}**.",
         f"- Missing session files: **{len(missing_files)}**.",
         "- A complete cell has 20 prompt triplets (60 records), matching prompt hashes, expected backend/context/capacity, successful warmups, and no recorded failures.", "",
         "## Cell status", "",
@@ -198,16 +208,16 @@ def main() -> None:
             lines.append(f"| {ctx} | {tag.upper()} | " + " | ".join(vals) + " |")
     lines += [
         "", "## Provenance findings", "",
-        "All present session records report `working_tree_dirty=true`. Each recorded commit is present, the exact runner file at each commit is retrievable and hashed in `audit.json`, and `src/zassd` matches current HEAD across the captured revisions. This reconstructs the committed execution source, but historical dirty-file lists/source hashes were not saved; uncommitted edits at run time that were later reverted cannot be ruled out. Treat the data as reproducible against the recorded commit, with that limitation stated.", "",
+        f"{dirty_complete_cells} complete cells include records with `working_tree_dirty=true`; {report['clean_provenance_cells']} complete cells have consistently clean working-tree and source-tree flags, prompt hashes, and one execution commit. The HQQ/context-384 session-2 cell contains an earlier dirty partial run plus a clean append, so it is structurally complete but remains exploratory. Each recorded commit is checked against current `src/zassd` and the runner snapshot is hashed in `audit.json`. Historical dirty-file lists/source hashes were not saved, so reverted uncommitted edits cannot be ruled out for dirty records.", "",
         "Records preserve model/tokenizer revision, backend quantization metadata, attention backend, prompt token count/hash, output budget, KV capacity, warmup status, randomized method order/seed, torch/CUDA/GPU model/capability, latency, TPS, token IDs, exactness, and peak allocated/reserved VRAM.", "",
         "Missing per-run provenance includes GPU driver, Transformers/bitsandbytes/GemLite versions, temperature, EOS token/stop reason, GPU temperature/SM clock/power, and source-tree diff/hash. Temperature 0.0 is visible in the runner source at the recorded revision, but is not embedded in records.", "",
         "## Metric and interpretation caveats", "",
         "The runner computes decode TPS as `(generated_tokens - 1) / decode_time`, excluding the first output token. Preserve and label that definition in comparisons. Within-backend token exactness is recorded; cross-backend token equality is not a correctness criterion because BNB and HQQ use different quantized weights.", "",
         "A prompt triplet is complete only when vanilla, PLD, and CKA rows all exist. Partial prompt triplets are preserved and must not count as complete observations. The output-128 matrix does not meet the stated three-session protocol, and no output-32/256 matrix is included.", "",
         "## Recommended rerun order", "",
-        "1. Preserve existing raw records unchanged as exploratory artifacts; 13 cells are structurally complete, one HQQ/context-384 cell is partial (4/20 prompts), and 10 session files are absent.",
+        "1. Preserve raw records unchanged as exploratory artifacts. All 24 session cells are now structurally complete and no session files are missing; the HQQ/context-384 session-2 cell mixes historical dirty records with a clean append and should remain exploratory.",
         "2. Add missing runtime provenance to the runner and start from a clean, committed source tree.",
-        "3. Keep structurally complete cells when their recorded source commit matches current HEAD and no source-file diff is found; rerun only the partial/missing cells under an enhanced provenance runner. Rerun previously complete cells only if source equivalence fails or a source modification is discovered.",
+        "3. Keep clean-provenance cells as the primary subset. Rerun mixed/dirty cells only if a clean three-session confirmatory result is required; do not treat structural completeness as provenance cleanliness.",
         "4. After three clean sessions exist per backend/context, compute paired summaries and document/session-aware uncertainty.",
         "5. Decide whether output-32 or output-256 is needed after the primary output-128 matrix is valid.", "",
         "Machine-readable details: [`audit.json`](audit.json).",
