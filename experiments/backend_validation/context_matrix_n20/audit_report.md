@@ -2,22 +2,22 @@
 
 Scope: output-128 only; frozen 20-prompt cohort at contexts 128, 384, 1024, and 2048; BNB and HQQ; vanilla, PLD K=4, and CKA90/K2.
 
-- Structurally complete session cells: **13/24**.
-- Complete cells carrying `working_tree_dirty=true`: **13/13**; clean-provenance cells: **0**.
-- Missing session files: **10**.
+- Structurally complete session cells: **18/24**.
+- Complete cells carrying `working_tree_dirty=true`: **13/18**; clean-provenance cells: **0**.
+- Missing session files: **5**.
 - A complete cell has 20 prompt triplets (60 records), matching prompt hashes, expected backend/context/capacity, successful warmups, and no recorded failures.
 
 ## Cell status
 
 | Context | Backend | Session 1 | Session 2 | Session 3 |
 |---:|---|---:|---:|---:|
-| 128 | BNB | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | missing |
-| 128 | HQQ | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | missing |
-| 384 | BNB | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | missing |
+| 128 | BNB | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) |
+| 128 | HQQ | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) |
+| 384 | BNB | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) |
 | 384 | HQQ | 20/20 prompts (60 rows); dirty tree | 4/20 prompts (12 rows); dirty tree | missing |
-| 1024 | BNB | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | missing |
+| 1024 | BNB | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) |
 | 1024 | HQQ | 20/20 prompts (60 rows); dirty tree | missing | missing |
-| 2048 | BNB | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | missing |
+| 2048 | BNB | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows); dirty tree | 20/20 prompts (60 rows) |
 | 2048 | HQQ | 20/20 prompts (60 rows); dirty tree | missing | missing |
 
 ## Provenance findings
