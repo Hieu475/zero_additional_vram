@@ -241,14 +241,20 @@ def read_cell(path: Path, backend: str, context: int, cohort: list[str],
     tree_clean = all(value is False for value in dirty_values)
     valid_hashes = all(bool(row.get("prompt_token_ids_sha256"))
                        for methods in grouped.values() for row in methods.values())
+    source_hashes = {
+        row.get("runtime", {}).get("source_files_sha256")
+        for methods in grouped.values() for row in methods.values()
+    }
     return {
         "rows": rows,
         "grouped": grouped,
         "complete": True,
         "working_tree_clean": tree_clean,
         "source_tree_clean": source_clean,
-        "clean_provenance": tree_clean and source_clean and valid_hashes and len(commits) == 1,
+        "clean_provenance": tree_clean and source_clean and valid_hashes and len(commits) == 1
+        and len(source_hashes) == 1 and None not in source_hashes,
         "execution_commits": commits,
+        "source_files_sha256": sorted(str(value) for value in source_hashes if value is not None),
         "working_tree_dirty_values": sorted({str(v) for v in dirty_values}),
         "source_tree_dirty_values": sorted({str(v) for v in source_dirty_values}),
     }
@@ -298,9 +304,13 @@ def main() -> None:
         for context in CONTEXTS:
             for session in (1, 2, 3):
                 name = f"n20_ctx{context}_out128_{tag}_session{session}.jsonl"
-                cell = read_cell(BASE / name, backend, context, cohorts[context], prepared)
+                clean_path = BASE / "clean_reruns" / name
+                path = clean_path if clean_path.exists() else BASE / name
+                cell = read_cell(path, backend, context, cohorts[context], prepared)
                 inventory.append({
                     "file": name,
+                    "source_file": str(path.relative_to(ROOT)),
+                    "clean_rerun_used": path == clean_path,
                     "complete": cell is not None,
                     "clean_provenance": bool(cell and cell["clean_provenance"]),
                     "execution_commits": cell["execution_commits"] if cell else [],
@@ -309,7 +319,7 @@ def main() -> None:
                     cells[(tag, context, session)] = cell
 
     result: dict[str, Any] = {
-        "scope": "output-128 context matrix; only structurally complete 20-prompt cells",
+        "scope": "output-128 context matrix; only structurally complete 20-prompt cells; clean_rerun files override historical raw records when present",
         "prompt_cohort": "20 prompts per context; four prompts from each of narrativeqa, qasper, gov_report, multi_news, qmsum",
         "expected_cells": len(BACKENDS) * len(CONTEXTS) * 3,
         "complete_cells": len(cells),
@@ -320,6 +330,8 @@ def main() -> None:
             "limitations": "Intervals are omitted if either condition has fewer than two independent sessions. Intervals based on only two or three sessions remain fragile. Prompt/source IDs are the paired unit across conditions.",
         },
         "inventory": inventory,
+        "clean_rerun_manifest": "experiments/backend_validation/context_matrix_n20/clean_reruns/manifest.json",
+        "cross_backend_absolute_tps_limit": "The 14 replacement cells were run in backend blocks (BNB first, then HQQ), not interleaved. Treat absolute cross-backend TPS as descriptive; primary backend comparisons use within-backend paired speedup. Quantized weights also differ.",
         "per_backend_context": {},
         "paired_backend_speedup_delta": {},
         "paired_context_contrasts": {},
@@ -541,13 +553,13 @@ def main() -> None:
     out_md = BASE / "paired_summary.md"
     out_json.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     lines = [
-        "# Output-128 context matrix: paired preliminary summary", "",
-        "Only structurally complete cells are included (20 prompts × 3 methods, successful warmups, no failed method rows, expected KV capacity). Each context has four prompts from each of five LongBench tasks: NarrativeQA, QASPER, GovReport, MultiNews, and QMSum. Incomplete files are ignored. Clean-provenance results are shown separately from exploratory runs.", "",
+        "# Output-128 context matrix: paired summary", "",
+        "Only structurally complete cells are included (20 prompts × 3 methods, successful warmups, no failed method rows, expected KV capacity). Each context has four prompts from each of five LongBench tasks: NarrativeQA, QASPER, GovReport, MultiNews, and QMSum. The 14 fresh clean reruns override the historical dirty/mixed files for analysis; those originals remain unchanged. The other 10 cells use prior clean records.", "",
         f"- Complete cells: **{result['complete_cells']}/{result['expected_cells']}**.",
         f"- Cells with fully clean working-tree and source-tree provenance: **{result['clean_provenance_cells']}**.",
         "- TPS definition: `(generated tokens - 1) / decode time`; speedup is paired against vanilla for the same backend, prompt, and session.",
         "- Within-cell 95% intervals resample sessions and prompt documents stratified by LongBench task. Backend/context contrasts pair source documents and resample sessions independently within each condition; session numbers are not assumed to identify synchronized runs.",
-        "- Cross-backend comparison is HQQ internal speedup minus BNB internal speedup. Quantized weights differ, so this is an inference-stack comparison, not a kernel-only effect.", "",
+        "- Cross-backend speedup deltas compare inference stacks with different quantized weights. Replacement sessions ran in blocks (BNB before HQQ), not interleaved, so absolute cross-backend TPS is descriptive; this does not isolate a kernel-only effect.", "",
         "## Clean-provenance cells", "",
         "| Backend | Context | Method | Session IDs | Decode speedup | 95% interval | Decode slowdown | E2E speedup | Exact vs own vanilla | Token disagreement | First mismatch (median zero-based index) | Mean decode TPS | Peak allocated (MB) |",
         "|---|---:|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|",
@@ -572,7 +584,7 @@ def main() -> None:
             )
     lines += [
         "", "## Complete cells including exploratory provenance", "",
-        "These results include complete cells with historical dirty or missing provenance fields. Use them as sensitivity analysis, not as the clean-only result.", "",
+        "This section includes every complete selected cell. With the clean rerun overlay present, it currently uses the same 24 clean cells as the primary section; it remains as a cross-check if incomplete/dirty cells are later added.", "",
         "| Backend | Context | Method | Session count | Decode speedup | 95% interval | Decode slowdown | E2E speedup | Exact vs own vanilla | Token disagreement | First mismatch (median zero-based index) | Mean decode TPS | Peak allocated (MB) |",
         "|---|---:|---|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
@@ -642,7 +654,7 @@ def main() -> None:
         lines.append(f"| {backend} | {ctx.removeprefix('ctx')} | {method} | {provenance_label} | {association['n_prompts']} | {rho_text} | {ci_text} |")
     lines += ["", "## Cross-check with existing kernel profile", "",
               "The separate instrumented BNB NF4 profile at context 384/output 32 reports dequantization kernel shares of 8.0% for vanilla, 6.7% for PLD K4, and 4.2% for CKA90/K2, while NF4 GEMM shares are 37.8%, 49.3%, and 47.5%. CKA90/K2 has the lowest dequant share yet remains slower in the paired context matrix. This supports avoiding a dequantization-only explanation; it does not establish what causes the slowdown because the profile is a single instrumented prompt with a different budget/capacity. See [`kernel_profile/report.md`](../kernel_profile/report.md).", ""]
-    lines += ["", "## Evidence visible in this rolling snapshot", "",
+    lines += ["", "## Evidence from the completed clean matrix", "",
               "The clean-provenance point estimates show CKA90/K2 below 1× for both decode and end-to-end speedup in every completed cell. PLD K4 is not uniformly profitable: BNB ctx1024 is below 1×, and many prompt-level runs still slow down even when the cell mean exceeds 1×. Neither method reaches 100% exact sequence match in these clean cells, so the current evidence does not support a lossless claim.", ""]
     bnb_ctx = result["paired_context_contrasts"].get(
         "hf_bnb_nf4/1024-minus-128/pld_k4/all_complete_including_exploratory")
@@ -654,13 +666,13 @@ def main() -> None:
         bnb_ci_text = "not estimable" if bnb_ci is None else f"[{bnb_ci[0]:+.3f}, {bnb_ci[1]:+.3f}]"
         hqq_ci_text = "not estimable" if hqq_ci is None else f"[{hqq_ci[0]:+.3f}, {hqq_ci[1]:+.3f}]"
         lines.append(
-            "The exploratory matched-source comparison from ctx128 to ctx1024 estimates a PLD speedup change of "
+            "The clean matched-source comparison from ctx128 to ctx1024 estimates a PLD speedup change of "
             f"{bnb_ctx['decode_speedup_delta']['mean']:+.3f} for BNB (95% interval {bnb_ci_text}) and "
             f"{hqq_ctx['decode_speedup_delta']['mean']:+.3f} for HQQ (95% interval {hqq_ci_text}). "
-            "This pattern is consistent with backend-dependent context sensitivity, but the BNB/HQQ runs include historical provenance limitations and should be treated as a follow-up hypothesis."
+            "The BNB interval excludes zero while the HQQ interval crosses zero. This is evidence of different observed context sensitivity in this cohort; it does not isolate the cause because quantization and backend implementation differ."
         )
     lines += ["", "## Interpretation limits", "",
-              "This report is a rolling summary: it changes as queued benchmark cells finish. A clean single-session cell supports a reproducible descriptive result but not a session-level uncertainty interval. Bootstrap intervals based on only two or three session clusters remain fragile; collecting more independent sessions would strengthen them. Exploratory cells are retained in `paired_summary.json` and are not mixed into the clean-only table.",
+              "The matrix contains three clean sessions per backend/context. Session-level intervals are now estimable, but three session clusters remain a small basis for uncertainty estimates. The exploratory profile remains a one-prompt instrumented measurement and is not causal timing evidence.",
               ""]
     out_md.write_text("\n".join(lines))
     print(json.dumps({"complete_cells": result["complete_cells"],

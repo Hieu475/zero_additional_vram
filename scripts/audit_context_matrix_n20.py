@@ -56,7 +56,8 @@ def main() -> None:
             cohort = [line.strip() for line in (BASE / f"cohort_ctx{ctx}.txt").read_text().splitlines() if line.strip()]
             for session in SESSIONS:
                 name = f"n20_ctx{ctx}_out128_{backend_tag}_session{session}.jsonl"
-                path = BASE / name
+                clean_path = BASE / "clean_reruns" / name
+                path = clean_path if clean_path.exists() else BASE / name
                 rows, parse_errors = read_jsonl(path)
                 anomalies = list(parse_errors)
                 grouped: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
@@ -82,9 +83,14 @@ def main() -> None:
                     if row.get("warmup_status", {}).get("passed") is not True:
                         anomalies.append(f"warmup failed: {pid}/{method}")
                     runtime = row.get("runtime", {})
-                    for key in ("driver", "temperature_c", "sm_clock_mhz", "power_w", "transformers"):
-                        if runtime.get(key) is not None:
-                            telemetry[key] += 1
+                    telemetry["transformers_version"] += int(bool(runtime.get("packages", {}).get("transformers")))
+                    start_telemetry = runtime.get("gpu_telemetry_at_start", {})
+                    for key in ("driver_version", "temperature_c", "sm_clock_mhz", "power_draw_w"):
+                        telemetry[key] += int(start_telemetry.get(key) is not None)
+                    for location in ("gpu_telemetry_before", "gpu_telemetry_after"):
+                        sample = row.get(location, {})
+                        for key in ("temperature_c", "sm_clock_mhz", "power_draw_w"):
+                            telemetry[f"{location}.{key}"] += int(sample.get(key) is not None)
 
                 incomplete = {
                     pid: sorted(set(METHODS) - set(grouped.get(pid, {})))
@@ -93,15 +99,19 @@ def main() -> None:
                 commits = sorted({row.get("runtime", {}).get("execution_commit") for row in rows})
                 dirty_values = sorted({row.get("runtime", {}).get("working_tree_dirty") for row in rows}, key=str)
                 source_dirty_values = sorted({row.get("runtime", {}).get("source_tree_dirty") for row in rows}, key=str)
+                source_hashes = sorted({row.get("runtime", {}).get("source_files_sha256") for row in rows if row.get("runtime", {}).get("source_files_sha256")})
                 clean_provenance = (
                     len(rows) == EXPECTED_ROWS
                     and dirty_values == [False]
                     and source_dirty_values == [False]
                     and len(commits) == 1
                     and all(row.get("prompt_token_ids_sha256") for row in rows)
+                    and len(source_hashes) == 1
                 )
                 stat = {
-                    "file": name, "exists": path.exists(), "rows": len(rows),
+                    "file": name, "source_file": str(path.relative_to(ROOT)),
+                    "clean_rerun_used": path == clean_path,
+                    "exists": path.exists(), "rows": len(rows),
                     "expected_rows": EXPECTED_ROWS,
                     "unique_prompts": len(grouped),
                     "complete_prompt_triplets": len(cohort) - len(incomplete),
@@ -110,6 +120,7 @@ def main() -> None:
                     "execution_commits": commits,
                     "working_tree_dirty_values": dirty_values,
                     "source_tree_dirty_values": source_dirty_values,
+                    "source_files_sha256_values": source_hashes,
                     "clean_provenance": clean_provenance,
                     "anomalies": anomalies,
                 }
@@ -175,12 +186,11 @@ def main() -> None:
         "exploratory_exactness_counts": dict(exact),
         "telemetry_field_presence_counts": dict(telemetry),
         "important_limitations": [
-            "Fourteen complete cells contain at least one record with working_tree_dirty=true; ten cells have consistent clean working-tree and source-tree flags, prompt hashes, and a single execution commit. The HQQ context-384 session-2 cell combines a partial earlier dirty run with a clean append and is complete structurally but not clean-provenance.",
-            "Historical dirty-file lists/source hashes were not saved, so uncommitted source edits later reverted cannot be ruled out for dirty records. Runtime records omit GPU driver version, Transformers/bitsandbytes/GemLite versions, temperature, SM clocks, and power telemetry.",
-            "Temperature=0 is visible in the captured runner source, but is not stored in each record. EOS token ID/position and explicit stopping reason are not stored.",
+            "Fourteen cells use fresh clean-provenance reruns stored under clean_reruns/; their original dirty records remain unchanged. The remaining ten cells use previously captured clean records. All selected cells have 20 prompts, successful warmups, and clean working-tree/source-tree provenance.",
+            "Rerun records capture execution/source hashes, package versions, GPU driver, temperature, SM clock, power, EOS token and stop status, and per-method telemetry. Some fields are absent in historical dirty records, which remain preserved as raw exploratory data.",
             "TPS is calculated as (generated token count - 1) / decode time, excluding the first generated token; keep this definition explicit in any comparison.",
-            "Output-128 alone is incomplete; output-32/256 and three independent sessions are not complete. Exactness counts here are descriptive, not prompt-level confidence intervals.",
-            "Method order and seed are stored; no GPU thermal/power trace or per-run session UUID is stored.",
+            "This audit covers output-128 only; it does not include output-32/256. Three session clusters per condition still provide limited session-level uncertainty.",
+            "The replacement runs were grouped by backend (BNB first, then HQQ), not interleaved. Absolute cross-backend throughput comparisons are descriptive; temperature/power are point samples, not continuous telemetry traces.",
         ],
     }
     (BASE / "audit.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
@@ -191,7 +201,7 @@ def main() -> None:
         f"- Structurally complete session cells: **{complete_cells}/{expected_cells}**.",
         f"- Complete cells carrying `working_tree_dirty=true`: **{dirty_complete_cells}/{complete_cells}**; clean-provenance cells: **{report['clean_provenance_cells']}**.",
         f"- Missing session files: **{len(missing_files)}**.",
-        "- A complete cell has 20 prompt triplets (60 records), matching prompt hashes, expected backend/context/capacity, successful warmups, and no recorded failures.", "",
+        "- A complete cell has 20 prompt triplets (60 records), matching prompt hashes, expected backend/context/capacity, successful warmups, no measured failures, and clean working/source-tree provenance. Rerun cells are read from `clean_reruns/`; original files remain unchanged.", "",
         "## Cell status", "",
         "| Context | Backend | Session 1 | Session 2 | Session 3 |", "|---:|---|---:|---:|---:|",
     ]
@@ -203,23 +213,21 @@ def main() -> None:
                 if not st["exists"]:
                     vals.append("missing")
                 else:
-                    flag = "; dirty tree" if True in st["working_tree_dirty_values"] else ""
+                    flag = "; clean rerun" if st.get("clean_rerun_used") else ""
                     vals.append(f"{st['complete_prompt_triplets']}/20 prompts ({st['rows']} rows){flag}")
             lines.append(f"| {ctx} | {tag.upper()} | " + " | ".join(vals) + " |")
     lines += [
         "", "## Provenance findings", "",
-        f"{dirty_complete_cells} complete cells include records with `working_tree_dirty=true`; {report['clean_provenance_cells']} complete cells have consistently clean working-tree and source-tree flags, prompt hashes, and one execution commit. The HQQ/context-384 session-2 cell contains an earlier dirty partial run plus a clean append, so it is structurally complete but remains exploratory. Each recorded commit is checked against current `src/zassd` and the runner snapshot is hashed in `audit.json`. Historical dirty-file lists/source hashes were not saved, so reverted uncommitted edits cannot be ruled out for dirty records.", "",
-        "Records preserve model/tokenizer revision, backend quantization metadata, attention backend, prompt token count/hash, output budget, KV capacity, warmup status, randomized method order/seed, torch/CUDA/GPU model/capability, latency, TPS, token IDs, exactness, and peak allocated/reserved VRAM.", "",
-        "Missing per-run provenance includes GPU driver, Transformers/bitsandbytes/GemLite versions, temperature, EOS token/stop reason, GPU temperature/SM clock/power, and source-tree diff/hash. Temperature 0.0 is visible in the runner source at the recorded revision, but is not embedded in records.", "",
+        f"{report['clean_provenance_cells']} selected cells have clean working-tree/source-tree flags, prompt hashes, and one execution commit per cell. {sum(s.get('clean_rerun_used', False) for s in files)} cells read the clean reruns under `clean_reruns/`; original records remain intact. Each recorded commit is checked against current `src/zassd` and runner snapshots are hashed in `audit.json`.", "",
+        "Rerun records include model/tokenizer revision, quantization metadata, prompt hash, KV capacity, warmup status, method order/seed, PyTorch/CUDA/GPU, driver and package versions, telemetry snapshots, latency/TPS, token IDs, EOS/stopping status, exactness, and allocated/reserved VRAM.", "",
+        "Historical dirty records lack some provenance fields and are not selected where a clean rerun exists. Replacement cells were run in BNB-then-HQQ blocks, not interleaved, so absolute cross-backend throughput is descriptive. Temperature/power measurements are point samples, not continuous traces.", "",
         "## Metric and interpretation caveats", "",
         "The runner computes decode TPS as `(generated_tokens - 1) / decode_time`, excluding the first output token. Preserve and label that definition in comparisons. Within-backend token exactness is recorded; cross-backend token equality is not a correctness criterion because BNB and HQQ use different quantized weights.", "",
-        "A prompt triplet is complete only when vanilla, PLD, and CKA rows all exist. Partial prompt triplets are preserved and must not count as complete observations. The output-128 matrix does not meet the stated three-session protocol, and no output-32/256 matrix is included.", "",
+        "A prompt triplet is complete only when vanilla, PLD, and CKA rows all exist. All 24 backend/context matrices now have three clean sessions; no output-32/256 matrix is included.", "",
         "## Recommended rerun order", "",
-        "1. Preserve raw records unchanged as exploratory artifacts. All 24 session cells are now structurally complete and no session files are missing; the HQQ/context-384 session-2 cell mixes historical dirty records with a clean append and should remain exploratory.",
-        "2. Add missing runtime provenance to the runner and start from a clean, committed source tree.",
-        "3. Keep clean-provenance cells as the primary subset. Rerun mixed/dirty cells only if a clean three-session confirmatory result is required; do not treat structural completeness as provenance cleanliness.",
-        "4. After three clean sessions exist per backend/context, compute paired summaries and document/session-aware uncertainty.",
-        "5. Decide whether output-32 or output-256 is needed after the primary output-128 matrix is valid.", "",
+        "1. Keep original dirty records unchanged and analyze clean replacements listed in `clean_reruns/manifest.json`.",
+        "2. The output-128 three-session matrix now has clean provenance. Continue with numerical audit or a separately specified output-length study.",
+        "3. Interpret intervals cautiously because three session clusters per condition provide limited session-level uncertainty.", "",
         "Machine-readable details: [`audit.json`](audit.json).",
     ]
     (BASE / "audit_report.md").write_text("\n".join(lines) + "\n")
