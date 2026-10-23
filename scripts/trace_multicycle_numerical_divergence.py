@@ -7,9 +7,11 @@ so use a small number of prompts and a modest output length.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import platform
 from pathlib import Path
+import subprocess
 
 import torch
 import transformers
@@ -17,6 +19,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 from zassd.baselines.prompt_lookup import prompt_lookup_generate
 from zassd.cache.kv_cache import TargetKVCache
+from zassd.backends.base import load_backend
 
 
 def cache_error(left, right):
@@ -125,6 +128,9 @@ def main():
     ap.add_argument("--model", default="Qwen/Qwen2.5-3B-Instruct")
     ap.add_argument("--revision", default=None)
     ap.add_argument("--precision", choices=["nf4", "fp16", "bf16", "fp32"], default="nf4")
+    ap.add_argument("--weight-backend", choices=["hf_bnb_nf4", "hqq_gemlite_w4a16"],
+                    default=None,
+                    help="Use the shared backend loader (NF4 double-quant or HQQ+GemLite W4A16). Overrides --precision.")
     ap.add_argument("--attention-implementation", choices=["sdpa", "eager"], default="sdpa")
     ap.add_argument("--benchmark", default="experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl")
     ap.add_argument("--ids", nargs="*", help="Benchmark IDs; omit to use first --samples")
@@ -138,6 +144,8 @@ def main():
     ap.add_argument("--verification-mode", choices=["batched", "sequential"], default="batched")
     ap.add_argument("--device", default="cuda:0")
     ap.add_argument("--output", default="experiments/numerical_causality/trace.json")
+    ap.add_argument("--checkpoint", default=None,
+                    help="Append completed prompt records here and resume matching IDs on restart.")
     args = ap.parse_args()
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA is required for this NF4 trace")
@@ -145,20 +153,28 @@ def main():
     revision = args.revision
     if revision is None and args.model == "Qwen/Qwen2.5-3B-Instruct":
         revision = "aa8e72537993ba99e69dfaafa59ed015b17504d1"
-    tokenizer = AutoTokenizer.from_pretrained(args.model, revision=revision)
-    load_args = {"device_map": args.device, "attn_implementation": args.attention_implementation}
-    if revision is not None:
-        load_args["revision"] = revision
-    if args.precision == "nf4":
-        load_args["quantization_config"] = BitsAndBytesConfig(
-            load_in_4bit=True, bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.float16)
+    if args.weight_backend:
+        loaded = load_backend(args.weight_backend, args.model, revision,
+                              device=args.device, attention=args.attention_implementation)
+        tokenizer, model = loaded.tokenizer, loaded.model
+        backend_metadata = loaded.metadata
     else:
-        load_args["torch_dtype"] = {
-            "fp16": torch.float16, "bf16": torch.bfloat16, "fp32": torch.float32,
-        }[args.precision]
-    model = AutoModelForCausalLM.from_pretrained(args.model, **load_args)
-    model.eval()
+        tokenizer = AutoTokenizer.from_pretrained(args.model, revision=revision)
+        load_args = {"device_map": args.device, "attn_implementation": args.attention_implementation}
+        if revision is not None:
+            load_args["revision"] = revision
+        if args.precision == "nf4":
+            load_args["quantization_config"] = BitsAndBytesConfig(
+                load_in_4bit=True, bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=torch.float16,
+                bnb_4bit_use_double_quant=True)
+        else:
+            load_args["torch_dtype"] = {
+                "fp16": torch.float16, "bf16": torch.bfloat16, "fp32": torch.float32,
+            }[args.precision]
+        model = AutoModelForCausalLM.from_pretrained(args.model, **load_args)
+        model.eval()
+        backend_metadata = {"quantization": args.precision}
     records = []
     with open(args.benchmark, encoding="utf-8") as stream:
         for line in stream:
@@ -172,8 +188,32 @@ def main():
             if len(records) >= args.samples:
                 break
 
+    output = Path(args.output)
+    if not output.is_absolute():
+        output = Path(__file__).resolve().parents[1] / output
+    checkpoint = Path(args.checkpoint) if args.checkpoint else output.with_suffix(".jsonl")
+    if not checkpoint.is_absolute():
+        checkpoint = Path(__file__).resolve().parents[1] / checkpoint
+    checkpoint.parent.mkdir(parents=True, exist_ok=True)
+    weight_backend = args.weight_backend or "legacy_precision_loader"
+    completed: dict[str, dict] = {}
+    if checkpoint.exists():
+        for line in checkpoint.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                saved = json.loads(line)
+                if saved.get("weight_backend") != weight_backend:
+                    raise ValueError(f"Checkpoint backend mismatch in {checkpoint}")
+                completed[str(saved["prompt_id"])] = saved
+    execution_commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=Path(__file__).resolve().parents[1],
+        capture_output=True, text=True, check=True).stdout.strip()
     summaries = []
     for prompt_index, item in enumerate(records):
+        item_id = str(item.get("id", item.get("prompt_id", prompt_index)))
+        if item_id in completed:
+            summaries.append(completed[item_id])
+            print(f"resume-skip {item_id}", flush=True)
+            continue
         if "input_ids" in item:
             prompt_ids = torch.tensor([item["input_ids"]], device=args.device, dtype=torch.long)
         else:
@@ -278,8 +318,13 @@ def main():
                     divergence_cycle = source_cycle["cycle_index"]
                     divergence_row = row_index
                     break
-        summaries.append({
-            "prompt_id": item.get("id", item.get("prompt_id", prompt_index)),
+        summary = {
+            "prompt_id": item_id,
+            "weight_backend": weight_backend,
+            "execution_commit": execution_commit,
+            "prompt_token_ids_sha256": hashlib.sha256(
+                json.dumps(item.get("input_ids", prompt_ids[0].tolist()), separators=(",", ":")).encode()
+            ).hexdigest(),
             "prompt_length": prompt_len,
             "token_ids": metrics.generated_token_ids,
             "vanilla_token_ids": vanilla_ids,
@@ -295,14 +340,21 @@ def main():
                 vanilla_margins[token_divergence]
                 if token_divergence is not None and token_divergence < len(vanilla_margins) else None),
             "cycles": trace_rows,
-        })
-        print(f"{item.get('id', item.get('prompt_id', prompt_index))}: kv={first_kv_cycle}, logits={first_logit_cycle}, token={token_divergence}")
+        }
+        summaries.append(summary)
+        with checkpoint.open("a", encoding="utf-8") as stream:
+            stream.write(json.dumps(summary) + "\n")
+            stream.flush()
+        print(f"{item_id}: kv={first_kv_cycle}, logits={first_logit_cycle}, token={token_divergence}", flush=True)
 
-    output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps({
         "model": args.model, "model_revision": revision,
         "precision": args.precision, "backend": args.backend,
+        "weight_backend": args.weight_backend or "legacy_precision_loader",
+        "backend_metadata": backend_metadata,
+        "execution_commit": execution_commit,
+        "checkpoint": str(checkpoint),
         "attention_implementation": args.attention_implementation,
         "verification_mode": args.verification_mode,
         "k": args.k, "benchmark": args.benchmark, "environment": {
@@ -317,6 +369,7 @@ def main():
         "candidate_source": args.candidate_source,
         "max_new_tokens": args.max_new_tokens, "backend": args.backend,
         "precision": args.precision,
+        "weight_backend": args.weight_backend or "legacy_precision_loader",
         "attention_implementation": args.attention_implementation,
         "verification_mode": args.verification_mode,
         "kv_cache_max_capacity": "prompt_length + max_new_tokens + k + 16",

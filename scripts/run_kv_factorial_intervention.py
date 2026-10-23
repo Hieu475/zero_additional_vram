@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from zassd.baselines.prompt_lookup import prompt_lookup_generate  # noqa: E402
 from zassd.cache.kv_cache import StaticPreallocatedLayer, TargetKVCache  # noqa: E402
+from zassd.backends.base import load_backend  # noqa: E402
 
 INPUTS = ROOT / "experiments/natural_context_validation/independent_pld_short_context/session1_rtx4050/prepared_inputs.jsonl"
 OUT = ROOT / "experiments/numerical_causality/interventions/factorial_kv_verification.jsonl"
@@ -335,6 +336,8 @@ def main() -> None:
     ap.add_argument("--k", type=int, default=4)
     ap.add_argument("--model", default="Qwen/Qwen2.5-3B-Instruct")
     ap.add_argument("--revision", default="aa8e72537993ba99e69dfaafa59ed015b17504d1")
+    ap.add_argument("--weight-backend", choices=("hf_bnb_nf4", "hqq_gemlite_w4a16"),
+                    default="hf_bnb_nf4")
     args = ap.parse_args()
     inputs = args.inputs if args.inputs.is_absolute() else ROOT / args.inputs
     output = args.output if args.output.is_absolute() else ROOT / args.output
@@ -348,20 +351,28 @@ def main() -> None:
     if wanted and {r["prompt_id"] for r in prompts} != wanted:
         raise ValueError("One or more requested prompt IDs are absent from prepared inputs")
 
-    tokenizer = AutoTokenizer.from_pretrained(args.model, revision=args.revision)
     execution_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
                                       capture_output=True, text=True, check=True).stdout.strip()
-    quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
-                               bnb_4bit_compute_dtype=torch.float16,
-                               bnb_4bit_use_double_quant=True)
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model, revision=args.revision, quantization_config=quant,
-        device_map=args.device, attn_implementation="sdpa").eval()
+    loaded = load_backend(args.weight_backend, args.model, args.revision,
+                          device=args.device, attention="sdpa")
+    tokenizer, model = loaded.tokenizer, loaded.model
+    quantization_metadata = loaded.metadata
 
     details = []
+    completed_ids = set()
     if output.exists():
-        raise FileExistsError(f"Refusing to append to existing intervention output: {output}")
+        for line in output.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            saved = json.loads(line)
+            if saved.get("weight_backend", "hf_bnb_nf4") != args.weight_backend:
+                raise ValueError(f"Existing output has a different backend: {output}")
+            details.append(saved)
+            completed_ids.add(saved["prompt_id"])
     for item in prompts:
+        if item["prompt_id"] in completed_ids:
+            print(f"resume-skip {item['prompt_id']}", flush=True)
+            continue
         prompt_list = item["input_ids"]
         prompt_ids = torch.tensor([prompt_list], dtype=torch.long, device=args.device)
         capacity = len(prompt_list) + args.max_new_tokens + args.k + 16
@@ -417,9 +428,10 @@ def main() -> None:
         row = {
             "prompt_id": item["prompt_id"],
             "execution_commit": execution_commit,
+            "weight_backend": args.weight_backend,
             "prompt_token_ids_sha256": hashlib.sha256(json.dumps(prompt_list, separators=(",", ":")).encode()).hexdigest(),
             "model_revision": args.revision,
-            "quantization": {"type": "NF4", "compute_dtype": "float16", "double_quant": True},
+            "quantization": quantization_metadata,
             "attention": "sdpa", "kv_backend": "static", "capacity": capacity,
             "max_new_tokens": args.max_new_tokens, "eos_token_id": tokenizer.eos_token_id,
             "pld_token_ids": metrics.generated_token_ids, "vanilla_token_ids": vanilla_output,
@@ -499,7 +511,8 @@ def main() -> None:
             for r in details for f in r["kv_interventions"] if f["draft_k"] == r["actual_cycle_k"]),
         "all_cache_integrity_checks_pass": integrity_ok,
         "execution_commit": execution_commit,
-        "double_quant": True, "model_revision": args.revision,
+        "weight_backend": args.weight_backend,
+        "quantization": quantization_metadata, "model_revision": args.revision,
         "cohort_ids": [r["prompt_id"] for r in details],
         "interpretation": "Classifications describe selected-row greedy argmax decisions. Logit norm changes alone do not imply a token change.",
     }
@@ -521,7 +534,7 @@ def main() -> None:
 ## Protocol
 
 - Execution commit: `{execution_commit}`; model `{args.model}` revision `{args.revision}`.
-- NF4, FP16 compute, double quant enabled; SDPA; static KV; RTX 4050.
+- Backend `{args.weight_backend}` with metadata `{json.dumps(quantization_metadata, sort_keys=True)}`; SDPA; static KV.
 - Diagnostic cohort: {len(details)} prompts; each PLD output mismatch vs the matched-capacity canonical sequential reference: {summary['sequence_mismatch_count']}/{len(details)}.
 - For each selected prompt prefix and fixed candidate sequence, four isolated cache clones were evaluated: A active KV + batch, B canonical KV + batch, C active KV + sequential, D canonical KV + sequential.
 - Every condition began at the same logical prefix length; input token positions are `[prefix_length, prefix_length + candidate_length)`. Attention mask was omitted consistently so the model/cache constructs the causal mask from logical cache length.
