@@ -1,0 +1,78 @@
+{
+  "schema": "llama32-3b-b1-tuning-summary-v1",
+  "scope": "paired diagnostic runs; three development prompts, two sessions per configuration; no speedup claim",
+  "model": "unsloth/Llama-3.2-3B-Instruct",
+  "revision": "006f5dcd1393c3add266de40994ba96225e9689d",
+  "rows": [
+    {
+      "config": "bf16_k1_rows2",
+      "n": 6,
+      "mean_speedup_vs_fixed_row_singleton": 1.1755228755503488,
+      "median_speedup_vs_fixed_row_singleton": 1.214778803690466,
+      "mean_speedup_vs_original_bnb": 0.9108266210271623,
+      "median_speedup_vs_original_bnb": 0.9226318675272769,
+      "block_matches_singleton": 6,
+      "block_matches_original_bnb": 4,
+      "artifacts": [
+        "experiments/exact_quantized_feasibility/llama32_3b_perf_padded_k1rows2_session0_v1",
+        "experiments/exact_quantized_feasibility/llama32_3b_perf_padded_k1rows2_session1_v1"
+      ]
+    },
+    {
+      "config": "bf16_k2_rows3",
+      "n": 6,
+      "mean_speedup_vs_fixed_row_singleton": 1.2358577367961219,
+      "median_speedup_vs_fixed_row_singleton": 1.2425906470344257,
+      "mean_speedup_vs_original_bnb": 0.9177139861153149,
+      "median_speedup_vs_original_bnb": 0.9106736913062448,
+      "block_matches_singleton": 6,
+      "block_matches_original_bnb": 4,
+      "artifacts": [
+        "experiments/exact_quantized_feasibility/llama32_3b_perf_padded_k2rows3_session1_v1",
+        "experiments/exact_quantized_feasibility/llama32_3b_perf_padded_k2rows3_session0_v1"
+      ]
+    },
+    {
+      "config": "bf16_k3_rows4",
+      "n": 6,
+      "mean_speedup_vs_fixed_row_singleton": 1.2758725354315796,
+      "median_speedup_vs_fixed_row_singleton": 1.2619068808750737,
+      "mean_speedup_vs_original_bnb": 0.6047868644018928,
+      "median_speedup_vs_original_bnb": 0.619153102990509,
+      "block_matches_singleton": 6,
+      "block_matches_original_bnb": 4,
+      "artifacts": [
+        "experiments/exact_quantized_feasibility/llama32_3b_perf_padded_k3rows4_session1_v1",
+        "experiments/exact_quantized_feasibility/llama32_3b_perf_padded_k3rows4_session0_v1"
+      ]
+    },
+    {
+      "config": "bf16_k4_rows5",
+      "n": 6,
+      "mean_speedup_vs_fixed_row_singleton": 1.3478692969083692,
+      "median_speedup_vs_fixed_row_singleton": 1.3359115825946604,
+      "mean_speedup_vs_original_bnb": 0.6161969018868573,
+      "median_speedup_vs_original_bnb": 0.6153734292190969,
+      "block_matches_singleton": 6,
+      "block_matches_original_bnb": 4,
+      "artifacts": [
+        "experiments/exact_quantized_feasibility/llama32_3b_perf_padded_session0_v1",
+        "experiments/exact_quantized_feasibility/llama32_3b_perf_padded_session1_v1"
+      ]
+    },
+    {
+      "config": "fp16_k2_rows3",
+      "n": 6,
+      "mean_speedup_vs_fixed_row_singleton": 1.193355817128188,
+      "median_speedup_vs_fixed_row_singleton": 1.1947398244007885,
+      "mean_speedup_vs_original_bnb": 0.8811163684022095,
+      "median_speedup_vs_original_bnb": 0.881347232119167,
+      "block_matches_singleton": 6,
+      "block_matches_original_bnb": 6,
+      "artifacts": [
+        "experiments/exact_quantized_feasibility/llama32_3b_perf_fp16_k2rows3_padded_session0_v1",
+        "experiments/exact_quantized_feasibility/llama32_3b_perf_fp16_k2rows3_padded_session1_v1"
+      ]
+    }
+  ]
+}

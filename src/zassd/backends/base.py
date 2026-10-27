@@ -22,7 +22,8 @@ class LoadedBackend:
 
 
 def load_backend(name: str, model_id: str, revision: str, device: str = "cuda:0",
-                 attention: str = "sdpa") -> LoadedBackend:
+                 attention: str = "sdpa", *,
+                 model_dtype: torch.dtype | None = None) -> LoadedBackend:
     """Load a model with a named backend while preserving the HF model API."""
     if name not in {"hf_bnb_nf4", "hqq_gemlite_w4a16"}:
         raise ValueError(f"unknown backend {name!r}; expected hf_bnb_nf4 or hqq_gemlite_w4a16")
@@ -36,11 +37,15 @@ def load_backend(name: str, model_id: str, revision: str, device: str = "cuda:0"
         model = AutoModelForCausalLM.from_pretrained(
             model_id, revision=revision, quantization_config=quant,
             device_map=device, attn_implementation=attention,
+            **({"dtype": model_dtype} if model_dtype is not None else {}),
         ).eval()
-        return LoadedBackend(name, model, tokenizer, {
+        metadata = {
             "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
             "attention": attention,
-        })
+        }
+        if model_dtype is not None:
+            metadata["model_dtype"] = str(model_dtype)
+        return LoadedBackend(name, model, tokenizer, metadata)
     if name == "hqq_gemlite_w4a16":
         try:
             from gemlite.helper import A16W4_HQQ_INT, patch_model

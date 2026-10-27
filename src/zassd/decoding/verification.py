@@ -1,8 +1,7 @@
-"""Token verification for speculative decoding.
+"""Token-level acceptance decisions for speculative decoding.
 
-Implements exact greedy verification and stochastic verification.
-Greedy verification mathematically guarantees exact output match with
-the vanilla autoregressive model (Output_spec == Output_vanilla).
+Whole-trajectory equality under finite-precision execution also requires the
+verification logits and committed KV state to match the reference path.
 """
 
 from __future__ import annotations

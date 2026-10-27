@@ -61,6 +61,12 @@ def first_difference(left: list[int], right: list[int]) -> int | None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model", default="Qwen/Qwen2.5-3B-Instruct")
+    parser.add_argument("--revision", default=None,
+                        help="Pin model and tokenizer revision for a matched numerical trace")
+    parser.add_argument("--bnb-double-quant", action="store_true",
+                        help="Enable NF4 double quantization to match the BNB backend study")
+    parser.add_argument("--attention-implementation", default=None,
+                        help="Pin SDPA/eager attention implementation when matching a benchmark")
     parser.add_argument("--benchmark", default="data/benchmarks/gsm8k_eval.jsonl")
     parser.add_argument("--samples", type=int, default=10)
     parser.add_argument("--ids", nargs="*", default=None,
@@ -82,14 +88,22 @@ def main() -> None:
 
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA is unavailable; the NF4 divergence trace requires a working GPU driver")
-    tokenizer = AutoTokenizer.from_pretrained(args.model)
+    tokenizer = AutoTokenizer.from_pretrained(args.model, revision=args.revision)
     if "bnb-4bit" in args.model.lower() or "4bit" in args.model.lower():
-        model = AutoModelForCausalLM.from_pretrained(args.model, device_map=args.device)
+        load_kwargs = {"device_map": args.device, "revision": args.revision}
+        if args.attention_implementation:
+            load_kwargs["attn_implementation"] = args.attention_implementation
+        model = AutoModelForCausalLM.from_pretrained(args.model, **load_kwargs)
     else:
         quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
-                                  bnb_4bit_compute_dtype=torch.float16)
+                                  bnb_4bit_compute_dtype=torch.float16,
+                                  bnb_4bit_use_double_quant=args.bnb_double_quant)
+        load_kwargs = {"quantization_config": quant, "device_map": args.device,
+                       "revision": args.revision}
+        if args.attention_implementation:
+            load_kwargs["attn_implementation"] = args.attention_implementation
         model = AutoModelForCausalLM.from_pretrained(
-            args.model, quantization_config=quant, device_map=args.device)
+            args.model, **load_kwargs)
     model.eval()
     adapter = ModelAdapter(model)
     manager = LayerManager(adapter)
@@ -181,6 +195,9 @@ def main() -> None:
         "canonical_kv_replay": args.canonical_kv_replay,
         "canonical_verify": args.canonical_verify,
         "margin_fallback_threshold": args.margin_fallback_threshold,
+        "revision": args.revision,
+        "bnb_double_quant": args.bnb_double_quant,
+        "attention_implementation": args.attention_implementation,
         "benchmark": args.benchmark, "samples": results,
     }, indent=2), encoding="utf-8")
     print(f"Saved {output}")
