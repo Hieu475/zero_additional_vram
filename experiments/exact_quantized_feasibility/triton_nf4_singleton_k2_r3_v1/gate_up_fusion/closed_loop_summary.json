@@ -1,0 +1,53 @@
+{
+  "schema": "zassd-fused-gate-up-closed-loop-summary-v1",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "schedule": "experimental K2/R3 fused gate/up MLP; all other schedule components match K2/R3 warp1 prototype",
+  "prompt_budgets": {
+    "HumanEval/112": {
+      "sessions": 2,
+      "timing_pairs": 4,
+      "all_fused_exact_to_singleton_and_prior_k2_tokens": true,
+      "acceptance": {
+        "accepted": 324,
+        "drafted": 332,
+        "rate": 0.9759036144578314
+      },
+      "geomean_speedup_vs_original_k2_block": 0.9570401842901832,
+      "geomean_speedup_vs_bnb": 1.7663416939142393,
+      "bnb_token_match_rounds": 0,
+      "bnb_rounds": 4,
+      "runs": [
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/gate_up_fusion/closed_loop_humaneval112_128_s12_v1.json",
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/gate_up_fusion/closed_loop_humaneval112_128_s14_v1.json"
+      ]
+    },
+    "HumanEval/114": {
+      "sessions": 2,
+      "timing_pairs": 4,
+      "all_fused_exact_to_singleton_and_prior_k2_tokens": true,
+      "acceptance": {
+        "accepted": 112,
+        "drafted": 292,
+        "rate": 0.3835616438356164
+      },
+      "geomean_speedup_vs_original_k2_block": 0.994949432670993,
+      "geomean_speedup_vs_bnb": 1.0205414118100826,
+      "bnb_token_match_rounds": 4,
+      "bnb_rounds": 4,
+      "runs": [
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/gate_up_fusion/closed_loop_humaneval114_128_s13_v1.json",
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/gate_up_fusion/closed_loop_humaneval114_128_s15_v1.json"
+      ]
+    }
+  },
+  "overall_geomean_speedup_vs_original_k2_block": 0.9758107339043061,
+  "overall_geomean_speedup_vs_bnb": 1.3426186525019868,
+  "limitations": [
+    "Two development prompts, one output budget and two processes per prompt.",
+    "Timing comparison is descriptive and uses separate process artifacts, not paired same-process A/B.",
+    "Exactness is relative to the fused profile singleton; current K2 singleton token output also matched in both sessions.",
+    "No BNB state equivalence claim; GSM8K held-out indices 300-349 unused."
+  ],
+  "latency_interpretation": "Cross-process historical comparison only; use paired_ab_summary.json for the fused-versus-standard block latency decision.",
+  "paired_latency_summary": "paired_ab_summary.json"
+}

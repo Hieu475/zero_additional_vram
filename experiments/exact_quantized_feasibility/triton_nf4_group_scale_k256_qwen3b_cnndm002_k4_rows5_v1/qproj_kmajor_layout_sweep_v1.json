@@ -1,0 +1,62 @@
+{
+  "status": "experimental q_proj layout comparison; finite microbenchmark",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "physical_rows": 5,
+  "iterations_per_sample": 30,
+  "rounds": 5,
+  "kernel_source_sha256": {
+    "current": "1ff2b2b8f628cd62238c956387b7d9b4bc14e59b8070feff67f1409a301fc3f5",
+    "kmajor": "c47ef5865d17765e1eb95e2fe422f9cb374b7b6b2d34f505bc13002a6edc33e5"
+  },
+  "results": [
+    {
+      "m": 1,
+      "median_cuda_ms": {
+        "group_scale_n8_k256": 0.04061866601308187,
+        "group_scale_kmajor_n8_k256": 0.05372586647669474
+      },
+      "kmajor_over_current_latency_ratio": 1.3226890922363501,
+      "outputs_bitwise_equal_between_layouts": false,
+      "row0_bitwise_equal_to_own_singleton": {
+        "group_scale_n8_k256": true,
+        "group_scale_kmajor_n8_k256": true
+      }
+    },
+    {
+      "m": 3,
+      "median_cuda_ms": {
+        "group_scale_n8_k256": 0.10216106573740641,
+        "group_scale_kmajor_n8_k256": 0.15356586774190267
+      },
+      "kmajor_over_current_latency_ratio": 1.5031740970344472,
+      "outputs_bitwise_equal_between_layouts": false,
+      "row0_bitwise_equal_to_own_singleton": {
+        "group_scale_n8_k256": true,
+        "group_scale_kmajor_n8_k256": true
+      }
+    },
+    {
+      "m": 5,
+      "median_cuda_ms": {
+        "group_scale_n8_k256": 0.16536320050557454,
+        "group_scale_kmajor_n8_k256": 0.24961493810017904
+      },
+      "kmajor_over_current_latency_ratio": 1.5094950831685452,
+      "outputs_bitwise_equal_between_layouts": false,
+      "row0_bitwise_equal_to_own_singleton": {
+        "group_scale_n8_k256": true,
+        "group_scale_kmajor_n8_k256": true
+      }
+    }
+  ]
+}

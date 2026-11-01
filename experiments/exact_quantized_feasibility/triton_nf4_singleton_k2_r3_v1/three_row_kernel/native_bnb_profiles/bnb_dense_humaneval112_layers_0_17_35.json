@@ -1,0 +1,519 @@
+{
+  "schema": "zassd-actual-bnb-nf4-gemm-vs-dense-v1",
+  "classification": "finite direct operator comparison on model-generated M=3 activations; not an end-to-end benchmark or proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "prompt_id": "HumanEval/112",
+  "prompt_tokens": 157,
+  "forced_bnb_tokens": [
+    262,
+    671,
+    4615,
+    2038
+  ],
+  "block_predictions": [
+    671,
+    4615,
+    2038
+  ],
+  "block_predictions_match_bnb_continuation": true,
+  "layers": [
+    0,
+    17,
+    35
+  ],
+  "activation_protocol": "Capture gate/up inputs during one M=3 block with original BNB linears and native rowwise SDPA. Compare BNB fused GEMM, dense F.linear over BNB-dequantized weights cast to BNB compute dtype, and fixed-three-row Triton on the exact same activation tensor.",
+  "source_sha256": "1bde5e6fc005f95f2ee35944d2a33d57552dbd20a0150eb951baadeb39e6a17e",
+  "timing_protocol": {
+    "iterations_per_round": 10,
+    "alternating_rounds": 5,
+    "dense_weight_dequantization_excluded": true
+  },
+  "results": {
+    "layers.0.mlp.gate_proj": {
+      "activation_shape": [
+        1,
+        3,
+        2048
+      ],
+      "activation_dtype": "torch.bfloat16",
+      "bnb_compute_dtype": "torch.float16",
+      "quant_state_weight_dtype": "torch.bfloat16",
+      "bnb_fused_vs_dense": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.015625,
+        "mean_abs_diff": 0.00033426383743062615,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "triton_vs_dense": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.015625,
+        "mean_abs_diff": 0.00032944162376224995,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "bnb_fused_vs_triton": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.015625,
+        "mean_abs_diff": 8.506901212967932e-05,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "dense_dequant_vs_quant_state_dtype": "torch.bfloat16",
+      "timing": {
+        "samples_ms": {
+          "bnb_fused": [
+            0.12830719947814942,
+            0.12482559680938721,
+            0.12247040271759033,
+            0.12738560438156127,
+            0.12471040487289428
+          ],
+          "dense_f_linear": [
+            0.25176639556884767,
+            0.2552544116973877,
+            0.25017919540405276,
+            0.2560287952423096,
+            0.25057919025421144
+          ],
+          "triton_nf4": [
+            0.1141759991645813,
+            0.10882560014724732,
+            0.11448320150375366,
+            0.10792959928512573,
+            0.11405760049819946
+          ]
+        },
+        "median_ms": {
+          "bnb_fused": 0.12482559680938721,
+          "dense_f_linear": 0.25176639556884767,
+          "triton_nf4": 0.11405760049819946
+        },
+        "dense_over_bnb_ratio": 2.0169452580571536,
+        "triton_over_bnb_ratio": 0.9137356713172313
+      }
+    },
+    "layers.0.mlp.up_proj": {
+      "activation_shape": [
+        1,
+        3,
+        2048
+      ],
+      "activation_dtype": "torch.bfloat16",
+      "bnb_compute_dtype": "torch.float16",
+      "quant_state_weight_dtype": "torch.bfloat16",
+      "bnb_fused_vs_dense": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.0078125,
+        "mean_abs_diff": 0.00028676181682385504,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "triton_vs_dense": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.0078125,
+        "mean_abs_diff": 0.00028238879167474806,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "bnb_fused_vs_triton": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.00390625,
+        "mean_abs_diff": 7.479636406060308e-05,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "dense_dequant_vs_quant_state_dtype": "torch.bfloat16",
+      "timing": {
+        "samples_ms": {
+          "bnb_fused": [
+            0.11816960573196411,
+            0.1304800033569336,
+            0.12154879570007324,
+            0.12625919580459594,
+            0.12124160528182984
+          ],
+          "dense_f_linear": [
+            0.2511552095413208,
+            0.2564095973968506,
+            0.2515775918960571,
+            0.2545664072036743,
+            0.24986560344696046
+          ],
+          "triton_nf4": [
+            0.11386879682540893,
+            0.1078112006187439,
+            0.11448320150375366,
+            0.10792959928512573,
+            0.11159360408782959
+          ]
+        },
+        "median_ms": {
+          "bnb_fused": 0.12154879570007324,
+          "dense_f_linear": 0.2515775918960571,
+          "triton_nf4": 0.11159360408782959
+        },
+        "dense_over_bnb_ratio": 2.0697662239026653,
+        "triton_over_bnb_ratio": 0.9180971596229673
+      }
+    },
+    "layers.17.mlp.gate_proj": {
+      "activation_shape": [
+        1,
+        3,
+        2048
+      ],
+      "activation_dtype": "torch.bfloat16",
+      "bnb_compute_dtype": "torch.float16",
+      "quant_state_weight_dtype": "torch.bfloat16",
+      "bnb_fused_vs_dense": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.015625,
+        "mean_abs_diff": 0.0007210758631117642,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "triton_vs_dense": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.015625,
+        "mean_abs_diff": 0.0007118929643183947,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "bnb_fused_vs_triton": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.015625,
+        "mean_abs_diff": 0.0001833184069255367,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "dense_dequant_vs_quant_state_dtype": "torch.bfloat16",
+      "timing": {
+        "samples_ms": {
+          "bnb_fused": [
+            0.11828160285949707,
+            0.12349439859390259,
+            0.1210368037223816,
+            0.12851200103759766,
+            0.12193919420242309
+          ],
+          "dense_f_linear": [
+            0.2500607967376709,
+            0.24975359439849854,
+            0.2495199918746948,
+            0.2520064115524292,
+            0.2510848045349121
+          ],
+          "triton_nf4": [
+            0.11059199571609497,
+            0.10782719850540161,
+            0.11526399850845337,
+            0.10751999616622925,
+            0.11374399662017823
+          ]
+        },
+        "median_ms": {
+          "bnb_fused": 0.12193919420242309,
+          "dense_f_linear": 0.2500607967376709,
+          "triton_nf4": 0.11059199571609497
+        },
+        "dense_over_bnb_ratio": 2.0507007478051866,
+        "triton_over_bnb_ratio": 0.9069437963687754
+      }
+    },
+    "layers.17.mlp.up_proj": {
+      "activation_shape": [
+        1,
+        3,
+        2048
+      ],
+      "activation_dtype": "torch.bfloat16",
+      "bnb_compute_dtype": "torch.float16",
+      "quant_state_weight_dtype": "torch.bfloat16",
+      "bnb_fused_vs_dense": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.015625,
+        "mean_abs_diff": 0.0006291350000537932,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "triton_vs_dense": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.015625,
+        "mean_abs_diff": 0.0006229759892448783,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "bnb_fused_vs_triton": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.0078125,
+        "mean_abs_diff": 0.00015760987298563123,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "dense_dequant_vs_quant_state_dtype": "torch.bfloat16",
+      "timing": {
+        "samples_ms": {
+          "bnb_fused": [
+            0.11828160285949707,
+            0.12349439859390259,
+            0.12113920450210572,
+            0.12613760232925414,
+            0.1274880051612854
+          ],
+          "dense_f_linear": [
+            0.2507904052734375,
+            0.24995839595794678,
+            0.25436160564422605,
+            0.24975359439849854,
+            0.2566272020339966
+          ],
+          "triton_nf4": [
+            0.11107200384140015,
+            0.10745279788970948,
+            0.10985280275344848,
+            0.10741759538650512,
+            0.11304960250854493
+          ]
+        },
+        "median_ms": {
+          "bnb_fused": 0.12349439859390259,
+          "dense_f_linear": 0.2507904052734375,
+          "triton_nf4": 0.10985280275344848
+        },
+        "dense_over_bnb_ratio": 2.0307836479137285,
+        "triton_over_bnb_ratio": 0.8895367239666233
+      }
+    },
+    "layers.35.mlp.gate_proj": {
+      "activation_shape": [
+        1,
+        3,
+        2048
+      ],
+      "activation_dtype": "torch.bfloat16",
+      "bnb_compute_dtype": "torch.float16",
+      "quant_state_weight_dtype": "torch.bfloat16",
+      "bnb_fused_vs_dense": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.03125,
+        "mean_abs_diff": 0.0017975543159991503,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "triton_vs_dense": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.03125,
+        "mean_abs_diff": 0.0017767056124284863,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "bnb_fused_vs_triton": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.03125,
+        "mean_abs_diff": 0.00045011707697995007,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "dense_dequant_vs_quant_state_dtype": "torch.bfloat16",
+      "timing": {
+        "samples_ms": {
+          "bnb_fused": [
+            0.11820800304412842,
+            0.1235967993736267,
+            0.12133760452270508,
+            0.1233247995376587,
+            0.12143679857254028
+          ],
+          "dense_f_linear": [
+            0.25556480884552,
+            0.24965119361877441,
+            0.25372800827026365,
+            0.24937279224395753,
+            0.24983999729156495
+          ],
+          "triton_nf4": [
+            0.11212799549102784,
+            0.10751999616622925,
+            0.11089279651641845,
+            0.10738559961318969,
+            0.11048320531845093
+          ]
+        },
+        "median_ms": {
+          "bnb_fused": 0.12143679857254028,
+          "dense_f_linear": 0.24983999729156495,
+          "triton_nf4": 0.11048320531845093
+        },
+        "dense_over_bnb_ratio": 2.057366467400102,
+        "triton_over_bnb_ratio": 0.9098000492202846
+      }
+    },
+    "layers.35.mlp.up_proj": {
+      "activation_shape": [
+        1,
+        3,
+        2048
+      ],
+      "activation_dtype": "torch.bfloat16",
+      "bnb_compute_dtype": "torch.float16",
+      "quant_state_weight_dtype": "torch.bfloat16",
+      "bnb_fused_vs_dense": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.0625,
+        "mean_abs_diff": 0.001462496118620038,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "triton_vs_dense": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.0625,
+        "mean_abs_diff": 0.001452272292226553,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "bnb_fused_vs_triton": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.03125,
+        "mean_abs_diff": 0.00035568419843912125,
+        "shape": [
+          1,
+          3,
+          11008
+        ],
+        "dtype_a": "torch.bfloat16",
+        "dtype_b": "torch.bfloat16"
+      },
+      "dense_dequant_vs_quant_state_dtype": "torch.bfloat16",
+      "timing": {
+        "samples_ms": {
+          "bnb_fused": [
+            0.11818239688873292,
+            0.12991679906845094,
+            0.12195839881896972,
+            0.12482559680938721,
+            0.12154879570007324
+          ],
+          "dense_f_linear": [
+            0.25080320835113523,
+            0.25128960609436035,
+            0.25090880393981935,
+            0.25140159130096434,
+            0.2500351905822754
+          ],
+          "triton_nf4": [
+            0.11138880252838135,
+            0.10803200006484985,
+            0.11251200437545776,
+            0.10822080373764038,
+            0.10998079776763917
+          ]
+        },
+        "median_ms": {
+          "bnb_fused": 0.12195839881896972,
+          "dense_f_linear": 0.25090880393981935,
+          "triton_nf4": 0.10998079776763917
+        },
+        "dense_over_bnb_ratio": 2.057331076576846,
+        "triton_over_bnb_ratio": 0.901789453064978
+      }
+    }
+  },
+  "limits": [
+    "Only selected gate/up layers and one three-token block per prompt.",
+    "BNB dense dequantization uses the public utility and may not reproduce the fused kernel's internal rounding path.",
+    "CUDA event timings are direct operator timings; they do not predict decoder latency.",
+    "GSM8K held-out indices 300-349 were not used."
+  ]
+}

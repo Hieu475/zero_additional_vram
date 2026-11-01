@@ -1,0 +1,65 @@
+{
+  "status": "experimental q_proj layout comparison; finite microbenchmark",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "physical_rows": 5,
+  "iterations_per_sample": 30,
+  "rounds": 5,
+  "kernel_source_sha256": {
+    "current": "1ff2b2b8f628cd62238c956387b7d9b4bc14e59b8070feff67f1409a301fc3f5",
+    "kmajor": "c47ef5865d17765e1eb95e2fe422f9cb374b7b6b2d34f505bc13002a6edc33e5"
+  },
+  "results": [
+    {
+      "m": 1,
+      "median_cuda_ms": {
+        "group_scale_n8_k256": 0.03979946772257487,
+        "group_scale_kmajor_n8_k256": 0.05369173288345337
+      },
+      "kmajor_over_current_latency_ratio": 1.3490565566784851,
+      "outputs_bitwise_equal_between_layouts": false,
+      "max_abs_difference_between_layouts": 1.9073486328125e-06,
+      "row0_bitwise_equal_to_own_singleton": {
+        "group_scale_n8_k256": true,
+        "group_scale_kmajor_n8_k256": true
+      }
+    },
+    {
+      "m": 3,
+      "median_cuda_ms": {
+        "group_scale_n8_k256": 0.10174933274586996,
+        "group_scale_kmajor_n8_k256": 0.15291733741760255
+      },
+      "kmajor_over_current_latency_ratio": 1.5028829505892707,
+      "outputs_bitwise_equal_between_layouts": false,
+      "max_abs_difference_between_layouts": 0.0001220703125,
+      "row0_bitwise_equal_to_own_singleton": {
+        "group_scale_n8_k256": true,
+        "group_scale_kmajor_n8_k256": true
+      }
+    },
+    {
+      "m": 5,
+      "median_cuda_ms": {
+        "group_scale_n8_k256": 0.1650005340576172,
+        "group_scale_kmajor_n8_k256": 0.24882240295410157
+      },
+      "kmajor_over_current_latency_ratio": 1.5080096823639024,
+      "outputs_bitwise_equal_between_layouts": false,
+      "max_abs_difference_between_layouts": 0.00048828125,
+      "row0_bitwise_equal_to_own_singleton": {
+        "group_scale_n8_k256": true,
+        "group_scale_kmajor_n8_k256": true
+      }
+    }
+  ]
+}

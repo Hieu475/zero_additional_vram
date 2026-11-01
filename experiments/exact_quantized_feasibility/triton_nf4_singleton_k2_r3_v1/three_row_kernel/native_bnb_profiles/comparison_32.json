@@ -1,0 +1,124 @@
+{
+  "schema": "zassd-native-bnb-rowwise-profile-comparison-v1",
+  "classification": "diagnostic operator profile; separate 32-token runs, not paired latency benchmark or proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "schedule": {
+    "k": 2,
+    "physical_rows": 3,
+    "attention_strategy": "bnb_rowwise",
+    "quantized_linear_strategy": "fixed_rows"
+  },
+  "profiles": [
+    {
+      "prompt_id": "HumanEval/112",
+      "artifact_dir": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/humaneval112_32",
+      "prompt_tokens": 157,
+      "generated_tokens": 32,
+      "target_forwards": 20,
+      "target_rows": 40,
+      "cycles": 20,
+      "draft_tokens": 20,
+      "accepted_draft_tokens": 11,
+      "acceptance": 0.55,
+      "wall_ms_diagnostic": {
+        "total": 1466.3646230001177,
+        "prefill": 101.71150800033502,
+        "draft": 0.6194909983605612,
+        "verify": 1355.1638919980178
+      },
+      "events": {
+        "bnb_gemm_4bit_simt_kernel": {
+          "key": "void gemm_4bit_simt<__half, 3>(__half const*, unsigned char const*, float const*, unsigned char const*, float const*, float const*, __half*, __half const*, int, int, int, int, int)",
+          "calls": 5040,
+          "calls_per_target_forward": 252.0,
+          "self_cuda_ms": 296.16891700000247,
+          "self_cuda_ms_per_target_forward": 14.808445850000123
+        },
+        "bnb_linear_2048_to_11008_wrapper": {
+          "calls": 1440,
+          "self_cuda_ms": 166.93931799999814,
+          "input_shapes": "[[1, 3, 2048], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]"
+        },
+        "bnb_linear_11008_to_2048_wrapper": {
+          "calls": 720,
+          "self_cuda_ms": 82.25153499999921,
+          "input_shapes": "[[1, 3, 11008], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]"
+        },
+        "rowwise_lm_head_mm": {
+          "calls": 40,
+          "calls_per_target_forward": 2.0,
+          "self_cuda_ms": 146.12548800000053,
+          "self_cuda_ms_per_target_forward": 7.306274400000026,
+          "input_shapes": "[[1, 2048], [2048, 151936]]"
+        },
+        "copy_3x2048": {
+          "calls": 6480,
+          "self_cuda_ms": 12.411651000002472,
+          "input_shapes": "[[1, 3, 2048], [1, 3, 2048], []]"
+        }
+      }
+    },
+    {
+      "prompt_id": "cnndm_005",
+      "artifact_dir": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/cnndm005_32",
+      "prompt_tokens": 403,
+      "generated_tokens": 32,
+      "target_forwards": 24,
+      "target_rows": 42,
+      "cycles": 24,
+      "draft_tokens": 18,
+      "accepted_draft_tokens": 7,
+      "acceptance": 0.3888888888888889,
+      "wall_ms_diagnostic": {
+        "total": 1687.8079520001847,
+        "prefill": 149.76544700039085,
+        "draft": 1.4191069994922145,
+        "verify": 1530.3043840003738
+      },
+      "events": {
+        "bnb_gemm_4bit_simt_kernel": {
+          "key": "void gemm_4bit_simt<__half, 3>(__half const*, unsigned char const*, float const*, unsigned char const*, float const*, float const*, __half*, __half const*, int, int, int, int, int)",
+          "calls": 6048,
+          "calls_per_target_forward": 252.0,
+          "self_cuda_ms": 356.12896300000125,
+          "self_cuda_ms_per_target_forward": 14.838706791666718
+        },
+        "bnb_linear_2048_to_11008_wrapper": {
+          "calls": 1728,
+          "self_cuda_ms": 200.8908320000015,
+          "input_shapes": "[[1, 3, 2048], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]"
+        },
+        "bnb_linear_11008_to_2048_wrapper": {
+          "calls": 864,
+          "self_cuda_ms": 99.04799099999896,
+          "input_shapes": "[[1, 3, 11008], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]"
+        },
+        "rowwise_lm_head_mm": {
+          "calls": 42,
+          "calls_per_target_forward": 1.75,
+          "self_cuda_ms": 143.67781800000031,
+          "self_cuda_ms_per_target_forward": 5.986575750000013,
+          "input_shapes": "[[1, 2048], [2048, 151936]]"
+        },
+        "copy_3x2048": {
+          "calls": 7776,
+          "self_cuda_ms": 14.945540999998222,
+          "input_shapes": "[[1, 3, 2048], [1, 3, 2048], []]"
+        }
+      }
+    }
+  ],
+  "interpretation_limits": [
+    "Profiler instrumentation changes execution cost; use the separate paired 256-token runs for latency comparisons.",
+    "CUDA event values from wrappers and underlying kernels are nested and can overlap; do not sum them as a latency decomposition.",
+    "Two fixed prompts, one GPU, and 32-token diagnostic runs; acceptance and operator timings are not population estimates.",
+    "GSM8K held-out indices 300\u2013349 were not used."
+  ],
+  "interpretation": [
+    "The underlying BNB SIMT 4-bit kernel executes 252 times per target forward in both traces, making native NF4 linear execution the clearest operator-level optimization target.",
+    "The rowwise full-vocabulary LM head is also among the largest individual CUDA event groups.",
+    "The profiles support a linear/LM-head optimization focus; they do not by themselves explain the task-level latency gap or establish causality."
+  ]
+}

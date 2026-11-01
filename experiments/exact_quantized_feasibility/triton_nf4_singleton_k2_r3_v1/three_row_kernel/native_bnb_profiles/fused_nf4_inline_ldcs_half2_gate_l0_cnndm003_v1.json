@@ -1,0 +1,71 @@
+{
+  "prompt_id": "cnndm_003",
+  "layer": 0,
+  "projection": "gate_proj",
+  "shape": [
+    3,
+    2048
+  ],
+  "output_shape": [
+    3,
+    11008
+  ],
+  "exact_elements": 33024,
+  "total_elements": 33024,
+  "bitwise_exact": true,
+  "max_abs_diff": 0.0,
+  "unpaired_triton_ms": 0.2121105483084014,
+  "unpaired_bnb_ms": 0.13873787969350815,
+  "paired_triton_median_ms": 0.1610880047082901,
+  "paired_bnb_median_ms": 0.13334600627422333,
+  "paired_speedup_bnb_over_triton_median": 0.8295500975958952,
+  "paired_ratios": [
+    0.8762295374312771,
+    0.8071818712713699,
+    0.796627529234594,
+    0.7990617780361144,
+    0.8558894565687549,
+    0.825496249770546,
+    0.8628455171331455,
+    0.8250198174407916,
+    0.8772070676243119,
+    0.8100649932026489,
+    0.8684052719856528,
+    0.8051182019241673,
+    0.8620880090245732,
+    0.8107556406745975,
+    0.878812122777236,
+    0.8484134611617041,
+    0.8845373516023501,
+    0.8246375683234937,
+    0.8618785022796546,
+    0.8171584458505358,
+    0.7972743379157454,
+    0.7866397355904687,
+    0.8383456516653508,
+    0.822883504533426,
+    0.8497388277540545,
+    0.8113611811587935,
+    0.8402872272314847,
+    0.8114927546564527,
+    0.8336039454212444,
+    0.8460931541266292
+  ],
+  "paired_rounds": 30,
+  "repeats_per_round": 8,
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "triton": "3.6.0",
+    "cuda": "12.8",
+    "bnb": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "source": "scripts/benchmark_bnb_nf4_fused_inline_ldcs_half2.py",
+  "source_sha256": "191c80d608b57ce27d82de8fe7ca16d381b86bb4bd9a86961ad08b435c9e74d9",
+  "sass_artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_half2_gate_l0_cnndm003_v1.sass.txt",
+  "paired_speedup_geomean": 0.8340377483610738,
+  "paired_speedup_p10_p90": [
+    0.7972743379157454,
+    0.8762295374312771
+  ]
+}

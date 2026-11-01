@@ -1,0 +1,56 @@
+{
+  "schema": "zassd-nf4-singleton-k2-r3-experiment-manifest-v1",
+  "classification": "development-only K2/R3 Qwen LM-head M=3 operator screen; no runtime integration",
+  "model": {
+    "id": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1"
+  },
+  "schedule": {
+    "k": 2,
+    "ngram_size": 3,
+    "physical_rows": 3,
+    "attention": "triton_batched",
+    "attention_block_k": 32,
+    "singleton_linear": "one-row packed NF4 prototype N=16/K=256/num_warps=1",
+    "block_linear": "two-row packed NF4 kernel N=16/K=256/num_warps=1",
+    "base_identity_contract": "experiments/exact_quantized_feasibility/b1_triton_batched_k1r2_n16_reference_contract_v5.json",
+    "lm_head": "fixed physical rows M=3 Triton fp32 accumulation to model dtype; operator-only candidates"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "triton": "3.6.0",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "source_sha256": {
+    "src/zassd/certification/nf4_fixed_row_singleton_group_scale_packed.py": "12fc40f3d80109d99a8197a3e6c55e5223af85bcfc61869f50352c31d79521f2",
+    "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows.py": "262fe0fe09b53b0296892a6e60f313340bbf6581fbb2057affb2aa4da03fe278",
+    "src/zassd/certification/fixed_row_dispatch.py": "0422f2d06dcd93da94377a45a5094f4e12e48d5a3dbef1a489559911b4ddfb38",
+    "src/zassd/certification/qwen2_padded.py": "c7e459453502cf3e184082940c18944a0bb342b09ecaa8b72e4eb1f0b41f0848",
+    "src/zassd/certification/triton_b1_reference_contract.py": "9e9a45b013a4343314381e1a14ae0dc89c2395ac87a6271361faea5a4891e6c3",
+    "src/zassd/decoding/b1_exact.py": "e19b4e6440697fc96e6e6e7b1902da843fa45b8cae0e62700c4ac331f99b0d63",
+    "src/zassd/cache/kv_cache.py": "a56a3ad4ee163e7456e236515e8848173face82426b0fe3c0e7489b170ed3934",
+    "src/zassd/backends/base.py": "00c77e4731ef61cda25d4393d865b1f21b7422689870d680529aa79165df9ef6",
+    "scripts/audit_nf4_singleton_k2_r3_closed_loop.py": "dcc096bb7c3993fa1bffc6f9929fece0a96add62e250292de06739143b954cb6",
+    "scripts/validate_nf4_singleton_k2_r3_manifest.py": "913023f9943321d3e9a71d18fbbf8fd91a85a49740d50cfc722a36ae5d2e24a7",
+    "scripts/audit_triton_b1_closed_loop.py": "69ffa08de5a9620baefee7526653085f390b72eddac0c5f94e22ddd4baf51e4a",
+    "scripts/run_strong_baseline_comparison.py": "d887583863e9d4889170a664bfa1ca9f9a6bf6fc0b1f4b09631f62170714a238",
+    "scripts/prototype_fixed_row_sdpa_triton.py": "c7816185111dcdd0b169f8c4919bcfa5da73099be66d886c51e8f9fa4b8c0582",
+    "experiments/exact_quantized_feasibility/b1_triton_batched_k1r2_n16_reference_contract_v5.json": "87c55049144629b60015efd72d693d01859d2c50e4c193cdbca6fb4e2ab40761",
+    "scripts/benchmark_qwen_lm_head_triton_m3.py": "87ee809f396cf2c4404da0b315cff687ee6526597ec758fcee1088cb0720bef8"
+  },
+  "scope_limits": [
+    "Finite development evidence only; exactness is relative to the K=2/R=3 experimental singleton reference.",
+    "The base B1 K=1/R=2 contract validates loaded model/tokenizer/weights/runtime identity, not K=2/R=3 arithmetic equivalence.",
+    "No original BNB token/state equivalence claim.",
+    "Held-out GSM8K indices 300-349 are excluded."
+  ],
+  "evidence": {
+    "prompt_112": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/lm_head_tuning/humaneval112_lm_head_m3.json",
+    "prompt_114": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/lm_head_tuning/humaneval114_lm_head_m3.json",
+    "summary": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/lm_head_tuning/two_prompt_summary.json"
+  }
+}

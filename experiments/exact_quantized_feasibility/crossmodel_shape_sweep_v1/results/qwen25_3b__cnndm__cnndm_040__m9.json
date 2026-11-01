@@ -1,0 +1,91 @@
+{
+  "status": "completed",
+  "scope": "single-prefix shape diagnostic; not full-sequence exactness or a universal guarantee",
+  "protocol_sha256": "61ce798959d8ae9b9ce66d8475ebff5aa7dd64076ea9777db7a01bdf882d78b3",
+  "cohort_sha256": "12f1b072d375bdcbc819a24d125e73b3307ed0d37a802d6f0e377e193aaf48e3",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "family": "Qwen2",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "cnndm_040",
+  "task": "cnndm",
+  "prompt_sha256": "3fab323bb299d3aedf9c6d562f432271cb66c0b7fcaa51be6ecd4ab8f1c4075f",
+  "prompt_token_count": 312,
+  "prompt_token_ids_sha256": "5772bbf076499d35ed13247b71030fe29038b3873a1382e87e28d9061556ebd0",
+  "M": 9,
+  "candidate_ids": [
+    576,
+    22629,
+    53887,
+    4961,
+    264,
+    1550,
+    9315,
+    315,
+    220
+  ],
+  "candidate_length": 9,
+  "linear_singleton_counts": {
+    "patched_modules": 253,
+    "split_forward_calls": 253,
+    "single_row_kernel_calls": 2277
+  },
+  "ordinary_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.375,
+      0.25,
+      0.375,
+      0.21875,
+      0.265625,
+      0.25,
+      0.25,
+      0.25,
+      0.1875
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.125,
+    "kv_value_max_abs": 0.265625,
+    "first_kv_different_layer": 1
+  },
+  "singleton_linear_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.1875,
+      0.28125,
+      0.375,
+      0.25390625,
+      0.1572265625,
+      0.25,
+      0.25,
+      0.25,
+      0.1875
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.125,
+    "kv_value_max_abs": 0.25,
+    "first_kv_different_layer": 1
+  },
+  "model_manifest": "experiments/exact_quantized_feasibility/crossmodel_shape_sweep_v1/manifests/qwen25_3b.json"
+}

@@ -1,0 +1,89 @@
+{
+  "status": "experimental fixed-row schedule; finite test, not universal proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "prompt_id": "cnndm_001",
+  "prompt_length": 398,
+  "reference_contract_id": "db32a0aac8ce87a4faf44d3b917802d31ef93408e32120edba126a0991e9a568",
+  "physical_rows": 5,
+  "attention_strategy": "padded",
+  "rows": [
+    {
+      "m": 1,
+      "token_inputs": [
+        362
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 399,
+      "block_cache_length": 399
+    },
+    {
+      "m": 2,
+      "token_inputs": [
+        362,
+        61390
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 400,
+      "block_cache_length": 400,
+      "first_module_differences": [],
+      "attention_tensor_differences": []
+    },
+    {
+      "m": 3,
+      "token_inputs": [
+        362,
+        61390,
+        5562
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 401,
+      "block_cache_length": 401
+    },
+    {
+      "m": 4,
+      "token_inputs": [
+        362,
+        61390,
+        5562,
+        6941
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 402,
+      "block_cache_length": 402
+    },
+    {
+      "m": 5,
+      "token_inputs": [
+        362,
+        61390,
+        5562,
+        6941,
+        576
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 403,
+      "block_cache_length": 403
+    }
+  ]
+}

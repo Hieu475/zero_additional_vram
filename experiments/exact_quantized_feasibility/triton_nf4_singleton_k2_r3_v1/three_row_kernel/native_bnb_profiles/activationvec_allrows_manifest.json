@@ -1,0 +1,39 @@
+{
+  "schema": "zassd-activationvec-allrows-variant-manifest-v1",
+  "classification": "development-only experimental activationvec M=3 override extended to padded singleton and partial rows; no correctness guarantee until audit passes",
+  "model": {
+    "id": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1"
+  },
+  "schedule": {
+    "k": 2,
+    "ngram_size": 3,
+    "physical_rows": 3,
+    "attention": "bnb_rowwise",
+    "singleton_linear": "experimental: pad M=1/2 with zeros to 3 then Triton M=3",
+    "block_linear": "Triton fused activation-vector M=3",
+    "quantization": "BNB NF4"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "triton": "3.6.0",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "source_sha256": {
+    "scripts/benchmark_bnb_nf4_activationvec_allrows_closed_loop.py": "f3bf5c562b42e38e0801e7f8790c03680acf4fa2f59cfc68c8eaa7d5cb4d9dbc",
+    "scripts/benchmark_bnb_nf4_activationvec_closed_loop.py": "01a40bc6aa59a2d1bf7b8cdce40b038881a7ff8396bde4a78809d6352de89d99",
+    "scripts/audit_bnb_nf4_activationvec_block_integration.py": "234ffa6a673205f63f116b20f457490e5f04460418b6c309669097b10d37d300",
+    "scripts/audit_bnb_nf4_gate_reduction_orders.py": "ba9751d19c02c4e704aad64622173908d5f811203d5674c9449c0337da64cae5",
+    "scripts/benchmark_bnb_nf4_fused_inline_ldcs_activationvec_tailmask_half2.py": "322da0c917025d9879761fce33b1b5c29880badd41fb79f14b0978e4ac4a4c7a",
+    "src/zassd/decoding/b1_exact.py": "e19b4e6440697fc96e6e6e7b1902da843fa45b8cae0e62700c4ac331f99b0d63",
+    "src/zassd/certification/fixed_row_dispatch.py": "22bfa87d6ba25ff0f7f0da5e09359557984e5e8f3daa71b7f44c3362bd4225a9",
+    "src/zassd/certification/qwen2_padded.py": "a87cf46e83cbd6741e7c9465c358b0988e160516f66820a8e77ce74d7265c4c5",
+    "src/zassd/cache/kv_cache.py": "a56a3ad4ee163e7456e236515e8848173face82426b0fe3c0e7489b170ed3934",
+    "scripts/audit_activationvec_allrows_paired_ab.py": "1cdd0d58e196aa7672e40bceaa3e72e1a6ff319acf1b164cb15da8f6225b33e2"
+  },
+  "heldout_policy": "GSM8K held-out indices 300-349 are excluded; development prompts only."
+}

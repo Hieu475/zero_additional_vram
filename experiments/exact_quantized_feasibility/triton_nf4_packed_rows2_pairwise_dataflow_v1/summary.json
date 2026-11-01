@@ -1,0 +1,44 @@
+{
+  "title": "Pairwise-nibble NF4 reduction dataflow screen",
+  "status": "rejected; no whole-model pilot and no runtime registration",
+  "base_schedule": "N=16/K=256/num_warps=1 interleaved reduction",
+  "correctness": "Both pairwise variants passed finite M=1/2 rowwise singleton equality for q_proj and down_proj; each defines a different B1 arithmetic schedule from the interleaved kernel.",
+  "pairwise_v1_separate_reductions": {
+    "m2_latency_ratio_to_interleaved": {"q_proj": 1.017, "down_proj": 1.008},
+    "max_abs_output_difference": {"q_proj": 0.000003815, "down_proj": 0.000976563},
+    "ncu_registers_per_thread": {"q_proj": 246, "down_proj": 246},
+    "interleaved_registers_per_thread": {"q_proj": 168, "down_proj": 166},
+    "ncu_local_memory_sectors": 0
+  },
+  "pairwise_v2_fused_pair_reduction": {
+    "m2_latency_ratio_to_interleaved": {"q_proj": 1.016, "down_proj": 1.051},
+    "max_abs_output_difference": {"q_proj": 0.000488281, "down_proj": 0.001953125}
+  },
+  "num_warps_sweep": {
+    "artifact": "operator_benchmark_warp_sweep.json",
+    "configuration": "block_n=16, block_k=256; 20 calls/sample, 5 alternating-order rounds; q_proj and down_proj at M=1/2",
+    "singleton_equality": "All interleaved and pairwise schedules passed rowwise singleton equality at M=1 and M=2 for num_warps=1/2/4.",
+    "pairwise_over_interleaved_latency_ratios": {
+      "q_proj_m1": {"w1": 1.025, "w2": 1.140, "w4": 1.079},
+      "q_proj_m2": {"w1": 0.972, "w2": 1.196, "w4": 1.065},
+      "down_proj_m1": {"w1": 1.041, "w2": 1.249, "w4": 1.145},
+      "down_proj_m2": {"w1": 1.047, "w2": 1.312, "w4": 1.160}
+    },
+    "decision": "No stable cross-operator benefit; the small q_proj M=2 w1 win is inconsistent with the earlier paired run and does not offset regressions elsewhere. Keep pairwise rejected."
+  },
+  "decision": "The pairwise dataflow did not lower register pressure or improve M=2 operator latency. Keep the interleaved warp1 implementation as the current experimental reference; pursue a more fundamental dataflow redesign before another whole-model run.",
+  "limits": [
+    "Finite operator-only measurements on Qwen2.5-3B NF4 and one RTX 4050.",
+    "No whole-model tokens/KV or end-to-end performance were measured for pairwise schedules.",
+    "No held-out GSM8K data was used."
+  ],
+  "artifacts": {
+    "pairwise_v1_benchmark": "operator_benchmark.json",
+    "pairwise_v2_benchmark": "operator_benchmark_v2.json",
+    "pairwise_warp_sweep": "operator_benchmark_warp_sweep.json",
+    "q_proj_pairwise_v1_ncu": "ncu/q_proj_pairwise_w1.ncu-rep",
+    "down_proj_pairwise_v1_ncu": "ncu/down_proj_pairwise_w1.ncu-rep",
+    "prototype_module": "../../../src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows_pairwise.py",
+    "benchmark_script": "../../../scripts/benchmark_nf4_packed_rows2_pairwise.py"
+  }
+}

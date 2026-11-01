@@ -1,0 +1,114 @@
+{
+  "schema": "zassd-activationvec-nf4-m3-launch-sweep-v1",
+  "classification": "paired operator screen; staged reduction order retained, warp-shuffle candidate measured only after BNB bitwise gate",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "cnndm_003",
+  "prompt_sha256": "baea8efa9760531deacd4b71b497fe768b9b4c9445fecba57b015e44b57e9f51",
+  "forced_tokens": [
+    20924,
+    3693,
+    18478
+  ],
+  "scope": "layer 0 q_proj/gate_proj/down_proj",
+  "configs": [
+    {
+      "out_tile": 8,
+      "num_warps": 8
+    }
+  ],
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "triton": "3.6.0",
+    "cuda": "12.8",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "results": {
+    "q_proj": {
+      "input_shape": [
+        3,
+        2048
+      ],
+      "output_shape": [
+        3,
+        2048
+      ],
+      "input_sha256": "8c4e484ba9555c4ea25a6111522d71b5db427937e2e6707e89bb768e30945547",
+      "configs": [
+        {
+          "out_tile": 8,
+          "num_warps": 8,
+          "exact_elements": 5,
+          "total_elements": 6144,
+          "bitwise_exact": false,
+          "max_abs_diff": 7.90625,
+          "latency_status": "not measured: exactness gate failed"
+        }
+      ]
+    },
+    "gate_proj": {
+      "input_shape": [
+        3,
+        2048
+      ],
+      "output_shape": [
+        3,
+        11008
+      ],
+      "input_sha256": "2828866fc96f942732fd554b03af0809103d33aa02936a4180711f686dc1d989",
+      "configs": [
+        {
+          "out_tile": 8,
+          "num_warps": 8,
+          "exact_elements": 44,
+          "total_elements": 33024,
+          "bitwise_exact": false,
+          "max_abs_diff": 3.15234375,
+          "latency_status": "not measured: exactness gate failed"
+        }
+      ]
+    },
+    "down_proj": {
+      "input_shape": [
+        3,
+        11008
+      ],
+      "output_shape": [
+        3,
+        2048
+      ],
+      "input_sha256": "4f98c200929d10b36ec7b3a35ba272fba49f133dde393370d2ddec21f7931d0f",
+      "configs": [
+        {
+          "out_tile": 8,
+          "num_warps": 8,
+          "exact_elements": 5,
+          "total_elements": 6144,
+          "bitwise_exact": false,
+          "max_abs_diff": 1.921875,
+          "latency_status": "not measured: exactness gate failed"
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "one development prompt and one layer",
+    "does not establish B1 singleton or end-to-end speedup",
+    "GSM8K held-out indices 300-349 excluded"
+  ],
+  "reduction_schedule": {
+    "baseline": "five tl.gather stages at xor distances 16,8,4,2,1 with invalid-lane guards",
+    "candidate": "five shfl.sync.bfly stages at xor distances 16,8,4,2,1",
+    "arithmetic": "FP fusion disabled; additions kept in the same staged order",
+    "launch_geometry": {
+      "out_tile": 8,
+      "num_warps": 8
+    }
+  },
+  "source_hashes": {
+    "base_kernel": "322da0c917025d9879761fce33b1b5c29880badd41fb79f14b0978e4ac4a4c7a",
+    "warp_shuffle_driver": "8f57096a6363ceee290cd97917595ed793530ab7132cbbe8e7ad8534abe37e76",
+    "generated_warp_shuffle_kernel": "f5d6cd71dcacc13fb9926ab09ba9a3d2355b201cb01240ee53cf2e77a42eaf23"
+  }
+}

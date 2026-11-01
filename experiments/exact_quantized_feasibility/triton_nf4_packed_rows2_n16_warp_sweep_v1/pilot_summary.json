@@ -1,0 +1,306 @@
+{
+  "title": "N=16 K256 warp=1 Qwen2.5-3B B1 pilot screen",
+  "status": "experimental finite reference; not a proof; opt-in strategy only",
+  "strategy": "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+  "reference_contract_id": "49c5f6a606a9ef8c32ec8d39b9d6890971834762ac4bbee58ec0b8d60475afbd",
+  "protocol": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "K": 1,
+    "physical_rows": 2,
+    "attention": "padded",
+    "max_new_tokens": 32,
+    "heldout_used": false
+  },
+  "n_runs": 9,
+  "token_and_state_match": {
+    "b1_and_bnb_token_matches": 9,
+    "runs": 9,
+    "shared_kv_prefixes": 288,
+    "all_shared_states_equal": true
+  },
+  "speedup_vs_b1": {
+    "geometric_mean": 1.1422807517058353,
+    "range": [
+      1.0535685374841761,
+      1.2744891412164454
+    ],
+    "diagnostic_paired_log_95_interval": [
+      1.077164606999922,
+      1.2113332607090967
+    ]
+  },
+  "speedup_vs_original_bnb": {
+    "geometric_mean": 0.9160014019219689,
+    "range": [
+      0.8552371630836648,
+      1.030574670593557
+    ],
+    "diagnostic_paired_log_95_interval": [
+      0.8677304950069714,
+      0.9669575670684148
+    ]
+  },
+  "acceptance": {
+    "accepted_draft_tokens": 42,
+    "draft_tokens": 81
+  },
+  "by_prompt": {
+    "cnndm_000": {
+      "runs": 3,
+      "speedup_vs_b1_geomean": 1.249459666923377,
+      "speedup_vs_bnb_geomean": 0.994009322822136
+    },
+    "cnndm_001": {
+      "runs": 3,
+      "speedup_vs_b1_geomean": 1.1223843954600854,
+      "speedup_vs_bnb_geomean": 0.899163521170793
+    },
+    "cnndm_002": {
+      "runs": 3,
+      "speedup_vs_b1_geomean": 1.0628077544856578,
+      "speedup_vs_bnb_geomean": 0.8599224317443069
+    }
+  },
+  "matched_warp1_vs_warp4_slots": {
+    "n_slots": 6,
+    "warp1_over_warp4_latency": {
+      "block": {
+        "geometric_mean": 0.9227999065792148,
+        "range": [
+          0.8787325874222065,
+          0.9510208480255923
+        ]
+      },
+      "singleton": {
+        "geometric_mean": 0.941508478263261,
+        "range": [
+          0.8987020163699037,
+          0.9759789090007815
+        ]
+      },
+      "original_bnb": {
+        "geometric_mean": 0.9299234369535964,
+        "range": [
+          0.8833428694944501,
+          0.9701404637454512
+        ]
+      }
+    },
+    "slots": [
+      {
+        "prompt_id": "cnndm_000",
+        "session_index": 1,
+        "block_warp1_over_warp4": 0.9471790573994685,
+        "singleton_warp1_over_warp4": 0.9547492020648909,
+        "original_bnb_warp1_over_warp4": 0.9287456538243389
+      },
+      {
+        "prompt_id": "cnndm_000",
+        "session_index": 2,
+        "block_warp1_over_warp4": 0.8787325874222065,
+        "singleton_warp1_over_warp4": 0.8987020163699037,
+        "original_bnb_warp1_over_warp4": 0.8833428694944501
+      },
+      {
+        "prompt_id": "cnndm_001",
+        "session_index": 1,
+        "block_warp1_over_warp4": 0.928975652222434,
+        "singleton_warp1_over_warp4": 0.9256318333235569,
+        "original_bnb_warp1_over_warp4": 0.9073796314744799
+      },
+      {
+        "prompt_id": "cnndm_001",
+        "session_index": 2,
+        "block_warp1_over_warp4": 0.9395322324305835,
+        "singleton_warp1_over_warp4": 0.9759789090007815,
+        "original_bnb_warp1_over_warp4": 0.9587028137965501
+      },
+      {
+        "prompt_id": "cnndm_002",
+        "session_index": 0,
+        "block_warp1_over_warp4": 0.9510208480255923,
+        "singleton_warp1_over_warp4": 0.9572281938682302,
+        "original_bnb_warp1_over_warp4": 0.9701404637454512
+      },
+      {
+        "prompt_id": "cnndm_002",
+        "session_index": 2,
+        "block_warp1_over_warp4": 0.8938206394270067,
+        "singleton_warp1_over_warp4": 0.9387418825662148,
+        "original_bnb_warp1_over_warp4": 0.9340054516925578
+      }
+    ]
+  },
+  "runs": [
+    {
+      "prompt_id": "cnndm_000",
+      "session_index": 0,
+      "artifact": "triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm000_k1_rows2_session0_v1",
+      "speedup_vs_b1": 1.2028552477740926,
+      "speedup_vs_original_bnb": 0.9528345068019749,
+      "matches_b1_tokens": true,
+      "matches_bnb_tokens": true,
+      "all_shared_kv_states_equal": true,
+      "shared_prefixes": 32,
+      "accepted_draft_tokens": 8,
+      "draft_tokens": 12,
+      "latency_s": {
+        "original_greedy": 0.8700635750064976,
+        "b1_reference": 1.0983654869996826,
+        "b1_block": 0.9131318910003756
+      }
+    },
+    {
+      "prompt_id": "cnndm_000",
+      "session_index": 1,
+      "artifact": "triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm000_k1_rows2_session1_v1",
+      "speedup_vs_b1": 1.2723811238660452,
+      "speedup_vs_original_bnb": 1.0001714009887606,
+      "matches_b1_tokens": true,
+      "matches_bnb_tokens": true,
+      "all_shared_kv_states_equal": true,
+      "shared_prefixes": 32,
+      "accepted_draft_tokens": 8,
+      "draft_tokens": 12,
+      "latency_s": {
+        "original_greedy": 0.8155435190055869,
+        "b1_reference": 1.037504350002564,
+        "b1_block": 0.8154037579952274
+      }
+    },
+    {
+      "prompt_id": "cnndm_000",
+      "session_index": 2,
+      "artifact": "triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm000_k1_rows2_session2_v1",
+      "speedup_vs_b1": 1.2744891412164454,
+      "speedup_vs_original_bnb": 1.030574670593557,
+      "matches_b1_tokens": true,
+      "matches_bnb_tokens": true,
+      "all_shared_kv_states_equal": true,
+      "shared_prefixes": 32,
+      "accepted_draft_tokens": 8,
+      "draft_tokens": 12,
+      "latency_s": {
+        "original_greedy": 0.8238465260001249,
+        "b1_reference": 1.0188329689990496,
+        "b1_block": 0.7994049820044893
+      }
+    },
+    {
+      "prompt_id": "cnndm_001",
+      "session_index": 1,
+      "artifact": "triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm001_k1_rows2_session1_v1",
+      "speedup_vs_b1": 1.1091729293850408,
+      "speedup_vs_original_bnb": 0.8872405698233996,
+      "matches_b1_tokens": true,
+      "matches_bnb_tokens": true,
+      "all_shared_kv_states_equal": true,
+      "shared_prefixes": 32,
+      "accepted_draft_tokens": 4,
+      "draft_tokens": 9,
+      "latency_s": {
+        "original_greedy": 0.820804089999001,
+        "b1_reference": 1.0261181780006154,
+        "b1_block": 0.9251201059960295
+      }
+    },
+    {
+      "prompt_id": "cnndm_001",
+      "session_index": 2,
+      "artifact": "triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm001_k1_rows2_session2_v1",
+      "speedup_vs_b1": 1.1771507325884216,
+      "speedup_vs_original_bnb": 0.9420237832034015,
+      "matches_b1_tokens": true,
+      "matches_bnb_tokens": true,
+      "all_shared_kv_states_equal": true,
+      "shared_prefixes": 32,
+      "accepted_draft_tokens": 4,
+      "draft_tokens": 9,
+      "latency_s": {
+        "original_greedy": 0.8820476949986187,
+        "b1_reference": 1.1022047520018532,
+        "b1_block": 0.9363327239989303
+      }
+    },
+    {
+      "prompt_id": "cnndm_001",
+      "session_index": 0,
+      "artifact": "triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm001_k1_rows2_v1",
+      "speedup_vs_b1": 1.082912885391919,
+      "speedup_vs_original_bnb": 0.8697867319653054,
+      "matches_b1_tokens": true,
+      "matches_bnb_tokens": true,
+      "all_shared_kv_states_equal": true,
+      "shared_prefixes": 32,
+      "accepted_draft_tokens": 4,
+      "draft_tokens": 9,
+      "latency_s": {
+        "original_greedy": 0.8141127470007632,
+        "b1_reference": 1.0135969559996738,
+        "b1_block": 0.9359912229992915
+      }
+    },
+    {
+      "prompt_id": "cnndm_002",
+      "session_index": 1,
+      "artifact": "triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm002_k1_rows2_session1_v1",
+      "speedup_vs_b1": 1.064630631641847,
+      "speedup_vs_original_bnb": 0.8552371630836648,
+      "matches_b1_tokens": true,
+      "matches_bnb_tokens": true,
+      "all_shared_kv_states_equal": true,
+      "shared_prefixes": 32,
+      "accepted_draft_tokens": 2,
+      "draft_tokens": 6,
+      "latency_s": {
+        "original_greedy": 0.8557161779972375,
+        "b1_reference": 1.0652269269994576,
+        "b1_block": 1.0005600959993899
+      }
+    },
+    {
+      "prompt_id": "cnndm_002",
+      "session_index": 2,
+      "artifact": "triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm002_k1_rows2_session2_v1",
+      "speedup_vs_b1": 1.0702922800846715,
+      "speedup_vs_original_bnb": 0.8603634442989195,
+      "matches_b1_tokens": true,
+      "matches_bnb_tokens": true,
+      "all_shared_kv_states_equal": true,
+      "shared_prefixes": 32,
+      "accepted_draft_tokens": 2,
+      "draft_tokens": 6,
+      "latency_s": {
+        "original_greedy": 0.8366623069960042,
+        "b1_reference": 1.0408080609995523,
+        "b1_block": 0.9724521799944341
+      }
+    },
+    {
+      "prompt_id": "cnndm_002",
+      "session_index": 0,
+      "artifact": "triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm002_k1_rows2_v1",
+      "speedup_vs_b1": 1.0535685374841761,
+      "speedup_vs_original_bnb": 0.8641901665687166,
+      "matches_b1_tokens": true,
+      "matches_bnb_tokens": true,
+      "all_shared_kv_states_equal": true,
+      "shared_prefixes": 32,
+      "accepted_draft_tokens": 2,
+      "draft_tokens": 6,
+      "latency_s": {
+        "original_greedy": 0.864901421002287,
+        "b1_reference": 1.0544356559985317,
+        "b1_block": 1.0008230300009018
+      }
+    }
+  ],
+  "limits": [
+    "Three fixed development prompts on one GPU; intervals are descriptive only.",
+    "Only six prompt/session slots overlap with the earlier 4-warp pilot.",
+    "No held-out GSM8K data was used.",
+    "B1 speedup is below target by this nine-run aggregate, and original BNB remains faster on average."
+  ]
+}

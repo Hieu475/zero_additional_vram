@@ -1,0 +1,61 @@
+{
+  "schema": "zassd-nf4-fixed-three-rows-state-machine-trace-summary-v1",
+  "scope": "Single 64-token HumanEval/114 development trace with cycle logging enabled; diagnostic timing is excluded from performance claims.",
+  "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/state_machine_humaneval114_64.json",
+  "prompt_id": "HumanEval/114",
+  "generated_tokens": 64,
+  "b1_token_match": true,
+  "b1_state_match": true,
+  "shared_state_prefixes": 64,
+  "cycles": 60,
+  "branch_counts": {
+    "drafted_tokens": 29,
+    "accepted_draft_tokens": 3,
+    "rejected_cycles": 14,
+    "reject_at_first_candidate": 13,
+    "partial_accept_then_reject": 1,
+    "full_accept_cycles": 1,
+    "no_draft_cycles": 45
+  },
+  "pending_token_carry": {
+    "adjacent_cycle_transitions_checked": 59,
+    "next_pending_equals_following_pending": 59
+  },
+  "full_accept_events": [
+    {
+      "cycle_index": 44,
+      "draft_tokens": [
+        220,
+        15
+      ],
+      "accepted": 2,
+      "emitted_tokens": [
+        284,
+        220,
+        15
+      ],
+      "next_pending": 198
+    }
+  ],
+  "partial_accept_events": [
+    {
+      "cycle_index": 48,
+      "draft_tokens": [
+        284,
+        2224
+      ],
+      "accepted": 1,
+      "rejected_at": 1,
+      "emitted_tokens": [
+        10160,
+        284
+      ],
+      "next_pending": 1308
+    }
+  ],
+  "limits": [
+    "One prompt and one process; finite trace only.",
+    "Committed KV/state is compared with B1 after each emitted prefix; temporary rejected-state tensors are not directly compared.",
+    "No EOS or held-out GSM8K claim from this trace."
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "schema": "zassd-qwen-lm-head-fused-argmax-m3-two-prompt-summary-v1",
+  "scope": "operator-only finite screen on last three prefill hidden rows; no decoder integration or end-to-end timing",
+  "prompts": {
+    "HumanEval/112": {
+      "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/lm_head_tuning/humaneval112_fused_argmax_m3_v2.json",
+      "prompt_tokens": 157,
+      "torch_linear_plus_argmax_ms": 3.626291275024414,
+      "candidates": {
+        "n128_k128_w4": {
+          "median_cuda_ms": 3.5845855712890624,
+          "ratio_vs_torch": 0.9884990750680747,
+          "ids_match_torch_all_rows": true,
+          "top_values_match_after_cast_to_torch_dtype": true,
+          "max_abs_fp32_top_value_error": 0.05696296691894531,
+          "rowwise_id_invariant": [
+            true,
+            true,
+            true
+          ],
+          "rowwise_max_value_invariant": [
+            true,
+            true,
+            true
+          ]
+        },
+        "n128_k64_w4": {
+          "median_cuda_ms": 3.5943359375,
+          "ratio_vs_torch": 0.991187873477097,
+          "ids_match_torch_all_rows": true,
+          "top_values_match_after_cast_to_torch_dtype": true,
+          "max_abs_fp32_top_value_error": 0.05696296691894531,
+          "rowwise_id_invariant": [
+            true,
+            true,
+            true
+          ],
+          "rowwise_max_value_invariant": [
+            true,
+            true,
+            true
+          ]
+        },
+        "n128_k64_w8": {
+          "median_cuda_ms": 3.5939327239990235,
+          "ratio_vs_torch": 0.9910766817745018,
+          "ids_match_torch_all_rows": true,
+          "top_values_match_after_cast_to_torch_dtype": true,
+          "max_abs_fp32_top_value_error": 0.05696296691894531,
+          "rowwise_id_invariant": [
+            true,
+            true,
+            true
+          ],
+          "rowwise_max_value_invariant": [
+            true,
+            true,
+            true
+          ]
+        },
+        "n256_k64_w4": {
+          "median_cuda_ms": 3.611955261230469,
+          "ratio_vs_torch": 0.996046645813401,
+          "ids_match_torch_all_rows": true,
+          "top_values_match_after_cast_to_torch_dtype": true,
+          "max_abs_fp32_top_value_error": 0.05696296691894531,
+          "rowwise_id_invariant": [
+            true,
+            true,
+            true
+          ],
+          "rowwise_max_value_invariant": [
+            true,
+            true,
+            true
+          ]
+        },
+        "n64_k64_w4": {
+          "median_cuda_ms": 3.6047134399414062,
+          "ratio_vs_torch": 0.9940496133800332,
+          "ids_match_torch_all_rows": true,
+          "top_values_match_after_cast_to_torch_dtype": true,
+          "max_abs_fp32_top_value_error": 0.05696296691894531,
+          "rowwise_id_invariant": [
+            true,
+            true,
+            true
+          ],
+          "rowwise_max_value_invariant": [
+            true,
+            true,
+            true
+          ]
+        }
+      }
+    },
+    "HumanEval/114": {
+      "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/lm_head_tuning/humaneval114_fused_argmax_m3.json",
+      "prompt_tokens": 83,
+      "torch_linear_plus_argmax_ms": 3.630553436279297,
+      "candidates": {
+        "n128_k128_w4": {
+          "median_cuda_ms": 3.5946495056152346,
+          "ratio_vs_torch": 0.9901106177627679,
+          "ids_match_torch_all_rows": true,
+          "top_values_match_after_cast_to_torch_dtype": true,
+          "max_abs_fp32_top_value_error": 0.06152153015136719,
+          "rowwise_id_invariant": [
+            true,
+            true,
+            true
+          ],
+          "rowwise_max_value_invariant": [
+            true,
+            true,
+            true
+          ]
+        },
+        "n128_k64_w4": {
+          "median_cuda_ms": 3.598553466796875,
+          "ratio_vs_torch": 0.9911859252193747,
+          "ids_match_torch_all_rows": true,
+          "top_values_match_after_cast_to_torch_dtype": true,
+          "max_abs_fp32_top_value_error": 0.06152153015136719,
+          "rowwise_id_invariant": [
+            true,
+            true,
+            true
+          ],
+          "rowwise_max_value_invariant": [
+            true,
+            true,
+            true
+          ]
+        },
+        "n128_k64_w8": {
+          "median_cuda_ms": 3.597715377807617,
+          "ratio_vs_torch": 0.990955081904721,
+          "ids_match_torch_all_rows": true,
+          "top_values_match_after_cast_to_torch_dtype": true,
+          "max_abs_fp32_top_value_error": 0.06152153015136719,
+          "rowwise_id_invariant": [
+            true,
+            true,
+            true
+          ],
+          "rowwise_max_value_invariant": [
+            true,
+            true,
+            true
+          ]
+        },
+        "n256_k64_w4": {
+          "median_cuda_ms": 3.6163326263427735,
+          "ratio_vs_torch": 0.9960830186950512,
+          "ids_match_torch_all_rows": true,
+          "top_values_match_after_cast_to_torch_dtype": true,
+          "max_abs_fp32_top_value_error": 0.06152153015136719,
+          "rowwise_id_invariant": [
+            true,
+            true,
+            true
+          ],
+          "rowwise_max_value_invariant": [
+            true,
+            true,
+            true
+          ]
+        },
+        "n64_k64_w4": {
+          "median_cuda_ms": 3.6133888244628904,
+          "ratio_vs_torch": 0.995272177612128,
+          "ids_match_torch_all_rows": true,
+          "top_values_match_after_cast_to_torch_dtype": true,
+          "max_abs_fp32_top_value_error": 0.06152153015136719,
+          "rowwise_id_invariant": [
+            true,
+            true,
+            true
+          ],
+          "rowwise_max_value_invariant": [
+            true,
+            true,
+            true
+          ]
+        }
+      }
+    }
+  },
+  "aggregate": {
+    "n128_k128_w4": {
+      "geomean_latency_ratio_vs_torch": 0.989304518272092,
+      "ids_match_all_prompts_and_rows": true,
+      "top_values_match_after_cast_all_prompts_and_rows": true,
+      "rowwise_invariant_all_prompts": true
+    },
+    "n128_k64_w4": {
+      "geomean_latency_ratio_vs_torch": 0.9911868993477572,
+      "ids_match_all_prompts_and_rows": true,
+      "top_values_match_after_cast_all_prompts_and_rows": true,
+      "rowwise_invariant_all_prompts": true
+    },
+    "n128_k64_w8": {
+      "geomean_latency_ratio_vs_torch": 0.9910158799745393,
+      "ids_match_all_prompts_and_rows": true,
+      "top_values_match_after_cast_all_prompts_and_rows": true,
+      "rowwise_invariant_all_prompts": true
+    },
+    "n256_k64_w4": {
+      "geomean_latency_ratio_vs_torch": 0.9960648320881994,
+      "ids_match_all_prompts_and_rows": true,
+      "top_values_match_after_cast_all_prompts_and_rows": true,
+      "rowwise_invariant_all_prompts": true
+    },
+    "n64_k64_w4": {
+      "geomean_latency_ratio_vs_torch": 0.9946607076602753,
+      "ids_match_all_prompts_and_rows": true,
+      "top_values_match_after_cast_all_prompts_and_rows": true,
+      "rowwise_invariant_all_prompts": true
+    }
+  },
+  "interpretation": "Best candidate N=128/K=128/4 warps has a two-prompt geomean latency ratio near 0.989; the approximately 1.1% operator-only gain is too small to justify integration without decoder-level paired timing.",
+  "limits": [
+    "Only two development prompts and three actual prefill rows per prompt on one RTX 4050.",
+    "Exact token IDs and top values after cast to Torch output dtype do not establish full-logit equivalence or decoder state/KV equivalence.",
+    "FP32 top-value values differ from Torch before cast; recorded max absolute differences are diagnostic.",
+    "No end-to-end decoding or held-out evaluation was run.",
+    "GSM8K held-out indices 300-349 remain excluded."
+  ]
+}

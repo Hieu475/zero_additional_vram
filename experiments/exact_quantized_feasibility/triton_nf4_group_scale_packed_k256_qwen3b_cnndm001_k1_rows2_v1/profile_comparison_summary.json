@@ -1,0 +1,129 @@
+{
+  "status": "paired operator trace diagnostic under torch.profiler; timings are profiler-perturbed and not production benchmark data",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "prompt_id": "cnndm_001",
+  "prompt_tokens": 398,
+  "max_new_tokens": 32,
+  "k": 1,
+  "physical_rows": 2,
+  "attention": "padded",
+  "model_dtype": "float16",
+  "strategy": "triton_nf4_group_scale_packed_k256",
+  "runs": {
+    "block": {
+      "profile_json": "profile_block_ops/profile.json",
+      "trace_json": "profile_block_ops/trace.json",
+      "profiler_measured_total_ms": 1349.4811579948873,
+      "prefill_ms": 183.49750799825415,
+      "verify_ms": 1160.0760169894784,
+      "target_forwards": 27,
+      "target_rows": 36,
+      "draft_tokens": 9,
+      "accepted_draft_tokens": 4,
+      "cuda_kernel_event_count": 53887,
+      "cuda_kernel_duration_sum_ms": 970.1739229999997,
+      "packed_nf4_kernel": {
+        "name": "_nf4_fixed_rows_group_scale_packed_kernel",
+        "duration_ms": 585.3357089999989,
+        "calls": 6804
+      },
+      "lm_head_cutlass_kernel": {
+        "name": "void cutlass::Kernel2<cutlass_80_wmma_tensorop_f16_s161616gemm_f16_16x16_128x1_tn_align8>(cutlass_80_wmma_tensorop_f16_s161616gemm_f16_16x16_128x1_tn_align8::Params)",
+        "duration_ms": 92.41500099999998,
+        "calls": 27
+      },
+      "packed_kernel_per_call_us": 86.02817592592578,
+      "fmha_kernel": {
+        "name": "fmha_cutlassF_f16_aligned_64x128_rf_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::half_t, cutlass::arch::Sm80, true, 64, 128, 128, true, true>::Params)",
+        "duration_ms": 24.51465800000003,
+        "calls": 972
+      },
+      "cuda_runtime_api": {
+        "cudaLaunchKernel": {
+          "duration_ms": 165.94788700000112,
+          "calls": 47056
+        },
+        "cudaMemcpyAsync": {
+          "duration_ms": 118.63629200000004,
+          "calls": 2388
+        },
+        "cudaStreamSynchronize": {
+          "duration_ms": 89.169675,
+          "calls": 84
+        },
+        "cudaFuncSetAttribute": {
+          "duration_ms": 0.9610489999999995,
+          "calls": 1008
+        },
+        "cudaStreamIsCapturing": {
+          "duration_ms": 0.5938199999999992,
+          "calls": 1083
+        }
+      }
+    },
+    "singleton": {
+      "profile_json": "profile_singleton_ops/profile.json",
+      "trace_json": "profile_singleton_ops/trace.json",
+      "profiler_measured_total_ms": 1492.3373249985161,
+      "prefill_ms": 179.9088039988419,
+      "verify_ms": 1310.4772719962057,
+      "target_forwards": 31,
+      "target_rows": 31,
+      "draft_tokens": 9,
+      "accepted_draft_tokens": 4,
+      "cuda_kernel_event_count": 64054,
+      "cuda_kernel_duration_sum_ms": 935.0503589999996,
+      "packed_nf4_kernel": {
+        "name": "_nf4_fixed_rows_group_scale_packed_kernel",
+        "duration_ms": 518.2844489999998,
+        "calls": 7812
+      },
+      "lm_head_cutlass_kernel": {
+        "name": "void cutlass::Kernel2<cutlass_80_wmma_tensorop_f16_s161616gemm_f16_16x16_128x1_tn_align8>(cutlass_80_wmma_tensorop_f16_s161616gemm_f16_16x16_128x1_tn_align8::Params)",
+        "duration_ms": 104.09981499999999,
+        "calls": 31
+      },
+      "packed_kernel_per_call_us": 66.3446555299539,
+      "fmha_kernel": {
+        "name": "fmha_cutlassF_f16_aligned_64x128_rf_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::half_t, cutlass::arch::Sm80, true, 64, 128, 128, true, true>::Params)",
+        "duration_ms": 28.01531800000007,
+        "calls": 1116
+      },
+      "cuda_runtime_api": {
+        "cudaStreamSynchronize": {
+          "duration_ms": 190.49013200000002,
+          "calls": 34
+        },
+        "cudaLaunchKernel": {
+          "duration_ms": 187.21270999999393,
+          "calls": 56211
+        },
+        "cudaMemcpyAsync": {
+          "duration_ms": 14.583291999999982,
+          "calls": 2328
+        },
+        "cudaFuncSetAttribute": {
+          "duration_ms": 0.9356489999999994,
+          "calls": 1152
+        },
+        "cudaStreamIsCapturing": {
+          "duration_ms": 0.6782170000000015,
+          "calls": 1150
+        }
+      }
+    }
+  },
+  "ratios_block_over_singleton": {
+    "packed_kernel_calls": 0.8709677419354839,
+    "packed_kernel_duration": 1.1293715451609068,
+    "packed_kernel_avg_duration_per_call": 1.2966858481477077,
+    "target_rows": 1.1612903225806452,
+    "target_forwards": 0.8709677419354839,
+    "lm_head_cutlass_calls": 0.8709677419354839,
+    "lm_head_cutlass_duration": 0.8877537486497933,
+    "profiler_measured_total": 0.9042735415039151
+  },
+  "interpretation": "Block uses fewer target forwards and packed-kernel launches, but verifies 36 candidate rows versus 31 singleton rows. The packed linear kernel duration is therefore higher in this single trace despite fewer launches. This points to row-level NF4 linear work, not draft/commit host time, as the immediate target. Profiler timing ratios are descriptive only."
+}

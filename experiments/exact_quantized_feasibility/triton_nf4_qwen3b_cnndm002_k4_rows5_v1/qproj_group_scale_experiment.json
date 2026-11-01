@@ -1,0 +1,330 @@
+{
+  "status": "single-GPU microbenchmark; not end-to-end performance claim",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "backend_metadata": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa",
+    "model_dtype": "torch.float16"
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "physical_rows": 5,
+  "iterations_per_sample": 10,
+  "rounds": 3,
+  "results": [
+    {
+      "m": 1,
+      "input_features": 2048,
+      "output_features": 2048,
+      "samples": {
+        "bnb_nf4": {
+          "cuda_ms": [
+            0.03860479891300202,
+            0.03552959859371185,
+            0.025088000297546386
+          ],
+          "wall_ms": [
+            0.04197100060991943,
+            0.036428299790713936,
+            0.025934400036931038
+          ]
+        },
+        "triton_nf4": {
+          "cuda_ms": [
+            0.07763839960098266,
+            0.07587839961051941,
+            0.07639039754867553
+          ],
+          "wall_ms": [
+            0.07876110030338168,
+            0.07756280028843321,
+            0.07727179981884547
+          ]
+        },
+        "triton_nf4_reuse2": {
+          "cuda_ms": [
+            0.44741120338439944,
+            0.4491263866424561,
+            0.44707841873168946
+          ],
+          "wall_ms": [
+            0.4483600001549348,
+            0.4505561002588365,
+            0.4479430994251743
+          ]
+        },
+        "triton_nf4_reuse4": {
+          "cuda_ms": [
+            0.4537087917327881,
+            0.4541600227355957,
+            0.4537343978881836
+          ],
+          "wall_ms": [
+            0.4545897005300503,
+            0.4553733000648208,
+            0.4546749005385209
+          ]
+        },
+        "triton_nf4_tensorcore": {
+          "cuda_ms": [
+            0.7014400005340576,
+            0.7097311973571777,
+            0.709222412109375
+          ],
+          "wall_ms": [
+            0.7023147001746111,
+            0.7107128003553953,
+            0.7102190000296105
+          ]
+        },
+        "triton_nf4_group_scale": {
+          "cuda_ms": [
+            0.06164479851722717,
+            0.06102079749107361,
+            0.06205120086669922
+          ],
+          "wall_ms": [
+            0.06249779980862513,
+            0.061870199715485796,
+            0.0628800000413321
+          ]
+        }
+      },
+      "median_cuda_ms": {
+        "bnb_nf4": 0.03552959859371185,
+        "triton_nf4": 0.07639039754867553,
+        "triton_nf4_reuse2": 0.44741120338439944,
+        "triton_nf4_reuse4": 0.4537343978881836,
+        "triton_nf4_tensorcore": 0.709222412109375,
+        "triton_nf4_group_scale": 0.06164479851722717
+      },
+      "median_wall_ms": {
+        "bnb_nf4": 0.036428299790713936,
+        "triton_nf4": 0.07756280028843321,
+        "triton_nf4_reuse2": 0.4483600001549348,
+        "triton_nf4_reuse4": 0.4546749005385209,
+        "triton_nf4_tensorcore": 0.7102190000296105,
+        "triton_nf4_group_scale": 0.06249779980862513
+      },
+      "triton_over_bnb_cuda_ratio": 2.1500495522681016,
+      "reuse2_over_bnb_cuda_ratio": 12.592633215495537,
+      "reuse4_over_bnb_cuda_ratio": 12.770602985885887,
+      "tensorcore_over_bnb_cuda_ratio": 19.96145299077191,
+      "group_scale_over_bnb_cuda_ratio": 1.7350265963358582,
+      "row0_bitwise_invariant_for_experimental_variants": true,
+      "group_scale_bitwise_equal_to_original_kernel": true
+    },
+    {
+      "m": 3,
+      "input_features": 2048,
+      "output_features": 2048,
+      "samples": {
+        "bnb_nf4": {
+          "cuda_ms": [
+            0.034806400537490845,
+            0.03246079981327057,
+            0.026495999097824095
+          ],
+          "wall_ms": [
+            0.036858599924016744,
+            0.03339750037412159,
+            0.027403699641581625
+          ]
+        },
+        "triton_nf4": {
+          "cuda_ms": [
+            0.20510718822479249,
+            0.2066431999206543,
+            0.2056191921234131
+          ],
+          "wall_ms": [
+            0.2061104001768399,
+            0.20759090039064176,
+            0.20658659996115603
+          ]
+        },
+        "triton_nf4_reuse2": {
+          "cuda_ms": [
+            0.44895358085632325,
+            0.44861440658569335,
+            0.44924159049987794
+          ],
+          "wall_ms": [
+            0.4499351998674683,
+            0.4494994995184243,
+            0.4502944000705611
+          ]
+        },
+        "triton_nf4_reuse4": {
+          "cuda_ms": [
+            0.455782413482666,
+            0.45569601058959963,
+            0.45608959197998045
+          ],
+          "wall_ms": [
+            0.4567262003547512,
+            0.4565736002405174,
+            0.45724789961241186
+          ]
+        },
+        "triton_nf4_tensorcore": {
+          "cuda_ms": [
+            0.7119872093200683,
+            0.7115744113922119,
+            0.7142399787902832
+          ],
+          "wall_ms": [
+            0.712872499570949,
+            0.7124386000214145,
+            0.7155612998758443
+          ]
+        },
+        "triton_nf4_group_scale": {
+          "cuda_ms": [
+            0.16957759857177734,
+            0.16957440376281738,
+            0.17171519994735718
+          ],
+          "wall_ms": [
+            0.17039970043697394,
+            0.17050339956767857,
+            0.17282650005654432
+          ]
+        }
+      },
+      "median_cuda_ms": {
+        "bnb_nf4": 0.03246079981327057,
+        "triton_nf4": 0.2056191921234131,
+        "triton_nf4_reuse2": 0.44895358085632325,
+        "triton_nf4_reuse4": 0.455782413482666,
+        "triton_nf4_tensorcore": 0.7119872093200683,
+        "triton_nf4_group_scale": 0.16957759857177734
+      },
+      "median_wall_ms": {
+        "bnb_nf4": 0.03339750037412159,
+        "triton_nf4": 0.20658659996115603,
+        "triton_nf4_reuse2": 0.4499351998674683,
+        "triton_nf4_reuse4": 0.4567262003547512,
+        "triton_nf4_tensorcore": 0.712872499570949,
+        "triton_nf4_group_scale": 0.17050339956767857
+      },
+      "triton_over_bnb_cuda_ratio": 6.334384651833262,
+      "reuse2_over_bnb_cuda_ratio": 13.83063829107448,
+      "reuse4_over_bnb_cuda_ratio": 14.041009959844978,
+      "tensorcore_over_bnb_cuda_ratio": 21.933754356508338,
+      "group_scale_over_bnb_cuda_ratio": 5.2240733299014686,
+      "row0_bitwise_invariant_for_experimental_variants": true,
+      "group_scale_bitwise_equal_to_original_kernel": true
+    },
+    {
+      "m": 5,
+      "input_features": 2048,
+      "output_features": 2048,
+      "samples": {
+        "bnb_nf4": {
+          "cuda_ms": [
+            0.048691201210021975,
+            0.05181440114974976,
+            0.04509440064430237
+          ],
+          "wall_ms": [
+            0.05039530005888082,
+            0.05482100023073144,
+            0.04699100027210079
+          ]
+        },
+        "triton_nf4": {
+          "cuda_ms": [
+            0.32460799217224123,
+            0.3239936113357544,
+            0.32448320388793944
+          ],
+          "wall_ms": [
+            0.32557039958192036,
+            0.3248545996029861,
+            0.32539469975745305
+          ]
+        },
+        "triton_nf4_reuse2": {
+          "cuda_ms": [
+            0.4492159843444824,
+            0.44905920028686525,
+            0.4491263866424561
+          ],
+          "wall_ms": [
+            0.45009680034127086,
+            0.45005630017840303,
+            0.4522148003161419
+          ]
+        },
+        "triton_nf4_reuse4": {
+          "cuda_ms": [
+            0.4555776119232178,
+            0.45648961067199706,
+            0.455782413482666
+          ],
+          "wall_ms": [
+            0.4564679999020882,
+            0.45744119997834787,
+            0.45676429945160635
+          ]
+        },
+        "triton_nf4_tensorcore": {
+          "cuda_ms": [
+            0.7107295989990234,
+            0.7129087924957276,
+            0.7117824077606201
+          ],
+          "wall_ms": [
+            0.7116102999134455,
+            0.7141287998820189,
+            0.7130322999728378
+          ]
+        },
+        "triton_nf4_group_scale": {
+          "cuda_ms": [
+            0.26929919719696044,
+            0.2690047979354858,
+            0.27197120189666746
+          ],
+          "wall_ms": [
+            0.2702504993067123,
+            0.27009010009351186,
+            0.2733563000219874
+          ]
+        }
+      },
+      "median_cuda_ms": {
+        "bnb_nf4": 0.048691201210021975,
+        "triton_nf4": 0.32448320388793944,
+        "triton_nf4_reuse2": 0.4491263866424561,
+        "triton_nf4_reuse4": 0.455782413482666,
+        "triton_nf4_tensorcore": 0.7117824077606201,
+        "triton_nf4_group_scale": 0.26929919719696044
+      },
+      "median_wall_ms": {
+        "bnb_nf4": 0.05039530005888082,
+        "triton_nf4": 0.32539469975745305,
+        "triton_nf4_reuse2": 0.45009680034127086,
+        "triton_nf4_reuse4": 0.45676429945160635,
+        "triton_nf4_tensorcore": 0.7130322999728378,
+        "triton_nf4_group_scale": 0.2702504993067123
+      },
+      "triton_over_bnb_cuda_ratio": 6.66410348942371,
+      "reuse2_over_bnb_cuda_ratio": 9.223974259850744,
+      "reuse4_over_bnb_cuda_ratio": 9.360673020094923,
+      "tensorcore_over_bnb_cuda_ratio": 14.618296326074532,
+      "group_scale_over_bnb_cuda_ratio": 5.53075690277962,
+      "row0_bitwise_invariant_for_experimental_variants": true,
+      "group_scale_bitwise_equal_to_original_kernel": true
+    }
+  ]
+}

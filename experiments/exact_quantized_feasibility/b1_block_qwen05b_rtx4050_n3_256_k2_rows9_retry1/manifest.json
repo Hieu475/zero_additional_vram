@@ -1,0 +1,23 @@
+{
+  "status": "experimental; finite diagnostic, not a proof",
+  "reference": "greedy singleton under the same fixed-row Qwen2 operator patch",
+  "second_baseline": "original BNB greedy, for compatibility measurement only",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "k": 2,
+  "physical_rows": 9,
+  "max_new_tokens": 256,
+  "capacity": 2048,
+  "per_task": 1,
+  "audit_state": false,
+  "input_hashes": {
+    "gsm8k": "a267e7a2e196949177bff46c9c2d9d50c39c66724b8fd0b868f7a042b7b1b0f6",
+    "humaneval": "3d5d2f3f5d6ce32547732cb27b9d483f177be4e6dcd82bd98a10610e3af5db04",
+    "cnndm": "11b5e9db9851878491854f6e166c513aa0ed6668d635ccb49d97592032d02096"
+  }
+}

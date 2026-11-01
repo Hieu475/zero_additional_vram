@@ -1,0 +1,298 @@
+{
+  "schema": "zassd-k1r2-k2r3-same-prompt-development-comparison-v1",
+  "prompt_id": "HumanEval/114",
+  "prompt_sha256": "4bdb0afd53bc0e28529bafba0538d6b3a566ad5f476fb7f1016cfabe823f1c3f",
+  "input_prompt_tokens": 83,
+  "comparison_scope": "single development prompt, two independent sessions/profile, paired wall-clock timing; experimental B1 profile singleton reference, not original BNB state equivalence",
+  "profiles": {
+    "k2r3_128": {
+      "run_files": [
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/closed_loop_humaneval114_128_s0_v1.json",
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/closed_loop_humaneval114_128_s1_v1.json"
+      ],
+      "sessions": 2,
+      "timing_pairs": 4,
+      "exact_to_profile_singleton_tokens_and_all_state_prefixes": true,
+      "accepted_draft_tokens": 112,
+      "draft_tokens": 292,
+      "acceptance_rate": 0.3835616438356164,
+      "bnb_matching_rounds": 4,
+      "bnb_rounds": 4,
+      "geomean_speedup_vs_singleton": 1.1340951011191223,
+      "geomean_speedup_vs_bnb": 1.0180265084446483,
+      "max_incremental_peak_allocated_bytes_by_method": {
+        "block": 35882496,
+        "singleton": 34910720,
+        "bnb": 101059072
+      },
+      "paired_rounds": [
+        {
+          "session": 0,
+          "round": 0,
+          "block_s": 3.184564481000052,
+          "singleton_s": 3.4776883459999226,
+          "bnb_s": 3.079389512000489,
+          "speedup_vs_singleton": 1.0920451969959235,
+          "speedup_vs_bnb": 0.9669735156480377,
+          "bnb_token_match": true,
+          "accepted_draft_tokens": 28,
+          "draft_tokens": 73
+        },
+        {
+          "session": 0,
+          "round": 1,
+          "block_s": 3.201971599999524,
+          "singleton_s": 3.6274364640003114,
+          "bnb_s": 3.2795157669997934,
+          "speedup_vs_singleton": 1.1328759018352474,
+          "speedup_vs_bnb": 1.0242176310996265,
+          "bnb_token_match": true,
+          "accepted_draft_tokens": 28,
+          "draft_tokens": 73
+        },
+        {
+          "session": 1,
+          "round": 0,
+          "block_s": 3.1599985630000447,
+          "singleton_s": 3.640814940999917,
+          "bnb_s": 3.2674958690004132,
+          "speedup_vs_singleton": 1.1521571508385098,
+          "speedup_vs_bnb": 1.0340181502798889,
+          "bnb_token_match": true,
+          "accepted_draft_tokens": 28,
+          "draft_tokens": 73
+        },
+        {
+          "session": 1,
+          "round": 1,
+          "block_s": 3.1474247519990968,
+          "singleton_s": 3.652738500999476,
+          "bnb_s": 3.3010850509999727,
+          "speedup_vs_singleton": 1.1605483176935136,
+          "speedup_vs_bnb": 1.0488209603433023,
+          "bnb_token_match": true,
+          "accepted_draft_tokens": 28,
+          "draft_tokens": 73
+        }
+      ]
+    },
+    "k2r3_256": {
+      "run_files": [
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/closed_loop_humaneval114_256_s2_v1.json",
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/closed_loop_humaneval114_256_s3_v1.json"
+      ],
+      "sessions": 2,
+      "timing_pairs": 4,
+      "exact_to_profile_singleton_tokens_and_all_state_prefixes": true,
+      "accepted_draft_tokens": 268,
+      "draft_tokens": 576,
+      "acceptance_rate": 0.4652777777777778,
+      "bnb_matching_rounds": 0,
+      "bnb_rounds": 4,
+      "geomean_speedup_vs_singleton": 1.1738218839878476,
+      "geomean_speedup_vs_bnb": 1.0785777056199641,
+      "max_incremental_peak_allocated_bytes_by_method": {
+        "block": 41969152,
+        "singleton": 41030144,
+        "bnb": 101059072
+      },
+      "paired_rounds": [
+        {
+          "session": 2,
+          "round": 0,
+          "block_s": 6.041892392000591,
+          "singleton_s": 6.961346699999922,
+          "bnb_s": 6.452985637999518,
+          "speedup_vs_singleton": 1.1521798549766757,
+          "speedup_vs_bnb": 1.0680404779375434,
+          "bnb_token_match": false,
+          "accepted_draft_tokens": 67,
+          "draft_tokens": 144
+        },
+        {
+          "session": 2,
+          "round": 1,
+          "block_s": 6.242431487999966,
+          "singleton_s": 7.370179669000208,
+          "bnb_s": 6.833426934000272,
+          "speedup_vs_singleton": 1.1806584794992385,
+          "speedup_vs_bnb": 1.0946739178694067,
+          "bnb_token_match": false,
+          "accepted_draft_tokens": 67,
+          "draft_tokens": 144
+        },
+        {
+          "session": 3,
+          "round": 0,
+          "block_s": 6.009970025999792,
+          "singleton_s": 7.129675604000113,
+          "bnb_s": 6.420934488000057,
+          "speedup_vs_singleton": 1.186308013709944,
+          "speedup_vs_bnb": 1.0683804511873416,
+          "bnb_token_match": false,
+          "accepted_draft_tokens": 67,
+          "draft_tokens": 144
+        },
+        {
+          "session": 3,
+          "round": 1,
+          "block_s": 6.216165865999756,
+          "singleton_s": 7.312895537999793,
+          "bnb_s": 6.734881129000314,
+          "speedup_vs_singleton": 1.1764318545614691,
+          "speedup_vs_bnb": 1.0834461747293052,
+          "bnb_token_match": false,
+          "accepted_draft_tokens": 67,
+          "draft_tokens": 144
+        }
+      ]
+    },
+    "k1r2_128": {
+      "run_files": [
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_row_kernel_v1/memory_budget_humaneval114_128_s35_v1.json",
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_row_kernel_v1/memory_budget_humaneval114_128_s37_v1.json"
+      ],
+      "sessions": 2,
+      "timing_pairs": 4,
+      "exact_to_profile_singleton_tokens_and_all_state_prefixes": true,
+      "accepted_draft_tokens": 92,
+      "draft_tokens": 168,
+      "acceptance_rate": 0.5476190476190477,
+      "bnb_matching_rounds": 4,
+      "bnb_rounds": 4,
+      "geomean_speedup_vs_singleton": 1.20098813899168,
+      "geomean_speedup_vs_bnb": 1.0602860857000018,
+      "max_incremental_peak_allocated_bytes_by_method": {
+        "block": 35552256,
+        "singleton": 34906624,
+        "bnb": 101059072
+      },
+      "paired_rounds": [
+        {
+          "session": 35,
+          "round": 0,
+          "block_s": 2.9854074449995096,
+          "singleton_s": 3.655889916999513,
+          "bnb_s": 3.3480987889997778,
+          "speedup_vs_singleton": 1.2245865880461464,
+          "speedup_vs_bnb": 1.1214880550417894,
+          "bnb_token_match": true,
+          "accepted_draft_tokens": 23,
+          "draft_tokens": 42
+        },
+        {
+          "session": 35,
+          "round": 1,
+          "block_s": 3.047985666999921,
+          "singleton_s": 3.617857180000101,
+          "bnb_s": 3.1954893530000845,
+          "speedup_vs_singleton": 1.1869665986851883,
+          "speedup_vs_bnb": 1.0483938253375544,
+          "bnb_token_match": true,
+          "accepted_draft_tokens": 23,
+          "draft_tokens": 42
+        },
+        {
+          "session": 37,
+          "round": 0,
+          "block_s": 2.957244052999158,
+          "singleton_s": 3.421983549000288,
+          "bnb_s": 3.0569726129997434,
+          "speedup_vs_singleton": 1.1571529057704262,
+          "speedup_vs_bnb": 1.0337234797714592,
+          "bnb_token_match": true,
+          "accepted_draft_tokens": 23,
+          "draft_tokens": 42
+        },
+        {
+          "session": 37,
+          "round": 1,
+          "block_s": 2.927655268000308,
+          "singleton_s": 3.62122961499972,
+          "bnb_s": 3.044308765000096,
+          "speedup_vs_singleton": 1.2369043768849015,
+          "speedup_vs_bnb": 1.0398453664524057,
+          "bnb_token_match": true,
+          "accepted_draft_tokens": 23,
+          "draft_tokens": 42
+        }
+      ]
+    },
+    "k1r2_256": {
+      "run_files": [
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_row_kernel_v1/memory_telemetry_humaneval114_256_s30_v1.json",
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_row_kernel_v1/memory_telemetry_humaneval114_256_s31_v1.json"
+      ],
+      "sessions": 2,
+      "timing_pairs": 4,
+      "exact_to_profile_singleton_tokens_and_all_state_prefixes": true,
+      "accepted_draft_tokens": 208,
+      "draft_tokens": 348,
+      "acceptance_rate": 0.5977011494252874,
+      "bnb_matching_rounds": 0,
+      "bnb_rounds": 4,
+      "geomean_speedup_vs_singleton": 1.2807956999371046,
+      "geomean_speedup_vs_bnb": 1.1202550510379432,
+      "max_incremental_peak_allocated_bytes_by_method": {
+        "block": 41634304,
+        "singleton": 41026048,
+        "bnb": 101059072
+      },
+      "paired_rounds": [
+        {
+          "session": 30,
+          "round": 0,
+          "block_s": 5.785348461000467,
+          "singleton_s": 7.36515885100016,
+          "bnb_s": 6.466212013000586,
+          "speedup_vs_singleton": 1.273070913644931,
+          "speedup_vs_bnb": 1.117687561361235,
+          "bnb_token_match": false,
+          "accepted_draft_tokens": 52,
+          "draft_tokens": 87
+        },
+        {
+          "session": 30,
+          "round": 1,
+          "block_s": 5.634715414000311,
+          "singleton_s": 7.321698615999594,
+          "bnb_s": 6.233287143999405,
+          "speedup_vs_singleton": 1.299391021205386,
+          "speedup_vs_bnb": 1.1062292744211804,
+          "bnb_token_match": false,
+          "accepted_draft_tokens": 52,
+          "draft_tokens": 87
+        },
+        {
+          "session": 31,
+          "round": 0,
+          "block_s": 5.581127718000062,
+          "singleton_s": 7.059516041999814,
+          "bnb_s": 6.47737601999961,
+          "speedup_vs_singleton": 1.264890609693755,
+          "speedup_vs_bnb": 1.1605855209349536,
+          "bnb_token_match": false,
+          "accepted_draft_tokens": 52,
+          "draft_tokens": 87
+        },
+        {
+          "session": 31,
+          "round": 1,
+          "block_s": 5.695046445999651,
+          "singleton_s": 7.324387081999703,
+          "bnb_s": 6.250607091000347,
+          "speedup_vs_singleton": 1.2860978661806248,
+          "speedup_vs_bnb": 1.0975515564743,
+          "bnb_token_match": false,
+          "accepted_draft_tokens": 52,
+          "draft_tokens": 87
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "Descriptive timings on one prompt and one RTX 4050; no population-level confidence interval.",
+    "Exactness applies within each profile to its own singleton B1 state; it does not establish K1/R2 and K2/R3 cross-profile state equality or BNB state equality.",
+    "GSM8K held-out indices 300-349 were not accessed."
+  ]
+}

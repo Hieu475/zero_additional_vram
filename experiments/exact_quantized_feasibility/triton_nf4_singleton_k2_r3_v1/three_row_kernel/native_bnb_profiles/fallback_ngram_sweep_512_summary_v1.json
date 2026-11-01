@@ -1,0 +1,151 @@
+{
+  "schema": "zassd-fallback-ngram-sweep-summary-512-v1",
+  "classification": "two selected prompts; one process per prompt; paired ngram sweep",
+  "scope": "Qwen2.5-3B-Instruct NF4, RTX 4050 Laptop GPU, K=2/R=3, 512 tokens, full no-proposal fallback",
+  "ratio_definition": "speedup = original BNB latency / candidate latency; >1 means candidate faster",
+  "prompt_count": 2,
+  "process_count": 2,
+  "timing_rounds_per_ngram": 8,
+  "all_ngram_sizes_exact_to_b1_token_and_kv": true,
+  "timed_tokens_match_b1": true,
+  "original_bnb_token_matches": {
+    "ngram2": 8,
+    "ngram3": 8,
+    "ngram4": 8
+  },
+  "aggregate": {
+    "ngram2": {
+      "geomean_across_two_prompts": 1.0580972599541045,
+      "prompts_faster_than_bnb": 1
+    },
+    "ngram3": {
+      "geomean_across_two_prompts": 1.111011113040176,
+      "prompts_faster_than_bnb": 1
+    },
+    "ngram4": {
+      "geomean_across_two_prompts": 1.1199862076941522,
+      "prompts_faster_than_bnb": 1
+    }
+  },
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/123",
+      "ngrams": {
+        "ngram2": {
+          "speedup_vs_bnb_geomean": 0.9474493897200937,
+          "speedup_vs_bnb_rounds": [
+            0.9570009114356292,
+            0.9480807001508024,
+            0.9463840456304493,
+            0.9384238007783713
+          ],
+          "speedup_vs_ngram3": 0.9989022219118445,
+          "empty_proposal_cycles": 173,
+          "cycles_median": 410.0,
+          "draft_tokens_median": 473.0,
+          "accepted_tokens_median": 101.0,
+          "acceptance_fraction": 0.2135306553911205,
+          "target_rows_median": 883.0
+        },
+        "ngram3": {
+          "speedup_vs_bnb_geomean": 0.9477943826232618,
+          "speedup_vs_bnb_rounds": [
+            0.9406614196840889,
+            0.9637199894696703,
+            0.9371836371682993,
+            0.9498338105166805
+          ],
+          "speedup_vs_ngram3": 1.0,
+          "empty_proposal_cycles": 173,
+          "cycles_median": 409.0,
+          "draft_tokens_median": 471.0,
+          "accepted_tokens_median": 102.0,
+          "acceptance_fraction": 0.21656050955414013,
+          "target_rows_median": 880.0
+        },
+        "ngram4": {
+          "speedup_vs_bnb_geomean": 0.9483111651873671,
+          "speedup_vs_bnb_rounds": [
+            0.9579985566484946,
+            0.9549853868554968,
+            0.9372912930466119,
+            0.9431207324245653
+          ],
+          "speedup_vs_ngram3": 0.9965236186616251,
+          "empty_proposal_cycles": 173,
+          "cycles_median": 407.0,
+          "draft_tokens_median": 467.0,
+          "accepted_tokens_median": 104.0,
+          "acceptance_fraction": 0.22269807280513917,
+          "target_rows_median": 874.0
+        }
+      }
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "ngrams": {
+        "ngram2": {
+          "speedup_vs_bnb_geomean": 1.1816671409257435,
+          "speedup_vs_bnb_rounds": [
+            1.1831226215297157,
+            1.1552015602280237,
+            1.1881715262183143,
+            1.2006432146247061
+          ],
+          "speedup_vs_ngram3": 0.9065690607723613,
+          "empty_proposal_cycles": 169,
+          "cycles_median": 340.0,
+          "draft_tokens_median": 342.0,
+          "accepted_tokens_median": 171.0,
+          "acceptance_fraction": 0.5,
+          "target_rows_median": 682.0
+        },
+        "ngram3": {
+          "speedup_vs_bnb_geomean": 1.3023348902769454,
+          "speedup_vs_bnb_rounds": [
+            1.2850871500362118,
+            1.2610423592825972,
+            1.3245035774420655,
+            1.3402175822612077
+          ],
+          "speedup_vs_ngram3": 1.0,
+          "empty_proposal_cycles": 169,
+          "cycles_median": 321.0,
+          "draft_tokens_median": 304.0,
+          "accepted_tokens_median": 190.0,
+          "acceptance_fraction": 0.625,
+          "target_rows_median": 625.0
+        },
+        "ngram4": {
+          "speedup_vs_bnb_geomean": 1.3227399945009515,
+          "speedup_vs_bnb_rounds": [
+            1.3104156153791957,
+            1.2997958794169222,
+            1.349793425474734,
+            1.3315160829365682
+          ],
+          "speedup_vs_ngram3": 1.0194016813388451,
+          "empty_proposal_cycles": 169,
+          "cycles_median": 318.0,
+          "draft_tokens_median": 298.0,
+          "accepted_tokens_median": 193.0,
+          "acceptance_fraction": 0.6476510067114094,
+          "target_rows_median": 616.0
+        }
+      }
+    }
+  ],
+  "input_sha256": {
+    "fallback_ngram_sweep_HumanEval123_512_v1.json": "ecf17be02510bb0a3da2dbe2b5ecc540577a4bfba920943182486646f67f8e5d",
+    "fallback_ngram_sweep_HumanEval114_512_v1.json": "f99250c9ee3f24475bd605d6350a1d33f28e277889722239e5d8ab4ed7626808"
+  },
+  "manifest_sha256": "f481445b2b94e2747c113b785538d0e3b9fdae8cfaa845a54e352f9853568a0b",
+  "heldout_used": false,
+  "limits": [
+    "Two selected HumanEval prompts, one process per prompt and one GPU; descriptive only.",
+    "Original-BNB comparison is token/latency only; no BNB KV-state claim.",
+    "GSM8K held-out indices 300-349 excluded."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_activationvec_ngram_sweep_512.py",
+  "source_sha256": "d5cafd185d3c0e91c36507d0624835e2fc75a4b1e2fd11695524ea6874793012"
+}

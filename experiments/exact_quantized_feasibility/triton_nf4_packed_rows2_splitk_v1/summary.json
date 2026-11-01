@@ -1,0 +1,92 @@
+{
+  "title": "Shape-invariant split-K NF4 down-projection experiment",
+  "status": "B1-correct in finite development pilots; no-go as current end-to-end performance candidate",
+  "reference_contract_ids_by_prompt": {
+    "cnndm_000": "0a058e6def90a590a374f7c61adece23bea06d0d10e1cb03f88dddb46e9e57bc",
+    "cnndm_001": "18921318c08b9642cb128c701c37c69a848c87aa950b91ea4c30c634e971a0b0",
+    "cnndm_002": "160af4981ac312674574332b8a9d1f35515914be729e25c35e0f9128c9d604f3"
+  },
+  "operator_screen": {
+    "target": "Qwen2.5-3B NF4 down_proj 11008x2048, N=16, K=256, num_warps=1",
+    "M2_latency_ratio_split8_to_reference": 0.790,
+    "q_proj_M2_latency_ratio_split8_to_reference": 1.665,
+    "all_36_down_proj_layers_M1_M2_singleton_equal": true,
+    "all_36_down_proj_layers_checked": 36,
+    "artifacts": [
+      "operator_benchmark.json",
+      "operator_benchmark_confirmatory.json",
+      "down_layers_shape_audit.json"
+    ]
+  },
+  "whole_model_pilots": {
+    "protocol": {
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "K": 1,
+      "physical_rows": 2,
+      "attention": "padded",
+      "new_tokens": 32,
+      "heldout_gsm8k_used": false
+    },
+    "runs": 9,
+    "token_match_to_b1": "9/9",
+    "token_match_to_original_bnb": "9/9",
+    "shared_kv_prefixes": 288,
+    "all_shared_kv_states_equal": true,
+    "speedup_vs_b1": {
+      "geometric_mean": 1.12577,
+      "diagnostic_paired_log_95_interval": [1.06287, 1.19240],
+      "by_prompt_geometric_mean": {
+        "cnndm_000": 1.23650,
+        "cnndm_001": 1.10333,
+        "cnndm_002": 1.04580
+      }
+    },
+    "speedup_vs_original_bnb": {
+      "geometric_mean": 0.88808,
+      "diagnostic_paired_log_95_interval": [0.83231, 0.94760],
+      "by_prompt_geometric_mean": {
+        "cnndm_000": 0.98982,
+        "cnndm_001": 0.85916,
+        "cnndm_002": 0.82363
+      }
+    },
+    "baseline_comparison": "Earlier warp1-only pilot summary on the same three prompts measured 1.14228x versus B1 and 0.91600x versus BNB. This is a cross-run diagnostic comparison, not a paired A/B estimate; currently available evidence favors retaining warp1-only as the better schedule."
+  },
+  "paired_same_process_comparison": {
+    "artifact": "paired_warp1_vs_split8.json",
+    "protocol": "3 prompts x 3 alternating-order repeats; same loaded model/process; B1 block generation only; 32 output tokens; K=1/R=2/padded attention",
+    "all_token_sequences_equal": true,
+    "split8_over_warp1_latency_ratio": {
+      "geometric_mean": 1.03793,
+      "prompt_level_log_95_interval_n3": [1.01848, 1.05776],
+      "repeat_level_log_95_interval_n9_diagnostic_only": [1.02992, 1.04601],
+      "by_prompt": {
+        "cnndm_000": 1.03779,
+        "cnndm_001": 1.04593,
+        "cnndm_002": 1.03012
+      }
+    },
+    "interpretation": "Split8 is 3.8% slower end-to-end than warp1 in this direct paired comparison, despite faster down_proj operator timings. The prompt-level interval treats prompts as the independent units; the repeat-level interval is diagnostic because repeats share prompts."
+  },
+  "followup_operator_screens": {
+    "workspace_reuse": {
+      "artifact": "operator_workspace_benchmark.json",
+      "down_proj_m2_reuse_to_allocate_latency_ratio": 0.999,
+      "decision": "Reusing the split partial buffer did not remove the end-to-end slowdown."
+    },
+    "warp_count": {
+      "artifact": "operator_warp_sweep.json",
+      "down_proj_m2_latency_ratio_to_warp1": {"w1": 1.0, "w2": 1.052, "w4": 1.156},
+      "all_configurations_singleton_equal": true,
+      "decision": "One warp remains the fastest split8 configuration; more warps do not rescue the method."
+    }
+  },
+  "decision": "Retain split8 only as an opt-in research prototype with its own contract. Direct paired end-to-end evidence rejects it as the selected performance schedule. Workspace reuse and warp-count sweeps did not improve it. Stop this split-K branch and prioritize a materially different dataflow. Do not run held-out evaluation.",
+  "limitations": [
+    "Finite evidence on one GPU, one model revision, one K/row-count, and three development prompts.",
+    "Zero observed mismatch does not prove all-input equivalence.",
+    "The split-K arithmetic schedule is a separate B1 reference and is not equivalent to original BNB by construction."
+  ]
+}

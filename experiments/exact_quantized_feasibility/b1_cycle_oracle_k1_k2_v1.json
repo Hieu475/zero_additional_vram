@@ -1,0 +1,124 @@
+{
+  "status": "superseded; do not use for results",
+  "reference_contract_ids": [
+    "ca155f567ba080347f765335e8999b0256abafe87c88c0263ac38344b2b2ca27"
+  ],
+  "k_values": [
+    1,
+    2
+  ],
+  "oracle_assumptions": [
+    "All candidate cycle edges were measured from the same B1 token and state trajectory.",
+    "Cycle action cost uses the median observed draft+verify+commit wall time across sessions.",
+    "The oracle has zero K-selection/switching/checkpoint overhead and uses future knowledge.",
+    "Only K values and fixed-row schedule represented in the supplied runs are considered.",
+    "A zero-cost final edge is allowed only for a token already pending at EOS/budget completion."
+  ],
+  "prompt_count": 3,
+  "prompts": [
+    {
+      "task": "cnndm",
+      "id": "cnndm_000",
+      "sessions": 4,
+      "k_coverage": [
+        1,
+        2
+      ],
+      "common_reference_tokens": true,
+      "all_state_audits_exact": false,
+      "reference_token_count": 64,
+      "cycle_action_count": 96,
+      "median_b1_singleton_total_s": 2.328172851001,
+      "fixed_k": {
+        "1": {
+          "median_total_s": 1.9415986804979184,
+          "samples": 2
+        },
+        "2": {
+          "median_total_s": 1.6927844775000267,
+          "samples": 2
+        }
+      },
+      "cycle_oracle": {
+        "predicted_total_s": null,
+        "cycle_cost_s": null,
+        "median_prefill_s": 0.20172534999801428,
+        "median_noncycle_overhead_s": 0.0022159095115057426,
+        "median_component_sum_error_s": 1.8739499864750542e-05,
+        "speedup_vs_singleton": null,
+        "gain_vs_best_fixed_k": null,
+        "path": []
+      }
+    },
+    {
+      "task": "gsm8k",
+      "id": "gsm8k_000",
+      "sessions": 4,
+      "k_coverage": [
+        1,
+        2
+      ],
+      "common_reference_tokens": true,
+      "all_state_audits_exact": false,
+      "reference_token_count": 64,
+      "cycle_action_count": 114,
+      "median_b1_singleton_total_s": 2.28999293599918,
+      "fixed_k": {
+        "1": {
+          "median_total_s": 2.0386028149987396,
+          "samples": 2
+        },
+        "2": {
+          "median_total_s": 1.8913893720000488,
+          "samples": 2
+        }
+      },
+      "cycle_oracle": {
+        "predicted_total_s": null,
+        "cycle_cost_s": null,
+        "median_prefill_s": 0.07221272500100895,
+        "median_noncycle_overhead_s": 0.002458698510963586,
+        "median_component_sum_error_s": 1.8269998690811917e-05,
+        "speedup_vs_singleton": null,
+        "gain_vs_best_fixed_k": null,
+        "path": []
+      }
+    },
+    {
+      "task": "humaneval",
+      "id": "HumanEval/0",
+      "sessions": 4,
+      "k_coverage": [
+        1,
+        2
+      ],
+      "common_reference_tokens": true,
+      "all_state_audits_exact": false,
+      "reference_token_count": 64,
+      "cycle_action_count": 125,
+      "median_b1_singleton_total_s": 2.183399649498824,
+      "fixed_k": {
+        "1": {
+          "median_total_s": 2.189103658500244,
+          "samples": 2
+        },
+        "2": {
+          "median_total_s": 2.1444145850018685,
+          "samples": 2
+        }
+      },
+      "cycle_oracle": {
+        "predicted_total_s": null,
+        "cycle_cost_s": null,
+        "median_prefill_s": 0.07946936149892281,
+        "median_noncycle_overhead_s": 0.0022847620075481245,
+        "median_component_sum_error_s": 1.833800160966348e-05,
+        "speedup_vs_singleton": null,
+        "gain_vs_best_fixed_k": null,
+        "path": []
+      }
+    }
+  ],
+  "superseded_by": "b1_cycle_oracle_k1_k2_v4.json",
+  "superseded_reason": "Superseded by v4: v1 incorrectly required every block prefix count to equal every singleton prefix count; block traces only observe shared cycle frontiers."
+}

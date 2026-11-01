@@ -1,0 +1,91 @@
+{
+  "status": "completed",
+  "scope": "single-prefix shape diagnostic; not full-sequence exactness or a universal guarantee",
+  "protocol_sha256": "9f833c6baff42e8edcac90ab629499af308e8cc47598a8975140f1f1fa3a60a2",
+  "cohort_sha256": "01610458c693cb12d715bb0474ede6d354e1dee33c599d2cc08e7d805546ff08",
+  "model": "unsloth/Llama-3.2-1B-Instruct",
+  "revision": "5a8abab4a5d6f164389b1079fb721cfab8d7126c",
+  "family": "Llama",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "HumanEval/106",
+  "task": "humaneval",
+  "prompt_sha256": "f9dee5694b9f6e2c5f39785ca58d27c74624ba052d3010d58eececbe949ce19d",
+  "prompt_token_count": 120,
+  "prompt_token_ids_sha256": "e6096eeb260bc143bbebd07d3b7fdad01149235b36c829bb7f5bfd34b6ad4dfc",
+  "M": 9,
+  "candidate_ids": [
+    262,
+    1121,
+    284,
+    4260,
+    262,
+    369,
+    602,
+    304,
+    2134
+  ],
+  "candidate_length": 9,
+  "linear_singleton_counts": {
+    "patched_modules": 113,
+    "split_forward_calls": 113,
+    "single_row_kernel_calls": 1017
+  },
+  "ordinary_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.125,
+      0.171875,
+      0.1875,
+      0.15625,
+      0.140625,
+      0.125,
+      0.15625,
+      0.1875,
+      0.15625
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.1875,
+    "kv_value_max_abs": 0.046875,
+    "first_kv_different_layer": 0
+  },
+  "singleton_linear_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.125,
+      0.16455078125,
+      0.15625,
+      0.125,
+      0.1484375,
+      0.15625,
+      0.16796875,
+      0.15625,
+      0.25
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.1376953125,
+    "kv_value_max_abs": 0.03857421875,
+    "first_kv_different_layer": 1
+  },
+  "model_manifest": "experiments/exact_quantized_feasibility/crossmodel_shape_repeat_v1/session2/manifests/llama32_1b.json"
+}

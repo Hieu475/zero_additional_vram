@@ -1,0 +1,40 @@
+{
+  "title": "Paired K=1/R=2 versus K=2/R=3 seed for N=16/K=256/one-warp B1",
+  "prompt_id": "cnndm_000",
+  "session_index": 0,
+  "reference_contracts": {
+    "K1_R2": "49c5f6a606a9ef8c32ec8d39b9d6890971834762ac4bbee58ec0b8d60475afbd",
+    "K2_R3": "31bb7c874fe13b57a72af11f7cdbecc1b30b227ecb360828d98b31de23cdae46"
+  },
+  "results": {
+    "K1_R2": {
+      "latency_s": {"original_bnb": 0.870063575, "b1_singleton": 1.098365487, "b1_block": 0.913131891},
+      "speedup_vs_b1": 1.202855,
+      "speedup_vs_bnb": 0.952835,
+      "accepted_draft_tokens": 8,
+      "draft_tokens": 12,
+      "token_match_vs_b1_and_bnb": true,
+      "shared_kv_prefixes_equal": 32
+    },
+    "K2_R3": {
+      "latency_s": {"original_bnb": 0.8466, "b1_singleton": 1.0751, "b1_block": 0.9004},
+      "speedup_vs_b1": 1.194075,
+      "speedup_vs_bnb": 0.940256,
+      "accepted_draft_tokens": 11,
+      "draft_tokens": 18,
+      "token_match_vs_b1_and_bnb": true,
+      "shared_kv_prefixes_equal": 32
+    }
+  },
+  "decision": "K2 was not expanded: acceptance fraction decreased from 66.7% to 61.1%, and both paired speed ratios moved slightly in the wrong direction.",
+  "limits": [
+    "One paired seed on one development prompt; this is a screening result, not a general K comparison.",
+    "The K1/R2 and K2/R3 contracts are distinct because physical_rows differs.",
+    "Held-out GSM8K was not used."
+  ],
+  "artifacts": {
+    "K1_pilot": "../triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm000_k1_rows2_session0_v1/rows.jsonl",
+    "K2_pilot": "../triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm000_k2_rows3_session0_v1/rows.jsonl",
+    "K2_contract": "../triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm000_k2_rows3_session0_v1/reference_contract.json"
+  }
+}

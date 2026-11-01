@@ -1,0 +1,47 @@
+{
+  "schema": "zassd-activationvec-allrows-paired-ab-summary-v1",
+  "classification": "same-process paired development A/B; two prompts, one session each, four paired rounds",
+  "all_exact_to_singleton": true,
+  "prompt_count": 2,
+  "process_count": 2,
+  "paired_rounds_per_prompt": 4,
+  "geomean_allrows_over_blockonly": 0.9941436418071261,
+  "interpretation": "All-rows singleton padding preserved B1 token/KV states. The same-process A/B shows small slowdowns on both prompts; no evidence of an incremental speed benefit. Do not integrate this variant based on the current pilot.",
+  "rows": [
+    {
+      "prompt_id": "HumanEval/116",
+      "artifact": "activationvec_allrows_paired_ab_humaneval116_64_s1_v1.json",
+      "max_new_tokens": 64,
+      "timing_rounds": 4,
+      "all_exact_to_singleton": true,
+      "accepted_draft_tokens": 28,
+      "draft_tokens": 32,
+      "ratio_allrows_over_blockonly": 0.9989429898817301,
+      "block_only_speedup_vs_bnb": 1.2664432973763766,
+      "allrows_speedup_vs_bnb": 1.2681421043015422,
+      "allrows_speedup_vs_singleton": 1.516763529875823
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "artifact": "activationvec_allrows_paired_ab_humaneval123_64_s1_v1.json",
+      "max_new_tokens": 64,
+      "timing_rounds": 4,
+      "all_exact_to_singleton": true,
+      "accepted_draft_tokens": 2,
+      "draft_tokens": 26,
+      "ratio_allrows_over_blockonly": 0.9893673518471238,
+      "block_only_speedup_vs_bnb": 0.8011716388354393,
+      "allrows_speedup_vs_bnb": 0.79371412617193,
+      "allrows_speedup_vs_singleton": 0.9496189850939298
+    }
+  ],
+  "scope_limits": [
+    "Two development prompts on one RTX 4050, one process per prompt.",
+    "Small same-process paired effects are descriptive and require repeat sessions before precise performance claims.",
+    "No original-BNB state-equivalence claim; GSM8K held-out indices 300-349 not used."
+  ],
+  "variant_manifest": "activationvec_allrows_manifest.json",
+  "variant_manifest_sha256": "8ab3bd368f8bd6694bdd3c1f436331bd2e37e638b630bc8c5910406ef4beff10",
+  "source": "scripts/audit_activationvec_allrows_paired_ab.py",
+  "source_sha256": "1cdd0d58e196aa7672e40bceaa3e72e1a6ff319acf1b164cb15da8f6225b33e2"
+}

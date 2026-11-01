@@ -1,0 +1,422 @@
+{
+  "schema": "zassd-fallback-ngram-sweep-summary-256-repeat-v1",
+  "classification": "six selected development prompts; two independent processes and eight paired rounds per prompt",
+  "scope": "Qwen2.5-3B-Instruct NF4, RTX 4050 Laptop GPU, K=2/R=3, 256 tokens, full no-proposal fallback",
+  "ratio_definition": "speedup = baseline latency / candidate latency; >1 means candidate faster",
+  "prompt_count": 6,
+  "independent_processes": 12,
+  "timing_rounds_per_ngram": 48,
+  "all_ngram_sizes_exact_to_b1_token_and_kv": true,
+  "timed_tokens_match_b1": true,
+  "original_bnb_token_matches": {
+    "ngram2": 48,
+    "ngram3": 48,
+    "ngram4": 48
+  },
+  "aggregate_speedup_vs_bnb": {
+    "ngram2": {
+      "geomean_across_prompts": 1.1647699110624858,
+      "prompt_cluster_bootstrap_95pct": [
+        1.072805213308069,
+        1.285702079928705
+      ],
+      "prompt_min": 1.0248349906389116,
+      "prompt_max": 1.4574169142084898,
+      "prompts_faster_than_bnb": 6
+    },
+    "ngram3": {
+      "geomean_across_prompts": 1.1840967190813236,
+      "prompt_cluster_bootstrap_95pct": [
+        1.0833030857020576,
+        1.3072810866777342
+      ],
+      "prompt_min": 1.0234211818101813,
+      "prompt_max": 1.4719052410180629,
+      "prompts_faster_than_bnb": 6
+    },
+    "ngram4": {
+      "geomean_across_prompts": 1.1867298937309094,
+      "prompt_cluster_bootstrap_95pct": [
+        1.0865652997575133,
+        1.3128229319489573
+      ],
+      "prompt_min": 1.0235464180150897,
+      "prompt_max": 1.4809768445502547,
+      "prompts_faster_than_bnb": 6
+    }
+  },
+  "aggregate_speedup_vs_ngram3": {
+    "ngram2": {
+      "geomean_across_prompts": 0.9836780157335185,
+      "prompt_cluster_bootstrap_95pct": [
+        0.971815417702593,
+        0.9950548281599462
+      ],
+      "prompt_min": 0.9601613207241099,
+      "prompt_max": 1.0013814535538825,
+      "prompts_faster_than_ngram3": 1
+    },
+    "ngram4": {
+      "geomean_across_prompts": 1.0022237834183247,
+      "prompt_cluster_bootstrap_95pct": [
+        0.9967874138267879,
+        1.0074448566558847
+      ],
+      "prompt_min": 0.9909640288729751,
+      "prompt_max": 1.0130588069031772,
+      "prompts_faster_than_ngram3": 5
+    }
+  },
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/112",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "ngram2": 1.4574169142084898,
+        "ngram3": 1.4719052410180629,
+        "ngram4": 1.4809768445502547
+      },
+      "speedup_vs_ngram3": {
+        "ngram2": 0.990156753026063,
+        "ngram4": 1.0061631708885805
+      },
+      "acceptance_fraction": {
+        "ngram2": 0.6974358974358974,
+        "ngram3": 0.7098445595854922,
+        "ngram4": 0.7225130890052356
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_ngram_sweep_HumanEval112_256_v1.json",
+          "speedup_vs_bnb": {
+            "ngram2": 1.4659064757281937,
+            "ngram3": 1.486390204670086,
+            "ngram4": 1.4948241823272013
+          },
+          "speedup_vs_ngram3": {
+            "ngram2": 0.9862191442882665,
+            "ngram4": 1.0056741343091582
+          },
+          "original_bnb_token_matches": {
+            "ng2": 4,
+            "ng3": 4,
+            "ng4": 4
+          }
+        },
+        {
+          "artifact": "fallback_ngram_sweep_HumanEval112_256_repeat_v1.json",
+          "speedup_vs_bnb": {
+            "ngram2": 1.44897651861853,
+            "ngram3": 1.457561434224677,
+            "ngram4": 1.4672577819014305
+          },
+          "speedup_vs_ngram3": {
+            "ngram2": 0.9941100831810128,
+            "ngram4": 1.0066524452754277
+          },
+          "original_bnb_token_matches": {
+            "ng2": 4,
+            "ng3": 4,
+            "ng4": 4
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "ngram2": 1.0898444412623511,
+        "ngram3": 1.1350638874313748,
+        "ngram4": 1.1498864675601108
+      },
+      "speedup_vs_ngram3": {
+        "ngram2": 0.9601613207241099,
+        "ngram4": 1.0130588069031772
+      },
+      "acceptance_fraction": {
+        "ngram2": 0.379746835443038,
+        "ngram3": 0.4652777777777778,
+        "ngram4": 0.4788732394366197
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_ngram_sweep_HumanEval114_256_v1.json",
+          "speedup_vs_bnb": {
+            "ngram2": 1.0814108637378712,
+            "ngram3": 1.1224311352655543,
+            "ngram4": 1.1381400026358814
+          },
+          "speedup_vs_ngram3": {
+            "ngram2": 0.9634540861894585,
+            "ngram4": 1.0139953952423197
+          },
+          "original_bnb_token_matches": {
+            "ng2": 4,
+            "ng3": 4,
+            "ng4": 4
+          }
+        },
+        {
+          "artifact": "fallback_ngram_sweep_HumanEval114_256_repeat_v1.json",
+          "speedup_vs_bnb": {
+            "ngram2": 1.0983437895611468,
+            "ngram3": 1.1478388188563666,
+            "ngram4": 1.1617541648792094
+          },
+          "speedup_vs_ngram3": {
+            "ngram2": 0.9568798088354133,
+            "ngram4": 1.012123083654469
+          },
+          "original_bnb_token_matches": {
+            "ng2": 4,
+            "ng3": 4,
+            "ng4": 4
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/121",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "ngram2": 1.2410452727326131,
+        "ngram3": 1.2787212153424534,
+        "ngram4": 1.267166727361105
+      },
+      "speedup_vs_ngram3": {
+        "ngram2": 0.9705362340455497,
+        "ngram4": 0.9909640288729751
+      },
+      "acceptance_fraction": {
+        "ngram2": 0.559322033898305,
+        "ngram3": 0.5964912280701754,
+        "ngram4": 0.5964912280701754
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_ngram_sweep_HumanEval121_256_v1.json",
+          "speedup_vs_bnb": {
+            "ngram2": 1.235879613205327,
+            "ngram3": 1.2752906699223674,
+            "ngram4": 1.2634733642628933
+          },
+          "speedup_vs_ngram3": {
+            "ngram2": 0.9690964125696618,
+            "ngram4": 0.9907336374850186
+          },
+          "original_bnb_token_matches": {
+            "ng2": 4,
+            "ng3": 4,
+            "ng4": 4
+          }
+        },
+        {
+          "artifact": "fallback_ngram_sweep_HumanEval121_256_repeat_v1.json",
+          "speedup_vs_bnb": {
+            "ngram2": 1.2462325233906753,
+            "ngram3": 1.2821609889660832,
+            "ngram4": 1.2708708868333132
+          },
+          "speedup_vs_ngram3": {
+            "ngram2": 0.9719781947161096,
+            "ngram4": 0.991194473837584
+          },
+          "original_bnb_token_matches": {
+            "ng2": 4,
+            "ng3": 4,
+            "ng4": 4
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "ngram2": 1.0774617901872863,
+        "ngram3": 1.078395670500383,
+        "ngram4": 1.080185095577291
+      },
+      "speedup_vs_ngram3": {
+        "ngram2": 0.9991340095860516,
+        "ngram4": 1.0016593400046547
+      },
+      "acceptance_fraction": {
+        "ngram2": 0.36470588235294116,
+        "ngram3": 0.375,
+        "ngram4": 0.3855421686746988
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_ngram_sweep_HumanEval123_256_v1.json",
+          "speedup_vs_bnb": {
+            "ngram2": 1.081154723560508,
+            "ngram3": 1.0788912392374475,
+            "ngram4": 1.0924255031088441
+          },
+          "speedup_vs_ngram3": {
+            "ngram2": 1.0020979726600248,
+            "ngram4": 1.0125446044783557
+          },
+          "original_bnb_token_matches": {
+            "ng2": 4,
+            "ng3": 4,
+            "ng4": 4
+          }
+        },
+        {
+          "artifact": "fallback_ngram_sweep_HumanEval123_256_repeat_v1.json",
+          "speedup_vs_bnb": {
+            "ngram2": 1.073781470879935,
+            "ngram3": 1.0779003293936529,
+            "ngram4": 1.0680818393444873
+          },
+          "speedup_vs_ngram3": {
+            "ngram2": 0.996178813196917,
+            "ngram4": 0.9908910965314495
+          },
+          "original_bnb_token_matches": {
+            "ng2": 4,
+            "ng3": 4,
+            "ng4": 4
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "ngram2": 1.0248349906389116,
+        "ngram3": 1.0234211818101813,
+        "ngram4": 1.0235464180150897
+      },
+      "speedup_vs_ngram3": {
+        "ngram2": 1.0013814535538825,
+        "ngram4": 1.0001223701513458
+      },
+      "acceptance_fraction": {
+        "ngram2": 0.33858267716535434,
+        "ngram3": 0.33858267716535434,
+        "ngram4": 0.33858267716535434
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_ngram_sweep_cnndm_004_256_v1.json",
+          "speedup_vs_bnb": {
+            "ngram2": 1.0434238875834707,
+            "ngram3": 1.0515800287668728,
+            "ngram4": 1.051696571878677
+          },
+          "speedup_vs_ngram3": {
+            "ngram2": 0.9922439177615742,
+            "ngram4": 1.0001108266690275
+          },
+          "original_bnb_token_matches": {
+            "ng2": 4,
+            "ng3": 4,
+            "ng4": 4
+          }
+        },
+        {
+          "artifact": "fallback_ngram_sweep_cnndm_004_256_repeat_v1.json",
+          "speedup_vs_bnb": {
+            "ngram2": 1.0065772602449052,
+            "ngram3": 0.9960163627355713,
+            "ngram4": 0.9961497430386003
+          },
+          "speedup_vs_ngram3": {
+            "ngram2": 1.0106031365592514,
+            "ngram4": 1.000133913766901
+          },
+          "original_bnb_token_matches": {
+            "ng2": 4,
+            "ng3": 4,
+            "ng4": 4
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "ngram2": 1.147226295432208,
+        "ngram3": 1.1689999717798287,
+        "ngram4": 1.1707618945253053
+      },
+      "speedup_vs_ngram3": {
+        "ngram2": 0.9813741001939721,
+        "ngram4": 1.0015072051223353
+      },
+      "acceptance_fraction": {
+        "ngram2": 0.5597014925373134,
+        "ngram3": 0.5833333333333334,
+        "ngram4": 0.5833333333333334
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_ngram_sweep_cnndm_003_256_v1.json",
+          "speedup_vs_bnb": {
+            "ngram2": 1.1741858534017882,
+            "ngram3": 1.1961355418632076,
+            "ngram4": 1.1956022907790178
+          },
+          "speedup_vs_ngram3": {
+            "ngram2": 0.9816494973243345,
+            "ngram4": 0.9995541884129959
+          },
+          "original_bnb_token_matches": {
+            "ng2": 4,
+            "ng3": 4,
+            "ng4": 4
+          }
+        },
+        {
+          "artifact": "fallback_ngram_sweep_cnndm_003_256_repeat_v1.json",
+          "speedup_vs_bnb": {
+            "ngram2": 1.120885734671468,
+            "ngram3": 1.1424800001282154,
+            "ngram4": 1.1464375940425697
+          },
+          "speedup_vs_ngram3": {
+            "ngram2": 0.9810987803249739,
+            "ngram4": 1.0034640378071478
+          },
+          "original_bnb_token_matches": {
+            "ng2": 4,
+            "ng3": 4,
+            "ng4": 4
+          }
+        }
+      ]
+    }
+  ],
+  "input_sha256": {
+    "fallback_ngram_sweep_HumanEval112_256_v1.json": "0401670997ca8462aeb4181b51188491c7bc6151a6ffc670449b421c5b6d033e",
+    "fallback_ngram_sweep_HumanEval112_256_repeat_v1.json": "bea2e00e80aa55424c21b8d0184de14356f7e002eca9cc266b72b53ea65e4983",
+    "fallback_ngram_sweep_HumanEval114_256_v1.json": "c5ebd23ab94b587a19542d063d59b0fda7b5693c527732a1d4dc7c680f46ed0d",
+    "fallback_ngram_sweep_HumanEval114_256_repeat_v1.json": "8654ad69aecb23e325cc80bdeffe897aa04c739f57cf1ba6603fdaa8ac482f56",
+    "fallback_ngram_sweep_HumanEval121_256_v1.json": "60ec974334634c902dd126995724cea7f10d861310fbb22aa86792e5467374c1",
+    "fallback_ngram_sweep_HumanEval121_256_repeat_v1.json": "90b1e62fabd6ff2d80b544eb11d235e6ae917b4d4790867448856b949095050b",
+    "fallback_ngram_sweep_HumanEval123_256_v1.json": "56e11d4b09c4b45a5767376ba1268d64cd9808e3310e6f6b98acf8e86c3c719d",
+    "fallback_ngram_sweep_HumanEval123_256_repeat_v1.json": "770ff9111f7a7e6f05ed1ed6a91a1c0043545f4cf2bc76a307d6970335ed29e0",
+    "fallback_ngram_sweep_cnndm_004_256_v1.json": "4800caaf0233535476453920b0d8ee67d6f6c486a86d1b18e828ed750d41e624",
+    "fallback_ngram_sweep_cnndm_004_256_repeat_v1.json": "30e5a896edfbe75f715831b71f4cd8131302fe756299f9cfdd0de5418dd46bce",
+    "fallback_ngram_sweep_cnndm_003_256_v1.json": "957d314873cc5020d996c6de8dcb1013e5ca988ab55c58045f921a59875ab99a",
+    "fallback_ngram_sweep_cnndm_003_256_repeat_v1.json": "f80c2b52a399f9d0a738db55e015ee1b95f5bb9e3b598cc8beae73bc896a48d6"
+  },
+  "manifest_sha256s": [
+    "55355d146021568a9af10803a2a6cc84a91237b5788cea7222ad235c620c0c27",
+    "e7a58fb37155ba13bead7662b574638f77abd8b7657fa9d1638a1d39be31f952"
+  ],
+  "heldout_used": false,
+  "limits": [
+    "Six selected prompts, two processes each, one model and GPU; prompt bootstrap is descriptive.",
+    "Original-BNB comparison is token/latency only; no BNB KV-state identity claim.",
+    "GSM8K held-out indices 300-349 excluded."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_activationvec_ngram_sweep_256_repeats.py",
+  "source_sha256": "20a2020272f7d6f4237e03f0600e004815273debc8c2dac75ef76bf9c67135d4"
+}

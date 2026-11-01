@@ -1,0 +1,257 @@
+{
+  "status": "gated development memory telemetry; per-method peaks after model load",
+  "measurement_semantics": {
+    "peak_allocated_bytes": "maximum live tensor allocation observed during method call, including model weights",
+    "incremental_peak_allocated_bytes": "peak allocated minus allocated baseline immediately before method call",
+    "reserved": "CUDA caching allocator pool; may remain cached and is not a live tensor-byte measure"
+  },
+  "full_length_prompt_count": 2,
+  "full_length_process_count": 4,
+  "full_length_timing_round_count": 8,
+  "all_full_length_runs_exact_to_optimized_b1": true,
+  "full_length_incremental_peak_allocated_bytes_range_by_method": {
+    "optimized_b1_block": {
+      "min": 41634304,
+      "max": 125380096
+    },
+    "optimized_b1_singleton": {
+      "min": 41026048,
+      "max": 124742144
+    },
+    "original_bnb_greedy": {
+      "min": 101059072,
+      "max": 175378432
+    }
+  },
+  "prompt_peak_values_mb": {
+    "HumanEval/114": {
+      "optimized_b1_block": [
+        41.634,
+        41.634
+      ],
+      "optimized_b1_singleton": [
+        41.026,
+        41.026
+      ],
+      "original_bnb_greedy": [
+        101.059,
+        101.059
+      ]
+    },
+    "HumanEval/115": {
+      "optimized_b1_block": [
+        125.38,
+        125.38
+      ],
+      "optimized_b1_singleton": [
+        124.742,
+        124.742
+      ],
+      "original_bnb_greedy": [
+        175.378,
+        175.378
+      ]
+    }
+  },
+  "runs": [
+    {
+      "artifact": "memory_telemetry_humaneval114_256_s30_v1.json",
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 256,
+      "process_session": 30,
+      "token_kv_exact_to_b1": true,
+      "paired_rounds": 2,
+      "methods": {
+        "optimized_b1_block": {
+          "baseline_allocated_bytes": 2074559488,
+          "peak_allocated_bytes": 2116193792,
+          "incremental_peak_allocated_bytes": 41634304,
+          "baseline_reserved_bytes": 2206203904,
+          "peak_reserved_bytes": 2206203904,
+          "incremental_peak_reserved_bytes": 0
+        },
+        "optimized_b1_singleton": {
+          "baseline_allocated_bytes": 2074559488,
+          "peak_allocated_bytes": 2115585536,
+          "incremental_peak_allocated_bytes": 41026048,
+          "baseline_reserved_bytes": 2206203904,
+          "peak_reserved_bytes": 2206203904,
+          "incremental_peak_reserved_bytes": 0
+        },
+        "original_bnb_greedy": {
+          "baseline_allocated_bytes": 2074559488,
+          "peak_allocated_bytes": 2175618560,
+          "incremental_peak_allocated_bytes": 101059072,
+          "baseline_reserved_bytes": 2206203904,
+          "peak_reserved_bytes": 2206203904,
+          "incremental_peak_reserved_bytes": 0
+        }
+      },
+      "input_prompt_characters": 236,
+      "input_prompt_tokens": 83
+    },
+    {
+      "artifact": "memory_telemetry_humaneval114_256_s31_v1.json",
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 256,
+      "process_session": 31,
+      "token_kv_exact_to_b1": true,
+      "paired_rounds": 2,
+      "methods": {
+        "optimized_b1_block": {
+          "baseline_allocated_bytes": 2074559488,
+          "peak_allocated_bytes": 2116193792,
+          "incremental_peak_allocated_bytes": 41634304,
+          "baseline_reserved_bytes": 2206203904,
+          "peak_reserved_bytes": 2206203904,
+          "incremental_peak_reserved_bytes": 0
+        },
+        "optimized_b1_singleton": {
+          "baseline_allocated_bytes": 2074559488,
+          "peak_allocated_bytes": 2115585536,
+          "incremental_peak_allocated_bytes": 41026048,
+          "baseline_reserved_bytes": 2206203904,
+          "peak_reserved_bytes": 2206203904,
+          "incremental_peak_reserved_bytes": 0
+        },
+        "original_bnb_greedy": {
+          "baseline_allocated_bytes": 2074559488,
+          "peak_allocated_bytes": 2175618560,
+          "incremental_peak_allocated_bytes": 101059072,
+          "baseline_reserved_bytes": 2206203904,
+          "peak_reserved_bytes": 2206203904,
+          "incremental_peak_reserved_bytes": 0
+        }
+      },
+      "input_prompt_characters": 236,
+      "input_prompt_tokens": 83
+    },
+    {
+      "artifact": "memory_telemetry_humaneval115_256_s32_v1.json",
+      "prompt_id": "HumanEval/115",
+      "max_new_tokens": 256,
+      "process_session": 32,
+      "token_kv_exact_to_b1": true,
+      "paired_rounds": 2,
+      "methods": {
+        "optimized_b1_block": {
+          "baseline_allocated_bytes": 2074561536,
+          "peak_allocated_bytes": 2199941632,
+          "incremental_peak_allocated_bytes": 125380096,
+          "baseline_reserved_bytes": 2348810240,
+          "peak_reserved_bytes": 2348810240,
+          "incremental_peak_reserved_bytes": 0
+        },
+        "optimized_b1_singleton": {
+          "baseline_allocated_bytes": 2074561536,
+          "peak_allocated_bytes": 2199303680,
+          "incremental_peak_allocated_bytes": 124742144,
+          "baseline_reserved_bytes": 2348810240,
+          "peak_reserved_bytes": 2348810240,
+          "incremental_peak_reserved_bytes": 0
+        },
+        "original_bnb_greedy": {
+          "baseline_allocated_bytes": 2074561536,
+          "peak_allocated_bytes": 2249939968,
+          "incremental_peak_allocated_bytes": 175378432,
+          "baseline_reserved_bytes": 2348810240,
+          "peak_reserved_bytes": 2348810240,
+          "incremental_peak_reserved_bytes": 0
+        }
+      },
+      "input_prompt_characters": 1050,
+      "input_prompt_tokens": 321
+    },
+    {
+      "artifact": "memory_telemetry_humaneval115_256_s33_v1.json",
+      "prompt_id": "HumanEval/115",
+      "max_new_tokens": 256,
+      "process_session": 33,
+      "token_kv_exact_to_b1": true,
+      "paired_rounds": 2,
+      "methods": {
+        "optimized_b1_block": {
+          "baseline_allocated_bytes": 2074561536,
+          "peak_allocated_bytes": 2199941632,
+          "incremental_peak_allocated_bytes": 125380096,
+          "baseline_reserved_bytes": 2348810240,
+          "peak_reserved_bytes": 2348810240,
+          "incremental_peak_reserved_bytes": 0
+        },
+        "optimized_b1_singleton": {
+          "baseline_allocated_bytes": 2074561536,
+          "peak_allocated_bytes": 2199303680,
+          "incremental_peak_allocated_bytes": 124742144,
+          "baseline_reserved_bytes": 2348810240,
+          "peak_reserved_bytes": 2348810240,
+          "incremental_peak_reserved_bytes": 0
+        },
+        "original_bnb_greedy": {
+          "baseline_allocated_bytes": 2074561536,
+          "peak_allocated_bytes": 2249939968,
+          "incremental_peak_allocated_bytes": 175378432,
+          "baseline_reserved_bytes": 2348810240,
+          "peak_reserved_bytes": 2348810240,
+          "incremental_peak_reserved_bytes": 0
+        }
+      },
+      "input_prompt_characters": 1050,
+      "input_prompt_tokens": 321
+    },
+    {
+      "artifact": "memory_telemetry_smoke_humaneval115_8_s29.json",
+      "prompt_id": "HumanEval/115",
+      "max_new_tokens": 8,
+      "process_session": 29,
+      "token_kv_exact_to_b1": true,
+      "paired_rounds": 1,
+      "methods": {
+        "optimized_b1_block": {
+          "baseline_allocated_bytes": 2074561536,
+          "peak_allocated_bytes": 2189130752,
+          "incremental_peak_allocated_bytes": 114569216,
+          "baseline_reserved_bytes": 2348810240,
+          "peak_reserved_bytes": 2348810240,
+          "incremental_peak_reserved_bytes": 0
+        },
+        "optimized_b1_singleton": {
+          "baseline_allocated_bytes": 2074561536,
+          "peak_allocated_bytes": 2188522496,
+          "incremental_peak_allocated_bytes": 113960960,
+          "baseline_reserved_bytes": 2348810240,
+          "peak_reserved_bytes": 2348810240,
+          "incremental_peak_reserved_bytes": 0
+        },
+        "original_bnb_greedy": {
+          "baseline_allocated_bytes": 2074561536,
+          "peak_allocated_bytes": 2249939968,
+          "incremental_peak_allocated_bytes": 175378432,
+          "baseline_reserved_bytes": 2348810240,
+          "peak_reserved_bytes": 2348810240,
+          "incremental_peak_reserved_bytes": 0
+        }
+      },
+      "input_prompt_characters": 1050,
+      "input_prompt_tokens": 321
+    }
+  ],
+  "limitations": [
+    "Four full-length process runs across two prompts, plus one 8-token smoke.",
+    "Two independent processes per full-length prompt reproduced the same allocator peaks on this setup.",
+    "Peak varies materially by prompt; prompt length/activation causes were not isolated.",
+    "Reserved allocator memory remained cached; these measurements are not a universal device VRAM bound."
+  ],
+  "prompt_length_comparison": {
+    "tokenizer": "Qwen/Qwen2.5-3B-Instruct@aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "counting": "same default tokenizer settings as runner; confirmed equal to add_special_tokens=False for both prompts",
+    "HumanEval/114": {
+      "characters": 236,
+      "input_tokens": 83
+    },
+    "HumanEval/115": {
+      "characters": 1050,
+      "input_tokens": 321
+    },
+    "observation": "The longer prompt is associated with higher incremental peaks in these two observations; prompt length, content, and other input effects are confounded, so this is not a causal attribution."
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schema": "zassd-nf4-fixed-three-rows-closed-loop-256-summary-v1",
+  "scope": "K2/R3 development-only fixed-three-row block verification; two prompts, one process per prompt, two paired timing rounds each",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "generated_tokens": 256,
+  "profiles": {
+    "HumanEval/112": {
+      "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/closed_loop_humaneval112_256_s3.json",
+      "session": 3,
+      "all_256_tokens_and_states_match_b1": true,
+      "shared_state_prefixes": 256,
+      "paired_timing_rounds": 2,
+      "geomean_speedup_vs_b1_singleton": 2.0244310841495143,
+      "geomean_speedup_vs_original_bnb": 1.8407457508958485,
+      "bnb_token_match_rounds": 0,
+      "accepted_draft_tokens": 332,
+      "proposed_draft_tokens": 336
+    },
+    "HumanEval/114": {
+      "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/closed_loop_humaneval114_256_s2.json",
+      "session": 2,
+      "all_256_tokens_and_states_match_b1": true,
+      "shared_state_prefixes": 256,
+      "paired_timing_rounds": 2,
+      "geomean_speedup_vs_b1_singleton": 1.2073887775034164,
+      "geomean_speedup_vs_original_bnb": 1.0846691247252027,
+      "bnb_token_match_rounds": 0,
+      "accepted_draft_tokens": 134,
+      "proposed_draft_tokens": 288
+    }
+  },
+  "aggregate": {
+    "all_runs_match_b1_tokens_and_state": true,
+    "shared_state_prefixes": 512,
+    "paired_timing_rounds": 4,
+    "geomean_speedup_vs_b1_singleton": 1.5634178494027748,
+    "descriptive_paired_log_t_95_ci_vs_b1": [
+      0.9720133206188235,
+      2.514652134885427
+    ],
+    "geomean_speedup_vs_original_bnb": 1.4130109987066044,
+    "descriptive_paired_log_t_95_ci_vs_bnb": [
+      0.8686576918520746,
+      2.298488922844697
+    ],
+    "bnb_token_match_rounds": 0,
+    "acceptance": {
+      "accepted_draft_tokens": 466,
+      "proposed_draft_tokens": 624
+    }
+  },
+  "limits": [
+    "Only two development prompts, one process session per prompt, and one RTX 4050.",
+    "Intervals are descriptive across four paired rounds nested in two prompts.",
+    "No held-out GSM8K data used."
+  ]
+}

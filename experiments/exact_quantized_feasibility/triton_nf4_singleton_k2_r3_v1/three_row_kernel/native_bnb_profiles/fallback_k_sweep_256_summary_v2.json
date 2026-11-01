@@ -1,0 +1,357 @@
+{
+  "schema": "zassd-fallback-k-sweep-summary-256-repeat-v1",
+  "classification": "six selected development prompts; two independent processes and eight paired rounds per prompt",
+  "scope": "Qwen2.5-3B-Instruct NF4, RTX 4050 Laptop GPU, 256 tokens, physical_rows=3, native BNB fallback on every empty-proposal cycle",
+  "ratio_definition": "speedup = baseline latency / candidate latency; >1 means candidate faster",
+  "prompt_count": 6,
+  "independent_processes": 12,
+  "timing_rounds_per_k": 48,
+  "all_k_values_exact_to_b1_tokens_and_kv": true,
+  "timed_candidate_tokens_match_b1": true,
+  "original_bnb_token_matches_per_k": {
+    "k1_fallback_all": 48,
+    "k2_fallback_all": 48
+  },
+  "aggregate_speedup_vs_bnb": {
+    "k1_fallback_all": {
+      "geomean_across_prompts": 1.0113989674314372,
+      "prompt_cluster_bootstrap_95pct": [
+        0.97419303021442,
+        1.0502744850561558
+      ],
+      "prompt_min": 0.9490226339962393,
+      "prompt_max": 1.0762442774161884,
+      "prompts_faster_than_bnb": 3
+    },
+    "k2_fallback_all": {
+      "geomean_across_prompts": 1.152093091044495,
+      "prompt_cluster_bootstrap_95pct": [
+        1.0563765690954174,
+        1.2653461933642527
+      ],
+      "prompt_min": 1.0184489761579205,
+      "prompt_max": 1.3844579906080061,
+      "prompts_faster_than_bnb": 6
+    }
+  },
+  "k2_speedup_over_k1": {
+    "geomean_across_prompts": 1.139108431137088,
+    "prompt_cluster_bootstrap_95pct": [
+      1.0839240013504936,
+      1.2052890991991771
+    ],
+    "prompt_min": 1.04543369275746,
+    "prompt_max": 1.286378956580161,
+    "prompts_k2_faster": 6
+  },
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/112",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "k1_fallback_all": 1.0762442774161884,
+        "k2_fallback_all": 1.3844579906080061
+      },
+      "k2_speedup_over_k1": 1.286378956580161,
+      "acceptance_fraction": {
+        "k1": 0.7593984962406015,
+        "k2": 0.7098445595854922
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_k_sweep_HumanEval112_256_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.0803450576253653,
+            "k2_fallback_all": 1.3812888916824468
+          },
+          "k2_speedup_over_k1": 1.2785626980314664,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 22,
+            "k2": 22
+          }
+        },
+        {
+          "artifact": "fallback_k_sweep_HumanEval112_256_rep2_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.0721590629729725,
+            "k2_fallback_all": 1.3876343604151746
+          },
+          "k2_speedup_over_k1": 1.294242998391886,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 22,
+            "k2": 22
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "k1_fallback_all": 0.9753900923001431,
+        "k2_fallback_all": 1.0722339262346003
+      },
+      "k2_speedup_over_k1": 1.0992872848503947,
+      "acceptance_fraction": {
+        "k1": 0.5977011494252874,
+        "k2": 0.4652777777777778
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_k_sweep_HumanEval114_256_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 0.9841055113442536,
+            "k2_fallback_all": 1.069011176798294
+          },
+          "k2_speedup_over_k1": 1.0862769941589516,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 116,
+            "k2": 116
+          }
+        },
+        {
+          "artifact": "fallback_k_sweep_HumanEval114_256_rep2_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 0.9667518586068296,
+            "k2_fallback_all": 1.0754663912979783
+          },
+          "k2_speedup_over_k1": 1.1124533992081642,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 116,
+            "k2": 116
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/121",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "k1_fallback_all": 1.0756560522578267,
+        "k2_fallback_all": 1.2820105746372341
+      },
+      "k2_speedup_over_k1": 1.191840618519521,
+      "acceptance_fraction": {
+        "k1": 0.7,
+        "k2": 0.5964912280701754
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_k_sweep_HumanEval121_256_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.0497494268066347,
+            "k2_fallback_all": 1.2971668245475863
+          },
+          "k2_speedup_over_k1": 1.2356918626701245,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 68,
+            "k2": 68
+          }
+        },
+        {
+          "artifact": "fallback_k_sweep_HumanEval121_256_rep2_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.1022020238473726,
+            "k2_fallback_all": 1.2670314121353774
+          },
+          "k2_speedup_over_k1": 1.149545532236139,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 68,
+            "k2": 68
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "k1_fallback_all": 0.9490226339962393,
+        "k2_fallback_all": 1.0356648559129153
+      },
+      "k2_speedup_over_k1": 1.0912962650340954,
+      "acceptance_fraction": {
+        "k1": 0.47474747474747475,
+        "k2": 0.375
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_k_sweep_HumanEval123_256_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 0.9145551457154699,
+            "k2_fallback_all": 0.9931086006498233
+          },
+          "k2_speedup_over_k1": 1.085892529611104,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 109,
+            "k2": 109
+          }
+        },
+        {
+          "artifact": "fallback_k_sweep_HumanEval123_256_rep2_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 0.9847891229484835,
+            "k2_fallback_all": 1.0800447132078823
+          },
+          "k2_speedup_over_k1": 1.096726891107612,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 109,
+            "k2": 109
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "k1_fallback_all": 0.9741880171009566,
+        "k2_fallback_all": 1.0184489761579205
+      },
+      "k2_speedup_over_k1": 1.04543369275746,
+      "acceptance_fraction": {
+        "k1": 0.4657534246575342,
+        "k2": 0.33858267716535434
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_k_sweep_cnndm_004_256_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 0.9564173496863629,
+            "k2_fallback_all": 0.9876846868309399
+          },
+          "k2_speedup_over_k1": 1.0326921475805833,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 148,
+            "k2": 148
+          }
+        },
+        {
+          "artifact": "fallback_k_sweep_cnndm_004_256_rep2_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 0.9922888715625162,
+            "k2_fallback_all": 1.0501715080398515
+          },
+          "k2_speedup_over_k1": 1.0583324454563214,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 148,
+            "k2": 148
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "k1_fallback_all": 1.0253049676558192,
+        "k2_fallback_all": 1.164946508326702
+      },
+      "k2_speedup_over_k1": 1.1361951273777096,
+      "acceptance_fraction": {
+        "k1": 0.6627906976744186,
+        "k2": 0.5833333333333334
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_k_sweep_cnndm_003_256_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 0.9970659242559967,
+            "k2_fallback_all": 1.1270288842565575
+          },
+          "k2_speedup_over_k1": 1.1303454032866864,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 112,
+            "k2": 112
+          }
+        },
+        {
+          "artifact": "fallback_k_sweep_cnndm_003_256_rep2_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.0543438012728554,
+            "k2_fallback_all": 1.2041398283751918
+          },
+          "k2_speedup_over_k1": 1.1420751247567398,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 112,
+            "k2": 112
+          }
+        }
+      ]
+    }
+  ],
+  "input_sha256": {
+    "fallback_k_sweep_HumanEval112_256_v1.json": "d2a6c0084514e502fbff5c93139bc8c1982de3985c691eaaf7b6bfabe73c1cd8",
+    "fallback_k_sweep_HumanEval112_256_rep2_v1.json": "151c49104ec85f4fb3e03805a6e7c0999ee1375b7058a05750c1f92be83f76bd",
+    "fallback_k_sweep_HumanEval114_256_v1.json": "eaa432d352cbed2fa5d2721b59dd0b17ab5e9d0a67ae276f11ad3225e2cb70ee",
+    "fallback_k_sweep_HumanEval114_256_rep2_v1.json": "b961256657aedb7700dccbdb8ce98a2a48119717a272d5654275038c0329807f",
+    "fallback_k_sweep_HumanEval121_256_v1.json": "550dd7e6bd4a8564dfe2b4663a1dc7c85c607a634fe6344c1533c94f7f73e360",
+    "fallback_k_sweep_HumanEval121_256_rep2_v1.json": "f81a70691bcf7c16b2738271f99c7cfdf2c413dca34dc4c76f3023d0dfbb7dcc",
+    "fallback_k_sweep_HumanEval123_256_v1.json": "d20cdbb6e0e59421452d62fc281f97e6f9814952d166290b302f32388e6d2226",
+    "fallback_k_sweep_HumanEval123_256_rep2_v1.json": "457114d6bb45099612d26b06f543eca23727201d9c75d5a6002a8eeee6dce486",
+    "fallback_k_sweep_cnndm_004_256_v1.json": "ae2e7521f533f46d7fce2220db886a860ece6102b20bb512f1f1b949126a2fc7",
+    "fallback_k_sweep_cnndm_004_256_rep2_v1.json": "e5b69a5920b241393e5029eb2b4f09387c5f9daa0b827196d8de142f3572aaa5",
+    "fallback_k_sweep_cnndm_003_256_v1.json": "e365a1d7a4ef8106fb8994c2789eae66257c2a337fda78d25b27ff1d90084b87",
+    "fallback_k_sweep_cnndm_003_256_rep2_v1.json": "fe5c4b2ce6fe98f465ca2903c2c1f479b06919577b06ad505f0d50f95b90d607"
+  },
+  "manifest_sha256s": [
+    "333c1144584166b3882623b89a25e412b8cebf1258dfedf9f77de3ffc695d43e",
+    "b9fd32148c9fd2cc4a125a1ff33d95c6ab214df31b44ef4f5712b33660e73564"
+  ],
+  "heldout_used": false,
+  "limits": [
+    "Six selected prompts, two processes per prompt, one model and GPU; prompt-cluster bootstrap is descriptive.",
+    "Original-BNB comparison is token/latency only; no original-BNB KV-state identity claim.",
+    "GSM8K held-out indices 300-349 excluded."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_activationvec_k_sweep_256_repeats.py",
+  "source_sha256": "b81b188e64e451fbc55618c7bea544512067cde93098197c1f0a9e0d3b32e01a"
+}

@@ -1,0 +1,32 @@
+{
+  "status": "one-session tuning screen; B2 incompatible at physical_rows=5",
+  "k": 4,
+  "physical_rows": 5,
+  "attention_strategy": "bnb_rowwise",
+  "max_new_tokens": 256,
+  "n_prompts": 3,
+  "b1_token_exact": 3,
+  "bnb_token_exact": 0,
+  "b1_shared_kv_prefixes": 768,
+  "all_b1_kv_exact": true,
+  "first_bnb_token_divergence": {
+    "cnndm_000": 56,
+    "cnndm_001": 45,
+    "cnndm_002": 183
+  },
+  "forced_bnb_singleton_first_logit_drift": {
+    "cnndm_000": 1,
+    "cnndm_001": 1,
+    "cnndm_002": 1
+  },
+  "first_module_output_difference": {
+    "cnndm_000": "model.layers.0.self_attn.q_proj",
+    "cnndm_001": "model.layers.0.self_attn.q_proj",
+    "cnndm_002": "model.layers.0.self_attn.q_proj"
+  },
+  "latency_geomean": {
+    "block_speedup_vs_b1": 1.2510725956481101,
+    "block_speedup_vs_original": 0.8178577818824458
+  },
+  "conclusion": "Reject K4/R5 for current B2 schedule: padding singleton quantized linear calls to M=5 changes q_proj output on the first decode step. B1 block remains exact to its own singleton but is slower than original BNB."
+}

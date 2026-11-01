@@ -1,0 +1,53 @@
+{
+  "schema": "zassd-activationvec-allrows-variant-comparison-v1",
+  "classification": "two-prompt development pilot; each profile has three paired rounds",
+  "variant": "M=1/2 inputs zero-padded to physical M=3, dispatched to the same Triton NF4 kernel, then cropped to real rows",
+  "all_variant_runs_exact_to_singleton": true,
+  "prompt_count": 2,
+  "rows": [
+    {
+      "prompt_id": "HumanEval/116",
+      "max_new_tokens": 64,
+      "standard_artifact": "activationvec_closed_loop_humaneval116_64_s1_v1.json",
+      "allrows_artifact": "activationvec_allrows_humaneval116_64_s1_v1.json",
+      "allrows_matches_b1_singleton_tokens": true,
+      "allrows_kv_prefixes_equal": true,
+      "allrows_cache_lengths_equal": true,
+      "draft_tokens": 32,
+      "accepted_draft_tokens": 28,
+      "standard_speedup_vs_singleton": 1.5335409331450969,
+      "allrows_speedup_vs_singleton": 1.5070045211864764,
+      "standard_speedup_vs_original_bnb": 1.2752243404012642,
+      "allrows_speedup_vs_original_bnb": 1.2715303462246716,
+      "original_bnb_token_matches": 3,
+      "paired_rounds": 3
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "max_new_tokens": 64,
+      "standard_artifact": "activationvec_closed_loop_humaneval123_64_s1_v1.json",
+      "allrows_artifact": "activationvec_allrows_humaneval123_64_s1_v1.json",
+      "allrows_matches_b1_singleton_tokens": true,
+      "allrows_kv_prefixes_equal": true,
+      "allrows_cache_lengths_equal": true,
+      "draft_tokens": 26,
+      "accepted_draft_tokens": 2,
+      "standard_speedup_vs_singleton": 0.9946887465118448,
+      "allrows_speedup_vs_singleton": 0.958915410589779,
+      "standard_speedup_vs_original_bnb": 0.8129849478264785,
+      "allrows_speedup_vs_original_bnb": 0.8083032556856025,
+      "original_bnb_token_matches": 3,
+      "paired_rounds": 3
+    }
+  ],
+  "interpretation": "Finite exactness passed on both prompts. The pilot shows no clear incremental speed gain from extending Triton to singleton calls: /116 is close to its prior M3-block timing, while /123 is slightly slower; process/prompt sample is too small to infer a reliable difference.",
+  "scope_limits": [
+    "One process per prompt, three paired rounds each, same GPU.",
+    "Timing is compared with earlier standard-variant runs, not a same-process A/B; treat small deltas as inconclusive.",
+    "No original-BNB state equivalence claim; held-out GSM8K indices 300-349 unused."
+  ],
+  "manifest": "activationvec_allrows_manifest.json",
+  "manifest_sha256": "ccc808650fe00471768fdd18a5e75839d77498d56d1c914436b8d18c36766d64",
+  "source": "scripts/benchmark_bnb_nf4_activationvec_allrows_closed_loop.py",
+  "source_sha256": "f3bf5c562b42e38e0801e7f8790c03680acf4fa2f59cfc68c8eaa7d5cb4d9dbc"
+}

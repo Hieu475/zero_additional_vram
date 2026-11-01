@@ -1,0 +1,192 @@
+{
+  "classification": "single forced decode transition module trace; empirical diagnostic, not proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "quantized_linear_strategy": "triton_nf4_fixed_three_rows_group_scale_packed",
+  "attention_strategy": "triton_batched + fixed_row_sdpa_decode(block_k=32)",
+  "details": [
+    {
+      "prompt_id": "HumanEval/112",
+      "forced_bnb_token_index": 0,
+      "forced_token_id": 262,
+      "prefill_logits_equal": true,
+      "first_module_differences": [
+        {
+          "module": "model.layers.0.self_attn.o_proj",
+          "difference": "input",
+          "reference": "022ecdf47121b1204880f04f50006e4e06915d5a3a6d3f3af37dae45760a3f1a",
+          "fixed_three_row": "d1fbf94f967091e5effac7bfbebfde2df60c6beb6d004044ea7f92abdbcacfa7",
+          "tensor_shape": [
+            1,
+            1,
+            2048
+          ],
+          "tensor_dtype": "torch.bfloat16",
+          "tensor_max_abs_diff": 0.001953125,
+          "tensor_bitwise_equal": false
+        },
+        {
+          "module": "model.layers.0.self_attn.o_proj",
+          "difference": "output",
+          "reference": "1855f7aaacb796244e1a9f301e2342036da2ea12d1611f546923424c51bd84fb",
+          "fixed_three_row": "0b4f1f4f3bd703c7adbdf8bffa51599ea0a8daadfa2085da4547d73e0b3876ec"
+        },
+        {
+          "module": "model.layers.0.post_attention_layernorm",
+          "difference": "input",
+          "reference": "e933a22cf59a828bccac57ae59e75cb9884a0425980e10f47e82af8533509ff6",
+          "fixed_three_row": "41256953646ea83ddf36ee126f2271e61d316aa07006a97cd500d39bf1396faf"
+        },
+        {
+          "module": "model.layers.0.post_attention_layernorm",
+          "difference": "output",
+          "reference": "ef0e7c6a3074f57a16dfd31f3fbcff147d7e4ed594597ff0016a08f7243f6a7e",
+          "fixed_three_row": "6c2151367f9af31c2ee2a2a3cc20b1401b8cefe134bf12dc6c56faf3f49e2ec5"
+        },
+        {
+          "module": "model.layers.0.mlp.gate_proj",
+          "difference": "input",
+          "reference": "78bfd02bd6c49f93936ebabc0949e2a08f562019f3ce19189584f77bd0a80933",
+          "fixed_three_row": "643ddb201ad664b337973b5fd089b9959eae7a0f3ac2f151a2a2af768b30ef3a"
+        },
+        {
+          "module": "model.layers.0.mlp.gate_proj",
+          "difference": "output",
+          "reference": "7c410bd4fb1c50208966ef8ed46901c21b9d3df4af41487c2faaa5b7972630ab",
+          "fixed_three_row": "769aac18ed0a2c7a6bd972a4114dba8c355b96e65d9704cf468aa4d47e082599"
+        },
+        {
+          "module": "model.layers.0.mlp.act_fn",
+          "difference": "input",
+          "reference": "56f6eff11de457f978a622abc3fe800c209b886c5f7b4c6bb075bb4c8f3e5e5b",
+          "fixed_three_row": "85bcc00e14cb2e5fc973ff40ec6b6b016d2c619e4df5dcde0c15c149dc2a4499"
+        },
+        {
+          "module": "model.layers.0.mlp.act_fn",
+          "difference": "output",
+          "reference": "9a6f49d0efc35069a2649c0cf0bb047ab7cb1371463950efb19a1edacb0b2fb0",
+          "fixed_three_row": "916746208cdf211ab0a817579fe168a824b259e850e937eb12ae264279bfc004"
+        },
+        {
+          "module": "model.layers.0.mlp.up_proj",
+          "difference": "input",
+          "reference": "78bfd02bd6c49f93936ebabc0949e2a08f562019f3ce19189584f77bd0a80933",
+          "fixed_three_row": "643ddb201ad664b337973b5fd089b9959eae7a0f3ac2f151a2a2af768b30ef3a"
+        },
+        {
+          "module": "model.layers.0.mlp.up_proj",
+          "difference": "output",
+          "reference": "5ed4b000c8237c2aa8930f2148621b9f96ecb222071e2023fc54b0c20a5c3d34",
+          "fixed_three_row": "d96a030a6de2e34cbfd2e05a0d0382bd790cc71bbe325f1f6ec10d1ce3e26f3f"
+        },
+        {
+          "module": "model.layers.0.mlp.down_proj",
+          "difference": "input",
+          "reference": "acf5817ee90b2291b4bccc7b96627d476a85c1cdf19d15cb8f2fac3eb7b30dbe",
+          "fixed_three_row": "540b33e2eeed59e5af77cd81e9a12afb57c6fe045093554f7d082621edcbc2c0"
+        },
+        {
+          "module": "model.layers.0.mlp.down_proj",
+          "difference": "output",
+          "reference": "e4491b8159d9bd8d162e0efcfe8296a94250b68fcac12cba0d192b0237818c99",
+          "fixed_three_row": "0334d5ca502ea5ed15ca55ad8f82989b7b6ddfbd9b49fdf2a96ae8c76008ed53"
+        }
+      ],
+      "total_module_input_output_differences": 716,
+      "logits_equal_after_transition": false,
+      "logits_max_abs_diff": 0.125
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "forced_bnb_token_index": 0,
+      "forced_token_id": 362,
+      "prefill_logits_equal": true,
+      "first_module_differences": [
+        {
+          "module": "model.layers.0.self_attn.o_proj",
+          "difference": "input",
+          "reference": "165f29cb363e16cfe0a56d80cadbb61f72f365af47c839a8ba34e6f291fbd2fd",
+          "fixed_three_row": "4936206b63447bbda620798392c88975014c6938023e1fdb6786cefab35a9fed",
+          "tensor_shape": [
+            1,
+            1,
+            2048
+          ],
+          "tensor_dtype": "torch.bfloat16",
+          "tensor_max_abs_diff": 0.00390625,
+          "tensor_bitwise_equal": false
+        },
+        {
+          "module": "model.layers.0.self_attn.o_proj",
+          "difference": "output",
+          "reference": "9712e88dd704379a1f297451084fc5fc9a3bf84e0ec6c18fd3333d1344a198e9",
+          "fixed_three_row": "482653975c459414e3fb8bdc6694635c4766fe22d33e38673d73574c251b7f9d"
+        },
+        {
+          "module": "model.layers.0.post_attention_layernorm",
+          "difference": "input",
+          "reference": "25e423b96f186794b0b75a9d1cb799133d712de8d1b4396f3f6e36fe88ba7f6b",
+          "fixed_three_row": "a790dd32cdb779e5b83e725b7b6263e79204bce6bd276a4fd2a1f1978281cd7e"
+        },
+        {
+          "module": "model.layers.0.post_attention_layernorm",
+          "difference": "output",
+          "reference": "bb30feb4c76ba9e77c6bc0144a3062425191d38e13d50666531e1cdc5498bab9",
+          "fixed_three_row": "7249f15d3abbfa6a4410564d59bdb56a20309d5c4fe35d4e367fd3a4c479b78c"
+        },
+        {
+          "module": "model.layers.0.mlp.gate_proj",
+          "difference": "input",
+          "reference": "b1c877fbf27f07076ab29ea412e97c88445aaa65f7566474f2cda8ad56a6ec82",
+          "fixed_three_row": "af1fe7b796690d54b0741ce554b782d22f23600ab9b139f65b674189c481deb7"
+        },
+        {
+          "module": "model.layers.0.mlp.gate_proj",
+          "difference": "output",
+          "reference": "b9c661a664f8f6769be8e11e4d7813817d37e4c72eca871859e5837ce659c7bb",
+          "fixed_three_row": "8a8690d81774e8cd9140da3c3d9e25eb74c7795af74cebc29b4ac325427d55d2"
+        },
+        {
+          "module": "model.layers.0.mlp.act_fn",
+          "difference": "input",
+          "reference": "7038471670382a1ecbd591af661f703ee2e64b9e36f234dcb860cd2ff8030a6e",
+          "fixed_three_row": "1f3da37fe63d802dada10dd91b21e9bf30f047bb097cb405833d0060abd002e7"
+        },
+        {
+          "module": "model.layers.0.mlp.act_fn",
+          "difference": "output",
+          "reference": "4453fb911298b8a3d1aeff3e6e59308311484c9458121d6e98fd95bdb905feb4",
+          "fixed_three_row": "e9fc037b48f9309d3561d56848daaf462265d24b63c4a40cff51065fdde09892"
+        },
+        {
+          "module": "model.layers.0.mlp.up_proj",
+          "difference": "input",
+          "reference": "b1c877fbf27f07076ab29ea412e97c88445aaa65f7566474f2cda8ad56a6ec82",
+          "fixed_three_row": "af1fe7b796690d54b0741ce554b782d22f23600ab9b139f65b674189c481deb7"
+        },
+        {
+          "module": "model.layers.0.mlp.up_proj",
+          "difference": "output",
+          "reference": "ecf2c5cde26b39e5d364d5af5a238af012f92373c0c5d0d0bcd1d90e788c11ad",
+          "fixed_three_row": "1c41fac09f34b328d31f487a312633c9b8989e6bc727016560186be6f8f8f6ed"
+        },
+        {
+          "module": "model.layers.0.mlp.down_proj",
+          "difference": "input",
+          "reference": "6915ae8c3311fac937bf9ac0cf1b0a05c052392aec92592a351a278151002060",
+          "fixed_three_row": "4a207f33f8966a42eddce1695d6f8de043b7a36ae8d16e7f6e6ce94a59790ee3"
+        },
+        {
+          "module": "model.layers.0.mlp.down_proj",
+          "difference": "output",
+          "reference": "54c8b75366dfe72ed5c55ecf062f7cd9709e336d1db2d586f226577191fff8f9",
+          "fixed_three_row": "0d0b9a0caf719b658d524324e453bf15f2ae307ed42deba86737752949c5077b"
+        }
+      ],
+      "total_module_input_output_differences": 716,
+      "logits_equal_after_transition": false,
+      "logits_max_abs_diff": 0.1875
+    }
+  ]
+}

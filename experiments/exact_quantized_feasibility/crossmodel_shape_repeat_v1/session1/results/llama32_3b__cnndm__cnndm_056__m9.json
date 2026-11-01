@@ -1,0 +1,91 @@
+{
+  "status": "completed",
+  "scope": "single-prefix shape diagnostic; not full-sequence exactness or a universal guarantee",
+  "protocol_sha256": "9f833c6baff42e8edcac90ab629499af308e8cc47598a8975140f1f1fa3a60a2",
+  "cohort_sha256": "01610458c693cb12d715bb0474ede6d354e1dee33c599d2cc08e7d805546ff08",
+  "model": "unsloth/Llama-3.2-3B-Instruct",
+  "revision": "006f5dcd1393c3add266de40994ba96225e9689d",
+  "family": "Llama",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "cnndm_056",
+  "task": "cnndm",
+  "prompt_sha256": "4d4b66ada51bba86f5bfbdceca3ab6239329a35316a430ad9cb6d152b7446cdd",
+  "prompt_token_count": 303,
+  "prompt_token_ids_sha256": "d8282e1f20a0f3a8af8f0f8651b9a4c2e273e6d0ab1278dbc346e582ac8468f8",
+  "M": 9,
+  "candidate_ids": [
+    720,
+    31272,
+    315,
+    26036,
+    19794,
+    2851,
+    13929,
+    36627,
+    58077
+  ],
+  "candidate_length": 9,
+  "linear_singleton_counts": {
+    "patched_modules": 197,
+    "split_forward_calls": 197,
+    "single_row_kernel_calls": 1773
+  },
+  "ordinary_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.125,
+      0.140625,
+      0.125,
+      0.125,
+      0.125,
+      0.09375,
+      0.125,
+      0.1328125,
+      0.125
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.125,
+    "kv_value_max_abs": 0.033203125,
+    "first_kv_different_layer": 0
+  },
+  "singleton_linear_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.125,
+      0.140625,
+      0.15625,
+      0.125,
+      0.125,
+      0.078125,
+      0.125,
+      0.15625,
+      0.125
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.125,
+    "kv_value_max_abs": 0.0390625,
+    "first_kv_different_layer": 1
+  },
+  "model_manifest": "experiments/exact_quantized_feasibility/crossmodel_shape_repeat_v1/session1/manifests/llama32_3b.json"
+}

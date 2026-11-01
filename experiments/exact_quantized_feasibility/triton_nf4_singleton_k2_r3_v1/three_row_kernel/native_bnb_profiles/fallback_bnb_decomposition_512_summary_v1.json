@@ -1,0 +1,138 @@
+{
+  "schema": "zassd-fallback-decomposition-summary-512-v1",
+  "classification": "diagnostic same-process timing decomposition; two selected prompts; not a kernel profiler result",
+  "scope": "Qwen2.5-3B-Instruct NF4, RTX 4050 Laptop GPU, K=2/R=3, 512 output tokens, four paired rounds per prompt",
+  "ratio_definition": "speedup >1 means baseline time divided by candidate time is greater than one",
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/123",
+      "empty_proposal_cycles": 173,
+      "b1_exact": true,
+      "original_bnb_token_matches_per_mode": {
+        "activationvec": 4,
+        "fallback_every_other": 4,
+        "fallback_all": 4
+      },
+      "median_metrics": {
+        "original_bnb_greedy": {
+          "total_s": 12.53252014449754,
+          "prefill_s": 0.0988720409986854,
+          "decode_s": 12.433977761498682
+        },
+        "activationvec": {
+          "total_s": 14.447946360996866,
+          "prefill_s": 0.09785656450185343,
+          "decode_s": 14.349837675996241,
+          "draft_s": 0.027504174504429102,
+          "verify_s": 14.24584932695143,
+          "other_decode_s": 0.07648417454038281,
+          "cycles": 409.0,
+          "draft_tokens": 471.0,
+          "accepted_draft_tokens": 102.0,
+          "target_rows": 880.0,
+          "acceptance_fraction": 0.21656050955414013
+        },
+        "fallback_every_other": {
+          "total_s": 13.747989428502478,
+          "prefill_s": 0.09938556750421412,
+          "decode_s": 13.648376084001939,
+          "draft_s": 0.02739756002119975,
+          "verify_s": 13.547883311566693,
+          "other_decode_s": 0.07146239795474685,
+          "cycles": 409.0,
+          "draft_tokens": 471.0,
+          "accepted_draft_tokens": 102.0,
+          "target_rows": 880.0,
+          "acceptance_fraction": 0.21656050955414013
+        },
+        "fallback_all": {
+          "total_s": 13.179353726496629,
+          "prefill_s": 0.09796325249772053,
+          "decode_s": 13.080246927995177,
+          "draft_s": 0.027663000029860996,
+          "verify_s": 12.986287270043249,
+          "other_decode_s": 0.07106086848216364,
+          "cycles": 409.0,
+          "draft_tokens": 471.0,
+          "accepted_draft_tokens": 102.0,
+          "target_rows": 880.0,
+          "acceptance_fraction": 0.21656050955414013
+        }
+      }
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "empty_proposal_cycles": 169,
+      "b1_exact": true,
+      "original_bnb_token_matches_per_mode": {
+        "activationvec": 4,
+        "fallback_every_other": 4,
+        "fallback_all": 4
+      },
+      "median_metrics": {
+        "original_bnb_greedy": {
+          "total_s": 12.927556863000063,
+          "prefill_s": 0.058117819997278275,
+          "decode_s": 12.868624504000763
+        },
+        "activationvec": {
+          "total_s": 11.00171009600308,
+          "prefill_s": 0.05721825699947658,
+          "decode_s": 10.947092714501196,
+          "draft_s": 0.01368961841944838,
+          "verify_s": 10.889686455513583,
+          "other_decode_s": 0.044346213559038006,
+          "cycles": 321.0,
+          "draft_tokens": 304.0,
+          "accepted_draft_tokens": 190.0,
+          "target_rows": 625.0,
+          "acceptance_fraction": 0.625
+        },
+        "fallback_every_other": {
+          "total_s": 10.48324848199627,
+          "prefill_s": 0.0559360135011957,
+          "decode_s": 10.424093576995801,
+          "draft_s": 0.013704588935070205,
+          "verify_s": 10.368045724051626,
+          "other_decode_s": 0.04234326400910504,
+          "cycles": 321.0,
+          "draft_tokens": 304.0,
+          "accepted_draft_tokens": 190.0,
+          "target_rows": 625.0,
+          "acceptance_fraction": 0.625
+        },
+        "fallback_all": {
+          "total_s": 9.98399650599822,
+          "prefill_s": 0.05785475949960528,
+          "decode_s": 9.926129906500137,
+          "draft_s": 0.013761166530457558,
+          "verify_s": 9.866658842493052,
+          "other_decode_s": 0.04570989747662679,
+          "cycles": 321.0,
+          "draft_tokens": 304.0,
+          "accepted_draft_tokens": 190.0,
+          "target_rows": 625.0,
+          "acceptance_fraction": 0.625
+        }
+      }
+    }
+  ],
+  "prompt_count": 2,
+  "process_count": 2,
+  "all_candidate_tokens_and_kv_exact_to_b1": true,
+  "all_candidate_tokens_match_original_bnb": true,
+  "input_sha256": {
+    "fallback_bnb_decomposition_HumanEval123_512_v1.json": "f3593b8c6a62f5ebaa9e6de91a98e094a7e8bb05677378722ec4de4e2d30dd48",
+    "fallback_bnb_decomposition_HumanEval114_512_v1.json": "196e0f2e2c90a9a80bb4029ffc398182405a7c12ecc9502cd961d17ee3db2fb6"
+  },
+  "manifest_sha256": "37aa509cc8348031e0b01e707693e55944be584108c9c504d03b9da3ed2e0e86",
+  "heldout_used": false,
+  "limits": [
+    "Two selected HumanEval prompts on one GPU; timing medians are descriptive.",
+    "This is decoder phase timing and acceptance accounting, not CUDA-kernel attribution.",
+    "Original-BNB KV-state identity is not claimed.",
+    "GSM8K held-out indices 300-349 excluded."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_activationvec_fallback_decomposition_512.py",
+  "source_sha256": "49c7defbf3f4fafc4e31718221c77015f62b5766742f37bbe053f0de46541de6"
+}

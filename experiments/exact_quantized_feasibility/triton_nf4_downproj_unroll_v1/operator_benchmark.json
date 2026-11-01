@@ -1,0 +1,151 @@
+{
+  "status": "finite down_proj-only screening; each unroll factor compiles a separate ordered arithmetic schedule and has no runtime contract",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "shape": {
+    "in_features": 11008,
+    "out_features": 2048
+  },
+  "block_n": 16,
+  "block_k": 256,
+  "num_warps": 1,
+  "unroll_factors": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "iterations_per_sample": 25,
+  "rounds_per_m": 7,
+  "correctness": {
+    "unroll_1_m1_rowwise_singleton_equal": true,
+    "unroll_2_m1_rowwise_singleton_equal": true,
+    "unroll_4_m1_rowwise_singleton_equal": true,
+    "unroll_8_m1_rowwise_singleton_equal": true,
+    "unroll_2_m1_equals_unroll_1": true,
+    "unroll_4_m1_equals_unroll_1": true,
+    "unroll_8_m1_equals_unroll_1": true,
+    "unroll_1_m2_rowwise_singleton_equal": true,
+    "unroll_2_m2_rowwise_singleton_equal": true,
+    "unroll_4_m2_rowwise_singleton_equal": true,
+    "unroll_8_m2_rowwise_singleton_equal": true,
+    "unroll_2_m2_equals_unroll_1": true,
+    "unroll_4_m2_equals_unroll_1": true,
+    "unroll_8_m2_equals_unroll_1": true
+  },
+  "latency_by_m": {
+    "1": {
+      "median_cuda_ms": {
+        "unroll_1": 0.1176371192932129,
+        "unroll_2": 0.120830717086792,
+        "unroll_4": 0.15065728187561034,
+        "unroll_8": 0.20057727813720702
+      },
+      "ratio_vs_unroll_1": {
+        "unroll_1": 1.0,
+        "unroll_2": 1.0271478748609866,
+        "unroll_4": 1.2806950967584816,
+        "unroll_8": 1.7050509171111552
+      },
+      "samples_ms": {
+        "unroll_1": [
+          0.11931391716003419,
+          0.11737855911254882,
+          0.11722623825073242,
+          0.11768832206726074,
+          0.11814271926879882,
+          0.1176371192932129,
+          0.11743871688842773
+        ],
+        "unroll_2": [
+          0.12455936431884766,
+          0.120830717086792,
+          0.12017663955688476,
+          0.12050432205200196,
+          0.12099455833435059,
+          0.1270579242706299,
+          0.120381441116333
+        ],
+        "unroll_4": [
+          0.15065728187561034,
+          0.1499174404144287,
+          0.1500224018096924,
+          0.15133440017700195,
+          0.1500774383544922,
+          0.15069184303283692,
+          0.15105024337768555
+        ],
+        "unroll_8": [
+          0.20004863739013673,
+          0.20057727813720702,
+          0.19977344512939454,
+          0.20000768661499024,
+          0.20721664428710937,
+          0.20074495315551757,
+          0.20156415939331054
+        ]
+      }
+    },
+    "2": {
+      "median_cuda_ms": {
+        "unroll_1": 0.16023551940917968,
+        "unroll_2": 0.1206169605255127,
+        "unroll_4": 0.16773120880126954,
+        "unroll_8": 0.20725759506225586
+      },
+      "ratio_vs_unroll_1": {
+        "unroll_1": 1.0,
+        "unroll_2": 0.7527479610653836,
+        "unroll_4": 1.04677919989106,
+        "unroll_8": 1.2934560066735261
+      },
+      "samples_ms": {
+        "unroll_1": [
+          0.11992832183837891,
+          0.16330751419067382,
+          0.12366080284118652,
+          0.1826406478881836,
+          0.16023551940917968,
+          0.12149375915527344,
+          0.18010112762451172
+        ],
+        "unroll_2": [
+          0.12595199584960937,
+          0.12254079818725586,
+          0.1205452823638916,
+          0.12009471893310547,
+          0.11919360160827637,
+          0.1206169605255127,
+          0.12165120124816894
+        ],
+        "unroll_4": [
+          0.16773120880126954,
+          0.1658470344543457,
+          0.16953088760375976,
+          0.16502016067504882,
+          0.16626047134399413,
+          0.17137664794921875,
+          0.1701888084411621
+        ],
+        "unroll_8": [
+          0.2681625556945801,
+          0.2630361557006836,
+          0.20406272888183594,
+          0.2088960075378418,
+          0.20725759506225586,
+          0.20180864334106446,
+          0.20365312576293945
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "title": "N=8/16/32 output tile screen for K=256 and num_warps=1",
+  "status": "finite operator-only M=1/2 screen; every schedule matched its own singleton rows",
+  "m2_medians_ms_and_ratio_to_n16_warp4": {
+    "q_proj": {
+      "N8_warp1": {"latency_ms": 0.026761, "ratio": 0.987},
+      "N16_warp1": {"latency_ms": 0.026788, "ratio": 0.988},
+      "N32_warp1": {"latency_ms": 0.040387, "ratio": 1.489},
+      "N16_warp4": {"latency_ms": 0.027116, "ratio": 1.0}
+    },
+    "down_proj": {
+      "N8_warp1": {"latency_ms": 0.118292, "ratio": 1.034},
+      "N16_warp1": {"latency_ms": 0.108380, "ratio": 0.948},
+      "N32_warp1": {"latency_ms": 0.214057, "ratio": 1.872},
+      "N16_warp4": {"latency_ms": 0.114365, "ratio": 1.0}
+    }
+  },
+  "decision": "Keep N=16 for warp=1; N=8 has no consistent projection gain and N=32 is substantially slower.",
+  "artifact": "output_tile_benchmark.json"
+}

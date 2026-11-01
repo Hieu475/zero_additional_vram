@@ -1,0 +1,42 @@
+{
+  "title": "Diagnostic PyTorch profiler comparison: N=16/K=256 warp4 versus warp1",
+  "prompt_id": "cnndm_001",
+  "method": "B1 block, K=1, padded attention, 32 output tokens",
+  "warp4": {
+    "block_total_ms": 1452.371,
+    "verify_ms": 1266.496,
+    "custom_kernel_calls": 6804,
+    "custom_kernel_self_cuda_ms": 382.318,
+    "draft_tokens": 9,
+    "accepted_draft_tokens": 4
+  },
+  "warp1": {
+    "block_total_ms": 1364.426,
+    "verify_ms": 1181.994,
+    "custom_kernel_calls": 6804,
+    "custom_kernel_self_cuda_ms": 365.811,
+    "draft_tokens": 9,
+    "accepted_draft_tokens": 4
+  },
+  "ratios_warp1_over_warp4": {
+    "block_total": 0.939,
+    "verify": 0.933,
+    "custom_kernel_self_cuda": 0.957
+  },
+  "other_operator_self_cuda_ms": {
+    "aten_mm_warp4": 206.964,
+    "aten_mm_warp1": 203.576,
+    "bnb_gemm_4bit_warp4": 32.067,
+    "bnb_gemm_4bit_warp1": 32.008
+  },
+  "limits": [
+    "These are profiler-instrumented diagnostics, not comparable latency measurements.",
+    "Logical aten operator and underlying CUDA kernel events are hierarchical; do not sum them as independent time.",
+    "Both runs had the same cycle count, draft tokens, and accepted tokens; the profile does not measure multiple sessions."
+  ],
+  "artifacts": {
+    "warp1_profile": "profile_block_cnndm001/profile.json",
+    "warp1_trace": "profile_block_cnndm001/trace.json",
+    "warp4_profile": "../triton_nf4_group_scale_packed_rows2_n16_k256_qwen3b_cnndm001_k1_rows2_v1/profile_block_ops/profile.json"
+  }
+}

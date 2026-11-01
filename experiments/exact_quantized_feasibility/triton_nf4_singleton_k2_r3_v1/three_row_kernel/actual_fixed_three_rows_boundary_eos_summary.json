@@ -1,0 +1,239 @@
+{
+  "classification": "development-only boundary, EOS, and KV transaction audit under actual fixed-three-row NF4 dispatch; empirical not certification",
+  "configuration": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "K": 2,
+    "R": 3,
+    "physical_rows": 3,
+    "strategy": "triton_nf4_fixed_three_rows_group_scale_packed"
+  },
+  "boundary_cases": {
+    "cases": [
+      {
+        "artifact": "actual_fixed_three_rows_budget_humaneval112_8_s22.json",
+        "prompt_id": "HumanEval/112",
+        "session": 22,
+        "max_new_tokens": 8,
+        "token_match_b1": true,
+        "state_prefixes_matched": 8,
+        "last_cycle": {
+          "output_start": 6,
+          "pending": 671,
+          "draft_tokens": [
+            697
+          ],
+          "accepted": 1,
+          "rejected_at": null,
+          "emitted_tokens": [
+            671,
+            697
+          ]
+        }
+      },
+      {
+        "artifact": "actual_fixed_three_rows_budget_humaneval112_9_s22.json",
+        "prompt_id": "HumanEval/112",
+        "session": 22,
+        "max_new_tokens": 9,
+        "token_match_b1": true,
+        "state_prefixes_matched": 9,
+        "last_cycle": {
+          "output_start": 6,
+          "pending": 671,
+          "draft_tokens": [
+            697,
+            2038
+          ],
+          "accepted": 2,
+          "rejected_at": null,
+          "emitted_tokens": [
+            671,
+            697,
+            2038
+          ]
+        }
+      },
+      {
+        "artifact": "actual_fixed_three_rows_budget_humaneval114_46_s11.json",
+        "prompt_id": "HumanEval/114",
+        "session": 11,
+        "max_new_tokens": 46,
+        "token_match_b1": true,
+        "state_prefixes_matched": 46,
+        "last_cycle": {
+          "output_start": 44,
+          "pending": 284,
+          "draft_tokens": [
+            220
+          ],
+          "accepted": 1,
+          "rejected_at": null,
+          "emitted_tokens": [
+            284,
+            220
+          ]
+        }
+      },
+      {
+        "artifact": "actual_fixed_three_rows_budget_humaneval114_47_s11.json",
+        "prompt_id": "HumanEval/114",
+        "session": 11,
+        "max_new_tokens": 47,
+        "token_match_b1": true,
+        "state_prefixes_matched": 47,
+        "last_cycle": {
+          "output_start": 44,
+          "pending": 284,
+          "draft_tokens": [
+            220,
+            15
+          ],
+          "accepted": 2,
+          "rejected_at": null,
+          "emitted_tokens": [
+            284,
+            220,
+            15
+          ]
+        }
+      },
+      {
+        "artifact": "actual_fixed_three_rows_budget_humaneval114_52_s11.json",
+        "prompt_id": "HumanEval/114",
+        "session": 11,
+        "max_new_tokens": 52,
+        "token_match_b1": true,
+        "state_prefixes_matched": 52,
+        "last_cycle": {
+          "output_start": 50,
+          "pending": 10160,
+          "draft_tokens": [
+            284
+          ],
+          "accepted": 1,
+          "rejected_at": null,
+          "emitted_tokens": [
+            10160,
+            284
+          ]
+        }
+      },
+      {
+        "artifact": "actual_fixed_three_rows_budget_humaneval114_53_s11.json",
+        "prompt_id": "HumanEval/114",
+        "session": 11,
+        "max_new_tokens": 53,
+        "token_match_b1": true,
+        "state_prefixes_matched": 53,
+        "last_cycle": {
+          "output_start": 50,
+          "pending": 10160,
+          "draft_tokens": [
+            284,
+            2224
+          ],
+          "accepted": 1,
+          "rejected_at": 1,
+          "emitted_tokens": [
+            10160,
+            284
+          ]
+        }
+      },
+      {
+        "artifact": "actual_fixed_three_rows_budget_humaneval114_54_s11.json",
+        "prompt_id": "HumanEval/114",
+        "session": 11,
+        "max_new_tokens": 54,
+        "token_match_b1": true,
+        "state_prefixes_matched": 54,
+        "last_cycle": {
+          "output_start": 52,
+          "pending": 1308,
+          "draft_tokens": [],
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_tokens": [
+            1308
+          ]
+        }
+      }
+    ],
+    "matched_state_prefixes": 269,
+    "all_token_sequences_match_b1": true
+  },
+  "eos_fixtures": {
+    "cases": [
+      {
+        "artifact": "actual_fixed_three_rows_eos_accepted_s9.json",
+        "prompt_id": "eos_candidate_v2",
+        "session": 9,
+        "token_match_b1": true,
+        "state_prefixes_matched": 2,
+        "eos_events": [
+          {
+            "cycle_index": 0,
+            "draft_tokens": [
+              151645
+            ],
+            "eos_candidate_index": 0,
+            "accepted": 1,
+            "rejected_at": null,
+            "accepted_eos_candidate": true,
+            "rejected_eos_candidate": false,
+            "emitted_tokens": [
+              3925,
+              151645
+            ]
+          }
+        ],
+        "accepted_eos_seen": true,
+        "rejected_eos_seen": false
+      },
+      {
+        "artifact": "actual_fixed_three_rows_eos_rejected_s10.json",
+        "prompt_id": "eos_draft_reject",
+        "session": 10,
+        "token_match_b1": true,
+        "state_prefixes_matched": 3,
+        "eos_events": [
+          {
+            "cycle_index": 0,
+            "draft_tokens": [
+              151645
+            ],
+            "eos_candidate_index": 0,
+            "accepted": 0,
+            "rejected_at": 0,
+            "accepted_eos_candidate": false,
+            "rejected_eos_candidate": true,
+            "emitted_tokens": [
+              3925
+            ]
+          }
+        ],
+        "accepted_eos_seen": false,
+        "rejected_eos_seen": true
+      }
+    ],
+    "matched_state_prefixes": 5,
+    "accepted_eos_fixture_passed": true,
+    "rejected_eos_fixture_passed": true
+  },
+  "cache_rollback": {
+    "artifact": "actual_fixed_three_rows_cache_rollback_humaneval114_64_r2.json",
+    "verification_calls": 29,
+    "all_verifications_preserved_preexisting_kv_prefix": true,
+    "rollback_event_count": 30,
+    "all_cropped_active_prefixes_match_b1": true,
+    "layer_lengths_uniform": true
+  },
+  "limitations": [
+    "Finite development traces on one GPU.",
+    "EOS coverage is one accepted and one rejected EOS fixture.",
+    "Only active logical KV prefix is checked; bytes outside cropped logical lengths are not compared.",
+    "No claim of formal proof or universal shape-invariance.",
+    "Held-out GSM8K indices 300\u2013349 were not used."
+  ]
+}

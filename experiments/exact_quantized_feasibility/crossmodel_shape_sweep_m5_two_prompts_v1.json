@@ -1,0 +1,470 @@
+{
+  "status": "cross-model finite-precision shape-forensics sweep; same raw development prompts, same NF4/FP16/SDPA backend; not a universal model guarantee",
+  "backend": "bitsandbytes NF4, double_quant=True, FP16 compute, SDPA",
+  "m": 5,
+  "prompt_ids": [
+    "cnndm_001",
+    "cnndm_002"
+  ],
+  "model_count": 7,
+  "architecture_families": [
+    "Qwen2",
+    "Llama 3.2",
+    "Phi-3.5",
+    "OLMo 2"
+  ],
+  "configuration_count": 14,
+  "ordinary_batch": {
+    "configurations_with_nonzero_logit_difference": 14,
+    "configurations_with_nonzero_kv_difference": 14,
+    "candidate_row_argmax_matches": 69,
+    "candidate_row_argmax_total": 70,
+    "mismatching_configurations": [
+      {
+        "model": "Qwen/Qwen2.5-0.5B-Instruct",
+        "prompt_id": "cnndm_001",
+        "rows_equal": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ]
+      }
+    ]
+  },
+  "single_row_linear_intervention": {
+    "configurations_with_nonzero_kv_difference": 14,
+    "candidate_row_argmax_matches": 70,
+    "candidate_row_argmax_total": 70
+  },
+  "by_configuration": [
+    {
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "prompt_id": "cnndm_001",
+      "prompt_length": 398,
+      "prompt_token_ids_sha256": "bba094299d5d0fa60cfecdab34719b4c4c48a2637f9511232de8b4385bb85db3",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.3125,
+      "ordinary_kv_key_max_abs": 0.5,
+      "ordinary_kv_value_max_abs": 0.15625,
+      "ordinary_first_kv_different_layer": 1,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.25,
+      "single_row_linear_kv_value_max_abs": 0.109375,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_qwen25_0p5b_cnndm001_m5_v1.json"
+    },
+    {
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "prompt_id": "cnndm_001",
+      "prompt_length": 398,
+      "prompt_token_ids_sha256": "bba094299d5d0fa60cfecdab34719b4c4c48a2637f9511232de8b4385bb85db3",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.25,
+      "ordinary_kv_key_max_abs": 0.25,
+      "ordinary_kv_value_max_abs": 0.140625,
+      "ordinary_first_kv_different_layer": 1,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.25,
+      "single_row_linear_kv_value_max_abs": 0.140625,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_qwen25_1p5b_cnndm001_m5_v1.json"
+    },
+    {
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "prompt_id": "cnndm_001",
+      "prompt_length": 398,
+      "prompt_token_ids_sha256": "bba094299d5d0fa60cfecdab34719b4c4c48a2637f9511232de8b4385bb85db3",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.25,
+      "ordinary_kv_key_max_abs": 0.125,
+      "ordinary_kv_value_max_abs": 0.203125,
+      "ordinary_first_kv_different_layer": 1,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.125,
+      "single_row_linear_kv_value_max_abs": 0.203125,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_qwen25_3b_cnndm001_m5_v1.json"
+    },
+    {
+      "model": "unsloth/Llama-3.2-1B-Instruct",
+      "revision": "5a8abab4a5d6f164389b1079fb721cfab8d7126c",
+      "prompt_id": "cnndm_001",
+      "prompt_length": 396,
+      "prompt_token_ids_sha256": "40f0a5c5cbc0921146b02f6b7bff978e35c9fce630225bdd729b1413e6d78118",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.1640625,
+      "ordinary_kv_key_max_abs": 0.375,
+      "ordinary_kv_value_max_abs": 0.046875,
+      "ordinary_first_kv_different_layer": 1,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.140625,
+      "single_row_linear_kv_value_max_abs": 0.046875,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_llama32_1b_cnndm001_m5_v1.json"
+    },
+    {
+      "model": "unsloth/Llama-3.2-3B-Instruct",
+      "revision": "006f5dcd1393c3add266de40994ba96225e9689d",
+      "prompt_id": "cnndm_001",
+      "prompt_length": 396,
+      "prompt_token_ids_sha256": "40f0a5c5cbc0921146b02f6b7bff978e35c9fce630225bdd729b1413e6d78118",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.125,
+      "ordinary_kv_key_max_abs": 0.0625,
+      "ordinary_kv_value_max_abs": 0.0390625,
+      "ordinary_first_kv_different_layer": 0,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.0625,
+      "single_row_linear_kv_value_max_abs": 0.03125,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_llama32_3b_cnndm001_m5_v1.json"
+    },
+    {
+      "model": "microsoft/Phi-3.5-mini-instruct",
+      "revision": "2fe192450127e6a83f7441aef6e3ca586c338b77",
+      "prompt_id": "cnndm_001",
+      "prompt_length": 473,
+      "prompt_token_ids_sha256": "b4b94f87b689c581f5c6aff1a5be97546769128099434ae14c2f920eccf7f4cf",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.375,
+      "ordinary_kv_key_max_abs": 0.1875,
+      "ordinary_kv_value_max_abs": 0.09375,
+      "ordinary_first_kv_different_layer": 0,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.1875,
+      "single_row_linear_kv_value_max_abs": 0.0859375,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_phi35_3p8b_cnndm001_m5_v1.json"
+    },
+    {
+      "model": "allenai/OLMo-2-0425-1B-Instruct",
+      "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+      "prompt_id": "cnndm_001",
+      "prompt_length": 395,
+      "prompt_token_ids_sha256": "a1b4994af4d84227e8feb7a8d929a91328403df9861255707069675b7cca02db",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.1875,
+      "ordinary_kv_key_max_abs": 0.125,
+      "ordinary_kv_value_max_abs": 0.0263671875,
+      "ordinary_first_kv_different_layer": 0,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.125,
+      "single_row_linear_kv_value_max_abs": 0.03125,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_olmo2_1b_cnndm001_m5_v1.json"
+    },
+    {
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "prompt_id": "cnndm_002",
+      "prompt_length": 419,
+      "prompt_token_ids_sha256": "1c8f7c17bc44f6a95f6ed57c0c242c05a2524f91178ef385fc15fd9b9872dad4",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.328125,
+      "ordinary_kv_key_max_abs": 0.25,
+      "ordinary_kv_value_max_abs": 0.13134765625,
+      "ordinary_first_kv_different_layer": 1,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 1.0,
+      "single_row_linear_kv_value_max_abs": 0.15625,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_qwen25_0p5b_cnndm002_m5_v1.json"
+    },
+    {
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "prompt_id": "cnndm_002",
+      "prompt_length": 419,
+      "prompt_token_ids_sha256": "1c8f7c17bc44f6a95f6ed57c0c242c05a2524f91178ef385fc15fd9b9872dad4",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.25,
+      "ordinary_kv_key_max_abs": 0.25,
+      "ordinary_kv_value_max_abs": 0.15625,
+      "ordinary_first_kv_different_layer": 1,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.25,
+      "single_row_linear_kv_value_max_abs": 0.15625,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_qwen25_1p5b_cnndm002_m5_v1.json"
+    },
+    {
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "prompt_id": "cnndm_002",
+      "prompt_length": 419,
+      "prompt_token_ids_sha256": "1c8f7c17bc44f6a95f6ed57c0c242c05a2524f91178ef385fc15fd9b9872dad4",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.375,
+      "ordinary_kv_key_max_abs": 0.25,
+      "ordinary_kv_value_max_abs": 0.234375,
+      "ordinary_first_kv_different_layer": 1,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.25,
+      "single_row_linear_kv_value_max_abs": 0.25,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_qwen25_3b_cnndm002_m5_v1.json"
+    },
+    {
+      "model": "unsloth/Llama-3.2-1B-Instruct",
+      "revision": "5a8abab4a5d6f164389b1079fb721cfab8d7126c",
+      "prompt_id": "cnndm_002",
+      "prompt_length": 418,
+      "prompt_token_ids_sha256": "05ea4d39ebfb2692bc7ddcaaeddf347002ad43afe684f8aa39515a84dc84077e",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.25,
+      "ordinary_kv_key_max_abs": 0.125,
+      "ordinary_kv_value_max_abs": 0.03515625,
+      "ordinary_first_kv_different_layer": 1,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.125,
+      "single_row_linear_kv_value_max_abs": 0.03515625,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_llama32_1b_cnndm002_m5_v1.json"
+    },
+    {
+      "model": "unsloth/Llama-3.2-3B-Instruct",
+      "revision": "006f5dcd1393c3add266de40994ba96225e9689d",
+      "prompt_id": "cnndm_002",
+      "prompt_length": 418,
+      "prompt_token_ids_sha256": "05ea4d39ebfb2692bc7ddcaaeddf347002ad43afe684f8aa39515a84dc84077e",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.14453125,
+      "ordinary_kv_key_max_abs": 0.125,
+      "ordinary_kv_value_max_abs": 0.0419921875,
+      "ordinary_first_kv_different_layer": 0,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.1875,
+      "single_row_linear_kv_value_max_abs": 0.068359375,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_llama32_3b_cnndm002_m5_v1.json"
+    },
+    {
+      "model": "microsoft/Phi-3.5-mini-instruct",
+      "revision": "2fe192450127e6a83f7441aef6e3ca586c338b77",
+      "prompt_id": "cnndm_002",
+      "prompt_length": 481,
+      "prompt_token_ids_sha256": "b49c101d3549b447832afb76f6432a26a3761060e595dfa29ea814e3e787ae67",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.578125,
+      "ordinary_kv_key_max_abs": 0.1875,
+      "ordinary_kv_value_max_abs": 0.109375,
+      "ordinary_first_kv_different_layer": 0,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.1875,
+      "single_row_linear_kv_value_max_abs": 0.08984375,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "phi35_cnndm002_shape_k4_v1.json"
+    },
+    {
+      "model": "allenai/OLMo-2-0425-1B-Instruct",
+      "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+      "prompt_id": "cnndm_002",
+      "prompt_length": 417,
+      "prompt_token_ids_sha256": "1a41e577ecdb14cd8b15a54553f4e72b95643b3179cd656a86efecabed17121d",
+      "m": 5,
+      "candidate_rows_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "ordinary_logit_max_abs": 0.25,
+      "ordinary_kv_key_max_abs": 0.125,
+      "ordinary_kv_value_max_abs": 0.03125,
+      "ordinary_first_kv_different_layer": 0,
+      "single_row_linear_argmax_equal": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "single_row_linear_kv_key_max_abs": 0.125,
+      "single_row_linear_kv_value_max_abs": 0.03125,
+      "single_row_linear_first_kv_different_layer": 1,
+      "source_artifact": "crossmodel_shape_olmo2_1b_cnndm002_m5_v1.json"
+    }
+  ],
+  "limitations": [
+    "Only two previously used CNN/DM development prompts; one session and one GPU.",
+    "Candidate-row argmax comparison is a same-prefix diagnostic, not a multi-cycle generated-output exactness rate.",
+    "The single-row-linear intervention does not make all other operators or cache execution shape-invariant.",
+    "The sweep uses one quantization backend/runtime and cannot justify a claim about all models or backends.",
+    "B1 fixed-row decoding has not been ported to the non-Qwen architectures."
+  ]
+}

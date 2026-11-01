@@ -1,0 +1,87 @@
+{
+  "scope": "paired compute-only forward timing; KV restore outside timer; not end-to-end decode latency",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "cnndm_000",
+  "prompt_tokens": 397,
+  "k": 2,
+  "physical_rows": 3,
+  "candidate_ids": [
+    576,
+    21841,
+    21914
+  ],
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "rounds": 15,
+  "warmups": 2,
+  "median_ms": {
+    "singleton": 70.41407775878906,
+    "block": 26.76736068725586,
+    "rowwise_sdpa_block": 35.310752868652344
+  },
+  "samples_ms": {
+    "singleton": [
+      71.25196838378906,
+      70.37235260009766,
+      70.3486099243164,
+      70.00364685058594,
+      68.87117004394531,
+      70.63346862792969,
+      70.61196899414062,
+      68.9560317993164,
+      68.66802978515625,
+      70.57510375976562,
+      69.91155242919922,
+      72.38233947753906,
+      70.78399658203125,
+      72.34867095947266,
+      70.41407775878906
+    ],
+    "block": [
+      26.224639892578125,
+      26.972000122070312,
+      26.669952392578125,
+      25.350143432617188,
+      26.013568878173828,
+      27.214496612548828,
+      27.15340805053711,
+      25.630720138549805,
+      26.76736068725586,
+      25.837568283081055,
+      25.554943084716797,
+      33.78166580200195,
+      26.899456024169922,
+      26.94655990600586,
+      27.35798454284668
+    ],
+    "rowwise_sdpa_block": [
+      35.99568176269531,
+      36.03148651123047,
+      34.942752838134766,
+      35.45395278930664,
+      34.61427307128906,
+      35.20307159423828,
+      35.310752868652344,
+      34.07155227661133,
+      34.08601760864258,
+      35.63417434692383,
+      35.63315200805664,
+      36.66329574584961,
+      33.06086349487305,
+      33.479679107666016,
+      36.99398422241211
+    ]
+  },
+  "speedup_vs_singleton": {
+    "singleton": 1.0,
+    "block": 2.6305947224865442,
+    "rowwise_sdpa_block": 1.9941256427103888
+  },
+  "notes": [
+    "rowwise_sdpa_block issues one singleton-shaped SDPA call per candidate row and projects lm_head rowwise",
+    "timing excludes cache restore and CPU hook copies",
+    "correctness was checked separately by audit_operator_shape.py; this script does not recheck outputs"
+  ]
+}

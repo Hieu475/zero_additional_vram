@@ -1,0 +1,148 @@
+{
+  "schema": "zassd-k2r3-operator-profile-summary-v1",
+  "status": "diagnostic profiler attribution; not a latency benchmark",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "profile": {
+    "schedule": "K=2/R=3, triton_batched attention, packed NF4 rows2 N16/K256/one warp",
+    "generation_budget": 32,
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "torch": "2.11.0+cu128",
+    "triton": "3.6.0"
+  },
+  "interpretation_limits": [
+    "Profiler instrumentation changes execution cost; use the separate closed-loop timing artifacts for performance claims.",
+    "CUDA event totals across operators can overlap and should not be summed into an exact decomposition of verify wall time.",
+    "The BNB linears are classified as prefill from their sequence-shaped input tensors; block verification uses three-row tensors and the packed Triton path."
+  ],
+  "profiles": [
+    {
+      "prompt_id": "HumanEval/112",
+      "prompt_tokens": 157,
+      "profiled_output_tokens": 32,
+      "cycles": 15,
+      "accepted_draft_tokens": 17,
+      "draft_tokens": 19,
+      "target_forwards": 15,
+      "target_rows": 34,
+      "wall_ms": {
+        "total": 832.8880970002501,
+        "prefill": 114.8977040011232,
+        "draft": 0.4024719983135583,
+        "verify": 712.614914002188
+      },
+      "operators": {
+        "packed_nf4_linear": {
+          "event_key": "_packed_two_rows_kernel",
+          "calls": 3780,
+          "gpu_event_ms": 322.7025839999994,
+          "calls_per_target_forward": 252.0,
+          "gpu_event_ms_per_target_forward": 21.51350559999996
+        },
+        "lm_head_block_rows": {
+          "input_shape": "[[3, 2048], [2048, 151936]]",
+          "calls": 15,
+          "gpu_event_ms": 52.80084200000032,
+          "gpu_event_ms_per_target_forward": 3.520056133333355
+        },
+        "lm_head_prefill": {
+          "input_shape": "[[157, 2048], [2048, 151936]]",
+          "calls": 1,
+          "gpu_event_ms": 6.046281000000002
+        },
+        "fixed_row_attention": {
+          "calls": 540,
+          "calls_per_target_forward": 36.0,
+          "gpu_event_ms": 6.515279000000169
+        },
+        "bnb_4bit_prefill_linears": {
+          "events": [
+            {
+              "input_shapes": "[[1, 157, 2048], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]",
+              "calls": 72,
+              "gpu_event_ms": 54.02187400000004
+            },
+            {
+              "input_shapes": "[[1, 157, 11008], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]",
+              "calls": 36,
+              "gpu_event_ms": 12.073869000000018
+            },
+            {
+              "input_shapes": "[[1, 157, 2048], [2097152, 1], [], [256], [], [], [], [65536], [256], []]",
+              "calls": 36,
+              "gpu_event_ms": 1.4608030000000036
+            },
+            {
+              "input_shapes": "[[1, 157, 2048], [2097152, 1], [], [256], [], [], [2048], [65536], [256], []]",
+              "calls": 36,
+              "gpu_event_ms": 1.2857089999999853
+            }
+          ],
+          "summed_gpu_event_ms": 68.84225500000005
+        }
+      },
+      "trace": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/profile_humaneval112_k2r3_32/trace.json"
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "prompt_tokens": 83,
+      "profiled_output_tokens": 32,
+      "cycles": 31,
+      "accepted_draft_tokens": 0,
+      "draft_tokens": 12,
+      "target_forwards": 31,
+      "target_rows": 43,
+      "wall_ms": {
+        "total": 1523.3468449987413,
+        "prefill": 71.86272000035387,
+        "draft": 0.6139890010672389,
+        "verify": 1442.238115996588
+      },
+      "operators": {
+        "packed_nf4_linear": {
+          "event_key": "_packed_two_rows_kernel",
+          "calls": 7812,
+          "gpu_event_ms": 522.3729110000035,
+          "calls_per_target_forward": 252.0,
+          "gpu_event_ms_per_target_forward": 16.85073906451624
+        },
+        "lm_head_block_rows": {
+          "input_shape": "[[3, 2048], [2048, 151936]]",
+          "calls": 31,
+          "gpu_event_ms": 106.32593999999989,
+          "gpu_event_ms_per_target_forward": 3.4298690322580607
+        },
+        "lm_head_prefill": {
+          "input_shape": "[[83, 2048], [2048, 151936]]",
+          "calls": 1,
+          "gpu_event_ms": 3.8010090000000054
+        },
+        "fixed_row_attention": {
+          "calls": 1116,
+          "calls_per_target_forward": 36.0,
+          "gpu_event_ms": 6.812649000000849
+        },
+        "bnb_4bit_prefill_linears": {
+          "events": [
+            {
+              "input_shapes": "[[1, 83, 2048], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]",
+              "calls": 72,
+              "gpu_event_ms": 29.652565
+            },
+            {
+              "input_shapes": "[[1, 83, 11008], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]",
+              "calls": 36,
+              "gpu_event_ms": 20.284413000000004
+            },
+            {
+              "input_shapes": "[[1, 83, 2048], [2097152, 1], [], [256], [], [], [], [65536], [256], []]",
+              "calls": 36,
+              "gpu_event_ms": 2.349430000000024
+            }
+          ],
+          "summed_gpu_event_ms": 52.28640800000003
+        }
+      },
+      "trace": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/profile_humaneval114_k2r3_32/trace.json"
+    }
+  ]
+}

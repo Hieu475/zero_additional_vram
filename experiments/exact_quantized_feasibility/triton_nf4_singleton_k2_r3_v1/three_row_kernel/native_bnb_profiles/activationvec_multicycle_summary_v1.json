@@ -1,0 +1,128 @@
+{
+  "schema": "zassd-bnb-fused-nf4-activationvec-multicycle-summary-v1",
+  "classification": "development-only finite three-cycle B2 state evidence",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_ids": [
+    "cnndm_002",
+    "cnndm_003"
+  ],
+  "run_count": 2,
+  "total_cycle_cases": 6,
+  "all_cycles_pass": true,
+  "all_final_states_equal": true,
+  "cycle_outcomes": [
+    {
+      "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_multicycle_cnndm002_s1_v1.json",
+      "prompt_id": "cnndm_002",
+      "greedy_bnb_tokens": [
+        576,
+        4549,
+        34334,
+        64452,
+        619,
+        37055,
+        61431
+      ],
+      "cycle_count": 3,
+      "all_cycles_pass": true,
+      "final_processed_greedy_tokens": 6,
+      "final_state_bitwise_equal": true,
+      "cycles": [
+        {
+          "name": "reject_first_emit_pending",
+          "accepted_draft_count": 0,
+          "kept_input_rows": 1,
+          "emitted_token_equal": true,
+          "selected_next_logits_bitwise_equal": true,
+          "rollback_kv_bitwise_equal": true,
+          "all_layer_cache_lengths_equal": true,
+          "rejected_eos_draft": true
+        },
+        {
+          "name": "accept_both_emit_bonus",
+          "accepted_draft_count": 2,
+          "kept_input_rows": 3,
+          "emitted_token_equal": true,
+          "selected_next_logits_bitwise_equal": true,
+          "rollback_kv_bitwise_equal": true,
+          "all_layer_cache_lengths_equal": true,
+          "rejected_eos_draft": false
+        },
+        {
+          "name": "accept_one_reject_second_eos",
+          "accepted_draft_count": 1,
+          "kept_input_rows": 2,
+          "emitted_token_equal": true,
+          "selected_next_logits_bitwise_equal": true,
+          "rollback_kv_bitwise_equal": true,
+          "all_layer_cache_lengths_equal": true,
+          "rejected_eos_draft": true
+        }
+      ]
+    },
+    {
+      "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_multicycle_cnndm003_s1_v1.json",
+      "prompt_id": "cnndm_003",
+      "greedy_bnb_tokens": [
+        20924,
+        3693,
+        18478,
+        7337,
+        879,
+        1033,
+        14900
+      ],
+      "cycle_count": 3,
+      "all_cycles_pass": true,
+      "final_processed_greedy_tokens": 6,
+      "final_state_bitwise_equal": true,
+      "cycles": [
+        {
+          "name": "reject_first_emit_pending",
+          "accepted_draft_count": 0,
+          "kept_input_rows": 1,
+          "emitted_token_equal": true,
+          "selected_next_logits_bitwise_equal": true,
+          "rollback_kv_bitwise_equal": true,
+          "all_layer_cache_lengths_equal": true,
+          "rejected_eos_draft": true
+        },
+        {
+          "name": "accept_both_emit_bonus",
+          "accepted_draft_count": 2,
+          "kept_input_rows": 3,
+          "emitted_token_equal": true,
+          "selected_next_logits_bitwise_equal": true,
+          "rollback_kv_bitwise_equal": true,
+          "all_layer_cache_lengths_equal": true,
+          "rejected_eos_draft": false
+        },
+        {
+          "name": "accept_one_reject_second_eos",
+          "accepted_draft_count": 1,
+          "kept_input_rows": 2,
+          "emitted_token_equal": true,
+          "selected_next_logits_bitwise_equal": true,
+          "rollback_kv_bitwise_equal": true,
+          "all_layer_cache_lengths_equal": true,
+          "rejected_eos_draft": true
+        }
+      ]
+    }
+  ],
+  "source": "scripts/audit_bnb_nf4_activationvec_multicycle.py",
+  "source_sha256": "a29c1c28a040ad42d7700e22757617f31d228ea42099c6f78bb6656fda65dd50",
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "triton": "3.6.0",
+    "cuda": "12.8",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "scope_limits": [
+    "Two fixed development prompts and three scripted cycles each; no statistical generalization claim.",
+    "Covers reject-first, accept-both/bonus, and accept-one/reject-second EOS draft.",
+    "Does not cover accepted target EOS/termination, all possible rejection patterns, long-run closed-loop latency, or held-out GSM8K."
+  ]
+}

@@ -1,0 +1,249 @@
+{
+  "status": "diagnostic paired multi-session pilot; finite empirical evidence, not universal proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "strategy": "triton_nf4_group_scale_k256",
+  "k": 4,
+  "physical_rows": 5,
+  "max_new_tokens": 32,
+  "attention": "padded",
+  "model_dtype": "float16",
+  "capacity": 512,
+  "sessions_per_prompt": 3,
+  "prompts": [
+    "cnndm_001",
+    "cnndm_002"
+  ],
+  "records": [
+    {
+      "prompt_id": "cnndm001",
+      "session_index": 10,
+      "method_order": [
+        "b1_reference",
+        "b1_block",
+        "original_greedy"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.1390957789990352,
+        "b1_block": 1.4887692070042249,
+        "original_bnb": 0.8070166729958146
+      },
+      "latency_ratio_block_over_singleton": 1.3069745621500417,
+      "latency_ratio_block_over_bnb": 1.8447812254951343,
+      "speedup_singleton_over_block": 0.765125832560159,
+      "speedup_bnb_over_block": 0.5420696970349981,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 25,
+      "block_target_rows": 50,
+      "draft_tokens": 25,
+      "accepted_draft_tokens": 6,
+      "draft_acceptance_fraction": 0.24
+    },
+    {
+      "prompt_id": "cnndm001",
+      "session_index": 11,
+      "method_order": [
+        "b1_block",
+        "original_greedy",
+        "b1_reference"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.1440323510032613,
+        "b1_block": 1.492858145997161,
+        "original_bnb": 0.8303341540013207
+      },
+      "latency_ratio_block_over_singleton": 1.3049090304902622,
+      "latency_ratio_block_over_bnb": 1.7979004462278045,
+      "speedup_singleton_over_block": 0.7663369450545483,
+      "speedup_bnb_over_block": 0.5562043227132578,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 25,
+      "block_target_rows": 50,
+      "draft_tokens": 25,
+      "accepted_draft_tokens": 6,
+      "draft_acceptance_fraction": 0.24
+    },
+    {
+      "prompt_id": "cnndm001",
+      "session_index": 12,
+      "method_order": [
+        "original_greedy",
+        "b1_reference",
+        "b1_block"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.1450963579991367,
+        "b1_block": 1.4966185160010355,
+        "original_bnb": 0.8208000290032942
+      },
+      "latency_ratio_block_over_singleton": 1.3069804174524882,
+      "latency_ratio_block_over_bnb": 1.8233655739734738,
+      "speedup_singleton_over_block": 0.7651224047787636,
+      "speedup_bnb_over_block": 0.5484363718795032,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 25,
+      "block_target_rows": 50,
+      "draft_tokens": 25,
+      "accepted_draft_tokens": 6,
+      "draft_acceptance_fraction": 0.24
+    },
+    {
+      "prompt_id": "cnndm002",
+      "session_index": 10,
+      "method_order": [
+        "b1_reference",
+        "b1_block",
+        "original_greedy"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.1510678560007364,
+        "b1_block": 1.4842140729961102,
+        "original_bnb": 0.8149894290036173
+      },
+      "latency_ratio_block_over_singleton": 1.2894236123948897,
+      "latency_ratio_block_over_bnb": 1.821145183208901,
+      "speedup_singleton_over_block": 0.7755403192459509,
+      "speedup_bnb_over_block": 0.5491050407293593,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 28,
+      "block_target_rows": 48,
+      "draft_tokens": 20,
+      "accepted_draft_tokens": 3,
+      "draft_acceptance_fraction": 0.15
+    },
+    {
+      "prompt_id": "cnndm002",
+      "session_index": 11,
+      "method_order": [
+        "b1_block",
+        "original_greedy",
+        "b1_reference"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.1509087110025575,
+        "b1_block": 1.4822957500000484,
+        "original_bnb": 0.8413019599975087
+      },
+      "latency_ratio_block_over_singleton": 1.2879351210304242,
+      "latency_ratio_block_over_bnb": 1.7619069257896867,
+      "speedup_singleton_over_block": 0.7764366260933555,
+      "speedup_bnb_over_block": 0.5675668705098029,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 28,
+      "block_target_rows": 48,
+      "draft_tokens": 20,
+      "accepted_draft_tokens": 3,
+      "draft_acceptance_fraction": 0.15
+    },
+    {
+      "prompt_id": "cnndm002",
+      "session_index": 12,
+      "method_order": [
+        "original_greedy",
+        "b1_reference",
+        "b1_block"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.1481906219996745,
+        "b1_block": 1.49442010599887,
+        "original_bnb": 0.8108177870017244
+      },
+      "latency_ratio_block_over_singleton": 1.301543556762558,
+      "latency_ratio_block_over_bnb": 1.843102272737502,
+      "speedup_singleton_over_block": 0.768318505211909,
+      "speedup_bnb_over_block": 0.5425634891734636,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 28,
+      "block_target_rows": 48,
+      "draft_tokens": 20,
+      "accepted_draft_tokens": 3,
+      "draft_acceptance_fraction": 0.15
+    }
+  ],
+  "pooled_descriptive_summary": {
+    "latency_ratio_block_over_singleton": {
+      "geometric_mean": 1.2996032656527345,
+      "median": 1.30322629362641,
+      "range": [
+        1.2879351210304242,
+        1.3069804174524882
+      ],
+      "paired_log_t_95ci_tcrit_df5": [
+        1.290465596733502,
+        1.3088056375702406
+      ]
+    },
+    "latency_ratio_block_over_bnb": {
+      "geometric_mean": 1.815140323045653,
+      "median": 1.8222553785911875,
+      "range": [
+        1.7619069257896867,
+        1.8447812254951343
+      ],
+      "paired_log_t_95ci_tcrit_df5": [
+        1.782396241220657,
+        1.8484859405279659
+      ]
+    }
+  },
+  "per_prompt_descriptive_summary": {
+    "cnndm001": {
+      "latency_ratio_block_over_singleton": {
+        "geometric_mean": 1.3062876393083949,
+        "range": [
+          1.3049090304902622,
+          1.3069804174524882
+        ]
+      },
+      "latency_ratio_block_over_bnb": {
+        "geometric_mean": 1.8219148976956467,
+        "range": [
+          1.7979004462278045,
+          1.8447812254951343
+        ]
+      }
+    },
+    "cnndm002": {
+      "latency_ratio_block_over_singleton": {
+        "geometric_mean": 1.2929530964477816,
+        "range": [
+          1.2879351210304242,
+          1.301543556762558
+        ]
+      },
+      "latency_ratio_block_over_bnb": {
+        "geometric_mean": 1.8083909388487076,
+        "range": [
+          1.7619069257896867,
+          1.843102272737502
+        ]
+      }
+    }
+  },
+  "interpretation": "Latency ratios above 1 mean the block is slower. Runner speedup fields are their reciprocals.",
+  "confidence_interval_note": "Pooled paired log-ratio t intervals are descriptive only; n=6 and only two fixed prompts."
+}

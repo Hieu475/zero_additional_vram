@@ -1,0 +1,1225 @@
+{
+  "status": "experimental K=2/R=3 singleton optimization; no product runtime integration",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "HumanEval/114",
+  "prompt_sha256": "4bdb0afd53bc0e28529bafba0538d6b3a566ad5f476fb7f1016cfabe823f1c3f",
+  "input_prompt_characters": 236,
+  "input_prompt_tokens": 83,
+  "session": 11,
+  "experiment_manifest": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/budget_boundary_experiment_manifest.json",
+  "manifest_preflight": "passed",
+  "base_b1_reference_contract": {
+    "contract_id": "61f0c8f15fbc91b9ce86dd35da55360940accdc59642d1fe9faff985a2019bee",
+    "model_state_sha256": "c6212d37bd02338c60536b1ca674b3e0c76fbcd810ba5df8e8e28b0e16f4f6cf",
+    "verified_source_count": 16
+  },
+  "parameters": {
+    "k": 2,
+    "ngram_size": 3,
+    "physical_rows": 3,
+    "max_new_tokens": 52,
+    "block_k": 32,
+    "attention_strategy": "triton_batched",
+    "quantized_linear_strategy": "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+    "singleton_nf4_kernel": "one-row experimental kernel",
+    "block_nf4_kernel": "existing two-row kernel",
+    "timing_rounds": 1
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "reference": {
+    "token_ids": [
+      262,
+      671,
+      4615,
+      2038,
+      1588,
+      198,
+      262,
+      1308,
+      10160,
+      284,
+      2224,
+      492,
+      13573,
+      1305,
+      262,
+      1482,
+      10160,
+      284,
+      220,
+      15,
+      198,
+      262,
+      369,
+      1629,
+      304,
+      10307,
+      510,
+      286,
+      1482,
+      10160,
+      1421,
+      1629,
+      198,
+      286,
+      421,
+      1482,
+      10160,
+      861,
+      220,
+      15,
+      510,
+      310,
+      1482,
+      10160,
+      284,
+      220,
+      15,
+      198,
+      286,
+      1308,
+      10160,
+      284
+    ],
+    "state_prefixes": 52
+  },
+  "block": {
+    "token_ids": [
+      262,
+      671,
+      4615,
+      2038,
+      1588,
+      198,
+      262,
+      1308,
+      10160,
+      284,
+      2224,
+      492,
+      13573,
+      1305,
+      262,
+      1482,
+      10160,
+      284,
+      220,
+      15,
+      198,
+      262,
+      369,
+      1629,
+      304,
+      10307,
+      510,
+      286,
+      1482,
+      10160,
+      1421,
+      1629,
+      198,
+      286,
+      421,
+      1482,
+      10160,
+      861,
+      220,
+      15,
+      510,
+      310,
+      1482,
+      10160,
+      284,
+      220,
+      15,
+      198,
+      286,
+      1308,
+      10160,
+      284
+    ],
+    "state_prefixes": 52
+  },
+  "token_match": true,
+  "shared_state_prefixes": 52,
+  "all_shared_states_equal": true,
+  "same_prefix_domain": true,
+  "state_mismatches": [],
+  "memory_telemetry": {
+    "scope": "per-method decode call after model load; peak includes persistent model allocations",
+    "incremental_peak_allocated_bytes": "peak_allocated_bytes minus allocated baseline immediately before the call",
+    "reserved_memory_note": "allocator-reserved values can remain cached and are not equivalent to live tensor bytes"
+  },
+  "timing": {
+    "paired_rounds": [
+      {
+        "round": 0,
+        "method_order": [
+          "optimized_b1_block",
+          "optimized_b1_singleton",
+          "original_bnb_greedy"
+        ],
+        "methods": {
+          "optimized_b1_block": {
+            "token_ids": [
+              262,
+              671,
+              4615,
+              2038,
+              1588,
+              198,
+              262,
+              1308,
+              10160,
+              284,
+              2224,
+              492,
+              13573,
+              1305,
+              262,
+              1482,
+              10160,
+              284,
+              220,
+              15,
+              198,
+              262,
+              369,
+              1629,
+              304,
+              10307,
+              510,
+              286,
+              1482,
+              10160,
+              1421,
+              1629,
+              198,
+              286,
+              421,
+              1482,
+              10160,
+              861,
+              220,
+              15,
+              510,
+              310,
+              1482,
+              10160,
+              284,
+              220,
+              15,
+              198,
+              286,
+              1308,
+              10160,
+              284
+            ],
+            "total_s": 1.591447925000466,
+            "prefill_s": 0.0791085769997153,
+            "verify_s": 1.4968101490067056,
+            "accepted_draft_tokens": 3,
+            "draft_tokens": 25,
+            "memory": {
+              "baseline_allocated_bytes": 2074559488,
+              "peak_allocated_bytes": 2107017216,
+              "incremental_peak_allocated_bytes": 32457728,
+              "baseline_reserved_bytes": 2206203904,
+              "peak_reserved_bytes": 2206203904,
+              "incremental_peak_reserved_bytes": 0
+            }
+          },
+          "optimized_b1_singleton": {
+            "token_ids": [
+              262,
+              671,
+              4615,
+              2038,
+              1588,
+              198,
+              262,
+              1308,
+              10160,
+              284,
+              2224,
+              492,
+              13573,
+              1305,
+              262,
+              1482,
+              10160,
+              284,
+              220,
+              15,
+              198,
+              262,
+              369,
+              1629,
+              304,
+              10307,
+              510,
+              286,
+              1482,
+              10160,
+              1421,
+              1629,
+              198,
+              286,
+              421,
+              1482,
+              10160,
+              861,
+              220,
+              15,
+              510,
+              310,
+              1482,
+              10160,
+              284,
+              220,
+              15,
+              198,
+              286,
+              1308,
+              10160,
+              284
+            ],
+            "total_s": 1.524927206999564,
+            "prefill_s": 0.07902067900067777,
+            "verify_s": 1.4439262199994118,
+            "accepted_draft_tokens": 3,
+            "draft_tokens": 25,
+            "memory": {
+              "baseline_allocated_bytes": 2074559488,
+              "peak_allocated_bytes": 2106045952,
+              "incremental_peak_allocated_bytes": 31486464,
+              "baseline_reserved_bytes": 2206203904,
+              "peak_reserved_bytes": 2206203904,
+              "incremental_peak_reserved_bytes": 0
+            }
+          },
+          "original_bnb_greedy": {
+            "token_ids": [
+              262,
+              671,
+              4615,
+              2038,
+              1588,
+              198,
+              262,
+              1308,
+              10160,
+              284,
+              2224,
+              492,
+              13573,
+              1305,
+              262,
+              1482,
+              10160,
+              284,
+              220,
+              15,
+              198,
+              262,
+              369,
+              1629,
+              304,
+              10307,
+              510,
+              286,
+              1482,
+              10160,
+              1421,
+              1629,
+              198,
+              286,
+              421,
+              1482,
+              10160,
+              861,
+              220,
+              15,
+              510,
+              310,
+              1482,
+              10160,
+              284,
+              220,
+              15,
+              198,
+              286,
+              1308,
+              10160,
+              284
+            ],
+            "total_s": 1.370801400998971,
+            "prefill_s": 0.07926593099909951,
+            "decode_s": 1.2915316199996596,
+            "memory": {
+              "baseline_allocated_bytes": 2074559488,
+              "peak_allocated_bytes": 2175618560,
+              "incremental_peak_allocated_bytes": 101059072,
+              "baseline_reserved_bytes": 2206203904,
+              "peak_reserved_bytes": 2206203904,
+              "incremental_peak_reserved_bytes": 0
+            }
+          }
+        },
+        "block_matches_singleton": true,
+        "block_matches_original_bnb": true
+      }
+    ],
+    "geometric_mean_speedup_vs_optimized_b1_singleton": 0.9582011343532447,
+    "geometric_mean_speedup_vs_original_bnb": 0.8613548577145995,
+    "speedup_vs_b1_samples": [
+      0.9582011343532447
+    ],
+    "speedup_vs_bnb_samples": [
+      0.8613548577145995
+    ]
+  },
+  "limitations": [
+    "Finite development-only closed loop; singleton uses the prototype and block uses the current two-row kernel.",
+    "Not yet pinned by a live B1 reference contract; no BNB state-equivalence claim.",
+    "Held-out GSM8K indices 300-349 were not used."
+  ],
+  "terminal_branch_audit": {
+    "eos_token_id": 151645,
+    "block_terminal_eos": false,
+    "cycle_trace": [
+      {
+        "output_start": 0,
+        "pending": 262,
+        "draft_tokens": [
+          16246,
+          458
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          262
+        ],
+        "draft_s": 2.711999877647031e-05,
+        "verify_s": 0.03942625299896463,
+        "commit_s": 4.7792000259505585e-05,
+        "cycle_s": 0.039587071998539614,
+        "cache_len_after": 84,
+        "next_pending": 671
+      },
+      {
+        "output_start": 1,
+        "pending": 671,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          671
+        ],
+        "draft_s": 1.753100150381215e-05,
+        "verify_s": 0.028070907001165324,
+        "commit_s": 0.00010790600026666652,
+        "cycle_s": 0.02821390600001905,
+        "cache_len_after": 85,
+        "next_pending": 4615
+      },
+      {
+        "output_start": 2,
+        "pending": 4615,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          4615
+        ],
+        "draft_s": 1.6680000044289045e-05,
+        "verify_s": 0.02695389200016507,
+        "commit_s": 0.0009940640011336654,
+        "cycle_s": 0.027982648000033805,
+        "cache_len_after": 86,
+        "next_pending": 2038
+      },
+      {
+        "output_start": 3,
+        "pending": 2038,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          2038
+        ],
+        "draft_s": 2.3541000700788572e-05,
+        "verify_s": 0.027469433000078425,
+        "commit_s": 2.914400101872161e-05,
+        "cycle_s": 0.027553055000680615,
+        "cache_len_after": 87,
+        "next_pending": 1588
+      },
+      {
+        "output_start": 4,
+        "pending": 1588,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1588
+        ],
+        "draft_s": 1.7806998585001566e-05,
+        "verify_s": 0.02737090400114539,
+        "commit_s": 3.0451001293840818e-05,
+        "cycle_s": 0.027435878000687808,
+        "cache_len_after": 88,
+        "next_pending": 198
+      },
+      {
+        "output_start": 5,
+        "pending": 198,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          198
+        ],
+        "draft_s": 1.905699900817126e-05,
+        "verify_s": 0.027539552000234835,
+        "commit_s": 0.00010329500037187245,
+        "cycle_s": 0.02767912899980729,
+        "cache_len_after": 89,
+        "next_pending": 262
+      },
+      {
+        "output_start": 6,
+        "pending": 262,
+        "draft_tokens": [
+          3190,
+          262
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          262
+        ],
+        "draft_s": 3.004099926329218e-05,
+        "verify_s": 0.03940568100006203,
+        "commit_s": 8.104399967123754e-05,
+        "cycle_s": 0.03953748699859716,
+        "cache_len_after": 90,
+        "next_pending": 1308
+      },
+      {
+        "output_start": 7,
+        "pending": 1308,
+        "draft_tokens": [
+          3136,
+          1857
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          1308
+        ],
+        "draft_s": 2.808499993989244e-05,
+        "verify_s": 0.0395148869993136,
+        "commit_s": 0.00010599600136629306,
+        "cycle_s": 0.03967018100047426,
+        "cache_len_after": 91,
+        "next_pending": 10160
+      },
+      {
+        "output_start": 8,
+        "pending": 10160,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          10160
+        ],
+        "draft_s": 1.912500010803342e-05,
+        "verify_s": 0.026849198999116197,
+        "commit_s": 3.488400034257211e-05,
+        "cycle_s": 0.026921636999759357,
+        "cache_len_after": 92,
+        "next_pending": 284
+      },
+      {
+        "output_start": 9,
+        "pending": 284,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          284
+        ],
+        "draft_s": 1.879599949461408e-05,
+        "verify_s": 0.02705757800140418,
+        "commit_s": 3.0500999855576083e-05,
+        "cycle_s": 0.02712338799938152,
+        "cache_len_after": 93,
+        "next_pending": 2224
+      },
+      {
+        "output_start": 10,
+        "pending": 2224,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          2224
+        ],
+        "draft_s": 1.8046999684884213e-05,
+        "verify_s": 0.027801987000202644,
+        "commit_s": 2.902000051108189e-05,
+        "cycle_s": 0.02786545199887769,
+        "cache_len_after": 94,
+        "next_pending": 492
+      },
+      {
+        "output_start": 11,
+        "pending": 492,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          492
+        ],
+        "draft_s": 1.7414000467397273e-05,
+        "verify_s": 0.0291096019991528,
+        "commit_s": 2.9575001462944783e-05,
+        "cycle_s": 0.029172336000556243,
+        "cache_len_after": 95,
+        "next_pending": 13573
+      },
+      {
+        "output_start": 12,
+        "pending": 13573,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          13573
+        ],
+        "draft_s": 1.7794998711906374e-05,
+        "verify_s": 0.02835110399973928,
+        "commit_s": 0.00010670700066839345,
+        "cycle_s": 0.028492209001342417,
+        "cache_len_after": 96,
+        "next_pending": 1305
+      },
+      {
+        "output_start": 13,
+        "pending": 1305,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1305
+        ],
+        "draft_s": 1.8353999621467665e-05,
+        "verify_s": 0.026381495999885374,
+        "commit_s": 2.952999966510106e-05,
+        "cycle_s": 0.02644453299944871,
+        "cache_len_after": 97,
+        "next_pending": 262
+      },
+      {
+        "output_start": 14,
+        "pending": 262,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          262
+        ],
+        "draft_s": 1.858200084825512e-05,
+        "verify_s": 0.027234658000452328,
+        "commit_s": 2.8933000066899695e-05,
+        "cycle_s": 0.02729891000126372,
+        "cache_len_after": 98,
+        "next_pending": 1482
+      },
+      {
+        "output_start": 15,
+        "pending": 1482,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1482
+        ],
+        "draft_s": 1.9082999642705545e-05,
+        "verify_s": 0.027261017001364962,
+        "commit_s": 2.982800106110517e-05,
+        "cycle_s": 0.027326208999511437,
+        "cache_len_after": 99,
+        "next_pending": 10160
+      },
+      {
+        "output_start": 16,
+        "pending": 10160,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          10160
+        ],
+        "draft_s": 1.8970999008161016e-05,
+        "verify_s": 0.027858339999511372,
+        "commit_s": 0.00010966999980155379,
+        "cycle_s": 0.02800414999910572,
+        "cache_len_after": 100,
+        "next_pending": 284
+      },
+      {
+        "output_start": 17,
+        "pending": 284,
+        "draft_tokens": [
+          2224,
+          492
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          284
+        ],
+        "draft_s": 2.4421000489383005e-05,
+        "verify_s": 0.038299014000585885,
+        "commit_s": 0.0009872909995465307,
+        "cycle_s": 0.03932871999859344,
+        "cache_len_after": 101,
+        "next_pending": 220
+      },
+      {
+        "output_start": 18,
+        "pending": 220,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          220
+        ],
+        "draft_s": 1.9555998733267188e-05,
+        "verify_s": 0.027589377999902354,
+        "commit_s": 3.307799852336757e-05,
+        "cycle_s": 0.027659592000418343,
+        "cache_len_after": 102,
+        "next_pending": 15
+      },
+      {
+        "output_start": 19,
+        "pending": 15,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          15
+        ],
+        "draft_s": 1.9736000467673875e-05,
+        "verify_s": 0.027952091999395634,
+        "commit_s": 3.0250999770942144e-05,
+        "cycle_s": 0.02801892199931899,
+        "cache_len_after": 103,
+        "next_pending": 198
+      },
+      {
+        "output_start": 20,
+        "pending": 198,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          198
+        ],
+        "draft_s": 1.8867000108002685e-05,
+        "verify_s": 0.02743295500113163,
+        "commit_s": 2.7664000299409963e-05,
+        "cycle_s": 0.02749538100033533,
+        "cache_len_after": 104,
+        "next_pending": 262
+      },
+      {
+        "output_start": 21,
+        "pending": 262,
+        "draft_tokens": [
+          1308,
+          10160
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          262
+        ],
+        "draft_s": 2.650500027812086e-05,
+        "verify_s": 0.03911950300062017,
+        "commit_s": 0.00011124699994979892,
+        "cycle_s": 0.03927423599998292,
+        "cache_len_after": 105,
+        "next_pending": 369
+      },
+      {
+        "output_start": 22,
+        "pending": 369,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          369
+        ],
+        "draft_s": 4.6363000365090556e-05,
+        "verify_s": 0.029078211999149062,
+        "commit_s": 0.00011173900020367,
+        "cycle_s": 0.029253654000058305,
+        "cache_len_after": 106,
+        "next_pending": 1629
+      },
+      {
+        "output_start": 23,
+        "pending": 1629,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1629
+        ],
+        "draft_s": 2.0165000023553148e-05,
+        "verify_s": 0.02704305299994303,
+        "commit_s": 3.3541000448167324e-05,
+        "cycle_s": 0.027113332000226364,
+        "cache_len_after": 107,
+        "next_pending": 304
+      },
+      {
+        "output_start": 24,
+        "pending": 304,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          304
+        ],
+        "draft_s": 2.0487001165747643e-05,
+        "verify_s": 0.027162257001691614,
+        "commit_s": 3.216499862901401e-05,
+        "cycle_s": 0.027230945999690448,
+        "cache_len_after": 108,
+        "next_pending": 10307
+      },
+      {
+        "output_start": 25,
+        "pending": 10307,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          10307
+        ],
+        "draft_s": 2.038400089077186e-05,
+        "verify_s": 0.028280345000894158,
+        "commit_s": 3.2380001357523724e-05,
+        "cycle_s": 0.02835028799927386,
+        "cache_len_after": 109,
+        "next_pending": 510
+      },
+      {
+        "output_start": 26,
+        "pending": 510,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          510
+        ],
+        "draft_s": 2.0162999135209247e-05,
+        "verify_s": 0.027552383000511327,
+        "commit_s": 0.0001153920002252562,
+        "cycle_s": 0.027704915000867913,
+        "cache_len_after": 110,
+        "next_pending": 286
+      },
+      {
+        "output_start": 27,
+        "pending": 286,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          286
+        ],
+        "draft_s": 2.3952999981702305e-05,
+        "verify_s": 0.0269779539994488,
+        "commit_s": 0.0009916899998643203,
+        "cycle_s": 0.028011989999868092,
+        "cache_len_after": 111,
+        "next_pending": 1482
+      },
+      {
+        "output_start": 28,
+        "pending": 1482,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1482
+        ],
+        "draft_s": 2.0554000002448447e-05,
+        "verify_s": 0.029253840999444947,
+        "commit_s": 0.0009904820017254679,
+        "cycle_s": 0.030281469000328798,
+        "cache_len_after": 112,
+        "next_pending": 10160
+      },
+      {
+        "output_start": 29,
+        "pending": 10160,
+        "draft_tokens": [
+          284,
+          220
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          10160
+        ],
+        "draft_s": 2.6884999897447415e-05,
+        "verify_s": 0.03816048599946953,
+        "commit_s": 0.0009929810003086459,
+        "cycle_s": 0.039199172000735416,
+        "cache_len_after": 113,
+        "next_pending": 1421
+      },
+      {
+        "output_start": 30,
+        "pending": 1421,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1421
+        ],
+        "draft_s": 2.2965999960433692e-05,
+        "verify_s": 0.026760859000205528,
+        "commit_s": 3.0766001145821065e-05,
+        "cycle_s": 0.026833416000954458,
+        "cache_len_after": 114,
+        "next_pending": 1629
+      },
+      {
+        "output_start": 31,
+        "pending": 1629,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1629
+        ],
+        "draft_s": 2.036499972746242e-05,
+        "verify_s": 0.02720346499881998,
+        "commit_s": 3.0577000870835036e-05,
+        "cycle_s": 0.02727184099967417,
+        "cache_len_after": 115,
+        "next_pending": 198
+      },
+      {
+        "output_start": 32,
+        "pending": 198,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          198
+        ],
+        "draft_s": 2.070600021397695e-05,
+        "verify_s": 0.02851538899994921,
+        "commit_s": 0.0001121339992096182,
+        "cycle_s": 0.028665547999480623,
+        "cache_len_after": 116,
+        "next_pending": 286
+      },
+      {
+        "output_start": 33,
+        "pending": 286,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          286
+        ],
+        "draft_s": 2.1542999093071558e-05,
+        "verify_s": 0.02818154200031131,
+        "commit_s": 0.0001057680001395056,
+        "cycle_s": 0.028326294999715174,
+        "cache_len_after": 117,
+        "next_pending": 421
+      },
+      {
+        "output_start": 34,
+        "pending": 421,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          421
+        ],
+        "draft_s": 2.24110008275602e-05,
+        "verify_s": 0.02713601200048288,
+        "commit_s": 0.0009949439991032705,
+        "cycle_s": 0.028169949999210075,
+        "cache_len_after": 118,
+        "next_pending": 1482
+      },
+      {
+        "output_start": 35,
+        "pending": 1482,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1482
+        ],
+        "draft_s": 2.121199941029772e-05,
+        "verify_s": 0.02720159000091371,
+        "commit_s": 3.276999996160157e-05,
+        "cycle_s": 0.02727287699963199,
+        "cache_len_after": 119,
+        "next_pending": 10160
+      },
+      {
+        "output_start": 36,
+        "pending": 10160,
+        "draft_tokens": [
+          1421,
+          1629
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          10160
+        ],
+        "draft_s": 2.7557000066735782e-05,
+        "verify_s": 0.03944258299998182,
+        "commit_s": 5.6881001000874676e-05,
+        "cycle_s": 0.039545624998936546,
+        "cache_len_after": 120,
+        "next_pending": 861
+      },
+      {
+        "output_start": 37,
+        "pending": 861,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          861
+        ],
+        "draft_s": 2.2736998289474286e-05,
+        "verify_s": 0.027904751999813016,
+        "commit_s": 4.2940000639646314e-05,
+        "cycle_s": 0.027989500000330736,
+        "cache_len_after": 121,
+        "next_pending": 220
+      },
+      {
+        "output_start": 38,
+        "pending": 220,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          220
+        ],
+        "draft_s": 2.360299913561903e-05,
+        "verify_s": 0.02817129300092347,
+        "commit_s": 0.00010983699939970393,
+        "cycle_s": 0.02832266700170294,
+        "cache_len_after": 122,
+        "next_pending": 15
+      },
+      {
+        "output_start": 39,
+        "pending": 15,
+        "draft_tokens": [
+          198,
+          262
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          15
+        ],
+        "draft_s": 2.7993000912829302e-05,
+        "verify_s": 0.038115051998829586,
+        "commit_s": 5.5714999689371325e-05,
+        "cycle_s": 0.03821690299992042,
+        "cache_len_after": 123,
+        "next_pending": 510
+      },
+      {
+        "output_start": 40,
+        "pending": 510,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          510
+        ],
+        "draft_s": 2.3043001419864595e-05,
+        "verify_s": 0.02827820399943448,
+        "commit_s": 0.0009949600007530535,
+        "cycle_s": 0.029314683999473345,
+        "cache_len_after": 124,
+        "next_pending": 310
+      },
+      {
+        "output_start": 41,
+        "pending": 310,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          310
+        ],
+        "draft_s": 2.2464999346993864e-05,
+        "verify_s": 0.027339109999957145,
+        "commit_s": 3.5555000067688525e-05,
+        "cycle_s": 0.027414031999796862,
+        "cache_len_after": 125,
+        "next_pending": 1482
+      },
+      {
+        "output_start": 42,
+        "pending": 1482,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1482
+        ],
+        "draft_s": 2.33390001085354e-05,
+        "verify_s": 0.02792607700030203,
+        "commit_s": 3.527300032146741e-05,
+        "cycle_s": 0.02800200799902086,
+        "cache_len_after": 126,
+        "next_pending": 10160
+      },
+      {
+        "output_start": 43,
+        "pending": 10160,
+        "draft_tokens": [
+          861,
+          220
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          10160
+        ],
+        "draft_s": 2.9892000384279527e-05,
+        "verify_s": 0.03942994299904967,
+        "commit_s": 4.9807000323198736e-05,
+        "cycle_s": 0.03952800699880754,
+        "cache_len_after": 127,
+        "next_pending": 284
+      },
+      {
+        "output_start": 44,
+        "pending": 284,
+        "draft_tokens": [
+          220,
+          15
+        ],
+        "accepted": 2,
+        "rejected_at": null,
+        "emitted_tokens": [
+          284,
+          220,
+          15
+        ],
+        "draft_s": 2.3254999177879654e-05,
+        "verify_s": 0.039509558000645484,
+        "commit_s": 4.741100019600708e-05,
+        "cycle_s": 0.03959879899957741,
+        "cache_len_after": 130,
+        "next_pending": 198
+      },
+      {
+        "output_start": 47,
+        "pending": 198,
+        "draft_tokens": [
+          262,
+          369
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          198
+        ],
+        "draft_s": 3.151400051137898e-05,
+        "verify_s": 0.03960991100029787,
+        "commit_s": 6.131200098025147e-05,
+        "cycle_s": 0.039722038000036264,
+        "cache_len_after": 131,
+        "next_pending": 286
+      },
+      {
+        "output_start": 48,
+        "pending": 286,
+        "draft_tokens": [
+          421,
+          1482
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          286
+        ],
+        "draft_s": 3.180199928465299e-05,
+        "verify_s": 0.039606306001587654,
+        "commit_s": 7.511399962822907e-05,
+        "cycle_s": 0.03973230900010094,
+        "cache_len_after": 132,
+        "next_pending": 1308
+      },
+      {
+        "output_start": 49,
+        "pending": 1308,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1308
+        ],
+        "draft_s": 2.502699862816371e-05,
+        "verify_s": 0.029669244000615436,
+        "commit_s": 0.0009874959996523103,
+        "cycle_s": 0.030703942000400275,
+        "cache_len_after": 133,
+        "next_pending": 10160
+      },
+      {
+        "output_start": 50,
+        "pending": 10160,
+        "draft_tokens": [
+          284
+        ],
+        "accepted": 1,
+        "rejected_at": null,
+        "emitted_tokens": [
+          10160,
+          284
+        ],
+        "draft_s": 3.124800059595145e-05,
+        "verify_s": 0.029251296000438742,
+        "commit_s": 3.139200089208316e-05,
+        "cycle_s": 0.029332772999623558,
+        "cache_len_after": 135,
+        "next_pending": 1308
+      }
+    ],
+    "eos_draft_events": [],
+    "accepted_eos_candidate_seen": false,
+    "rejected_eos_candidate_seen": false,
+    "trace_runner_sha256": "8a67def78869e1756df81f51626234a11a91925300f1624c6eee263486bf9a4b"
+  }
+}

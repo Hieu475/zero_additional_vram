@@ -1,0 +1,149 @@
+{
+  "schema": "zassd-activationvec-nf4-m3-scale-reuse-screen-v1",
+  "classification": "operator-level pair-broadcast experiment; not integrated",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "launch": {
+    "out_tile": 8,
+    "num_warps": 8
+  },
+  "candidate": "load nested-NF4 scale metadata on even lanes, then broadcast to adjacent lane with warp bfly",
+  "cases": [
+    {
+      "prompt_id": "cnndm_003",
+      "benchmark": "data/benchmarks/cnndm_eval.jsonl",
+      "prompt_sha256": "baea8efa9760531deacd4b71b497fe768b9b4c9445fecba57b015e44b57e9f51",
+      "forced_tokens": [
+        20924,
+        3693,
+        18478
+      ],
+      "projections": {
+        "q_proj": {
+          "input_shape": [
+            3,
+            2048
+          ],
+          "output_shape": [
+            3,
+            2048
+          ],
+          "default_exact_elements": 6144,
+          "candidate_exact_elements": 101,
+          "total_elements": 6144,
+          "default_bitwise_equal_to_bnb_m3": true,
+          "candidate_bitwise_equal_to_bnb_m3": false,
+          "candidate_max_abs_diff": 2.6875,
+          "timing_status": "skipped: bitwise output gate failed"
+        },
+        "gate_proj": {
+          "input_shape": [
+            3,
+            2048
+          ],
+          "output_shape": [
+            3,
+            11008
+          ],
+          "default_exact_elements": 33024,
+          "candidate_exact_elements": 547,
+          "total_elements": 33024,
+          "default_bitwise_equal_to_bnb_m3": true,
+          "candidate_bitwise_equal_to_bnb_m3": false,
+          "candidate_max_abs_diff": 1.453125,
+          "timing_status": "skipped: bitwise output gate failed"
+        },
+        "down_proj": {
+          "input_shape": [
+            3,
+            11008
+          ],
+          "output_shape": [
+            3,
+            2048
+          ],
+          "default_exact_elements": 6144,
+          "candidate_exact_elements": 96,
+          "total_elements": 6144,
+          "default_bitwise_equal_to_bnb_m3": true,
+          "candidate_bitwise_equal_to_bnb_m3": false,
+          "candidate_max_abs_diff": 0.42578125,
+          "timing_status": "skipped: bitwise output gate failed"
+        }
+      }
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "benchmark": "data/benchmarks/humaneval_ext114.jsonl",
+      "prompt_sha256": "4bdb0afd53bc0e28529bafba0538d6b3a566ad5f476fb7f1016cfabe823f1c3f",
+      "forced_tokens": [
+        262,
+        671,
+        4615
+      ],
+      "projections": {
+        "q_proj": {
+          "input_shape": [
+            3,
+            2048
+          ],
+          "output_shape": [
+            3,
+            2048
+          ],
+          "default_exact_elements": 6144,
+          "candidate_exact_elements": 102,
+          "total_elements": 6144,
+          "default_bitwise_equal_to_bnb_m3": true,
+          "candidate_bitwise_equal_to_bnb_m3": false,
+          "candidate_max_abs_diff": 5.1875,
+          "timing_status": "skipped: bitwise output gate failed"
+        },
+        "gate_proj": {
+          "input_shape": [
+            3,
+            2048
+          ],
+          "output_shape": [
+            3,
+            11008
+          ],
+          "default_exact_elements": 33024,
+          "candidate_exact_elements": 520,
+          "total_elements": 33024,
+          "default_bitwise_equal_to_bnb_m3": true,
+          "candidate_bitwise_equal_to_bnb_m3": false,
+          "candidate_max_abs_diff": 2.015625,
+          "timing_status": "skipped: bitwise output gate failed"
+        },
+        "down_proj": {
+          "input_shape": [
+            3,
+            11008
+          ],
+          "output_shape": [
+            3,
+            2048
+          ],
+          "default_exact_elements": 6144,
+          "candidate_exact_elements": 105,
+          "total_elements": 6144,
+          "default_bitwise_equal_to_bnb_m3": true,
+          "candidate_bitwise_equal_to_bnb_m3": false,
+          "candidate_max_abs_diff": 0.4921875,
+          "timing_status": "skipped: bitwise output gate failed"
+        }
+      }
+    }
+  ],
+  "generated_source": "scripts/_nf4_activationvec_scale_reuse_kernel.py",
+  "generated_source_sha256": "6ad1c83ef9ecc9d2b20996b1095105170a56ce029fff7104d8e31d51c1720980",
+  "runner_sha256": "8b0b0597928ff720ac8569995d01bda083288d46a38f7d2c04c8f0006d6859d2",
+  "base_kernel_sha256": "322da0c917025d9879761fce33b1b5c29880badd41fb79f14b0978e4ac4a4c7a",
+  "limitations": [
+    "Operator outputs only; no full-model token/KV state-machine audit.",
+    "Two development prompts and one RTX 4050 toolchain.",
+    "GSM8K held-out indices 300-349 excluded."
+  ]
+}

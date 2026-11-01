@@ -1,0 +1,58 @@
+{
+  "schema": "zassd-fallback-ngram-sweep-manifest-v1",
+  "classification": "second independent process per prompt; paired K=2 ngram-size sweep across six-prompt development cohort",
+  "model": {
+    "id": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "triton": "3.6.0",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "schedule": {
+    "k": 2,
+    "ngram_sizes": [
+      2,
+      3,
+      4
+    ],
+    "physical_rows": 3,
+    "attention": "bnb_rowwise",
+    "max_new_tokens": 512,
+    "timing_rounds": 4,
+    "fallback": "native BNB M=1 on all empty-proposal cycles"
+  },
+  "prompt_cohort": [
+    "HumanEval/112",
+    "HumanEval/114",
+    "HumanEval/121",
+    "HumanEval/123",
+    "cnndm_004",
+    "cnndm_003"
+  ],
+  "ablation_manifest_sha256": "9b05f1152c6aeff944fc92af4514205ba59a5d3f9819ebdbb5e396d0b173adab",
+  "source_sha256": {
+    "scripts/audit_activationvec_fallback_fraction_ablation_512.py": "54217257a40ab8b80d25deae1244e1e121a99bd85c06c37a5c3963cf0581fe3c",
+    "scripts/run_strong_baseline_comparison.py": "d887583863e9d4889170a664bfa1ca9f9a6bf6fc0b1f4b09631f62170714a238",
+    "scripts/audit_bnb_nf4_gate_reduction_orders.py": "ba9751d19c02c4e704aad64622173908d5f811203d5674c9449c0337da64cae5",
+    "scripts/audit_bnb_nf4_activationvec_block_integration.py": "234ffa6a673205f63f116b20f457490e5f04460418b6c309669097b10d37d300",
+    "scripts/audit_triton_b1_closed_loop.py": "69ffa08de5a9620baefee7526653085f390b72eddac0c5f94e22ddd4baf51e4a",
+    "src/zassd/backends/base.py": "00c77e4731ef61cda25d4393d865b1f21b7422689870d680529aa79165df9ef6",
+    "src/zassd/decoding/b1_exact.py": "e19b4e6440697fc96e6e6e7b1902da843fa45b8cae0e62700c4ac331f99b0d63",
+    "src/zassd/decoding/ngram.py": "0976856395ce1a293e767c84fd6b1dc6d8f277b57f0674e806896cc3913d4713",
+    "src/zassd/certification/fixed_row_dispatch.py": "22bfa87d6ba25ff0f7f0da5e09359557984e5e8f3daa71b7f44c3362bd4225a9",
+    "src/zassd/certification/qwen2_padded.py": "a87cf46e83cbd6741e7c9465c358b0988e160516f66820a8e77ce74d7265c4c5",
+    "src/zassd/cache/kv_cache.py": "a56a3ad4ee163e7456e236515e8848173face82426b0fe3c0e7489b170ed3934",
+    "scripts/audit_activationvec_ngram_sweep_512_repeat.py": "94d876bf74fb72327783396e917e2a4ef1f882f58ae7a08ff5b4f5de1a9d40d9"
+  },
+  "benchmark_sha256": {
+    "data/benchmarks/humaneval_ext114.jsonl": "5f7469c762a00fd8d4e1f80f28f79bb2d507b2532ada97454601f5facf1a725c",
+    "data/benchmarks/cnndm_eval.jsonl": "11b5e9db9851878491854f6e166c513aa0ed6668d635ccb49d97592032d02096"
+  },
+  "heldout_policy": "GSM8K indices 300-349 excluded."
+}

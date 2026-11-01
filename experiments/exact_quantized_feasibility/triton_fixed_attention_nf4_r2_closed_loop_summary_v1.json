@@ -1,0 +1,45 @@
+{
+  "status": "development-only combined fixed-attention and Triton NF4 R=2 closed-loop runs",
+  "configuration": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "k": 1,
+    "ngram_size": 3,
+    "physical_rows": 2,
+    "block_k": 32,
+    "attention_strategy": "triton_batched",
+    "quantized_linear_strategy": "triton_nf4_group_scale_packed_rows2_n16_warp1_k256"
+  },
+  "runs": [
+    {
+      "prompt_id": "cnndm_003",
+      "max_new_tokens": 128,
+      "token_kv_logical_lengths_exact_to_b1": true,
+      "shared_kv_prefixes": 128,
+      "accepted_draft_tokens": 28,
+      "draft_tokens": 44,
+      "speedup_vs_b1": 1.2883346644652762,
+      "speedup_vs_original_bnb": 1.0727886261989719,
+      "block_matches_original_bnb_tokens": false,
+      "artifact": "triton_fixed_attention_nf4_r2_closed_loop_cnndm003_128_s4_v1.json",
+      "timing_rounds": 2
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "max_new_tokens": 256,
+      "token_kv_logical_lengths_exact_to_b1": true,
+      "shared_kv_prefixes": 256,
+      "accepted_draft_tokens": 55,
+      "draft_tokens": 84,
+      "speedup_vs_b1": 1.2952110980774347,
+      "speedup_vs_original_bnb": 1.056572482583927,
+      "block_matches_original_bnb_tokens": false,
+      "artifact": "triton_fixed_attention_nf4_r2_closed_loop_cnndm004_256_s5_v1.json",
+      "timing_rounds": 1
+    }
+  ],
+  "limitations": [
+    "One timing pair per run; exploratory, not a stable performance claim.",
+    "Both runs compare against the custom B1 singleton reference; BNB token/state identity is not implied.",
+    "Held-out GSM8K indices 300\u2013349 were not used."
+  ]
+}

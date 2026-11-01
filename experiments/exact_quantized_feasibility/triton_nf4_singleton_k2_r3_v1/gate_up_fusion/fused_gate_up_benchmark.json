@@ -1,0 +1,70 @@
+{
+  "schema": "zassd-nf4-fused-gate-up-m3-prototype-benchmark-v1",
+  "status": "experimental one-launch prototype; not integrated into the model runtime",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "triton": "3.6.0",
+  "shape": {
+    "rows": 3,
+    "in_features": 2048,
+    "out_features_each": 11008
+  },
+  "tile": {
+    "block_n": 16,
+    "block_k": 256,
+    "num_warps": 1
+  },
+  "iterations_per_sample": 20,
+  "alternating_rounds": 9,
+  "correctness": {
+    "fused_gate_m1_rowwise_singleton_equal": true,
+    "fused_up_m1_rowwise_singleton_equal": true,
+    "fused_gate_m1_equals_separate_schedule": true,
+    "fused_up_m1_equals_separate_schedule": true,
+    "fused_gate_m2_rowwise_singleton_equal": true,
+    "fused_up_m2_rowwise_singleton_equal": true,
+    "fused_gate_m2_equals_separate_schedule": true,
+    "fused_up_m2_equals_separate_schedule": true,
+    "fused_gate_m3_rowwise_singleton_equal": true,
+    "fused_up_m3_rowwise_singleton_equal": true,
+    "fused_gate_m3_equals_separate_schedule": true,
+    "fused_up_m3_equals_separate_schedule": true
+  },
+  "median_cuda_ms": {
+    "separate_two_launches": 0.3293328046798706,
+    "fused_one_launch": 0.31274240016937255
+  },
+  "fused_over_separate_latency_ratio": 0.9496241969377305,
+  "samples_ms": {
+    "separate_two_launches": [
+      0.31267681121826174,
+      0.31405599117279054,
+      0.3673088073730469,
+      0.37253119945526125,
+      0.3293328046798706,
+      0.3208672046661377,
+      0.3809679985046387,
+      0.3177472114562988,
+      0.3684351921081543
+    ],
+    "fused_one_launch": [
+      0.3051520109176636,
+      0.3642879962921143,
+      0.30812160968780516,
+      0.31196160316467286,
+      0.3637248039245605,
+      0.3081279993057251,
+      0.31274240016937255,
+      0.3627536058425903,
+      0.31571838855743406
+    ]
+  },
+  "limitations": [
+    "Single first-layer random activation benchmark on one RTX 4050.",
+    "Rowwise shape invariance is checked against singleton calls of the fused kernel; integrated whole-model exactness is not tested.",
+    "A fused result differing from separate projections defines a new arithmetic schedule and would require a new reference contract."
+  ]
+}

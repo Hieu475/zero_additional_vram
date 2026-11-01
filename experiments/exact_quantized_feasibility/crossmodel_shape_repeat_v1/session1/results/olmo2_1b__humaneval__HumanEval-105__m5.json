@@ -1,0 +1,71 @@
+{
+  "status": "completed",
+  "scope": "single-prefix shape diagnostic; not full-sequence exactness or a universal guarantee",
+  "protocol_sha256": "9f833c6baff42e8edcac90ab629499af308e8cc47598a8975140f1f1fa3a60a2",
+  "cohort_sha256": "01610458c693cb12d715bb0474ede6d354e1dee33c599d2cc08e7d805546ff08",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "family": "OLMo2",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "HumanEval/105",
+  "task": "humaneval",
+  "prompt_sha256": "7610e97e9e03b58b9d2f83c6ffb2e08c7a8827a982645a091f53b347cdfa7a5b",
+  "prompt_token_count": 271,
+  "prompt_token_ids_sha256": "511efe9cd094ac332b39269cbc5642cd1acea563e41c25649d550a8f223429f8",
+  "M": 5,
+  "candidate_ids": [
+    262,
+    471,
+    10839,
+    2625,
+    87
+  ],
+  "candidate_length": 5,
+  "linear_singleton_counts": {
+    "patched_modules": 113,
+    "split_forward_calls": 113,
+    "single_row_kernel_calls": 565
+  },
+  "ordinary_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.15625,
+      0.25,
+      0.25,
+      0.1640625,
+      0.15625
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.125,
+    "kv_value_max_abs": 0.03515625,
+    "first_kv_different_layer": 0
+  },
+  "singleton_linear_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.14453125,
+      0.125,
+      0.1875,
+      0.15625,
+      0.1640625
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.125,
+    "kv_value_max_abs": 0.0283203125,
+    "first_kv_different_layer": 1
+  },
+  "model_manifest": "experiments/exact_quantized_feasibility/crossmodel_shape_repeat_v1/session1/manifests/olmo2_1b.json"
+}

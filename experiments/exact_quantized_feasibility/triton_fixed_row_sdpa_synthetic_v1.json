@@ -1,0 +1,42 @@
+{
+  "scope": "synthetic fixed-row Triton attention; shape-invariance screen only",
+  "device": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "triton": "3.6.0",
+  "dtype": "torch.bfloat16",
+  "prefix_length": 397,
+  "rows": 3,
+  "heads": 16,
+  "head_dim": 128,
+  "reduction": "serial online-softmax over visible keys; fixed per-key accumulation",
+  "rowwise_exact": true,
+  "row_results": [
+    {
+      "row": 0,
+      "visible_kv_length": 398,
+      "bitwise_equal": true,
+      "max_abs": 0.0
+    },
+    {
+      "row": 1,
+      "visible_kv_length": 399,
+      "bitwise_equal": true,
+      "max_abs": 0.0
+    },
+    {
+      "row": 2,
+      "visible_kv_length": 400,
+      "bitwise_equal": true,
+      "max_abs": 0.0
+    }
+  ],
+  "median_block_ms": 0.14681600034236908,
+  "median_singleton_calls_ms": 0.43001599609851837,
+  "speedup_vs_singleton_calls": 2.928945040702227,
+  "rounds": 8,
+  "limitations": [
+    "synthetic tensors only; not compared with Qwen SDPA outputs",
+    "one program per query/head with serial key loop; likely a slow correctness prototype",
+    "does not implement GQA packing, cache writes, masks, or model integration"
+  ]
+}

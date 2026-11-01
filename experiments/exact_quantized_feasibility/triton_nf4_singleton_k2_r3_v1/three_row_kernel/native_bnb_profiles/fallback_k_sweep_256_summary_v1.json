@@ -1,0 +1,350 @@
+{
+  "schema": "zassd-fallback-k-sweep-summary-256-v1",
+  "classification": "six selected development prompts; one process and four paired timing rounds per prompt",
+  "scope": "Qwen2.5-3B-Instruct NF4, RTX 4050 Laptop GPU, 256 tokens, physical_rows=3, native BNB fallback on all empty-proposal cycles",
+  "ratio_definition": "speedup = baseline latency / candidate latency; >1 means candidate faster",
+  "prompt_count": 6,
+  "independent_processes": 6,
+  "timing_rounds_per_k": 24,
+  "all_k_values_exact_to_b1_tokens_and_kv": true,
+  "timed_tokens_match_b1": true,
+  "original_bnb_token_matches_per_k": {
+    "k1_fallback_all": 24,
+    "k2_fallback_all": 24
+  },
+  "aggregate_speedup_vs_bnb": {
+    "k1_fallback_all": {
+      "geomean_across_prompts": 0.9955089515137769,
+      "prompt_cluster_bootstrap_95pct": [
+        0.9533375605641938,
+        1.0407460622951008
+      ],
+      "prompt_min": 0.9145551457154699,
+      "prompt_max": 1.0803450576253653,
+      "prompts_faster_than_bnb": 2
+    },
+    "k2_fallback_all": {
+      "geomean_across_prompts": 1.1331883944001857,
+      "prompt_cluster_bootstrap_95pct": [
+        1.0284819802581058,
+        1.263799883785268
+      ],
+      "prompt_min": 0.9876846868309399,
+      "prompt_max": 1.3812888916824468,
+      "prompts_faster_than_bnb": 4
+    }
+  },
+  "k2_speedup_over_k1": {
+    "geomean_across_prompts": 1.1383005573953429,
+    "prompt_cluster_bootstrap_95pct": [
+      1.0751527131366707,
+      1.212098754812612
+    ],
+    "prompt_min": 1.0326921475805833,
+    "prompt_max": 1.2785626980314664,
+    "prompts_k2_faster": 6
+  },
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/112",
+      "empty_proposal_cycles": {
+        "k1": 22,
+        "k2": 22
+      },
+      "k1_vs_k2": {
+        "k1_fallback_all": {
+          "speedup_vs_bnb_geomean": 1.0803450576253653,
+          "timing_speedups_vs_bnb": [
+            1.05900776416189,
+            1.0662364496431194,
+            1.129164080244868,
+            1.0684156338998634
+          ],
+          "latency_s_median": 8.039390915997501,
+          "cycles_median": 155.0,
+          "draft_tokens_median": 133.0,
+          "accepted_tokens_median": 101.0,
+          "acceptance_fraction": 0.7593984962406015,
+          "target_rows_median": 288.0
+        },
+        "k2_fallback_all": {
+          "speedup_vs_bnb_geomean": 1.3812888916824468,
+          "timing_speedups_vs_bnb": [
+            1.3881957509545029,
+            1.377753459818612,
+            1.3819211996086322,
+            1.377312777832256
+          ],
+          "latency_s_median": 6.227033659502922,
+          "cycles_median": 119.0,
+          "draft_tokens_median": 193.0,
+          "accepted_tokens_median": 137.0,
+          "acceptance_fraction": 0.7098445595854922,
+          "target_rows_median": 312.0
+        }
+      },
+      "k2_speedup_over_k1_geomean": 1.2785626980314664,
+      "k2_speedup_over_k1_rounds": [
+        1.3108456783158107,
+        1.29216503551324,
+        1.2238444560767041,
+        1.2891170197546398
+      ],
+      "artifact": "fallback_k_sweep_HumanEval112_256_v1.json"
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "empty_proposal_cycles": {
+        "k1": 116,
+        "k2": 116
+      },
+      "k1_vs_k2": {
+        "k1_fallback_all": {
+          "speedup_vs_bnb_geomean": 0.9841055113442536,
+          "timing_speedups_vs_bnb": [
+            1.0025097702535697,
+            0.9960451330196431,
+            0.9645466914354209,
+            0.9738134505587209
+          ],
+          "latency_s_median": 8.502020300002187,
+          "cycles_median": 203.0,
+          "draft_tokens_median": 87.0,
+          "accepted_tokens_median": 52.0,
+          "acceptance_fraction": 0.5977011494252874,
+          "target_rows_median": 290.0
+        },
+        "k2_fallback_all": {
+          "speedup_vs_bnb_geomean": 1.069011176798294,
+          "timing_speedups_vs_bnb": [
+            1.075319579923852,
+            1.0666643115621006,
+            1.0679878472329212,
+            1.0660985540875014
+          ],
+          "latency_s_median": 7.840966028001276,
+          "cycles_median": 188.0,
+          "draft_tokens_median": 144.0,
+          "accepted_tokens_median": 67.0,
+          "acceptance_fraction": 0.4652777777777778,
+          "target_rows_median": 332.0
+        }
+      },
+      "k2_speedup_over_k1_geomean": 1.0862769941589516,
+      "k2_speedup_over_k1_rounds": [
+        1.0726275312527538,
+        1.0708995769382115,
+        1.1072432850747338,
+        1.0947667168448252
+      ],
+      "artifact": "fallback_k_sweep_HumanEval114_256_v1.json"
+    },
+    {
+      "prompt_id": "HumanEval/121",
+      "empty_proposal_cycles": {
+        "k1": 68,
+        "k2": 68
+      },
+      "k1_vs_k2": {
+        "k1_fallback_all": {
+          "speedup_vs_bnb_geomean": 1.0497494268066347,
+          "timing_speedups_vs_bnb": [
+            0.8944993740523448,
+            1.3141564854453485,
+            0.9932659790056745,
+            1.0400396599232784
+          ],
+          "latency_s_median": 8.224826024495997,
+          "cycles_median": 178.0,
+          "draft_tokens_median": 110.0,
+          "accepted_tokens_median": 77.0,
+          "acceptance_fraction": 0.7,
+          "target_rows_median": 288.0
+        },
+        "k2_fallback_all": {
+          "speedup_vs_bnb_geomean": 1.2971668245475863,
+          "timing_speedups_vs_bnb": [
+            1.3599813813219797,
+            1.462223375505129,
+            1.1674652005885933,
+            1.2195306014210328
+          ],
+          "latency_s_median": 6.386811808995844,
+          "cycles_median": 154.0,
+          "draft_tokens_median": 171.0,
+          "accepted_tokens_median": 102.0,
+          "acceptance_fraction": 0.5964912280701754,
+          "target_rows_median": 325.0
+        }
+      },
+      "k2_speedup_over_k1_geomean": 1.2356918626701245,
+      "k2_speedup_over_k1_rounds": [
+        1.5203827087780561,
+        1.112670668751905,
+        1.1753802357726013,
+        1.1725808624557597
+      ],
+      "artifact": "fallback_k_sweep_HumanEval121_256_v1.json"
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "empty_proposal_cycles": {
+        "k1": 109,
+        "k2": 109
+      },
+      "k1_vs_k2": {
+        "k1_fallback_all": {
+          "speedup_vs_bnb_geomean": 0.9145551457154699,
+          "timing_speedups_vs_bnb": [
+            0.9097561656808817,
+            0.9232881600958497,
+            0.9210776492642045,
+            0.9042344992261291
+          ],
+          "latency_s_median": 9.09765652250644,
+          "cycles_median": 208.0,
+          "draft_tokens_median": 99.0,
+          "accepted_tokens_median": 47.0,
+          "acceptance_fraction": 0.47474747474747475,
+          "target_rows_median": 307.0
+        },
+        "k2_fallback_all": {
+          "speedup_vs_bnb_geomean": 0.9931086006498233,
+          "timing_speedups_vs_bnb": [
+            0.976812675211026,
+            0.9998443332130689,
+            1.0078123381482753,
+            0.988242723600747
+          ],
+          "latency_s_median": 8.342058799004008,
+          "cycles_median": 193.0,
+          "draft_tokens_median": 168.0,
+          "accepted_tokens_median": 63.0,
+          "acceptance_fraction": 0.375,
+          "target_rows_median": 361.0
+        }
+      },
+      "k2_speedup_over_k1_geomean": 1.085892529611104,
+      "k2_speedup_over_k1_rounds": [
+        1.0737082221146121,
+        1.0829168795030055,
+        1.0941665330315615,
+        1.0929053519264247
+      ],
+      "artifact": "fallback_k_sweep_HumanEval123_256_v1.json"
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "empty_proposal_cycles": {
+        "k1": 148,
+        "k2": 148
+      },
+      "k1_vs_k2": {
+        "k1_fallback_all": {
+          "speedup_vs_bnb_geomean": 0.9564173496863629,
+          "timing_speedups_vs_bnb": [
+            0.9748752728967122,
+            0.9403064423041022,
+            0.9676468897129574,
+            0.9433099414445946
+          ],
+          "latency_s_median": 8.958308211498661,
+          "cycles_median": 221.0,
+          "draft_tokens_median": 73.0,
+          "accepted_tokens_median": 34.0,
+          "acceptance_fraction": 0.4657534246575342,
+          "target_rows_median": 294.0
+        },
+        "k2_fallback_all": {
+          "speedup_vs_bnb_geomean": 0.9876846868309399,
+          "timing_speedups_vs_bnb": [
+            1.0154018479939881,
+            0.9731950744223631,
+            0.9863858014385627,
+            0.9763119791756657
+          ],
+          "latency_s_median": 8.717385858501075,
+          "cycles_median": 212.0,
+          "draft_tokens_median": 127.0,
+          "accepted_tokens_median": 43.0,
+          "acceptance_fraction": 0.33858267716535434,
+          "target_rows_median": 339.0
+        }
+      },
+      "k2_speedup_over_k1_geomean": 1.0326921475805833,
+      "k2_speedup_over_k1_rounds": [
+        1.0415710360330062,
+        1.0349765040827237,
+        1.0193654440734718,
+        1.0349853598283205
+      ],
+      "artifact": "fallback_k_sweep_cnndm_004_256_v1.json"
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "empty_proposal_cycles": {
+        "k1": 112,
+        "k2": 112
+      },
+      "k1_vs_k2": {
+        "k1_fallback_all": {
+          "speedup_vs_bnb_geomean": 0.9970659242559967,
+          "timing_speedups_vs_bnb": [
+            1.0038926442175582,
+            0.9958406013627088,
+            1.0142466317936587,
+            0.9747086520696681
+          ],
+          "latency_s_median": 8.515616734497598,
+          "cycles_median": 198.0,
+          "draft_tokens_median": 86.0,
+          "accepted_tokens_median": 57.0,
+          "acceptance_fraction": 0.6627906976744186,
+          "target_rows_median": 284.0
+        },
+        "k2_fallback_all": {
+          "speedup_vs_bnb_geomean": 1.1270288842565575,
+          "timing_speedups_vs_bnb": [
+            1.1533188314410463,
+            1.1261761921029978,
+            1.1273714668573178,
+            1.101837178252507
+          ],
+          "latency_s_median": 7.5548861534989555,
+          "cycles_median": 178.0,
+          "draft_tokens_median": 132.0,
+          "accepted_tokens_median": 77.0,
+          "acceptance_fraction": 0.5833333333333334,
+          "target_rows_median": 310.0
+        }
+      },
+      "k2_speedup_over_k1_geomean": 1.1303454032866864,
+      "k2_speedup_over_k1_rounds": [
+        1.1488467796673139,
+        1.1308799727204712,
+        1.111535825229808,
+        1.130427206030128
+      ],
+      "artifact": "fallback_k_sweep_cnndm_003_256_v1.json"
+    }
+  ],
+  "input_sha256": {
+    "fallback_k_sweep_HumanEval112_256_v1.json": "d2a6c0084514e502fbff5c93139bc8c1982de3985c691eaaf7b6bfabe73c1cd8",
+    "fallback_k_sweep_HumanEval114_256_v1.json": "eaa432d352cbed2fa5d2721b59dd0b17ab5e9d0a67ae276f11ad3225e2cb70ee",
+    "fallback_k_sweep_HumanEval121_256_v1.json": "550dd7e6bd4a8564dfe2b4663a1dc7c85c607a634fe6344c1533c94f7f73e360",
+    "fallback_k_sweep_HumanEval123_256_v1.json": "d20cdbb6e0e59421452d62fc281f97e6f9814952d166290b302f32388e6d2226",
+    "fallback_k_sweep_cnndm_004_256_v1.json": "ae2e7521f533f46d7fce2220db886a860ece6102b20bb512f1f1b949126a2fc7",
+    "fallback_k_sweep_cnndm_003_256_v1.json": "e365a1d7a4ef8106fb8994c2789eae66257c2a337fda78d25b27ff1d90084b87"
+  },
+  "manifest_sha256s": [
+    "333c1144584166b3882623b89a25e412b8cebf1258dfedf9f77de3ffc695d43e"
+  ],
+  "heldout_used": false,
+  "limits": [
+    "Six selected prompts, one process per prompt, one model and GPU; prompt bootstrap is descriptive.",
+    "Original-BNB comparison is token/latency only; no original-BNB KV identity claim.",
+    "GSM8K held-out indices 300-349 excluded."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_activationvec_k_sweep_256.py",
+  "source_sha256": "194bd8c37e935e963aa62dcf31ab9811c44cd5a1842bad59af2b370000ae58d0"
+}

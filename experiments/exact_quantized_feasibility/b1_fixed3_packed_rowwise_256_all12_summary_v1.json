@@ -1,0 +1,542 @@
+{
+  "schema": "zassd-fixed3-packed-rowwise-256-all12-v1",
+  "classification": "development-only; paired process sessions clustered by prompt; descriptive prompt bootstrap",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "configuration": {
+    "k": 2,
+    "physical_rows": 3,
+    "attention_strategy": "rowwise",
+    "quantized_linear_strategy": "triton_nf4_fixed_three_rows_group_scale_packed",
+    "ngram_size": 3,
+    "max_new_tokens": 256,
+    "capacity": 2048
+  },
+  "prompts": 12,
+  "process_runs": 24,
+  "b1_tokens_and_all_256_kv_prefixes_exact_runs": 24,
+  "original_bnb_token_match_runs": 6,
+  "geomean_speedup_vs_b1_singleton": 1.5162031957577697,
+  "prompt_bootstrap_95_ci_vs_b1_singleton": [
+    1.3359776334931812,
+    1.740758530894154
+  ],
+  "geomean_speedup_vs_original_bnb": 1.227892608031562,
+  "prompt_bootstrap_95_ci_vs_original_bnb": [
+    1.0795822430026294,
+    1.417624179397481
+  ],
+  "per_prompt": {
+    "humaneval:HumanEval/50": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_acceptance_contrast_256_s17_v1/rows.jsonl",
+          "session_index": 17,
+          "speedup_vs_b1_singleton": 2.183269609012284,
+          "speedup_vs_original_bnb": 1.721153993633808,
+          "accepted_draft_tokens": 144,
+          "draft_tokens": 182,
+          "cycles": 111,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": true,
+          "first_bnb_divergence_index": null
+        },
+        {
+          "artifact": "b1_fixed3_packed_acceptance_contrast_256_s18_v1/rows.jsonl",
+          "session_index": 18,
+          "speedup_vs_b1_singleton": 2.1293797635949367,
+          "speedup_vs_original_bnb": 1.7425824683656734,
+          "accepted_draft_tokens": 144,
+          "draft_tokens": 182,
+          "cycles": 111,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": true,
+          "first_bnb_divergence_index": null
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 2.1561563310443392,
+      "geomean_speedup_vs_original_bnb": 1.731835088761005,
+      "accepted_draft_tokens": 288,
+      "draft_tokens": 364,
+      "all_b1_exact": true,
+      "bnb_matching_sessions": 2,
+      "bnb_divergence_indices": [
+        null,
+        null
+      ]
+    },
+    "humaneval:HumanEval/52": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_acceptance_contrast_256_s17_v1/rows.jsonl",
+          "session_index": 17,
+          "speedup_vs_b1_singleton": 2.2654646607700255,
+          "speedup_vs_original_bnb": 1.8833687072721208,
+          "accepted_draft_tokens": 149,
+          "draft_tokens": 162,
+          "cycles": 106,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": true,
+          "first_bnb_divergence_index": null
+        },
+        {
+          "artifact": "b1_fixed3_packed_acceptance_contrast_256_s18_v1/rows.jsonl",
+          "session_index": 18,
+          "speedup_vs_b1_singleton": 2.2444429421756333,
+          "speedup_vs_original_bnb": 1.8821441903720655,
+          "accepted_draft_tokens": 149,
+          "draft_tokens": 162,
+          "cycles": 106,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": true,
+          "first_bnb_divergence_index": null
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 2.254929304571121,
+      "geomean_speedup_vs_original_bnb": 1.8827563492711343,
+      "accepted_draft_tokens": 298,
+      "draft_tokens": 324,
+      "all_b1_exact": true,
+      "bnb_matching_sessions": 2,
+      "bnb_divergence_indices": [
+        null,
+        null
+      ]
+    },
+    "humaneval:HumanEval/114": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_acceptance_contrast_256_s17_v1/rows.jsonl",
+          "session_index": 17,
+          "speedup_vs_b1_singleton": 1.3161462665006132,
+          "speedup_vs_original_bnb": 1.0927444632699115,
+          "accepted_draft_tokens": 69,
+          "draft_tokens": 142,
+          "cycles": 187,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 226
+        },
+        {
+          "artifact": "b1_fixed3_packed_acceptance_contrast_256_s18_v1/rows.jsonl",
+          "session_index": 18,
+          "speedup_vs_b1_singleton": 1.3394118666866544,
+          "speedup_vs_original_bnb": 1.085102090745136,
+          "accepted_draft_tokens": 69,
+          "draft_tokens": 142,
+          "cycles": 187,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 226
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.32772810757559,
+      "geomean_speedup_vs_original_bnb": 1.0889165724445342,
+      "accepted_draft_tokens": 138,
+      "draft_tokens": 284,
+      "all_b1_exact": true,
+      "bnb_matching_sessions": 0,
+      "bnb_divergence_indices": [
+        226,
+        226
+      ]
+    },
+    "cnndm:cnndm_003": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_acceptance_contrast_256_s17_v1/rows.jsonl",
+          "session_index": 17,
+          "speedup_vs_b1_singleton": 1.384054342579973,
+          "speedup_vs_original_bnb": 1.1275377562993472,
+          "accepted_draft_tokens": 78,
+          "draft_tokens": 142,
+          "cycles": 177,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 89
+        },
+        {
+          "artifact": "b1_fixed3_packed_acceptance_contrast_256_s18_v1/rows.jsonl",
+          "session_index": 18,
+          "speedup_vs_b1_singleton": 1.3948161277223223,
+          "speedup_vs_original_bnb": 1.122026584584331,
+          "accepted_draft_tokens": 78,
+          "draft_tokens": 142,
+          "cycles": 177,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 89
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.3894248157689795,
+      "geomean_speedup_vs_original_bnb": 1.1247787950039048,
+      "accepted_draft_tokens": 156,
+      "draft_tokens": 284,
+      "all_b1_exact": true,
+      "bnb_matching_sessions": 0,
+      "bnb_divergence_indices": [
+        89,
+        89
+      ]
+    },
+    "humaneval:HumanEval/116": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_newdev_256_s19_v1/rows.jsonl",
+          "session_index": 19,
+          "speedup_vs_b1_singleton": 2.1887464383623274,
+          "speedup_vs_original_bnb": 1.834244405463968,
+          "accepted_draft_tokens": 148,
+          "draft_tokens": 177,
+          "cycles": 108,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": true,
+          "first_bnb_divergence_index": null
+        },
+        {
+          "artifact": "b1_fixed3_packed_newdev_256_s20_v1/rows.jsonl",
+          "session_index": 20,
+          "speedup_vs_b1_singleton": 2.16283567286601,
+          "speedup_vs_original_bnb": 1.7545220026660302,
+          "accepted_draft_tokens": 148,
+          "draft_tokens": 177,
+          "cycles": 108,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": true,
+          "first_bnb_divergence_index": null
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 2.1757524849459475,
+      "geomean_speedup_vs_original_bnb": 1.793940402480975,
+      "accepted_draft_tokens": 296,
+      "draft_tokens": 354,
+      "all_b1_exact": true,
+      "bnb_matching_sessions": 2,
+      "bnb_divergence_indices": [
+        null,
+        null
+      ]
+    },
+    "humaneval:HumanEval/117": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_newdev_256_s19_v1/rows.jsonl",
+          "session_index": 19,
+          "speedup_vs_b1_singleton": 1.2389442578732353,
+          "speedup_vs_original_bnb": 1.0100446855524536,
+          "accepted_draft_tokens": 52,
+          "draft_tokens": 102,
+          "cycles": 203,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 162
+        },
+        {
+          "artifact": "b1_fixed3_packed_newdev_256_s20_v1/rows.jsonl",
+          "session_index": 20,
+          "speedup_vs_b1_singleton": 1.2188518368232248,
+          "speedup_vs_original_bnb": 1.003681445545361,
+          "accepted_draft_tokens": 52,
+          "draft_tokens": 102,
+          "cycles": 203,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 162
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.2288569829033726,
+      "geomean_speedup_vs_original_bnb": 1.006858038683059,
+      "accepted_draft_tokens": 104,
+      "draft_tokens": 204,
+      "all_b1_exact": true,
+      "bnb_matching_sessions": 0,
+      "bnb_divergence_indices": [
+        162,
+        162
+      ]
+    },
+    "cnndm:cnndm_006": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_newdev_256_s19_v1/rows.jsonl",
+          "session_index": 19,
+          "speedup_vs_b1_singleton": 1.1184893877774507,
+          "speedup_vs_original_bnb": 0.9252999836947413,
+          "accepted_draft_tokens": 37,
+          "draft_tokens": 124,
+          "cycles": 218,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 12
+        },
+        {
+          "artifact": "b1_fixed3_packed_newdev_256_s20_v1/rows.jsonl",
+          "session_index": 20,
+          "speedup_vs_b1_singleton": 1.1232125546454823,
+          "speedup_vs_original_bnb": 0.8578638468899694,
+          "accepted_draft_tokens": 37,
+          "draft_tokens": 124,
+          "cycles": 218,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 12
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.1208484833327705,
+      "geomean_speedup_vs_original_bnb": 0.8909441079773729,
+      "accepted_draft_tokens": 74,
+      "draft_tokens": 248,
+      "all_b1_exact": true,
+      "bnb_matching_sessions": 0,
+      "bnb_divergence_indices": [
+        12,
+        12
+      ]
+    },
+    "cnndm:cnndm_007": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_newdev_256_s19_v1/rows.jsonl",
+          "session_index": 19,
+          "speedup_vs_b1_singleton": 1.5315875969057364,
+          "speedup_vs_original_bnb": 1.285542828354747,
+          "accepted_draft_tokens": 106,
+          "draft_tokens": 163,
+          "cycles": 150,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 35
+        },
+        {
+          "artifact": "b1_fixed3_packed_newdev_256_s20_v1/rows.jsonl",
+          "session_index": 20,
+          "speedup_vs_b1_singleton": 1.5752625527913957,
+          "speedup_vs_original_bnb": 1.2471639516712096,
+          "accepted_draft_tokens": 106,
+          "draft_tokens": 163,
+          "cycles": 150,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 35
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.5532715756510094,
+      "geomean_speedup_vs_original_bnb": 1.266207989965902,
+      "accepted_draft_tokens": 212,
+      "draft_tokens": 326,
+      "all_b1_exact": true,
+      "bnb_matching_sessions": 0,
+      "bnb_divergence_indices": [
+        35,
+        35
+      ]
+    },
+    "humaneval:HumanEval/118": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s21_v1/rows.jsonl",
+          "session_index": 21,
+          "speedup_vs_b1_singleton": 1.4592562636801516,
+          "speedup_vs_original_bnb": 1.1442626069507171,
+          "accepted_draft_tokens": 91,
+          "draft_tokens": 139,
+          "cycles": 165,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 191
+        },
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s22_v1/rows.jsonl",
+          "session_index": 22,
+          "speedup_vs_b1_singleton": 1.4649868013635252,
+          "speedup_vs_original_bnb": 1.201024453678876,
+          "accepted_draft_tokens": 91,
+          "draft_tokens": 139,
+          "cycles": 165,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 191
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.462118725035171,
+      "geomean_speedup_vs_original_bnb": 1.1723000351352684,
+      "accepted_draft_tokens": 182,
+      "draft_tokens": 278,
+      "all_b1_exact": true,
+      "bnb_matching_sessions": 0,
+      "bnb_divergence_indices": [
+        191,
+        191
+      ]
+    },
+    "humaneval:HumanEval/119": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s21_v1/rows.jsonl",
+          "session_index": 21,
+          "speedup_vs_b1_singleton": 1.5410622282429662,
+          "speedup_vs_original_bnb": 1.2530299424520968,
+          "accepted_draft_tokens": 99,
+          "draft_tokens": 146,
+          "cycles": 156,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 77
+        },
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s22_v1/rows.jsonl",
+          "session_index": 22,
+          "speedup_vs_b1_singleton": 1.5730153009190109,
+          "speedup_vs_original_bnb": 1.2666624948338605,
+          "accepted_draft_tokens": 99,
+          "draft_tokens": 146,
+          "cycles": 156,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 77
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.5569567960269581,
+      "geomean_speedup_vs_original_bnb": 1.2598277791062957,
+      "accepted_draft_tokens": 198,
+      "draft_tokens": 292,
+      "all_b1_exact": true,
+      "bnb_matching_sessions": 0,
+      "bnb_divergence_indices": [
+        77,
+        77
+      ]
+    },
+    "cnndm:cnndm_008": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s21_v1/rows.jsonl",
+          "session_index": 21,
+          "speedup_vs_b1_singleton": 1.2994018766990658,
+          "speedup_vs_original_bnb": 1.0056903109172088,
+          "accepted_draft_tokens": 67,
+          "draft_tokens": 132,
+          "cycles": 188,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 68
+        },
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s22_v1/rows.jsonl",
+          "session_index": 22,
+          "speedup_vs_b1_singleton": 1.2914818100238268,
+          "speedup_vs_original_bnb": 1.0417039943180442,
+          "accepted_draft_tokens": 67,
+          "draft_tokens": 132,
+          "cycles": 188,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 68
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.295435790638682,
+      "geomean_speedup_vs_original_bnb": 1.0235387701154326,
+      "accepted_draft_tokens": 134,
+      "draft_tokens": 264,
+      "all_b1_exact": true,
+      "bnb_matching_sessions": 0,
+      "bnb_divergence_indices": [
+        68,
+        68
+      ]
+    },
+    "cnndm:cnndm_009": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s21_v1/rows.jsonl",
+          "session_index": 21,
+          "speedup_vs_b1_singleton": 1.1962138975375687,
+          "speedup_vs_original_bnb": 0.9322251693554237,
+          "accepted_draft_tokens": 48,
+          "draft_tokens": 97,
+          "cycles": 208,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 248
+        },
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s22_v1/rows.jsonl",
+          "session_index": 22,
+          "speedup_vs_b1_singleton": 1.2014168962880287,
+          "speedup_vs_original_bnb": 0.9782088999643074,
+          "accepted_draft_tokens": 48,
+          "draft_tokens": 97,
+          "cycles": 208,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 248
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.1988125742067406,
+      "geomean_speedup_vs_original_bnb": 0.9549402899837294,
+      "accepted_draft_tokens": 96,
+      "draft_tokens": 194,
+      "all_b1_exact": true,
+      "bnb_matching_sessions": 0,
+      "bnb_divergence_indices": [
+        248,
+        248
+      ]
+    }
+  },
+  "limitations": [
+    "12 selected development prompts on one GPU",
+    "two sessions per prompt",
+    "prompt-bootstrap interval reflects only this selected cohort",
+    "held-out GSM8K indices 300-349 excluded",
+    "B1 empirical matches do not establish universal equivalence; BNB token identity is measured separately"
+  ]
+}

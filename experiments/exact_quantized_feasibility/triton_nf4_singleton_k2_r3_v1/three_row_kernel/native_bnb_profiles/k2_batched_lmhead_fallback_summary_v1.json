@@ -1,0 +1,99 @@
+{
+  "schema": "zassd-k2-batched-lmhead-fallback-summary-v1",
+  "classification": "paired diagnostic ablation, two prompts by two budgets, one process and four timing rounds per stratum",
+  "scope": "Qwen2.5-3B-Instruct NF4, RTX 4050 Laptop GPU, K2/R3, ngram3, full fallback",
+  "strata": [
+    {
+      "prompt_id": "HumanEval/123",
+      "max_new_tokens": 256,
+      "paired_rounds": 4,
+      "batched_over_rowwise_geomean": 1.0013125173977402,
+      "rowwise_speedup_vs_bnb_geomean": 1.0746353014545358,
+      "batched_speedup_vs_bnb_geomean": 1.0760457789839206,
+      "batched_over_rowwise_round_ratios": [
+        1.0045687073597132,
+        0.9913974246213731,
+        1.0027687283339364,
+        1.0065847984371397
+      ],
+      "artifact": "k2_batched_lmhead_HumanEval123_256_fallback_v1.json"
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "max_new_tokens": 512,
+      "paired_rounds": 4,
+      "batched_over_rowwise_geomean": 0.996735503909021,
+      "rowwise_speedup_vs_bnb_geomean": 0.9587967969618035,
+      "batched_speedup_vs_bnb_geomean": 0.9556668085660786,
+      "batched_over_rowwise_round_ratios": [
+        1.017187440366994,
+        0.9900536925596526,
+        0.9934871925524091,
+        0.9865013932212856
+      ],
+      "artifact": "k2_batched_lmhead_HumanEval123_512_fallback_v1.json"
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 256,
+      "paired_rounds": 4,
+      "batched_over_rowwise_geomean": 0.9970308798150932,
+      "rowwise_speedup_vs_bnb_geomean": 1.1562147773363824,
+      "batched_speedup_vs_bnb_geomean": 1.1527818367029057,
+      "batched_over_rowwise_round_ratios": [
+        0.9935575869245109,
+        1.0098546778290953,
+        0.9969012482213006,
+        0.9879395509085453
+      ],
+      "artifact": "k2_batched_lmhead_HumanEval114_256_fallback_v1.json"
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 512,
+      "paired_rounds": 4,
+      "batched_over_rowwise_geomean": 0.9985185326279542,
+      "rowwise_speedup_vs_bnb_geomean": 1.2817279054380202,
+      "batched_speedup_vs_bnb_geomean": 1.279829067366273,
+      "batched_over_rowwise_round_ratios": [
+        1.0016057332004351,
+        0.9851555405122943,
+        1.016989088293787,
+        0.990618924152699
+      ],
+      "artifact": "k2_batched_lmhead_HumanEval114_512_fallback_v1.json"
+    }
+  ],
+  "stratum_count": 4,
+  "timing_rounds_per_stratum": 4,
+  "all_artifacts_b1_token_and_kv_exact": true,
+  "original_bnb_token_matches": {
+    "rowwise": 16,
+    "batched": 16
+  },
+  "batched_over_rowwise": {
+    "geomean_across_prompt_budget_strata": 0.9983977145371721,
+    "descriptive_stratum_bootstrap_95pct": [
+      0.9968831809220935,
+      1.0002403872965324
+    ],
+    "strata_batched_faster": 1,
+    "min": 0.996735503909021,
+    "max": 1.0013125173977402
+  },
+  "input_sha256": {
+    "k2_batched_lmhead_HumanEval123_256_fallback_v1.json": "139475ae0a7e2da216cd36ea118eadefd03c78b2fb9d1f06fecf260a590132b6",
+    "k2_batched_lmhead_HumanEval123_512_fallback_v1.json": "ba2e41813583b24f67ba2db82100f56ee831a8a4a23c74d3d537e40ec1e79a8c",
+    "k2_batched_lmhead_HumanEval114_256_fallback_v1.json": "14387afceccf3630b4b9c6cea0a7d8ba67c2f56399fb5839fc4321cd4ac69cfa",
+    "k2_batched_lmhead_HumanEval114_512_fallback_v1.json": "2c3b83621f872a45e6201794f6b4956e592a615b8349334c767800329c04fde0"
+  },
+  "manifest_sha256": "7f96a047f9b8abfec6dbf880d7c027d7fe68ad1d51468b0a04dd029963dcb2cc",
+  "heldout_used": false,
+  "limits": [
+    "Four selected prompt-budget strata on one model/GPU; bootstrap is descriptive and not a population interval.",
+    "Ordinary paired latency; no BNB KV-state identity claim.",
+    "GSM8K held-out indices 300-349 excluded."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_k2_batched_lmhead_fallback.py",
+  "source_sha256": "252f9ea045f7becede9897cf76365639f99b95711cbd05eba1cd922811789ae5"
+}

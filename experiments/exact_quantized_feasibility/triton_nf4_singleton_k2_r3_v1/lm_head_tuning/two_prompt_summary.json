@@ -1,0 +1,173 @@
+{
+  "schema": "zassd-qwen-lm-head-m3-two-prompt-summary-v1",
+  "scope": "operator-only M=3 screen using last three prompt prefill activations on two prompts; one RTX 4050",
+  "profiles": {
+    "HumanEval/112": {
+      "prompt_tokens": 157,
+      "torch_linear_ms": 3.4911231994628906,
+      "candidates": {
+        "n64_k32_w4": {
+          "median_ms": 6.329241561889648,
+          "latency_ratio_vs_torch": 1.8129527949238233,
+          "bitwise_logits_equal": true,
+          "argmax_match_each_row": true,
+          "rowwise_invariant_each_row": true
+        },
+        "n64_k64_w4": {
+          "median_ms": 3.501567840576172,
+          "latency_ratio_vs_torch": 1.0029917709907483,
+          "bitwise_logits_equal": true,
+          "argmax_match_each_row": true,
+          "rowwise_invariant_each_row": true
+        },
+        "n128_k64_w4": {
+          "median_ms": 3.4936832427978515,
+          "latency_ratio_vs_torch": 1.0007333007713262,
+          "bitwise_logits_equal": true,
+          "argmax_match_each_row": true,
+          "rowwise_invariant_each_row": true
+        },
+        "n128_k128_w4": {
+          "median_ms": 3.4786304473876952,
+          "latency_ratio_vs_torch": 0.9964215665384947,
+          "bitwise_logits_equal": true,
+          "argmax_match_each_row": true,
+          "rowwise_invariant_each_row": true
+        },
+        "n256_k64_w4": {
+          "median_ms": 3.5146015167236326,
+          "latency_ratio_vs_torch": 1.0067251471573258,
+          "bitwise_logits_equal": true,
+          "argmax_match_each_row": true,
+          "rowwise_invariant_each_row": true
+        },
+        "n128_k64_w8": {
+          "median_ms": 3.5083263397216795,
+          "latency_ratio_vs_torch": 1.00492768065631,
+          "bitwise_logits_equal": true,
+          "argmax_match_each_row": true,
+          "rowwise_invariant_each_row": true
+        }
+      }
+    },
+    "HumanEval/114": {
+      "prompt_tokens": 83,
+      "torch_linear_ms": 3.4840576171875,
+      "candidates": {
+        "n64_k32_w4": {
+          "median_ms": 6.328217697143555,
+          "latency_ratio_vs_torch": 1.8163355467846707,
+          "bitwise_logits_equal": true,
+          "argmax_match_each_row": true,
+          "rowwise_invariant_each_row": true
+        },
+        "n64_k64_w4": {
+          "median_ms": 3.497343826293945,
+          "latency_ratio_vs_torch": 1.0038134297897088,
+          "bitwise_logits_equal": true,
+          "argmax_match_each_row": true,
+          "rowwise_invariant_each_row": true
+        },
+        "n128_k64_w4": {
+          "median_ms": 3.4907135009765624,
+          "latency_ratio_vs_torch": 1.0019103828123357,
+          "bitwise_logits_equal": true,
+          "argmax_match_each_row": true,
+          "rowwise_invariant_each_row": true
+        },
+        "n128_k128_w4": {
+          "median_ms": 3.477219009399414,
+          "latency_ratio_vs_torch": 0.9980371714421856,
+          "bitwise_logits_equal": true,
+          "argmax_match_each_row": true,
+          "rowwise_invariant_each_row": true
+        },
+        "n256_k64_w4": {
+          "median_ms": 3.518463897705078,
+          "latency_ratio_vs_torch": 1.0098753477404752,
+          "bitwise_logits_equal": true,
+          "argmax_match_each_row": true,
+          "rowwise_invariant_each_row": true
+        },
+        "n128_k64_w8": {
+          "median_ms": 3.5095230102539063,
+          "latency_ratio_vs_torch": 1.007309119384473,
+          "bitwise_logits_equal": true,
+          "argmax_match_each_row": true,
+          "rowwise_invariant_each_row": true
+        }
+      }
+    }
+  },
+  "candidate_aggregate": {
+    "n64_k32_w4": {
+      "geomean_latency_ratio_vs_torch": 1.8146433826134434,
+      "prompt_ratios": [
+        1.8129527949238233,
+        1.8163355467846707
+      ],
+      "all_logits_bitwise_equal": true,
+      "all_argmax_equal": true,
+      "all_rows_shape_invariant": true
+    },
+    "n64_k64_w4": {
+      "geomean_latency_ratio_vs_torch": 1.0034025162860003,
+      "prompt_ratios": [
+        1.0029917709907483,
+        1.0038134297897088
+      ],
+      "all_logits_bitwise_equal": true,
+      "all_argmax_equal": true,
+      "all_rows_shape_invariant": true
+    },
+    "n128_k64_w4": {
+      "geomean_latency_ratio_vs_torch": 1.0013216688301776,
+      "prompt_ratios": [
+        1.0007333007713262,
+        1.0019103828123357
+      ],
+      "all_logits_bitwise_equal": true,
+      "all_argmax_equal": true,
+      "all_rows_shape_invariant": true
+    },
+    "n128_k128_w4": {
+      "geomean_latency_ratio_vs_torch": 0.9972290418113939,
+      "prompt_ratios": [
+        0.9964215665384947,
+        0.9980371714421856
+      ],
+      "all_logits_bitwise_equal": true,
+      "all_argmax_equal": true,
+      "all_rows_shape_invariant": true
+    },
+    "n256_k64_w4": {
+      "geomean_latency_ratio_vs_torch": 1.00829901718914,
+      "prompt_ratios": [
+        1.0067251471573258,
+        1.0098753477404752
+      ],
+      "all_logits_bitwise_equal": true,
+      "all_argmax_equal": true,
+      "all_rows_shape_invariant": true
+    },
+    "n128_k64_w8": {
+      "geomean_latency_ratio_vs_torch": 1.0061176954248388,
+      "prompt_ratios": [
+        1.00492768065631,
+        1.007309119384473
+      ],
+      "all_logits_bitwise_equal": true,
+      "all_argmax_equal": true,
+      "all_rows_shape_invariant": true
+    }
+  },
+  "resource_rejections": {
+    "n256_k128_w4": "Triton shared-memory requirement 133120 bytes exceeds RTX 4050 limit 101376 bytes"
+  },
+  "decision": "No-go for integration: the fastest viable candidate is only about 0.3% faster than torch.linear across two prompt activation samples; no robust advantage, while all viable candidates were bitwise equal in this finite screen.",
+  "limits": [
+    "No full decode exactness or end-to-end timing run.",
+    "Only two prompts and three hidden rows per prompt.",
+    "Bitwise agreement here is finite empirical evidence, not a universal numerical contract."
+  ]
+}

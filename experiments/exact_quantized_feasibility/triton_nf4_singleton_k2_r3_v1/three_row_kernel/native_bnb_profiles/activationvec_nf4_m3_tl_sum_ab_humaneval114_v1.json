@@ -1,0 +1,203 @@
+{
+  "schema": "zassd-activationvec-nf4-m3-tl-sum-ab-v1",
+  "classification": "paired operator A/B; same activations and launch geometry; exactness gated",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "HumanEval/114",
+  "prompt_sha256": "4bdb0afd53bc0e28529bafba0538d6b3a566ad5f476fb7f1016cfabe823f1c3f",
+  "forced_tokens": [
+    262,
+    671,
+    4615
+  ],
+  "launch": {
+    "out_tile": 8,
+    "num_warps": 8
+  },
+  "comparison": {
+    "baseline": "five guarded tl.gather stages",
+    "candidate": "tl.sum(axis=2, keep_dims=True)"
+  },
+  "results": {
+    "q_proj": {
+      "input_shape": [
+        3,
+        2048
+      ],
+      "output_shape": [
+        3,
+        2048
+      ],
+      "input_sha256": "8d89de76b93dfd5e0773727c493e4974eba05e33a4b3602ffba43a81b4f1be5b",
+      "gather_exact_elements": 6144,
+      "tl_sum_exact_elements": 6144,
+      "total_elements": 6144,
+      "both_bitwise_exact_to_bnb_m3": true,
+      "gather_median_ms": 0.02532200049608946,
+      "tl_sum_median_ms": 0.02534399926662445,
+      "paired_gather_over_tl_sum": [
+        1.5610127089194366,
+        1.0081917394285986,
+        0.9832089723777865,
+        0.9839154254084862,
+        5.944162159451022,
+        0.9896874939745974,
+        0.9655171944137277,
+        0.9910839666766287,
+        0.9995265482797284,
+        0.9848485160279796,
+        1.0052893123304336,
+        1.1450776940326366,
+        0.9052721586976866,
+        0.908522692884808,
+        0.9932134422071405,
+        0.9987374375811012,
+        1.0149206006853204,
+        1.0051281695377223,
+        1.0138712424225167,
+        0.9481834633385335,
+        0.8952381217149283,
+        1.0092504694861135,
+        0.9173457334395482,
+        1.005102079832552,
+        1.0051546786134395,
+        0.8881336161677171,
+        1.0111236219995419,
+        1.0989583254384143,
+        1.074434654442473,
+        1.026846648385424,
+        0.9987374375811012,
+        0.9949238192468948
+      ],
+      "median_speedup": 0.9991319929304148,
+      "paired_rounds": 32,
+      "repeats_per_round": 8
+    },
+    "gate_proj": {
+      "input_shape": [
+        3,
+        2048
+      ],
+      "output_shape": [
+        3,
+        11008
+      ],
+      "input_sha256": "31a49f47304be099819092b31d76ddc5e59a466f7dc79351fb6793c3e73f4703",
+      "gather_exact_elements": 33024,
+      "tl_sum_exact_elements": 33024,
+      "total_elements": 33024,
+      "both_bitwise_exact_to_bnb_m3": true,
+      "gather_median_ms": 0.10039599984884262,
+      "tl_sum_median_ms": 0.09669000282883644,
+      "paired_gather_over_tl_sum": [
+        1.0730614590285088,
+        1.0348324220706049,
+        1.036443172436381,
+        1.0348895363629815,
+        1.0336184497287462,
+        1.0337635124514775,
+        1.0070034960924084,
+        1.059503798427123,
+        1.0373087356464232,
+        1.0839691802423925,
+        1.0397515455133661,
+        1.0358855657634312,
+        1.0413730077835435,
+        1.0372148887313017,
+        1.0115979518703637,
+        1.0578623256927442,
+        1.0341434900466824,
+        1.0350124236590397,
+        1.0458126549616136,
+        1.0341873668329737,
+        0.8231049345017722,
+        1.0328799129862631,
+        1.0339420031236908,
+        1.0321934519028415,
+        1.033099315578343,
+        1.033099315578343,
+        1.0333207294658746,
+        1.0440881606904664,
+        1.015060238499458,
+        1.0301204769989158,
+        1.0310615965746985,
+        1.031092845903709
+      ],
+      "median_speedup": 1.034165428439828,
+      "paired_rounds": 32,
+      "repeats_per_round": 8
+    },
+    "down_proj": {
+      "input_shape": [
+        3,
+        11008
+      ],
+      "output_shape": [
+        3,
+        2048
+      ],
+      "input_sha256": "11d94361f9eee027ef7338eaeda21e8e218318ce30cc7dd9430825056e1fa70d",
+      "gather_exact_elements": 6144,
+      "tl_sum_exact_elements": 6144,
+      "total_elements": 6144,
+      "both_bitwise_exact_to_bnb_m3": true,
+      "gather_median_ms": 0.13145600259304047,
+      "tl_sum_median_ms": 0.12861799448728561,
+      "paired_gather_over_tl_sum": [
+        1.0399817022500002,
+        1.021916639441729,
+        1.0205154494353055,
+        0.9705323157099492,
+        1.019427250405561,
+        1.0199438123219016,
+        1.0184420212726912,
+        1.0267326461064146,
+        1.052631525200683,
+        1.0204683266906398,
+        1.0221367264907717,
+        1.0233229250920126,
+        1.0211538952342702,
+        0.9884393303449662,
+        1.0229541516471143,
+        1.0229312659766399,
+        1.0239282825872384,
+        1.020937232755443,
+        1.0247876234586746,
+        1.0216754419657972,
+        1.0408367339981683,
+        1.0201860432134155,
+        1.0545455186861297,
+        1.0209163787783673,
+        1.0239521632919002,
+        1.018968885286933,
+        1.0229084258954995,
+        1.0231631402248187,
+        1.020937232755443,
+        1.0210326319554066,
+        1.0198383298095979,
+        1.0239521632919002
+      ],
+      "median_speedup": 1.0217960407037632,
+      "paired_rounds": 32,
+      "repeats_per_round": 8
+    }
+  },
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "triton": "3.6.0",
+    "cuda": "12.8",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "source_hashes": {
+    "runner": "0a9412bf6bb0a82b051e66a0c96dba0a23bbb26eacf1de8e2f19cf0625b0ec17",
+    "base_kernel": "322da0c917025d9879761fce33b1b5c29880badd41fb79f14b0978e4ac4a4c7a",
+    "tl_sum_driver": "4ca790d4a629d9d12cf0bbbd031822455d3dda9793d2ad99459dfc1ad5a304b5",
+    "generated_tl_sum_kernel": "3fc274be3d1316c0893ec93085ac57039562c58649ef953c6f533d3e60a78bed"
+  },
+  "limitations": [
+    "one development prompt and layer-0 q/gate/down projections",
+    "does not establish whole-model B1 equivalence or end-to-end speedup",
+    "GSM8K held-out indices 300-349 excluded"
+  ]
+}

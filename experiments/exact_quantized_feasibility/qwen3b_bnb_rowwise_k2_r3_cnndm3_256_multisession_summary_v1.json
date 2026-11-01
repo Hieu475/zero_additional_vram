@@ -1,0 +1,97 @@
+{
+  "status": "two process sessions; finite development pilot",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "k": 2,
+  "physical_rows": 3,
+  "attention_strategy": "bnb_rowwise",
+  "max_new_tokens": 256,
+  "prompts": [
+    "cnndm_000",
+    "cnndm_001",
+    "cnndm_002"
+  ],
+  "process_sessions": 2,
+  "runs": 6,
+  "b1_token_exact_runs": 6,
+  "bnb_token_exact_runs": 6,
+  "b1_kv_exact_shared_prefixes": 1536,
+  "all_b1_shared_kv_exact": true,
+  "paired_latency": {
+    "block_speedup_vs_b1": {
+      "prompt_geometric_mean_across_sessions": {
+        "cnndm_000": 1.305275197316897,
+        "cnndm_001": 1.218540926846637,
+        "cnndm_002": 1.1605436186952722
+      },
+      "mean_prompt_ratio": 1.2281199142862687,
+      "geometric_mean_prompt_ratio": 1.2266892460192402,
+      "prompt_bootstrap_percentile_95_ci": [
+        1.1605436186952722,
+        1.305275197316897
+      ],
+      "bootstrap_unit": "prompt (session ratios geometrically averaged within prompt)"
+    },
+    "block_speedup_vs_original": {
+      "prompt_geometric_mean_across_sessions": {
+        "cnndm_000": 1.0100912064106078,
+        "cnndm_001": 0.9394784971702688,
+        "cnndm_002": 0.886428122923037
+      },
+      "mean_prompt_ratio": 0.9453326088346379,
+      "geometric_mean_prompt_ratio": 0.943981870458756,
+      "prompt_bootstrap_percentile_95_ci": [
+        0.886428122923037,
+        1.0100912064106078
+      ],
+      "bootstrap_unit": "prompt (session ratios geometrically averaged within prompt)"
+    }
+  },
+  "bnb_singleton_replay": "3/3 prompts, 256 forced tokens: no logit or active-KV drift observed",
+  "caveat": "finite evidence only; not a universal proof or a settled performance claim",
+  "run_manifest_contract_ids": {
+    "session0": "6199326828447cd13c3ab4dad9d8b0dbcc1ab1733d07945a340f4bad8ab825d0",
+    "session1": "a183d5d9d4fe7fcc399056c1491fd575ffff0b3c19c568eae093f5dfcea62cfa"
+  },
+  "reference_contract_id": "3428440b58a5a02f2781fe859f6afe6ab8b8c2acbfb2aa2e4e63d309b3ebbadb",
+  "drafting": {
+    "draft_tokens": 862,
+    "accepted_draft_tokens": 444,
+    "acceptance_rate": 0.5150812064965197,
+    "target_rows": 1952
+  },
+  "profile_diagnostic": {
+    "prompt_id": "cnndm_001",
+    "max_new_tokens": 24,
+    "profiled_verify_ms": 1026.1483049835078,
+    "profiled_block_total_ms": 1220.3586049872683,
+    "dominant_cuda_entries": [
+      {
+        "operator": "void gemm_4bit_simt<__half, 3>(__half const*, unsigned char const*, float const*, unsigned char const*, float const*, float const*, __half*,",
+        "calls": 4284,
+        "self_cuda_time_ms": 250.60684499999965,
+        "input_shapes": "[]"
+      },
+      {
+        "operator": "bitsandbytes::gemm_4bit",
+        "calls": 1224,
+        "self_cuda_time_ms": 141.36160400000136,
+        "input_shapes": "[[1, 3, 2048], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]"
+      },
+      {
+        "operator": "aten::mm",
+        "calls": 27,
+        "self_cuda_time_ms": 90.91854400000003,
+        "input_shapes": "[[1, 2048], [2048, 151936]]"
+      },
+      {
+        "operator": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true",
+        "calls": 27,
+        "self_cuda_time_ms": 90.91854400000003,
+        "input_shapes": "[]"
+      }
+    ],
+    "warning": "instrumented single-prompt trace; diagnostic only, not latency benchmark"
+  }
+}

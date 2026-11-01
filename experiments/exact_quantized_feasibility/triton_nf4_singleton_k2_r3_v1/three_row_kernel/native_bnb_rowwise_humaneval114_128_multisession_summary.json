@@ -1,0 +1,161 @@
+{
+  "classification": "two-session, one-prompt native-BNB exact speculative block audit",
+  "prompt_id": "HumanEval/114",
+  "max_new_tokens": 128,
+  "sessions": [
+    {
+      "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_rowwise_humaneval114_128_s6_statefull.json",
+      "session": 6,
+      "generated_tokens": 128,
+      "token_match": true,
+      "state_prefixes_compared": 128,
+      "state_mismatches": [],
+      "full_prefix_domain": true,
+      "logical_lengths_equal": true,
+      "accepted_draft_tokens": 28,
+      "draft_tokens": 73,
+      "paired_speedup_vs_native_singleton": [
+        1.0936742032785032,
+        1.087570684929292,
+        1.0906077618651477
+      ],
+      "paired_speedup_vs_original_bnb": [
+        0.8593462336048013,
+        0.8858268277991763,
+        0.8456124812056097
+      ]
+    },
+    {
+      "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_rowwise_humaneval114_128_s7_statefull.json",
+      "session": 7,
+      "generated_tokens": 128,
+      "token_match": true,
+      "state_prefixes_compared": 128,
+      "state_mismatches": [],
+      "full_prefix_domain": true,
+      "logical_lengths_equal": true,
+      "accepted_draft_tokens": 28,
+      "draft_tokens": 73,
+      "paired_speedup_vs_native_singleton": [
+        1.104501738621494,
+        1.084829965626142,
+        1.1105582304475359
+      ],
+      "paired_speedup_vs_original_bnb": [
+        0.9363777806642134,
+        0.8774570539247419,
+        0.8886637765982535
+      ]
+    }
+  ],
+  "paired_round_count": 6,
+  "paired_geomean_speedup_vs_native_singleton": 1.095251633462823,
+  "paired_geomean_speedup_vs_native_singleton_excluding_flagged_rounds": 1.095251633462823,
+  "paired_geomean_speedup_vs_original_bnb": 0.8817601612998051,
+  "speedup_range_vs_native_singleton": [
+    1.084829965626142,
+    1.1105582304475359
+  ],
+  "speedup_range_vs_original_bnb": [
+    0.8456124812056097,
+    0.9363777806642134
+  ],
+  "paired_rounds": [
+    {
+      "session": 6,
+      "round": 0,
+      "method_order": [
+        "original_bnb_greedy",
+        "native_bnb_singleton",
+        "native_bnb_block"
+      ],
+      "native_bnb_singleton_s": 4.006478764998974,
+      "native_bnb_block_s": 3.663320167001075,
+      "original_bnb_s": 3.1480603880008857,
+      "block_speedup_vs_singleton": 1.0936742032785032,
+      "block_speedup_vs_original_bnb": 0.8593462336048013,
+      "singleton_time_gt_2x_session_median": false
+    },
+    {
+      "session": 6,
+      "round": 1,
+      "method_order": [
+        "native_bnb_singleton",
+        "native_bnb_block",
+        "original_bnb_greedy"
+      ],
+      "native_bnb_singleton_s": 3.949674364999737,
+      "native_bnb_block_s": 3.631648425000094,
+      "original_bnb_s": 3.2170116039997083,
+      "block_speedup_vs_singleton": 1.087570684929292,
+      "block_speedup_vs_original_bnb": 0.8858268277991763,
+      "singleton_time_gt_2x_session_median": false
+    },
+    {
+      "session": 6,
+      "round": 2,
+      "method_order": [
+        "native_bnb_block",
+        "original_bnb_greedy",
+        "native_bnb_singleton"
+      ],
+      "native_bnb_singleton_s": 4.035468146999847,
+      "native_bnb_block_s": 3.7002011979984673,
+      "original_bnb_s": 3.1289363159994537,
+      "block_speedup_vs_singleton": 1.0906077618651477,
+      "block_speedup_vs_original_bnb": 0.8456124812056097,
+      "singleton_time_gt_2x_session_median": false
+    },
+    {
+      "session": 7,
+      "round": 0,
+      "method_order": [
+        "native_bnb_block",
+        "native_bnb_singleton",
+        "original_bnb_greedy"
+      ],
+      "native_bnb_singleton_s": 4.235475706000216,
+      "native_bnb_block_s": 3.834738831001232,
+      "original_bnb_s": 3.5907642359998135,
+      "block_speedup_vs_singleton": 1.104501738621494,
+      "block_speedup_vs_original_bnb": 0.9363777806642134,
+      "singleton_time_gt_2x_session_median": false
+    },
+    {
+      "session": 7,
+      "round": 1,
+      "method_order": [
+        "original_bnb_greedy",
+        "native_bnb_block",
+        "native_bnb_singleton"
+      ],
+      "native_bnb_singleton_s": 4.252631918998304,
+      "native_bnb_block_s": 3.920090755000274,
+      "original_bnb_s": 3.4397112850001577,
+      "block_speedup_vs_singleton": 1.084829965626142,
+      "block_speedup_vs_original_bnb": 0.8774570539247419,
+      "singleton_time_gt_2x_session_median": false
+    },
+    {
+      "session": 7,
+      "round": 2,
+      "method_order": [
+        "native_bnb_singleton",
+        "original_bnb_greedy",
+        "native_bnb_block"
+      ],
+      "native_bnb_singleton_s": 4.428630858999895,
+      "native_bnb_block_s": 3.9877520489990275,
+      "original_bnb_s": 3.5437707960008993,
+      "block_speedup_vs_singleton": 1.1105582304475359,
+      "block_speedup_vs_original_bnb": 0.8886637765982535,
+      "singleton_time_gt_2x_session_median": false
+    }
+  ],
+  "limitations": [
+    "Two independent process sessions but one fixed development prompt and one GPU.",
+    "Paired rounds are nested within sessions; this does not estimate prompt-level generalization.",
+    "Empirical finite exactness is not a proof across prompts, runtimes, GPUs or library versions.",
+    "No held-out GSM8K prompts used."
+  ]
+}

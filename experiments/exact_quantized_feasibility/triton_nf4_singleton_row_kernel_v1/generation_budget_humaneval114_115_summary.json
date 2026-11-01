@@ -1,0 +1,408 @@
+{
+  "status": "gated same-prompt generation-budget comparison on two development prompts; descriptive only",
+  "configuration": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "k": 1,
+    "physical_rows": 2,
+    "budgets": [
+      64,
+      128,
+      256
+    ],
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "prompts": {
+    "HumanEval/114": {
+      "input_prompt_tokens": 83,
+      "budgets": {
+        "64": {
+          "artifacts": [
+            "memory_budget_humaneval114_64_s34_v1.json",
+            "memory_budget_humaneval114_64_s36_v1.json"
+          ],
+          "independent_processes": 2,
+          "timing_rounds": 4,
+          "exact_to_optimized_b1": true,
+          "accepted_draft_tokens": 6,
+          "draft_tokens": 30,
+          "acceptance_rate": 0.2,
+          "geomean_speedup_vs_optimized_b1_singleton": 1.0287027684998644,
+          "geomean_speedup_vs_original_bnb": 0.9521600298726381,
+          "bnb_token_matches": 4,
+          "bnb_token_comparisons": 4,
+          "incremental_peak_allocated_bytes_by_method": {
+            "optimized_b1_block": {
+              "min": 32668672,
+              "max": 32668672
+            },
+            "optimized_b1_singleton": {
+              "min": 32023040,
+              "max": 32023040
+            },
+            "original_bnb_greedy": {
+              "min": 101059072,
+              "max": 101059072
+            }
+          },
+          "paired_rounds": [
+            {
+              "artifact": "memory_budget_humaneval114_64_s34_v1.json",
+              "round": 0,
+              "speedup_vs_optimized_b1_singleton": 1.0928334395194466,
+              "speedup_vs_original_bnb": 0.9869232685412244,
+              "block_matches_bnb": true
+            },
+            {
+              "artifact": "memory_budget_humaneval114_64_s34_v1.json",
+              "round": 1,
+              "speedup_vs_optimized_b1_singleton": 1.02477010786641,
+              "speedup_vs_original_bnb": 0.9514157643587607,
+              "block_matches_bnb": true
+            },
+            {
+              "artifact": "memory_budget_humaneval114_64_s36_v1.json",
+              "round": 0,
+              "speedup_vs_optimized_b1_singleton": 0.9543568181538256,
+              "speedup_vs_original_bnb": 0.8593987637429505,
+              "block_matches_bnb": true
+            },
+            {
+              "artifact": "memory_budget_humaneval114_64_s36_v1.json",
+              "round": 1,
+              "speedup_vs_optimized_b1_singleton": 1.04777595981565,
+              "speedup_vs_original_bnb": 1.0185710538285704,
+              "block_matches_bnb": true
+            }
+          ]
+        },
+        "128": {
+          "artifacts": [
+            "memory_budget_humaneval114_128_s35_v1.json",
+            "memory_budget_humaneval114_128_s37_v1.json"
+          ],
+          "independent_processes": 2,
+          "timing_rounds": 4,
+          "exact_to_optimized_b1": true,
+          "accepted_draft_tokens": 46,
+          "draft_tokens": 84,
+          "acceptance_rate": 0.5476190476190477,
+          "geomean_speedup_vs_optimized_b1_singleton": 1.20098813899168,
+          "geomean_speedup_vs_original_bnb": 1.0602860857000018,
+          "bnb_token_matches": 4,
+          "bnb_token_comparisons": 4,
+          "incremental_peak_allocated_bytes_by_method": {
+            "optimized_b1_block": {
+              "min": 35552256,
+              "max": 35552256
+            },
+            "optimized_b1_singleton": {
+              "min": 34906624,
+              "max": 34906624
+            },
+            "original_bnb_greedy": {
+              "min": 101059072,
+              "max": 101059072
+            }
+          },
+          "paired_rounds": [
+            {
+              "artifact": "memory_budget_humaneval114_128_s35_v1.json",
+              "round": 0,
+              "speedup_vs_optimized_b1_singleton": 1.2245865880461464,
+              "speedup_vs_original_bnb": 1.1214880550417894,
+              "block_matches_bnb": true
+            },
+            {
+              "artifact": "memory_budget_humaneval114_128_s35_v1.json",
+              "round": 1,
+              "speedup_vs_optimized_b1_singleton": 1.1869665986851883,
+              "speedup_vs_original_bnb": 1.0483938253375544,
+              "block_matches_bnb": true
+            },
+            {
+              "artifact": "memory_budget_humaneval114_128_s37_v1.json",
+              "round": 0,
+              "speedup_vs_optimized_b1_singleton": 1.1571529057704262,
+              "speedup_vs_original_bnb": 1.0337234797714592,
+              "block_matches_bnb": true
+            },
+            {
+              "artifact": "memory_budget_humaneval114_128_s37_v1.json",
+              "round": 1,
+              "speedup_vs_optimized_b1_singleton": 1.2369043768849015,
+              "speedup_vs_original_bnb": 1.0398453664524057,
+              "block_matches_bnb": true
+            }
+          ]
+        },
+        "256": {
+          "artifacts": [
+            "memory_telemetry_humaneval114_256_s30_v1.json",
+            "memory_telemetry_humaneval114_256_s31_v1.json"
+          ],
+          "independent_processes": 2,
+          "timing_rounds": 4,
+          "exact_to_optimized_b1": true,
+          "accepted_draft_tokens": 104,
+          "draft_tokens": 174,
+          "acceptance_rate": 0.5977011494252874,
+          "geomean_speedup_vs_optimized_b1_singleton": 1.2807956999371046,
+          "geomean_speedup_vs_original_bnb": 1.1202550510379432,
+          "bnb_token_matches": 0,
+          "bnb_token_comparisons": 4,
+          "incremental_peak_allocated_bytes_by_method": {
+            "optimized_b1_block": {
+              "min": 41634304,
+              "max": 41634304
+            },
+            "optimized_b1_singleton": {
+              "min": 41026048,
+              "max": 41026048
+            },
+            "original_bnb_greedy": {
+              "min": 101059072,
+              "max": 101059072
+            }
+          },
+          "paired_rounds": [
+            {
+              "artifact": "memory_telemetry_humaneval114_256_s30_v1.json",
+              "round": 0,
+              "speedup_vs_optimized_b1_singleton": 1.273070913644931,
+              "speedup_vs_original_bnb": 1.117687561361235,
+              "block_matches_bnb": false
+            },
+            {
+              "artifact": "memory_telemetry_humaneval114_256_s30_v1.json",
+              "round": 1,
+              "speedup_vs_optimized_b1_singleton": 1.299391021205386,
+              "speedup_vs_original_bnb": 1.1062292744211804,
+              "block_matches_bnb": false
+            },
+            {
+              "artifact": "memory_telemetry_humaneval114_256_s31_v1.json",
+              "round": 0,
+              "speedup_vs_optimized_b1_singleton": 1.264890609693755,
+              "speedup_vs_original_bnb": 1.1605855209349536,
+              "block_matches_bnb": false
+            },
+            {
+              "artifact": "memory_telemetry_humaneval114_256_s31_v1.json",
+              "round": 1,
+              "speedup_vs_optimized_b1_singleton": 1.2860978661806248,
+              "speedup_vs_original_bnb": 1.0975515564743,
+              "block_matches_bnb": false
+            }
+          ]
+        }
+      }
+    },
+    "HumanEval/115": {
+      "input_prompt_tokens": 321,
+      "budgets": {
+        "64": {
+          "artifacts": [
+            "budget_humaneval115_64_s38_v1.json",
+            "budget_humaneval115_64_s39_v1.json"
+          ],
+          "independent_processes": 2,
+          "timing_rounds": 4,
+          "exact_to_optimized_b1": true,
+          "accepted_draft_tokens": 18,
+          "draft_tokens": 44,
+          "acceptance_rate": 0.4090909090909091,
+          "geomean_speedup_vs_optimized_b1_singleton": 1.119504121197637,
+          "geomean_speedup_vs_original_bnb": 1.0433551927218934,
+          "bnb_token_matches": 0,
+          "bnb_token_comparisons": 4,
+          "incremental_peak_allocated_bytes_by_method": {
+            "optimized_b1_block": {
+              "min": 116888576,
+              "max": 116888576
+            },
+            "optimized_b1_singleton": {
+              "min": 116254720,
+              "max": 116254720
+            },
+            "original_bnb_greedy": {
+              "min": 175378432,
+              "max": 175378432
+            }
+          },
+          "paired_rounds": [
+            {
+              "artifact": "budget_humaneval115_64_s38_v1.json",
+              "round": 0,
+              "speedup_vs_optimized_b1_singleton": 1.1152287099830631,
+              "speedup_vs_original_bnb": 1.0100355985682274,
+              "block_matches_bnb": false
+            },
+            {
+              "artifact": "budget_humaneval115_64_s38_v1.json",
+              "round": 1,
+              "speedup_vs_optimized_b1_singleton": 1.1315466231929205,
+              "speedup_vs_original_bnb": 1.0649958943972992,
+              "block_matches_bnb": false
+            },
+            {
+              "artifact": "budget_humaneval115_64_s39_v1.json",
+              "round": 0,
+              "speedup_vs_optimized_b1_singleton": 1.10417583996612,
+              "speedup_vs_original_bnb": 1.0190495788140037,
+              "block_matches_bnb": false
+            },
+            {
+              "artifact": "budget_humaneval115_64_s39_v1.json",
+              "round": 1,
+              "speedup_vs_optimized_b1_singleton": 1.127270526920468,
+              "speedup_vs_original_bnb": 1.0810575129550606,
+              "block_matches_bnb": false
+            }
+          ]
+        },
+        "128": {
+          "artifacts": [
+            "budget_humaneval115_128_s40_v1.json",
+            "budget_humaneval115_128_s41_v1.json"
+          ],
+          "independent_processes": 2,
+          "timing_rounds": 4,
+          "exact_to_optimized_b1": true,
+          "accepted_draft_tokens": 74,
+          "draft_tokens": 106,
+          "acceptance_rate": 0.6981132075471698,
+          "geomean_speedup_vs_optimized_b1_singleton": 1.3608747192829458,
+          "geomean_speedup_vs_original_bnb": 1.2509987229123483,
+          "bnb_token_matches": 0,
+          "bnb_token_comparisons": 4,
+          "incremental_peak_allocated_bytes_by_method": {
+            "optimized_b1_block": {
+              "min": 119612416,
+              "max": 119612416
+            },
+            "optimized_b1_singleton": {
+              "min": 118974976,
+              "max": 118974976
+            },
+            "original_bnb_greedy": {
+              "min": 175378432,
+              "max": 175378432
+            }
+          },
+          "paired_rounds": [
+            {
+              "artifact": "budget_humaneval115_128_s40_v1.json",
+              "round": 0,
+              "speedup_vs_optimized_b1_singleton": 1.4005611408580256,
+              "speedup_vs_original_bnb": 1.3403984088523397,
+              "block_matches_bnb": false
+            },
+            {
+              "artifact": "budget_humaneval115_128_s40_v1.json",
+              "round": 1,
+              "speedup_vs_optimized_b1_singleton": 1.3466772396590416,
+              "speedup_vs_original_bnb": 1.1853911810824296,
+              "block_matches_bnb": false
+            },
+            {
+              "artifact": "budget_humaneval115_128_s41_v1.json",
+              "round": 0,
+              "speedup_vs_optimized_b1_singleton": 1.3431429224118714,
+              "speedup_vs_original_bnb": 1.2418846571616682,
+              "block_matches_bnb": false
+            },
+            {
+              "artifact": "budget_humaneval115_128_s41_v1.json",
+              "round": 1,
+              "speedup_vs_optimized_b1_singleton": 1.3538943155116223,
+              "speedup_vs_original_bnb": 1.241225268384189,
+              "block_matches_bnb": false
+            }
+          ]
+        },
+        "256": {
+          "artifacts": [
+            "memory_telemetry_humaneval115_256_s32_v1.json",
+            "memory_telemetry_humaneval115_256_s33_v1.json"
+          ],
+          "independent_processes": 2,
+          "timing_rounds": 4,
+          "exact_to_optimized_b1": true,
+          "accepted_draft_tokens": 202,
+          "draft_tokens": 234,
+          "acceptance_rate": 0.8632478632478633,
+          "geomean_speedup_vs_optimized_b1_singleton": 1.5566249608828209,
+          "geomean_speedup_vs_original_bnb": 1.3869430727299086,
+          "bnb_token_matches": 0,
+          "bnb_token_comparisons": 4,
+          "incremental_peak_allocated_bytes_by_method": {
+            "optimized_b1_block": {
+              "min": 125380096,
+              "max": 125380096
+            },
+            "optimized_b1_singleton": {
+              "min": 124742144,
+              "max": 124742144
+            },
+            "original_bnb_greedy": {
+              "min": 175378432,
+              "max": 175378432
+            }
+          },
+          "paired_rounds": [
+            {
+              "artifact": "memory_telemetry_humaneval115_256_s32_v1.json",
+              "round": 0,
+              "speedup_vs_optimized_b1_singleton": 1.5105813312829874,
+              "speedup_vs_original_bnb": 1.3162854974428009,
+              "block_matches_bnb": false
+            },
+            {
+              "artifact": "memory_telemetry_humaneval115_256_s32_v1.json",
+              "round": 1,
+              "speedup_vs_optimized_b1_singleton": 1.628916101066048,
+              "speedup_vs_original_bnb": 1.3960534439143408,
+              "block_matches_bnb": false
+            },
+            {
+              "artifact": "memory_telemetry_humaneval115_256_s33_v1.json",
+              "round": 0,
+              "speedup_vs_optimized_b1_singleton": 1.5469196650466785,
+              "speedup_vs_original_bnb": 1.3806655083184258,
+              "block_matches_bnb": false
+            },
+            {
+              "artifact": "memory_telemetry_humaneval115_256_s33_v1.json",
+              "round": 1,
+              "speedup_vs_optimized_b1_singleton": 1.5425007047516641,
+              "speedup_vs_original_bnb": 1.4584579995394753,
+              "block_matches_bnb": false
+            }
+          ]
+        }
+      }
+    }
+  },
+  "all_runs_exact_to_optimized_b1": true,
+  "limitations": [
+    "Two prompts; each budget has two independent processes and four timing pairs.",
+    "Prompt token lengths differ (83 vs 321), and task content is confounded with prompt length.",
+    "Per-prompt budget trends are not population-level break-even estimates.",
+    "Token match to BNB at shorter horizons does not establish BNB state identity or longer-horizon fidelity.",
+    "Held-out GSM8K indices 300-349 were not used."
+  ],
+  "artifacts": [
+    "memory_budget_humaneval114_64_s34_v1.json",
+    "memory_budget_humaneval114_64_s36_v1.json",
+    "memory_budget_humaneval114_128_s35_v1.json",
+    "memory_budget_humaneval114_128_s37_v1.json",
+    "memory_telemetry_humaneval114_256_s30_v1.json",
+    "memory_telemetry_humaneval114_256_s31_v1.json",
+    "budget_humaneval115_64_s38_v1.json",
+    "budget_humaneval115_64_s39_v1.json",
+    "budget_humaneval115_128_s40_v1.json",
+    "budget_humaneval115_128_s41_v1.json",
+    "memory_telemetry_humaneval115_256_s32_v1.json",
+    "memory_telemetry_humaneval115_256_s33_v1.json"
+  ]
+}

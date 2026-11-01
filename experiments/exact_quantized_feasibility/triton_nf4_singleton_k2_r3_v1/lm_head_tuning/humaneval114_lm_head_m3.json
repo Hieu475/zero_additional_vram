@@ -1,0 +1,227 @@
+{
+  "schema": "zassd-qwen-lm-head-m3-triton-screen-v1",
+  "status": "finite operator-only screen on actual prompt hidden states; not integrated",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "HumanEval/114",
+  "prompt_tokens": 83,
+  "activation_source": "last three hidden rows captured at lm_head during prompt prefill",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "triton": "3.6.0",
+  "shape": {
+    "physical_rows": 3,
+    "hidden": 2048,
+    "vocab": 151936,
+    "input_dtype": "torch.bfloat16",
+    "weight_dtype": "torch.bfloat16"
+  },
+  "iterations_per_sample": 10,
+  "alternating_rounds": 7,
+  "correctness": {
+    "n64_k32_w4": {
+      "argmax_matches_torch_by_row": [
+        [
+          true,
+          true,
+          true
+        ]
+      ],
+      "bitwise_logits_match_torch": true,
+      "max_abs_logit_error": 0.0,
+      "max_abs_error_index": 0,
+      "rowwise_equal_with_other_rows_changed": [
+        true,
+        true,
+        true
+      ]
+    },
+    "n64_k64_w4": {
+      "argmax_matches_torch_by_row": [
+        [
+          true,
+          true,
+          true
+        ]
+      ],
+      "bitwise_logits_match_torch": true,
+      "max_abs_logit_error": 0.0,
+      "max_abs_error_index": 0,
+      "rowwise_equal_with_other_rows_changed": [
+        true,
+        true,
+        true
+      ]
+    },
+    "n128_k64_w4": {
+      "argmax_matches_torch_by_row": [
+        [
+          true,
+          true,
+          true
+        ]
+      ],
+      "bitwise_logits_match_torch": true,
+      "max_abs_logit_error": 0.0,
+      "max_abs_error_index": 0,
+      "rowwise_equal_with_other_rows_changed": [
+        true,
+        true,
+        true
+      ]
+    },
+    "n128_k128_w4": {
+      "argmax_matches_torch_by_row": [
+        [
+          true,
+          true,
+          true
+        ]
+      ],
+      "bitwise_logits_match_torch": true,
+      "max_abs_logit_error": 0.0,
+      "max_abs_error_index": 0,
+      "rowwise_equal_with_other_rows_changed": [
+        true,
+        true,
+        true
+      ]
+    },
+    "n256_k64_w4": {
+      "argmax_matches_torch_by_row": [
+        [
+          true,
+          true,
+          true
+        ]
+      ],
+      "bitwise_logits_match_torch": true,
+      "max_abs_logit_error": 0.0,
+      "max_abs_error_index": 0,
+      "rowwise_equal_with_other_rows_changed": [
+        true,
+        true,
+        true
+      ]
+    },
+    "n128_k64_w8": {
+      "argmax_matches_torch_by_row": [
+        [
+          true,
+          true,
+          true
+        ]
+      ],
+      "bitwise_logits_match_torch": true,
+      "max_abs_logit_error": 0.0,
+      "max_abs_error_index": 0,
+      "rowwise_equal_with_other_rows_changed": [
+        true,
+        true,
+        true
+      ]
+    }
+  },
+  "resource_rejections": {
+    "n256_k128_w4": "out of resource: shared memory, Required: 133120, Hardware limit: 101376. Reducing block sizes or `num_stages` may help."
+  },
+  "timing": {
+    "torch_linear": {
+      "median_cuda_ms": 3.4840576171875,
+      "ratio_vs_torch_linear": 1.0,
+      "samples_ms": [
+        3.5924190521240233,
+        3.6243263244628907,
+        3.4837505340576174,
+        3.4925376892089846,
+        3.482726287841797,
+        3.4840576171875,
+        3.483340835571289
+      ]
+    },
+    "n64_k32_w4": {
+      "median_cuda_ms": 6.328217697143555,
+      "ratio_vs_torch_linear": 1.8163355467846707,
+      "samples_ms": [
+        6.2224384307861325,
+        6.328217697143555,
+        6.336544036865234,
+        6.3372447967529295,
+        6.3271934509277346,
+        6.304460906982422,
+        6.330470275878906
+      ]
+    },
+    "n64_k64_w4": {
+      "median_cuda_ms": 3.497343826293945,
+      "ratio_vs_torch_linear": 1.0038134297897088,
+      "samples_ms": [
+        3.5070175170898437,
+        3.497343826293945,
+        3.4978816986083983,
+        3.4993408203125,
+        3.4966529846191405,
+        3.495935821533203,
+        3.4960193634033203
+      ]
+    },
+    "n128_k64_w4": {
+      "median_cuda_ms": 3.4907135009765624,
+      "ratio_vs_torch_linear": 1.0019103828123357,
+      "samples_ms": [
+        3.6001792907714845,
+        3.4907135009765624,
+        3.487628936767578,
+        3.4916351318359373,
+        3.4892833709716795,
+        3.4918399810791017,
+        3.489039993286133
+      ]
+    },
+    "n128_k128_w4": {
+      "median_cuda_ms": 3.477219009399414,
+      "ratio_vs_torch_linear": 0.9980371714421856,
+      "samples_ms": [
+        3.3770496368408205,
+        3.4767871856689454,
+        3.4757598876953124,
+        3.477219009399414,
+        3.4791454315185546,
+        3.477983856201172,
+        3.477734375
+      ]
+    },
+    "n256_k64_w4": {
+      "median_cuda_ms": 3.518463897705078,
+      "ratio_vs_torch_linear": 1.0098753477404752,
+      "samples_ms": [
+        3.518463897705078,
+        3.518636703491211,
+        3.5149600982666014,
+        3.5134464263916017,
+        3.5326976776123047,
+        3.5165023803710938,
+        3.6370174407958986
+      ]
+    },
+    "n128_k64_w8": {
+      "median_cuda_ms": 3.5095230102539063,
+      "ratio_vs_torch_linear": 1.007309119384473,
+      "samples_ms": [
+        3.7555198669433594,
+        3.50750732421875,
+        3.6142078399658204,
+        3.506175994873047,
+        3.5095230102539063,
+        3.6344512939453124,
+        3.504617691040039
+      ]
+    }
+  },
+  "limits": [
+    "One RTX 4050, one set of three prompt activation rows; no full decode comparison.",
+    "Triton reduction schedule differs from PyTorch GEMM and may change argmax on other rows/prompts.",
+    "Only the exact M=3 path is tested; runtime must pad singleton rows to the same physical shape."
+  ]
+}

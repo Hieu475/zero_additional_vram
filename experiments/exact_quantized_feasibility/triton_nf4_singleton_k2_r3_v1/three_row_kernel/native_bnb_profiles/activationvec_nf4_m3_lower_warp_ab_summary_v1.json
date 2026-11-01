@@ -1,0 +1,51 @@
+{
+  "schema": "zassd-activationvec-nf4-m3-launch-ab-summary-v1",
+  "classification": "selected development prompt clusters; descriptive only",
+  "prompt_count": 2,
+  "all_default_and_tuned_runs_exact_to_b1": true,
+  "paired_rounds_per_prompt": [
+    4,
+    4
+  ],
+  "tuned_over_default_speedup_geomean": 0.9934980841816397,
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/114",
+      "tuned_over_default_speedup": 0.9912006426655324,
+      "default_over_original_bnb": 1.1416917332984367,
+      "tuned_over_original_bnb": 1.131645579771336,
+      "tuned_over_b1_singleton": 1.38066634754725,
+      "timed_token_matches": {
+        "original_bnb": 4,
+        "bnb_singleton": 4,
+        "fallback_default": 4,
+        "fallback_tuned": 4
+      },
+      "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_nf4_m3_lower_warp_ab_humaneval114_256_v1.json",
+      "artifact_sha256": "5636072f3a903e4e4a23a51a2e5dce7b109d9c75cbc20a7bfc0fe88a64643d76"
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "tuned_over_default_speedup": 0.99580085079268,
+      "default_over_original_bnb": 1.071270584570779,
+      "tuned_over_original_bnb": 1.0667721595447535,
+      "tuned_over_b1_singleton": 1.2801671547978286,
+      "timed_token_matches": {
+        "original_bnb": 4,
+        "bnb_singleton": 4,
+        "fallback_default": 4,
+        "fallback_tuned": 4
+      },
+      "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_nf4_m3_lower_warp_ab_humaneval123_256_v1.json",
+      "artifact_sha256": "0038ab7a41ad6105d3d0432376c3f289bbf7e15fe9da68e5b4c7faa7780e94c2"
+    }
+  ],
+  "interpretation": "The shape-tuned launch is retained as exact but is not faster end to end in this two-prompt screen; preserve the default launch pending broader evidence.",
+  "scope_limits": [
+    "two selected HumanEval prompts",
+    "one process per prompt",
+    "single GPU",
+    "does not establish original-BNB KV identity",
+    "GSM8K held-out indices 300-349 excluded"
+  ]
+}

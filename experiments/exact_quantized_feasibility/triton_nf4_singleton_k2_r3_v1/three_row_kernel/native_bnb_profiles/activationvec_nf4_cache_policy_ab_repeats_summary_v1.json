@@ -1,0 +1,92 @@
+{
+  "schema": "zassd-activationvec-nf4-cache-policy-ab-summary-v1",
+  "classification": "selected development prompt clusters; descriptive only",
+  "cache_policy": {
+    "default": "ld.global.cs.v4 activation loads",
+    "candidate": "ld.global.ca.v4 activation loads",
+    "NF4 weight loads": "ld.global.cs.v4 unchanged"
+  },
+  "prompt_count": 3,
+  "independent_process_count": 6,
+  "all_runs_exact_to_b1_and_timed_tokens": true,
+  "paired_rounds_per_prompt": [
+    4
+  ],
+  "cached_over_streaming_speedup_geomean": 1.0036027882242526,
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/114",
+      "independent_processes": 2,
+      "cached_over_streaming_speedup_geomean": 1.0049079327041248,
+      "process_speedups": [
+        1.007056501223456,
+        1.0027639481844763
+      ],
+      "cached_over_original_bnb_geomean": 1.1382290729961888,
+      "cached_over_b1_singleton_geomean": 1.3633053904291155,
+      "all_timed_token_matches": true,
+      "artifacts": [
+        {
+          "path": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_nf4_cache_policy_ab_humaneval114_256_v1.json",
+          "sha256": "71b0c1844b18a7a3540e280f8af04a155be1e11218e1c3f53e9b68fa20bdd72f"
+        },
+        {
+          "path": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_nf4_cache_policy_ab_humaneval114_256_rep2_v1.json",
+          "sha256": "496ae4409d3614397cc5f2cc8598a3e918964ea7f9d4c53d74b3c89adee58b00"
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "independent_processes": 2,
+      "cached_over_streaming_speedup_geomean": 1.00678378026957,
+      "process_speedups": [
+        1.0097223134532214,
+        1.0038537989195826
+      ],
+      "cached_over_original_bnb_geomean": 1.0789483857949211,
+      "cached_over_b1_singleton_geomean": 1.3000753691017275,
+      "all_timed_token_matches": true,
+      "artifacts": [
+        {
+          "path": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_nf4_cache_policy_ab_humaneval123_256_v1.json",
+          "sha256": "ef685df1c6b770eb5addffae0a22d72a839c3d1c44f58f975e055db39364709c"
+        },
+        {
+          "path": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_nf4_cache_policy_ab_humaneval123_256_rep2_v1.json",
+          "sha256": "f5ed5f668279f60157fbb1b5454a15cdac8e75b72504782b00d06cadc66deaf3"
+        }
+      ]
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "independent_processes": 2,
+      "cached_over_streaming_speedup_geomean": 0.9991325156359866,
+      "process_speedups": [
+        0.9997383539355688,
+        0.9985270444725095
+      ],
+      "cached_over_original_bnb_geomean": 1.2175022745287205,
+      "cached_over_b1_singleton_geomean": 1.4546827501480029,
+      "all_timed_token_matches": true,
+      "artifacts": [
+        {
+          "path": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_nf4_cache_policy_ab_cnndm003_256_v1.json",
+          "sha256": "b67c75d312eaa7ea3d257dc0f32f8dcba53996a3146833fe32f9be05486b5850"
+        },
+        {
+          "path": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_nf4_cache_policy_ab_cnndm003_256_rep2_v1.json",
+          "sha256": "b122fef21310665da66657dc926447f9bbfe6b43ad18fa43124ad27a326f0c9a"
+        }
+      ]
+    }
+  ],
+  "interpretation": "The cache-all activation loads preserved B1 identity and showed a small positive signal on HumanEval, while CNN/DailyMail was near parity. Keep it experimental; the gain is below 1% and prompt-level uncertainty is not estimated from three clusters.",
+  "scope_limits": [
+    "three selected prompts across HumanEval and CNN/DailyMail",
+    "two processes per prompt",
+    "one GPU",
+    "no original-BNB KV identity claim",
+    "GSM8K held-out indices 300-349 excluded"
+  ]
+}

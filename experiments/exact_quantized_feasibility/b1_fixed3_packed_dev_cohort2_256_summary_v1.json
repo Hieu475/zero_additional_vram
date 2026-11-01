@@ -1,0 +1,201 @@
+{
+  "schema": "zassd-fixed3-packed-dev-cohort2-256-v1",
+  "classification": "development-only; two independent sessions per prompt; descriptive results",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "configuration": {
+    "k": 2,
+    "physical_rows": 3,
+    "attention_strategy": "rowwise",
+    "quantized_linear_strategy": "triton_nf4_fixed_three_rows_group_scale_packed",
+    "ngram_size": 3,
+    "max_new_tokens": 256,
+    "capacity": 2048
+  },
+  "prompts": 4,
+  "process_runs": 8,
+  "b1_tokens_and_all_256_kv_prefixes_exact_runs": 8,
+  "original_bnb_token_match_runs": 0,
+  "geomean_speedup_vs_b1_singleton_all_runs": 1.3712182836750975,
+  "geomean_speedup_vs_original_bnb_all_runs": 1.0961187790356048,
+  "per_prompt": {
+    "humaneval:HumanEval/118": {
+      "process_runs": 2,
+      "geomean_speedup_vs_b1_singleton": 1.462118725035171,
+      "geomean_speedup_vs_original_bnb": 1.1723000351352684,
+      "accepted_draft_tokens": 182,
+      "draft_tokens": 278,
+      "all_b1_token_and_256_prefix_state_checks_pass": true,
+      "original_bnb_matching_runs": 0,
+      "first_bnb_divergence_indices": [
+        191,
+        191
+      ],
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s21_v1/rows.jsonl",
+          "session_index": 21,
+          "speedup_vs_b1_singleton": 1.4592562636801516,
+          "speedup_vs_original_bnb": 1.1442626069507171,
+          "accepted_draft_tokens": 91,
+          "draft_tokens": 139,
+          "cycles": 165,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 191
+        },
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s22_v1/rows.jsonl",
+          "session_index": 22,
+          "speedup_vs_b1_singleton": 1.4649868013635252,
+          "speedup_vs_original_bnb": 1.201024453678876,
+          "accepted_draft_tokens": 91,
+          "draft_tokens": 139,
+          "cycles": 165,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 191
+        }
+      ]
+    },
+    "humaneval:HumanEval/119": {
+      "process_runs": 2,
+      "geomean_speedup_vs_b1_singleton": 1.5569567960269581,
+      "geomean_speedup_vs_original_bnb": 1.2598277791062957,
+      "accepted_draft_tokens": 198,
+      "draft_tokens": 292,
+      "all_b1_token_and_256_prefix_state_checks_pass": true,
+      "original_bnb_matching_runs": 0,
+      "first_bnb_divergence_indices": [
+        77,
+        77
+      ],
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s21_v1/rows.jsonl",
+          "session_index": 21,
+          "speedup_vs_b1_singleton": 1.5410622282429662,
+          "speedup_vs_original_bnb": 1.2530299424520968,
+          "accepted_draft_tokens": 99,
+          "draft_tokens": 146,
+          "cycles": 156,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 77
+        },
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s22_v1/rows.jsonl",
+          "session_index": 22,
+          "speedup_vs_b1_singleton": 1.5730153009190109,
+          "speedup_vs_original_bnb": 1.2666624948338605,
+          "accepted_draft_tokens": 99,
+          "draft_tokens": 146,
+          "cycles": 156,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 77
+        }
+      ]
+    },
+    "cnndm:cnndm_008": {
+      "process_runs": 2,
+      "geomean_speedup_vs_b1_singleton": 1.295435790638682,
+      "geomean_speedup_vs_original_bnb": 1.0235387701154326,
+      "accepted_draft_tokens": 134,
+      "draft_tokens": 264,
+      "all_b1_token_and_256_prefix_state_checks_pass": true,
+      "original_bnb_matching_runs": 0,
+      "first_bnb_divergence_indices": [
+        68,
+        68
+      ],
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s21_v1/rows.jsonl",
+          "session_index": 21,
+          "speedup_vs_b1_singleton": 1.2994018766990658,
+          "speedup_vs_original_bnb": 1.0056903109172088,
+          "accepted_draft_tokens": 67,
+          "draft_tokens": 132,
+          "cycles": 188,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 68
+        },
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s22_v1/rows.jsonl",
+          "session_index": 22,
+          "speedup_vs_b1_singleton": 1.2914818100238268,
+          "speedup_vs_original_bnb": 1.0417039943180442,
+          "accepted_draft_tokens": 67,
+          "draft_tokens": 132,
+          "cycles": 188,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 68
+        }
+      ]
+    },
+    "cnndm:cnndm_009": {
+      "process_runs": 2,
+      "geomean_speedup_vs_b1_singleton": 1.1988125742067406,
+      "geomean_speedup_vs_original_bnb": 0.9549402899837294,
+      "accepted_draft_tokens": 96,
+      "draft_tokens": 194,
+      "all_b1_token_and_256_prefix_state_checks_pass": true,
+      "original_bnb_matching_runs": 0,
+      "first_bnb_divergence_indices": [
+        248,
+        248
+      ],
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s21_v1/rows.jsonl",
+          "session_index": 21,
+          "speedup_vs_b1_singleton": 1.1962138975375687,
+          "speedup_vs_original_bnb": 0.9322251693554237,
+          "accepted_draft_tokens": 48,
+          "draft_tokens": 97,
+          "cycles": 208,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 248
+        },
+        {
+          "artifact": "b1_fixed3_packed_dev_cohort2_256_s22_v1/rows.jsonl",
+          "session_index": 22,
+          "speedup_vs_b1_singleton": 1.2014168962880287,
+          "speedup_vs_original_bnb": 0.9782088999643074,
+          "accepted_draft_tokens": 48,
+          "draft_tokens": 97,
+          "cycles": 208,
+          "shared_state_prefixes": 256,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 248
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "four selected development prompts on one GPU",
+    "two process sessions per prompt",
+    "held-out GSM8K indices 300-349 excluded",
+    "finite empirical B1 identity does not prove universal equivalence"
+  ]
+}

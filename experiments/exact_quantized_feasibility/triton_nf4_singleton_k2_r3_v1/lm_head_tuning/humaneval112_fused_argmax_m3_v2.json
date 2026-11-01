@@ -1,0 +1,254 @@
+{
+  "schema": "zassd-qwen-lm-head-fused-argmax-m3-screen-v1",
+  "status": "operator-only diagnostic; not integrated into the decoder",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "HumanEval/112",
+  "prompt_tokens": 157,
+  "activation_source": "last three lm_head inputs captured during prompt prefill",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "triton": "3.6.0",
+  "shape": {
+    "physical_rows": 3,
+    "hidden": 2048,
+    "vocab": 151936,
+    "dtype": "torch.bfloat16"
+  },
+  "iterations_per_sample": 10,
+  "alternating_rounds": 7,
+  "correctness": {
+    "n64_k64_w4": {
+      "ids_match_torch_all_rows": true,
+      "max_values_bitwise_match_torch_all_rows": true,
+      "max_abs_top_value_error": 0.05696296691894531,
+      "rowwise_id_invariant": [
+        true,
+        true,
+        true
+      ],
+      "rowwise_max_value_invariant": [
+        true,
+        true,
+        true
+      ],
+      "output_token_ids": [
+        [
+          262,
+          3190,
+          262
+        ]
+      ],
+      "torch_token_ids": [
+        [
+          262,
+          3190,
+          262
+        ]
+      ]
+    },
+    "n128_k64_w4": {
+      "ids_match_torch_all_rows": true,
+      "max_values_bitwise_match_torch_all_rows": true,
+      "max_abs_top_value_error": 0.05696296691894531,
+      "rowwise_id_invariant": [
+        true,
+        true,
+        true
+      ],
+      "rowwise_max_value_invariant": [
+        true,
+        true,
+        true
+      ],
+      "output_token_ids": [
+        [
+          262,
+          3190,
+          262
+        ]
+      ],
+      "torch_token_ids": [
+        [
+          262,
+          3190,
+          262
+        ]
+      ]
+    },
+    "n128_k128_w4": {
+      "ids_match_torch_all_rows": true,
+      "max_values_bitwise_match_torch_all_rows": true,
+      "max_abs_top_value_error": 0.05696296691894531,
+      "rowwise_id_invariant": [
+        true,
+        true,
+        true
+      ],
+      "rowwise_max_value_invariant": [
+        true,
+        true,
+        true
+      ],
+      "output_token_ids": [
+        [
+          262,
+          3190,
+          262
+        ]
+      ],
+      "torch_token_ids": [
+        [
+          262,
+          3190,
+          262
+        ]
+      ]
+    },
+    "n256_k64_w4": {
+      "ids_match_torch_all_rows": true,
+      "max_values_bitwise_match_torch_all_rows": true,
+      "max_abs_top_value_error": 0.05696296691894531,
+      "rowwise_id_invariant": [
+        true,
+        true,
+        true
+      ],
+      "rowwise_max_value_invariant": [
+        true,
+        true,
+        true
+      ],
+      "output_token_ids": [
+        [
+          262,
+          3190,
+          262
+        ]
+      ],
+      "torch_token_ids": [
+        [
+          262,
+          3190,
+          262
+        ]
+      ]
+    },
+    "n128_k64_w8": {
+      "ids_match_torch_all_rows": true,
+      "max_values_bitwise_match_torch_all_rows": true,
+      "max_abs_top_value_error": 0.05696296691894531,
+      "rowwise_id_invariant": [
+        true,
+        true,
+        true
+      ],
+      "rowwise_max_value_invariant": [
+        true,
+        true,
+        true
+      ],
+      "output_token_ids": [
+        [
+          262,
+          3190,
+          262
+        ]
+      ],
+      "torch_token_ids": [
+        [
+          262,
+          3190,
+          262
+        ]
+      ]
+    }
+  },
+  "resource_rejections": {},
+  "timing": {
+    "torch_linear_plus_argmax": {
+      "median_cuda_ms": 3.626291275024414,
+      "ratio_vs_torch": 1.0,
+      "samples_ms": [
+        3.6316608428955077,
+        3.6315071105957033,
+        3.4948959350585938,
+        3.6245502471923827,
+        3.626291275024414,
+        3.6317184448242186,
+        3.6243457794189453
+      ]
+    },
+    "n64_k64_w4": {
+      "median_cuda_ms": 3.6047134399414062,
+      "ratio_vs_torch": 0.9940496133800332,
+      "samples_ms": [
+        3.6047134399414062,
+        3.624652862548828,
+        3.7380096435546877,
+        3.5813217163085938,
+        3.605401611328125,
+        3.596579360961914,
+        3.603148651123047
+      ]
+    },
+    "n128_k64_w4": {
+      "median_cuda_ms": 3.5943359375,
+      "ratio_vs_torch": 0.991187873477097,
+      "samples_ms": [
+        3.5920894622802733,
+        3.4846721649169923,
+        3.5943359375,
+        3.6102142333984375,
+        3.590758514404297,
+        3.5943424224853517,
+        3.610521697998047
+      ]
+    },
+    "n128_k128_w4": {
+      "median_cuda_ms": 3.5845855712890624,
+      "ratio_vs_torch": 0.9884990750680747,
+      "samples_ms": [
+        3.695344161987305,
+        3.5845855712890624,
+        3.58656005859375,
+        3.710732650756836,
+        3.5810302734375,
+        3.5834110260009764,
+        3.5665920257568358
+      ]
+    },
+    "n256_k64_w4": {
+      "median_cuda_ms": 3.611955261230469,
+      "ratio_vs_torch": 0.996046645813401,
+      "samples_ms": [
+        3.6109310150146485,
+        3.6104190826416014,
+        3.48590087890625,
+        3.6124671936035155,
+        3.613507080078125,
+        3.7187454223632814,
+        3.611955261230469
+      ]
+    },
+    "n128_k64_w8": {
+      "median_cuda_ms": 3.5939327239990235,
+      "ratio_vs_torch": 0.9910766817745018,
+      "samples_ms": [
+        3.463270568847656,
+        3.615641784667969,
+        3.591849517822266,
+        3.594240188598633,
+        3.5930049896240233,
+        3.724185562133789,
+        3.5939327239990235
+      ]
+    }
+  },
+  "limits": [
+    "Two or fewer prompt activation samples; finite argmax evidence only.",
+    "This returns token IDs and top values rather than a full logits tensor; integrating requires a decoder-specific interface.",
+    "End-to-end token/KV and latency were not tested."
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "experiment": "triton_b1_contract_api_256_independent_session_summary",
+  "contract_id": "61f0c8f15fbc91b9ce86dd35da55360940accdc59642d1fe9faff985a2019bee",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "budget": 256,
+  "prompt_ids": [
+    "cnndm_003",
+    "cnndm_004",
+    "cnndm_005"
+  ],
+  "sessions": [
+    {
+      "artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_256_session0_v1.json",
+      "sha256": "0468db528f7897a0bf4f502c86359a97d95bccbfe4f0c40adfea74ea58f1d2ba",
+      "timing_pairs": 3
+    },
+    {
+      "artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_256_session1_v1.json",
+      "sha256": "5655280f1019b851baded18529911af75dd7a95e94ae7485531a79c9a558d1b2",
+      "timing_pairs": 3
+    }
+  ],
+  "timing_pair_count": 6,
+  "all_b1_exact": true,
+  "bnb_token_matches": 0,
+  "speedup_vs_b1": {
+    "geomean": 1.2706164892633833,
+    "range": [
+      1.2274472771556608,
+      1.300501194597592
+    ],
+    "descriptive_paired_log_t_95_interval": [
+      1.2452266400349754,
+      1.2965240309528387
+    ]
+  },
+  "speedup_vs_bnb": {
+    "geomean": 1.0454956030255387,
+    "range": [
+      0.9885734640123134,
+      1.0971416873248347
+    ],
+    "descriptive_paired_log_t_95_interval": [
+      1.0047769634670456,
+      1.087864367604587
+    ]
+  },
+  "per_prompt": {
+    "cnndm_003": {
+      "session_count": 2,
+      "geomean_vs_b1": 1.2865401556924738,
+      "geomean_vs_bnb": 1.0782068300700003,
+      "all_b1_exact": true,
+      "bnb_token_matches": 0,
+      "shared_prefixes_per_session": [
+        198,
+        198
+      ],
+      "accepted_over_drafted": [
+        116,
+        182
+      ]
+    },
+    "cnndm_004": {
+      "session_count": 2,
+      "geomean_vs_b1": 1.252422677766428,
+      "geomean_vs_bnb": 1.0147405410002448,
+      "all_b1_exact": true,
+      "bnb_token_matches": 0,
+      "shared_prefixes_per_session": [
+        202,
+        202
+      ],
+      "accepted_over_drafted": [
+        110,
+        168
+      ]
+    },
+    "cnndm_005": {
+      "session_count": 2,
+      "geomean_vs_b1": 1.2731195647681517,
+      "geomean_vs_bnb": 1.0445026393130257,
+      "all_b1_exact": true,
+      "bnb_token_matches": 0,
+      "shared_prefixes_per_session": [
+        203,
+        203
+      ],
+      "accepted_over_drafted": [
+        108,
+        158
+      ]
+    }
+  },
+  "aggregate_acceptance": [
+    334,
+    508
+  ],
+  "samples": [
+    {
+      "session_artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_256_session0_v1.json",
+      "prompt_id": "cnndm_003",
+      "speedup_vs_b1": 1.300501194597592,
+      "speedup_vs_bnb": 1.0595987572436523,
+      "bnb_token_match": false,
+      "b1_exact": true,
+      "shared_prefixes": 198,
+      "accepted_draft_tokens": 58,
+      "draft_tokens": 91
+    },
+    {
+      "session_artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_256_session0_v1.json",
+      "prompt_id": "cnndm_004",
+      "speedup_vs_b1": 1.277906263655111,
+      "speedup_vs_bnb": 0.9885734640123134,
+      "bnb_token_match": false,
+      "b1_exact": true,
+      "shared_prefixes": 202,
+      "accepted_draft_tokens": 55,
+      "draft_tokens": 84
+    },
+    {
+      "session_artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_256_session0_v1.json",
+      "prompt_id": "cnndm_005",
+      "speedup_vs_b1": 1.2807405246118444,
+      "speedup_vs_bnb": 1.0736039852328652,
+      "bnb_token_match": false,
+      "b1_exact": true,
+      "shared_prefixes": 203,
+      "accepted_draft_tokens": 54,
+      "draft_tokens": 79
+    },
+    {
+      "session_artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_256_session1_v1.json",
+      "prompt_id": "cnndm_003",
+      "speedup_vs_b1": 1.2727289902423895,
+      "speedup_vs_bnb": 1.0971416873248347,
+      "bnb_token_match": false,
+      "b1_exact": true,
+      "shared_prefixes": 198,
+      "accepted_draft_tokens": 58,
+      "draft_tokens": 91
+    },
+    {
+      "session_artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_256_session1_v1.json",
+      "prompt_id": "cnndm_004",
+      "speedup_vs_b1": 1.2274472771556608,
+      "speedup_vs_bnb": 1.0416002482711226,
+      "bnb_token_match": false,
+      "b1_exact": true,
+      "shared_prefixes": 202,
+      "accepted_draft_tokens": 55,
+      "draft_tokens": 84
+    },
+    {
+      "session_artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_256_session1_v1.json",
+      "prompt_id": "cnndm_005",
+      "speedup_vs_b1": 1.2655439529304158,
+      "speedup_vs_bnb": 1.016190120880784,
+      "bnb_token_match": false,
+      "b1_exact": true,
+      "shared_prefixes": 203,
+      "accepted_draft_tokens": 54,
+      "draft_tokens": 79
+    }
+  ],
+  "interpretation": "Descriptive paired intervals over six pairs from three fixed prompts repeated in two processes on one GPU; prompts are not independent, and BNB latency does not imply token/state fidelity."
+}

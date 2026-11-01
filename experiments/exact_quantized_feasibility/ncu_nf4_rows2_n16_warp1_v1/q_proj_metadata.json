@@ -1,0 +1,38 @@
+{
+  "status": "single exact-schedule launch emitted after three warmups; NCU owns timing",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "triton": "3.6.0",
+  "layer": "q_proj",
+  "input_shape": [
+    1,
+    2,
+    2048
+  ],
+  "input_dtype": "torch.float16",
+  "output_shape": [
+    1,
+    2,
+    2048
+  ],
+  "output_sha256": "909bae6677628b89cce02f513f48a5f72a0b7b8d72840a0c49cd2d34fbc3f824",
+  "bias_dtype_after_hooked_call": "torch.float16",
+  "contract_id": "61f0c8f15fbc91b9ce86dd35da55360940accdc59642d1fe9faff985a2019bee",
+  "prefill_prompt_id": "cnndm_003",
+  "prefill_prompt_tokens": 262,
+  "physical_rows": 2,
+  "block_n": 16,
+  "block_k": 256,
+  "num_warps": 1,
+  "fp_fusion": false,
+  "kernel_source": "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows_warp_sweep.py",
+  "kernel_source_sha256": "19af16da02aa0026718d69038cb9eb434e65d80f4007453ee287cae74462581d",
+  "ncu_capture_instruction": "profile the fourth matching _packed_two_rows_kernel launch after three warmups"
+}

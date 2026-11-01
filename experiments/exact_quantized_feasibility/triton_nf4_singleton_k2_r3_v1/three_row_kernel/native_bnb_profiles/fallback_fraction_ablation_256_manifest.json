@@ -1,0 +1,44 @@
+{
+  "schema": "zassd-fallback-fraction-ablation-manifest-v1",
+  "classification": "research-only paired ablation; no production decoder changes",
+  "model": {
+    "id": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "triton": "3.6.0",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "schedule": {
+    "k": 2,
+    "ngram_size": 3,
+    "physical_rows": 3,
+    "attention": "bnb_rowwise",
+    "quantized_linear_strategy": "fixed_rows",
+    "max_new_tokens": 256,
+    "timing_rounds": 4
+  },
+  "ablation": {
+    "activationvec": "native M=1 on 0% of empty-proposal cycles",
+    "fallback_every_other": "native M=1 on each even-numbered empty-proposal cycle",
+    "fallback_all": "native M=1 on every empty-proposal cycle"
+  },
+  "source_sha256": {
+    "scripts/audit_activationvec_fallback_fraction_ablation_256.py": "4f221918f2cb7caf5fd500b5e6585264dcf14d1afeccbd204518ac227e2924ed",
+    "scripts/audit_bnb_nf4_gate_reduction_orders.py": "ba9751d19c02c4e704aad64622173908d5f811203d5674c9449c0337da64cae5",
+    "scripts/audit_bnb_nf4_activationvec_block_integration.py": "234ffa6a673205f63f116b20f457490e5f04460418b6c309669097b10d37d300",
+    "scripts/audit_triton_b1_closed_loop.py": "69ffa08de5a9620baefee7526653085f390b72eddac0c5f94e22ddd4baf51e4a",
+    "src/zassd/backends/base.py": "00c77e4731ef61cda25d4393d865b1f21b7422689870d680529aa79165df9ef6",
+    "src/zassd/decoding/b1_exact.py": "e19b4e6440697fc96e6e6e7b1902da843fa45b8cae0e62700c4ac331f99b0d63",
+    "src/zassd/decoding/ngram.py": "0976856395ce1a293e767c84fd6b1dc6d8f277b57f0674e806896cc3913d4713",
+    "src/zassd/certification/fixed_row_dispatch.py": "22bfa87d6ba25ff0f7f0da5e09359557984e5e8f3daa71b7f44c3362bd4225a9",
+    "src/zassd/certification/qwen2_padded.py": "a87cf46e83cbd6741e7c9465c358b0988e160516f66820a8e77ce74d7265c4c5",
+    "src/zassd/cache/kv_cache.py": "a56a3ad4ee163e7456e236515e8848173face82426b0fe3c0e7489b170ed3934"
+  },
+  "heldout_policy": "GSM8K held-out indices 300-349 excluded."
+}

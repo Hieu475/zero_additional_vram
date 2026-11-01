@@ -1,0 +1,150 @@
+{
+  "status": "finite singleton-kernel optimization feasibility screen; not integrated or contract-pinned",
+  "configuration": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "k": 1,
+    "physical_rows": 2,
+    "max_new_tokens": 128,
+    "block_k": 32,
+    "attention_strategy": "triton_batched",
+    "linear_strategy": "N=16/K=256/one-warp; one-row kernel for singleton, existing two-row kernel for block"
+  },
+  "operator_screen": {
+    "compared_linear4bit_modules": 252,
+    "one_row_equals_two_row_m1_bitwise": true,
+    "mismatches": 0
+  },
+  "prompts": {
+    "cnndm_003": {
+      "artifacts": [
+        "closed_loop_cnndm003_128_s0_v2.json",
+        "closed_loop_cnndm003_128_s1_v1.json"
+      ],
+      "runs_exact": true,
+      "prefixes": [
+        128,
+        128
+      ],
+      "bnb_matches": 0,
+      "speedup_vs_optimized_b1_geomean": 1.2675614746728192,
+      "speedup_vs_bnb_geomean": 1.135898425820909
+    },
+    "cnndm_004": {
+      "artifacts": [
+        "closed_loop_cnndm004_128_s2_v1.json"
+      ],
+      "runs_exact": true,
+      "prefixes": [
+        128
+      ],
+      "bnb_matches": 0,
+      "speedup_vs_optimized_b1_geomean": 1.1078459207821079,
+      "speedup_vs_bnb_geomean": 1.0504857393948461
+    }
+  },
+  "paired_rounds": [
+    {
+      "prompt_id": "cnndm_003",
+      "artifact": "closed_loop_cnndm003_128_s0_v2.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.2893488686025936,
+      "speedup_vs_bnb": 1.1394413243479755,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "artifact": "closed_loop_cnndm003_128_s0_v2.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.2682242098093242,
+      "speedup_vs_bnb": 1.0836912144918722,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "artifact": "closed_loop_cnndm003_128_s1_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.292328273294399,
+      "speedup_vs_bnb": 1.2287018493236141,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "artifact": "closed_loop_cnndm003_128_s1_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.2216218603759255,
+      "speedup_vs_bnb": 1.0972711487993685,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "artifact": "closed_loop_cnndm004_128_s2_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.111772901017701,
+      "speedup_vs_bnb": 1.0327736493191038,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "artifact": "closed_loop_cnndm004_128_s2_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.1039328113413114,
+      "speedup_vs_bnb": 1.0685015921925152,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    }
+  ],
+  "all_runs_exact_to_optimized_b1": true,
+  "paired_geomean_speedup_vs_optimized_b1_singleton": 1.2119158768353246,
+  "paired_geomean_speedup_vs_original_bnb": 1.1066825246451986,
+  "bnb_token_matches": 0,
+  "bnb_comparisons": 6,
+  "limitations": [
+    "Two prompts; one prompt has two independent sessions, the second has one session. Six timing pairs total.",
+    "Finite random-activation module screen; not a proof over all inputs.",
+    "Original BNB token identity was not achieved; no B2 claim.",
+    "The new singleton source is not in the static contract and has no runtime gate.",
+    "Held-out GSM8K indices 300-349 were not used.",
+    "The 256-token repeat covers three prompts with two independent processes each; see closed_loop_256_summary.json."
+  ],
+  "artifacts": {
+    "operator_benchmark": "operator_benchmark.json",
+    "all_module_audit": "all_module_operator_audit_cnnd003.json",
+    "closed_loop_runs": [
+      "closed_loop_cnndm003_128_s0_v2.json",
+      "closed_loop_cnndm003_128_s1_v1.json",
+      "closed_loop_cnndm004_128_s2_v1.json"
+    ],
+    "singleton_kernel": "../../../src/zassd/certification/nf4_fixed_row_singleton_group_scale_packed.py",
+    "closed_loop_harness": "../../../scripts/audit_nf4_singleton_optimized_closed_loop.py"
+  },
+  "long_run_256": {
+    "artifact": "closed_loop_cnndm003_256_s3_v1.json",
+    "prompt_id": "cnndm_003",
+    "token_kv_lengths_exact_to_optimized_b1": true,
+    "shared_state_prefixes": 256,
+    "accepted_draft_tokens": 58,
+    "draft_tokens": 91,
+    "speedup_vs_optimized_b1_singleton": 1.2511583859216977,
+    "speedup_vs_original_bnb": 1.134446611956847,
+    "block_matches_original_bnb_tokens": 0
+  },
+  "fixed_budget_256_multisession_summary": "closed_loop_256_summary.json",
+  "humaneval_128_multisession_summary": "humaneval_128_summary.json",
+  "experiment_manifest": "experiment_manifest.json",
+  "humaneval_112_256_summary": "humaneval_112_256_summary.json",
+  "humaneval_256_two_prompt_summary": "humaneval_256_two_prompt_summary.json",
+  "acceptance_speed_tradeoff_256_analysis": "acceptance_speed_tradeoff_256_analysis.json",
+  "humaneval_256_four_prompt_summary": "humaneval_256_four_prompt_summary.json",
+  "live_identity_smoke": "live_identity_smoke_humaneval114_8_s28.json",
+  "memory_telemetry_smoke": "memory_telemetry_smoke_humaneval115_8_s29.json",
+  "memory_telemetry_summary": "memory_telemetry_summary.json",
+  "memory_telemetry_humaneval115_repeat": "memory_telemetry_humaneval115_256_s33_v1.json",
+  "generation_budget_humaneval114_summary": "generation_budget_humaneval114_summary.json",
+  "generation_budget_humaneval114_115_summary": "generation_budget_humaneval114_115_summary.json",
+  "bnb_divergence_horizons": "bnb_divergence_horizons_humaneval_sweep.json"
+}

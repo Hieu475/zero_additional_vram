@@ -1,0 +1,78 @@
+{
+  "classification": "development-only CNN/DailyMail 256-token repeat; two sessions per prompt; not certification",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "configuration": {
+    "K": 2,
+    "R": 3,
+    "physical_rows": 3,
+    "max_new_tokens": 256,
+    "strategy": "triton_nf4_fixed_three_rows_group_scale_packed"
+  },
+  "correctness_vs_b1": {
+    "sessions_matched": 6,
+    "sessions_total": 6,
+    "state_prefixes_matched": 1536,
+    "state_prefixes_expected": 1536
+  },
+  "performance": {
+    "geomean_speedup_vs_b1": 1.2126589345411358,
+    "geomean_speedup_vs_original_bnb": 1.0753932793345922,
+    "speedup_ranges": {
+      "vs_b1": [
+        0.858512520795138,
+        1.4198357965342199
+      ],
+      "vs_original_bnb": [
+        0.7341662486957876,
+        1.317755795325735
+      ]
+    },
+    "prompt_clusters": {
+      "cnndm_003": {
+        "sessions": [
+          42,
+          43
+        ],
+        "timing_rounds": 4,
+        "geomean_speedup_vs_b1": 1.2378199970089074,
+        "geomean_speedup_vs_original_bnb": 1.10946516042332,
+        "bnb_token_match_rounds": 0
+      },
+      "cnndm_004": {
+        "sessions": [
+          42,
+          43
+        ],
+        "timing_rounds": 4,
+        "geomean_speedup_vs_b1": 1.0901477242768898,
+        "geomean_speedup_vs_original_bnb": 0.9570551968512861,
+        "bnb_token_match_rounds": 0
+      },
+      "cnndm_005": {
+        "sessions": [
+          42,
+          43
+        ],
+        "timing_rounds": 4,
+        "geomean_speedup_vs_b1": 1.3215182518440989,
+        "geomean_speedup_vs_original_bnb": 1.1712545721790089,
+        "bnb_token_match_rounds": 0
+      }
+    },
+    "bnb_token_match_timing_rounds": 0,
+    "timing_rounds": 12,
+    "unique_session_acceptance": {
+      "accepted": 326,
+      "drafted": 724,
+      "rate": 0.45027624309392267
+    }
+  },
+  "limitations": [
+    "Three CNN/DailyMail development prompts on one GPU; timing rounds are nested within two sessions per prompt.",
+    "The first timing round in cnndm_003 session 43 is an outlier with block first in the method order; performance estimates remain descriptive.",
+    "Exactness is empirical relative to experimental B1 singleton; no formal proof.",
+    "BNB token identity did not match in any 256-token run; no BNB equality claim.",
+    "Held-out GSM8K indices 300\u2013349 were not used."
+  ]
+}

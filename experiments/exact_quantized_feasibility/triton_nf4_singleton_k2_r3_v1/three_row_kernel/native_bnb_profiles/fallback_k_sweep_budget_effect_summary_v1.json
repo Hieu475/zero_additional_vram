@@ -1,0 +1,197 @@
+{
+  "schema": "zassd-k-sweep-budget-effect-v1",
+  "classification": "paired synthesis of two independent K=1/K=2 sweeps per prompt at 256 and 512 generated tokens",
+  "scope": "Qwen2.5-3B-Instruct NF4, RTX 4050 Laptop GPU, K=1/2, R=3, ngram3, full native-BNB empty-proposal fallback",
+  "prompt_count": 6,
+  "independent_processes_per_budget": 12,
+  "budgets": [
+    256,
+    512
+  ],
+  "b1_exactness_in_both_inputs": true,
+  "aggregate": {
+    "256": {
+      "k2_over_k1": {
+        "geomean_across_prompts": 1.139108431137088,
+        "prompt_cluster_bootstrap_95pct": [
+          1.0843606311399177,
+          1.2047284828530467
+        ],
+        "prompts_k2_faster": 6
+      },
+      "k2_vs_bnb": {
+        "geomean_across_prompts": 1.152093091044495,
+        "prompt_cluster_bootstrap_95pct": [
+          1.0563765690954174,
+          1.2653461933642527
+        ],
+        "prompts_faster_than_bnb": 6
+      }
+    },
+    "512": {
+      "k2_over_k1": {
+        "geomean_across_prompts": 1.1911889541280756,
+        "prompt_cluster_bootstrap_95pct": [
+          1.1185003830129194,
+          1.271961630049249
+        ],
+        "prompts_k2_faster": 6
+      },
+      "k2_vs_bnb": {
+        "geomean_across_prompts": 1.2518220121084502,
+        "prompt_cluster_bootstrap_95pct": [
+          1.1021973000393916,
+          1.4023561491188525
+        ],
+        "prompts_faster_than_bnb": 5
+      }
+    }
+  },
+  "budget_effect_256_over_512": {
+    "k2_over_k1": {
+      "geomean_across_prompts": 0.9562785376656642,
+      "prompt_cluster_bootstrap_95pct": [
+        0.9350887606528514,
+        0.9853954013446661
+      ],
+      "prompts_256_ratio_higher": 1
+    },
+    "k2_vs_bnb": {
+      "geomean_across_prompts": 0.9203329865593423,
+      "prompt_cluster_bootstrap_95pct": [
+        0.871834966497661,
+        0.9853207712327752
+      ],
+      "prompts_256_ratio_higher": 1
+    }
+  },
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/112",
+      "budgets": {
+        "256": {
+          "k2_over_k1": 1.286378956580161,
+          "k2_vs_bnb": 1.3844579906080061,
+          "k1_vs_bnb": 1.0762442774161884
+        },
+        "512": {
+          "k2_over_k1": 1.3620289298585546,
+          "k2_vs_bnb": 1.5515848278176416,
+          "k1_vs_bnb": 1.1391717119979032
+        }
+      },
+      "ratio_256_over_512": {
+        "k2_over_k1": 0.9444578807248611,
+        "k2_vs_bnb": 0.8922863679682242
+      }
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "budgets": {
+        "256": {
+          "k2_over_k1": 1.0992872848503947,
+          "k2_vs_bnb": 1.0722339262346003,
+          "k1_vs_bnb": 0.9753900923001431
+        },
+        "512": {
+          "k2_over_k1": 1.1956853356963988,
+          "k2_vs_bnb": 1.2820705132993755,
+          "k1_vs_bnb": 1.0722474174634444
+        }
+      },
+      "ratio_256_over_512": {
+        "k2_over_k1": 0.91937841172079,
+        "k2_vs_bnb": 0.8363299172018502
+      }
+    },
+    {
+      "prompt_id": "HumanEval/121",
+      "budgets": {
+        "256": {
+          "k2_over_k1": 1.191840618519521,
+          "k2_vs_bnb": 1.2820105746372341,
+          "k1_vs_bnb": 1.0756560522578267
+        },
+        "512": {
+          "k2_over_k1": 1.266062424902494,
+          "k2_vs_bnb": 1.3818288631196034,
+          "k1_vs_bnb": 1.0914381755117841
+        }
+      },
+      "ratio_256_over_512": {
+        "k2_over_k1": 0.9413758714238049,
+        "k2_vs_bnb": 0.9277636390826137
+      }
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "budgets": {
+        "256": {
+          "k2_over_k1": 1.0912962650340954,
+          "k2_vs_bnb": 1.0356648559129153,
+          "k1_vs_bnb": 0.9490226339962393
+        },
+        "512": {
+          "k2_over_k1": 1.068310594551667,
+          "k2_vs_bnb": 0.9658891071127415,
+          "k1_vs_bnb": 0.9041276123617322
+        }
+      },
+      "ratio_256_over_512": {
+        "k2_over_k1": 1.021515906141579,
+        "k2_vs_bnb": 1.0722399168665948
+      }
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "budgets": {
+        "256": {
+          "k2_over_k1": 1.04543369275746,
+          "k2_vs_bnb": 1.0184489761579205,
+          "k1_vs_bnb": 0.9741880171009566
+        },
+        "512": {
+          "k2_over_k1": 1.1063098880475017,
+          "k2_vs_bnb": 1.1230732431217054,
+          "k1_vs_bnb": 1.0151524950245077
+        }
+      },
+      "ratio_256_over_512": {
+        "k2_over_k1": 0.9449736498355983,
+        "k2_vs_bnb": 0.9068411008769381
+      }
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "budgets": {
+        "256": {
+          "k2_over_k1": 1.1361951273777096,
+          "k2_vs_bnb": 1.164946508326702,
+          "k1_vs_bnb": 1.0253049676558192
+        },
+        "512": {
+          "k2_over_k1": 1.1723337314844051,
+          "k2_vs_bnb": 1.2905607688488876,
+          "k1_vs_bnb": 1.1008475950058894
+        }
+      },
+      "ratio_256_over_512": {
+        "k2_over_k1": 0.9691737914416768,
+        "k2_vs_bnb": 0.9026669153795627
+      }
+    }
+  ],
+  "input_sha256": {
+    "256": "dffb9440cc2a830446d194567f79709091abd0897e3c909de6d0d6decac9ada5",
+    "512": "93661a4bce78c6d00901f258461a77171a244bc61a15e2c51b04a59589e0aa69"
+  },
+  "heldout_used": false,
+  "limits": [
+    "Six selected prompts on one model/GPU; bootstrap resamples prompt clusters and is descriptive.",
+    "Budget contrasts share prompts but are not a randomized estimate across workloads.",
+    "Original-BNB comparison is latency/token-ID only; no BNB KV-state identity claim.",
+    "GSM8K held-out indices 300-349 excluded."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_activationvec_k_sweep_budget_effect.py",
+  "source_sha256": "c205b7d947c307bc36405e7fae8df5158da3f7e6489d2fa1f937cc9efa2eec3b"
+}

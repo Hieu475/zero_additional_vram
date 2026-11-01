@@ -1,0 +1,303 @@
+{
+  "status": "diagnostic multi-session B1 pilot; not a universal proof or held-out evaluation",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "max_new_tokens": 256,
+  "attention_strategy": "padded",
+  "prompt_count": 1,
+  "prompt_hashes": {
+    "b1_long_context_cnndm_001_prompt/cnndm_001": "bba094299d5d0fa60cfecdab34719b4c4c48a2637f9511232de8b4385bb85db3"
+  },
+  "by_k": {
+    "2": {
+      "physical_rows": 3,
+      "attention_strategy": "padded",
+      "sessions": [
+        {
+          "session_index": 0,
+          "cohort_start_index": 0,
+          "directory": "experiments/exact_quantized_feasibility/b1_cycle_long_cnndm001_k2_s0_v1"
+        },
+        {
+          "session_index": 1,
+          "cohort_start_index": 0,
+          "directory": "experiments/exact_quantized_feasibility/b1_cycle_long_cnndm001_k2_s1_v1"
+        }
+      ],
+      "pairs": [
+        {
+          "session_index": 0,
+          "cohort_start_index": 0,
+          "task": "b1_long_context_cnndm_001_prompt",
+          "id": "cnndm_001",
+          "input_token_ids_sha256": "bba094299d5d0fa60cfecdab34719b4c4c48a2637f9511232de8b4385bb85db3",
+          "method_order": [
+            "original_greedy",
+            "b1_reference",
+            "b1_block"
+          ],
+          "block_matches_b1": true,
+          "all_shared_states_equal": true,
+          "block_matches_original_bnb": false,
+          "speedup_vs_original_bnb": 1.054325300998657,
+          "speedup_vs_b1_singleton": 1.4167244988708743,
+          "shared_frontier_count": 187,
+          "block_total_s": 6.7145951019992935,
+          "original_total_s": 7.0793675019995135,
+          "b1_singleton_total_s": 9.512731381000776
+        },
+        {
+          "session_index": 1,
+          "cohort_start_index": 0,
+          "task": "b1_long_context_cnndm_001_prompt",
+          "id": "cnndm_001",
+          "input_token_ids_sha256": "bba094299d5d0fa60cfecdab34719b4c4c48a2637f9511232de8b4385bb85db3",
+          "method_order": [
+            "b1_reference",
+            "b1_block",
+            "original_greedy"
+          ],
+          "block_matches_b1": true,
+          "all_shared_states_equal": true,
+          "block_matches_original_bnb": false,
+          "speedup_vs_original_bnb": 0.9886252280173217,
+          "speedup_vs_b1_singleton": 1.4084478258958688,
+          "shared_frontier_count": 187,
+          "block_total_s": 6.874294370001735,
+          "original_total_s": 6.796100839001156,
+          "b1_singleton_total_s": 9.682084959997155
+        }
+      ],
+      "summary": {
+        "n_paired_prompt_rounds": 2,
+        "n_repeat_rounds": 2,
+        "n_prompt_cohorts": 1,
+        "n_unique_prompts": 1,
+        "exact_vs_b1": 2,
+        "exact_vs_original_bnb": 0,
+        "mean_speedup_vs_original_bnb": 1.0214752645079894,
+        "geometric_mean_speedup_vs_original_bnb": 1.0209469090526837,
+        "median_speedup_vs_original_bnb": 1.0214752645079894,
+        "min_speedup_vs_original_bnb": 0.9886252280173217,
+        "max_speedup_vs_original_bnb": 1.054325300998657,
+        "mean_speedup_vs_b1_singleton": 1.4125861623833715,
+        "all_shared_frontier_states_equal": true
+      },
+      "by_prompt": {
+        "b1_long_context_cnndm_001_prompt/cnndm_001": {
+          "n_rounds": 2,
+          "ratios": [
+            1.054325300998657,
+            0.9886252280173217
+          ],
+          "mean_ratio": 1.0214752645079894
+        }
+      }
+    },
+    "4": {
+      "physical_rows": 5,
+      "attention_strategy": "padded",
+      "sessions": [
+        {
+          "session_index": 0,
+          "cohort_start_index": 0,
+          "directory": "experiments/exact_quantized_feasibility/b1_cycle_long_cnndm001_k4_r5_s0_v1"
+        },
+        {
+          "session_index": 1,
+          "cohort_start_index": 0,
+          "directory": "experiments/exact_quantized_feasibility/b1_cycle_long_cnndm001_k4_r5_s1_v1"
+        }
+      ],
+      "pairs": [
+        {
+          "session_index": 0,
+          "cohort_start_index": 0,
+          "task": "b1_long_context_cnndm_001_prompt",
+          "id": "cnndm_001",
+          "input_token_ids_sha256": "bba094299d5d0fa60cfecdab34719b4c4c48a2637f9511232de8b4385bb85db3",
+          "method_order": [
+            "original_greedy",
+            "b1_reference",
+            "b1_block"
+          ],
+          "block_matches_b1": true,
+          "all_shared_states_equal": true,
+          "block_matches_original_bnb": false,
+          "speedup_vs_original_bnb": 0.8820637533187782,
+          "speedup_vs_b1_singleton": 1.448677969582194,
+          "shared_frontier_count": 177,
+          "block_total_s": 7.9464029029986705,
+          "original_total_s": 7.009233970002242,
+          "b1_singleton_total_s": 11.511778822998167
+        },
+        {
+          "session_index": 1,
+          "cohort_start_index": 0,
+          "task": "b1_long_context_cnndm_001_prompt",
+          "id": "cnndm_001",
+          "input_token_ids_sha256": "bba094299d5d0fa60cfecdab34719b4c4c48a2637f9511232de8b4385bb85db3",
+          "method_order": [
+            "b1_reference",
+            "b1_block",
+            "original_greedy"
+          ],
+          "block_matches_b1": true,
+          "all_shared_states_equal": true,
+          "block_matches_original_bnb": false,
+          "speedup_vs_original_bnb": 0.9415162954479441,
+          "speedup_vs_b1_singleton": 1.4788560860270474,
+          "shared_frontier_count": 177,
+          "block_total_s": 7.997438492999208,
+          "original_total_s": 7.529718663001404,
+          "b1_singleton_total_s": 11.827060587998858
+        }
+      ],
+      "summary": {
+        "n_paired_prompt_rounds": 2,
+        "n_repeat_rounds": 2,
+        "n_prompt_cohorts": 1,
+        "n_unique_prompts": 1,
+        "exact_vs_b1": 2,
+        "exact_vs_original_bnb": 0,
+        "mean_speedup_vs_original_bnb": 0.9117900243833612,
+        "geometric_mean_speedup_vs_original_bnb": 0.9113053260974641,
+        "median_speedup_vs_original_bnb": 0.9117900243833612,
+        "min_speedup_vs_original_bnb": 0.8820637533187782,
+        "max_speedup_vs_original_bnb": 0.9415162954479441,
+        "mean_speedup_vs_b1_singleton": 1.4637670278046206,
+        "all_shared_frontier_states_equal": true
+      },
+      "by_prompt": {
+        "b1_long_context_cnndm_001_prompt/cnndm_001": {
+          "n_rounds": 2,
+          "ratios": [
+            0.8820637533187782,
+            0.9415162954479441
+          ],
+          "mean_ratio": 0.9117900243833612
+        }
+      }
+    },
+    "8": {
+      "physical_rows": 9,
+      "attention_strategy": "padded",
+      "sessions": [
+        {
+          "session_index": 0,
+          "cohort_start_index": 0,
+          "directory": "experiments/exact_quantized_feasibility/b1_cycle_long_cnndm001_k8_r9_s0_v1"
+        },
+        {
+          "session_index": 1,
+          "cohort_start_index": 0,
+          "directory": "experiments/exact_quantized_feasibility/b1_cycle_long_cnndm001_k8_r9_s1_v1"
+        }
+      ],
+      "pairs": [
+        {
+          "session_index": 0,
+          "cohort_start_index": 0,
+          "task": "b1_long_context_cnndm_001_prompt",
+          "id": "cnndm_001",
+          "input_token_ids_sha256": "bba094299d5d0fa60cfecdab34719b4c4c48a2637f9511232de8b4385bb85db3",
+          "method_order": [
+            "original_greedy",
+            "b1_reference",
+            "b1_block"
+          ],
+          "block_matches_b1": true,
+          "all_shared_states_equal": true,
+          "block_matches_original_bnb": false,
+          "speedup_vs_original_bnb": 0.9260969376003152,
+          "speedup_vs_b1_singleton": 1.5201463170851544,
+          "shared_frontier_count": 169,
+          "block_total_s": 7.665903963999881,
+          "original_total_s": 7.099370184998406,
+          "b1_singleton_total_s": 11.653295678002905
+        },
+        {
+          "session_index": 1,
+          "cohort_start_index": 0,
+          "task": "b1_long_context_cnndm_001_prompt",
+          "id": "cnndm_001",
+          "input_token_ids_sha256": "bba094299d5d0fa60cfecdab34719b4c4c48a2637f9511232de8b4385bb85db3",
+          "method_order": [
+            "b1_reference",
+            "b1_block",
+            "original_greedy"
+          ],
+          "block_matches_b1": true,
+          "all_shared_states_equal": true,
+          "block_matches_original_bnb": false,
+          "speedup_vs_original_bnb": 0.8927832699914955,
+          "speedup_vs_b1_singleton": 1.5652789265005376,
+          "shared_frontier_count": 169,
+          "block_total_s": 7.668119098001625,
+          "original_total_s": 6.845968442998128,
+          "b1_singleton_total_s": 12.002745229998254
+        }
+      ],
+      "summary": {
+        "n_paired_prompt_rounds": 2,
+        "n_repeat_rounds": 2,
+        "n_prompt_cohorts": 1,
+        "n_unique_prompts": 1,
+        "exact_vs_b1": 2,
+        "exact_vs_original_bnb": 0,
+        "mean_speedup_vs_original_bnb": 0.9094401037959053,
+        "geometric_mean_speedup_vs_original_bnb": 0.9092875520317648,
+        "median_speedup_vs_original_bnb": 0.9094401037959053,
+        "min_speedup_vs_original_bnb": 0.8927832699914955,
+        "max_speedup_vs_original_bnb": 0.9260969376003152,
+        "mean_speedup_vs_b1_singleton": 1.542712621792846,
+        "all_shared_frontier_states_equal": true
+      },
+      "by_prompt": {
+        "b1_long_context_cnndm_001_prompt/cnndm_001": {
+          "n_rounds": 2,
+          "ratios": [
+            0.9260969376003152,
+            0.8927832699914955
+          ],
+          "mean_ratio": 0.9094401037959053
+        }
+      }
+    }
+  },
+  "paired_k_comparisons": {
+    "K2_over_K4": {
+      "paired_session_prompt_count": 2,
+      "ratio_definition": "K_right latency / K_left latency; >1 favors K_left",
+      "mean_ratio": 1.1734177350414736,
+      "ratios": [
+        1.183452283017423,
+        1.1633831870655242
+      ]
+    },
+    "K2_over_K8": {
+      "paired_session_prompt_count": 2,
+      "ratio_definition": "K_right latency / K_left latency; >1 favors K_left",
+      "mean_ratio": 1.1285775187277034,
+      "ratios": [
+        1.1416777702228587,
+        1.115477267232548
+      ]
+    },
+    "K4_over_K8": {
+      "paired_session_prompt_count": 2,
+      "ratio_definition": "K_right latency / K_left latency; >1 favors K_left",
+      "mean_ratio": 0.9617615169831961,
+      "ratios": [
+        0.9647011430929409,
+        0.9588218908734513
+      ]
+    }
+  },
+  "limitations": [
+    "Previously used development prompts; no held-out claim.",
+    "Process sessions share the same GPU and software environment.",
+    "Latency ratios are descriptive; the sample is too small for strong confidence claims.",
+    "Exactness here means measured B1 token output and equality of KV hashes at shared cycle frontiers."
+  ]
+}

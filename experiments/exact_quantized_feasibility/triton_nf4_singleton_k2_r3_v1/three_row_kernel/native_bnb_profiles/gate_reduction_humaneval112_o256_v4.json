@@ -1,0 +1,451 @@
+{
+  "schema": "zassd-bnb-nf4-gate-reduction-order-audit-v2",
+  "classification": "small output-tile numerical screen on one actual three-row activation; not a proof of BNB kernel schedule",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "prompt_id": "HumanEval/112",
+  "prompt_tokens": 157,
+  "layer": 0,
+  "module": "mlp.gate_proj",
+  "output_channels_compared": 256,
+  "activation_shape": [
+    1,
+    3,
+    2048
+  ],
+  "activation_dtype": "torch.bfloat16",
+  "bnb_compute_dtype": "torch.float16",
+  "quant_state_weight_dtype": "torch.bfloat16",
+  "forced_bnb_tokens": [
+    262,
+    671,
+    4615,
+    2038
+  ],
+  "block_predictions_match_bnb_continuation": true,
+  "schedule_candidates": [
+    "FP32 products with full-K and tiled reductions",
+    "FP16-rounded products followed by full-K and tiled FP32 reductions",
+    "FP16 tile accumulation"
+  ],
+  "best_candidates": [
+    {
+      "name": "direct_fp32_code_scale_to_compute/half_product_then_full_k_sum_fp32",
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    {
+      "name": "direct_fp32_code_scale_to_compute/half_product_then_tile16_sum_fp32_acc",
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    {
+      "name": "direct_fp32_code_scale_to_compute/half_product_then_tile32_sum_fp32_acc",
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    {
+      "name": "direct_fp32_code_scale_to_compute/half_product_then_tile64_sum_fp32_acc",
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    {
+      "name": "direct_fp32_code_scale_to_compute/half_product_then_tile128_sum_fp32_acc",
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    {
+      "name": "direct_fp32_code_scale_to_compute/half_product_then_tile256_sum_fp32_acc",
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    {
+      "name": "direct_fp32_code_scale_to_compute/half_product_then_tile512_sum_fp32_acc",
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    {
+      "name": "direct_fp32_code_scale_to_compute/half_product_then_tile1024_sum_fp32_acc",
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    }
+  ],
+  "all_candidates": {
+    "direct_fp32_code_scale_to_compute/one_full_k_sum_fp32": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "direct_fp32_code_scale_to_compute/tile16_sum_then_fp32_acc": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "direct_fp32_code_scale_to_compute/tile16_sum_fp16_acc": {
+      "exact_elements": 533,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.00040318569517694414
+    },
+    "direct_fp32_code_scale_to_compute/tile32_sum_then_fp32_acc": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "direct_fp32_code_scale_to_compute/tile32_sum_fp16_acc": {
+      "exact_elements": 568,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0003083646297454834
+    },
+    "direct_fp32_code_scale_to_compute/tile64_sum_then_fp32_acc": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "direct_fp32_code_scale_to_compute/tile64_sum_fp16_acc": {
+      "exact_elements": 604,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.00020725528884213418
+    },
+    "direct_fp32_code_scale_to_compute/tile128_sum_then_fp32_acc": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "direct_fp32_code_scale_to_compute/tile128_sum_fp16_acc": {
+      "exact_elements": 633,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.00017884373664855957
+    },
+    "direct_fp32_code_scale_to_compute/tile256_sum_then_fp32_acc": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "direct_fp32_code_scale_to_compute/tile256_sum_fp16_acc": {
+      "exact_elements": 637,
+      "total_elements": 768,
+      "max_abs_diff": 0.00390625,
+      "mean_abs_diff": 0.00014145176101010293
+    },
+    "direct_fp32_code_scale_to_compute/tile512_sum_then_fp32_acc": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "direct_fp32_code_scale_to_compute/tile512_sum_fp16_acc": {
+      "exact_elements": 659,
+      "total_elements": 768,
+      "max_abs_diff": 0.00390625,
+      "mean_abs_diff": 0.00010207295417785645
+    },
+    "direct_fp32_code_scale_to_compute/tile1024_sum_then_fp32_acc": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "direct_fp32_code_scale_to_compute/tile1024_sum_fp16_acc": {
+      "exact_elements": 672,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.631117427488789e-05
+    },
+    "direct_fp32_code_scale_to_compute/half_product_then_full_k_sum_fp32": {
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    "direct_fp32_code_scale_to_compute/half_product_then_tile16_sum_fp32_acc": {
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    "direct_fp32_code_scale_to_compute/half_product_then_tile32_sum_fp32_acc": {
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    "direct_fp32_code_scale_to_compute/half_product_then_tile64_sum_fp32_acc": {
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    "direct_fp32_code_scale_to_compute/half_product_then_tile128_sum_fp32_acc": {
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    "direct_fp32_code_scale_to_compute/half_product_then_tile256_sum_fp32_acc": {
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    "direct_fp32_code_scale_to_compute/half_product_then_tile512_sum_fp32_acc": {
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    "direct_fp32_code_scale_to_compute/half_product_then_tile1024_sum_fp32_acc": {
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    "public_quant_state_dtype_to_compute/one_full_k_sum_fp32": {
+      "exact_elements": 499,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.000347137451171875
+    },
+    "public_quant_state_dtype_to_compute/tile16_sum_then_fp32_acc": {
+      "exact_elements": 499,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.000347137451171875
+    },
+    "public_quant_state_dtype_to_compute/tile16_sum_fp16_acc": {
+      "exact_elements": 427,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0005284547805786133
+    },
+    "public_quant_state_dtype_to_compute/tile32_sum_then_fp32_acc": {
+      "exact_elements": 499,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0003469785151537508
+    },
+    "public_quant_state_dtype_to_compute/tile32_sum_fp16_acc": {
+      "exact_elements": 466,
+      "total_elements": 768,
+      "max_abs_diff": 0.00390625,
+      "mean_abs_diff": 0.0004402299819048494
+    },
+    "public_quant_state_dtype_to_compute/tile64_sum_then_fp32_acc": {
+      "exact_elements": 499,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.000347137451171875
+    },
+    "public_quant_state_dtype_to_compute/tile64_sum_fp16_acc": {
+      "exact_elements": 473,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0004291236400604248
+    },
+    "public_quant_state_dtype_to_compute/tile128_sum_then_fp32_acc": {
+      "exact_elements": 499,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.000347137451171875
+    },
+    "public_quant_state_dtype_to_compute/tile128_sum_fp16_acc": {
+      "exact_elements": 474,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0004129906592424959
+    },
+    "public_quant_state_dtype_to_compute/tile256_sum_then_fp32_acc": {
+      "exact_elements": 499,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.000347137451171875
+    },
+    "public_quant_state_dtype_to_compute/tile256_sum_fp16_acc": {
+      "exact_elements": 496,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.00035237273550592363
+    },
+    "public_quant_state_dtype_to_compute/tile512_sum_then_fp32_acc": {
+      "exact_elements": 499,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.000347137451171875
+    },
+    "public_quant_state_dtype_to_compute/tile512_sum_fp16_acc": {
+      "exact_elements": 484,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0003917515277862549
+    },
+    "public_quant_state_dtype_to_compute/tile1024_sum_then_fp32_acc": {
+      "exact_elements": 499,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.000347137451171875
+    },
+    "public_quant_state_dtype_to_compute/tile1024_sum_fp16_acc": {
+      "exact_elements": 496,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0003471076488494873
+    },
+    "public_quant_state_dtype_to_compute/half_product_then_full_k_sum_fp32": {
+      "exact_elements": 494,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0003651579318102449
+    },
+    "public_quant_state_dtype_to_compute/half_product_then_tile16_sum_fp32_acc": {
+      "exact_elements": 494,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0003651579318102449
+    },
+    "public_quant_state_dtype_to_compute/half_product_then_tile32_sum_fp32_acc": {
+      "exact_elements": 494,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0003651579318102449
+    },
+    "public_quant_state_dtype_to_compute/half_product_then_tile64_sum_fp32_acc": {
+      "exact_elements": 494,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0003651579318102449
+    },
+    "public_quant_state_dtype_to_compute/half_product_then_tile128_sum_fp32_acc": {
+      "exact_elements": 494,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0003651579318102449
+    },
+    "public_quant_state_dtype_to_compute/half_product_then_tile256_sum_fp32_acc": {
+      "exact_elements": 494,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0003651579318102449
+    },
+    "public_quant_state_dtype_to_compute/half_product_then_tile512_sum_fp32_acc": {
+      "exact_elements": 494,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0003651579318102449
+    },
+    "public_quant_state_dtype_to_compute/half_product_then_tile1024_sum_fp32_acc": {
+      "exact_elements": 494,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 0.0003651579318102449
+    },
+    "strided_lane_accum/lanes16/fma0": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "strided_lane_accum/lanes16/fma1": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "strided_lane_accum/lanes32/fma0": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "strided_lane_accum/lanes32/fma1": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "strided_lane_accum/lanes64/fma0": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "strided_lane_accum/lanes64/fma1": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "strided_lane_accum/lanes128/fma0": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "strided_lane_accum/lanes128/fma1": {
+      "exact_elements": 669,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 9.651482105255127e-05
+    },
+    "strided_lane_accum_fp16_product/lanes16": {
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    "strided_lane_accum_fp16_product/lanes32": {
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    "strided_lane_accum_fp16_product/lanes64": {
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    },
+    "strided_lane_accum_fp16_product/lanes128": {
+      "exact_elements": 677,
+      "total_elements": 768,
+      "max_abs_diff": 0.0078125,
+      "mean_abs_diff": 7.5270734669175e-05
+    }
+  },
+  "source_sha256": "f6898e707808e0cf683d90f58be413adc6d1911288ac7dae5f11ec1d1431c4e2",
+  "limits": [
+    "One prompt, one first-layer gate projection, and first 256 output channels.",
+    "Torch reduction trees do not necessarily match the BNB SIMT kernel's lane/warp accumulation order.",
+    "No timing is claimed; output-channel subset is a localization probe only.",
+    "GSM8K held-out indices 300-349 were not used."
+  ]
+}

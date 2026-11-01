@@ -1,0 +1,42 @@
+{
+  "strategy": "N=16/K=256 packed NF4 two-row kernel; num_warps=1 experimental schedule",
+  "reference_contract_id": "49c5f6a606a9ef8c32ec8d39b9d6890971834762ac4bbee58ec0b8d60475afbd",
+  "operator_screen": {
+    "rowwise_singleton_equality": "All M=1/2 checks passed for q_proj and down_proj under each tested warp count 1/2/4/8.",
+    "m2_event_latency_ratio_warp1_over_warp4": {"q_proj": 0.898, "down_proj": 0.951},
+    "m2_event_latency_ratio_warp8_over_warp4": {"q_proj": 1.369, "down_proj": 1.492}
+  },
+  "ncu_single_launch_warp1": {
+    "q_proj": {"duration_us": 25.18, "registers_per_thread": 168, "theoretical_occupancy_pct": 25.0, "achieved_occupancy_pct": 11.86, "local_memory_sectors": 0},
+    "down_proj": {"duration_us": 124.83, "registers_per_thread": 166, "theoretical_occupancy_pct": 25.0, "achieved_occupancy_pct": 12.12, "local_memory_sectors": 0}
+  },
+  "full_model_screen": {
+    "runs": 9,
+    "prompts": ["cnndm_000", "cnndm_001", "cnndm_002"],
+    "sessions_per_prompt": 3,
+    "token_match_vs_b1_and_original_bnb": "9/9",
+    "shared_kv_states_equal": "9/9; 288/288 shared output prefixes",
+    "acceptance": "42/81 draft tokens",
+    "speedup_vs_b1_geometric_mean": 1.142,
+    "speedup_vs_b1_diagnostic_paired_log_95_interval": [1.077, 1.211],
+    "speedup_vs_original_bnb_geometric_mean": 0.916,
+    "speedup_vs_original_bnb_diagnostic_paired_log_95_interval": [0.868, 0.967],
+    "matched_slots_against_warp4": 6,
+    "block_latency_warp1_over_warp4_geometric_mean": 0.923,
+    "singleton_latency_warp1_over_warp4_geometric_mean": 0.942
+  },
+  "decision": "Keep as opt-in experimental reference only. It is faster than the matched warp4 implementation but misses the 1.15x B1 target in the three-prompt aggregate and is slower than original BNB on average.",
+  "limits": [
+    "Finite development sample on one RTX 4050; confidence interval is descriptive only.",
+    "Warp count changes the compiled execution schedule; this is a separate B1 contract from warp4.",
+    "Do not infer universal model/operator equivalence from these measurements.",
+    "Held-out GSM8K indices 300-349 were not used."
+  ],
+  "artifacts": {
+    "pilot_summary": "pilot_summary.json",
+    "operator_benchmark": "operator_benchmark_v2.json",
+    "reference_contract": "../triton_nf4_packed_rows2_n16_warp1_k256_qwen3b_cnndm000_k1_rows2_session0_v1/reference_contract.json",
+    "q_proj_ncu": "q_proj_warps1.ncu-rep",
+    "down_proj_ncu": "down_proj_warps1.ncu-rep"
+  }
+}

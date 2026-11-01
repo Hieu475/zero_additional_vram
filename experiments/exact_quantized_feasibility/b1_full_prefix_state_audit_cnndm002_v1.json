@@ -1,0 +1,63 @@
+{
+  "status": "finite per-output-prefix active-KV audit; one long development prompt; diagnostic hash slicing does not modify decoding",
+  "prompt_id": "cnndm_002",
+  "max_new_tokens": 256,
+  "by_k": [
+    {
+      "k": 2,
+      "physical_rows": 3,
+      "contract": "b1_reference_contract_v3.json",
+      "run": "b1_cycle_long_cnndm002_k2_allprefix_s0_v1",
+      "prompt_id": "cnndm_002",
+      "prompt_tokens": 419,
+      "generated_tokens": 256,
+      "block_matches_b1": true,
+      "block_matches_original_bnb": false,
+      "reference_prefixes": 256,
+      "block_prefixes": 256,
+      "all_prefix_states_equal": true,
+      "shared_prefixes_equal": true,
+      "speedup_vs_b1_singleton": 1.4011161666013103,
+      "speedup_vs_original_bnb": 1.0929289625250262
+    },
+    {
+      "k": 4,
+      "physical_rows": 5,
+      "contract": "b1_reference_contract_rows5.json",
+      "run": "b1_cycle_long_cnndm002_k4_allprefix_s0_v1",
+      "prompt_id": "cnndm_002",
+      "prompt_tokens": 419,
+      "generated_tokens": 256,
+      "block_matches_b1": true,
+      "block_matches_original_bnb": false,
+      "reference_prefixes": 256,
+      "block_prefixes": 256,
+      "all_prefix_states_equal": true,
+      "shared_prefixes_equal": true,
+      "speedup_vs_b1_singleton": 1.5690236492115264,
+      "speedup_vs_original_bnb": 0.9414437326029569
+    },
+    {
+      "k": 8,
+      "physical_rows": 9,
+      "contract": "b1_reference_contract_rows9.json",
+      "run": "b1_cycle_long_cnndm002_k8_allprefix_s0_v1",
+      "prompt_id": "cnndm_002",
+      "prompt_tokens": 419,
+      "generated_tokens": 256,
+      "block_matches_b1": true,
+      "block_matches_original_bnb": false,
+      "reference_prefixes": 256,
+      "block_prefixes": 256,
+      "all_prefix_states_equal": true,
+      "shared_prefixes_equal": true,
+      "speedup_vs_b1_singleton": 1.6215337018473288,
+      "speedup_vs_original_bnb": 0.9551749034785709
+    }
+  ],
+  "limitations": [
+    "One prompt and one process session per K.",
+    "The digest covers active KV bytes and logical lengths only, not unused static-cache suffix bytes or all backend state.",
+    "The runner hashes intermediate cache prefixes after each block commit/crop; this is stronger finite evidence, not a universal proof."
+  ]
+}

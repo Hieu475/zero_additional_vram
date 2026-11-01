@@ -1,0 +1,966 @@
+{
+  "scope": "single-prefix diagnostic with CPU hook copies; not a production timing or causal proof",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "backend": "hf_bnb_nf4",
+  "backend_metadata": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "cnndm_002",
+  "prompt_length": 417,
+  "prompt_token_ids_sha256": "1a41e577ecdb14cd8b15a54553f4e72b95643b3179cd656a86efecabed17121d",
+  "candidate_ids": [
+    65552,
+    622,
+    38155,
+    62531,
+    333
+  ],
+  "caveat": "Only the primary tensor input and first tensor output of each hooked module are compared; attention has additional state and arguments.",
+  "compared_modules": 113,
+  "modules_with_different_outputs": 113,
+  "modules_with_equal_primary_input_and_different_output": 3,
+  "first_equal_primary_input_different_output_in_module_traversal": {
+    "module": "model.layers.0.self_attn.q_proj",
+    "input_max_abs": 0.0,
+    "input_bitwise_equal": true,
+    "output_max_abs": 0.0078125,
+    "output_bitwise_equal": false
+  },
+  "first_output_differences": [
+    {
+      "module": "model.layers.0.self_attn.q_proj",
+      "input_max_abs": 0.0,
+      "input_bitwise_equal": true,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.0.self_attn.k_proj",
+      "input_max_abs": 0.0,
+      "input_bitwise_equal": true,
+      "output_max_abs": 0.00390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.0.self_attn.v_proj",
+      "input_max_abs": 0.0,
+      "input_bitwise_equal": true,
+      "output_max_abs": 0.00390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.0.self_attn.o_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.0.mlp.gate_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.0.mlp.up_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.0.mlp.down_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.self_attn.q_proj",
+      "input_max_abs": 0.005859375,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.00390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.self_attn.k_proj",
+      "input_max_abs": 0.005859375,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.self_attn.v_proj",
+      "input_max_abs": 0.005859375,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.00390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.self_attn.o_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.00390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.mlp.gate_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.mlp.up_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.mlp.down_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.self_attn.q_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0072021484375,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.self_attn.k_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.self_attn.v_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.self_attn.o_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.mlp.gate_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.mlp.up_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    }
+  ],
+  "all_module_comparisons": [
+    {
+      "module": "model.layers.0.self_attn.q_proj",
+      "input_max_abs": 0.0,
+      "input_bitwise_equal": true,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.0.self_attn.k_proj",
+      "input_max_abs": 0.0,
+      "input_bitwise_equal": true,
+      "output_max_abs": 0.00390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.0.self_attn.v_proj",
+      "input_max_abs": 0.0,
+      "input_bitwise_equal": true,
+      "output_max_abs": 0.00390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.0.self_attn.o_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.0.mlp.gate_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.0.mlp.up_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.0.mlp.down_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.self_attn.q_proj",
+      "input_max_abs": 0.005859375,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.00390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.self_attn.k_proj",
+      "input_max_abs": 0.005859375,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.self_attn.v_proj",
+      "input_max_abs": 0.005859375,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.00390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.self_attn.o_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.00390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.mlp.gate_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.mlp.up_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.1.mlp.down_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.self_attn.q_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0072021484375,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.self_attn.k_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.self_attn.v_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.self_attn.o_proj",
+      "input_max_abs": 0.00390625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.mlp.gate_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.mlp.up_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.2.mlp.down_proj",
+      "input_max_abs": 0.005859375,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.00390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.3.self_attn.q_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.3.self_attn.k_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.3.self_attn.v_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.3.self_attn.o_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.3.mlp.gate_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.3.mlp.up_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01171875,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.3.mlp.down_proj",
+      "input_max_abs": 0.01171875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.4.self_attn.q_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.4.self_attn.k_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.4.self_attn.v_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.4.self_attn.o_proj",
+      "input_max_abs": 0.005859375,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01220703125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.4.mlp.gate_proj",
+      "input_max_abs": 0.009765625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.4.mlp.up_proj",
+      "input_max_abs": 0.009765625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0087890625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.4.mlp.down_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.00390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.5.self_attn.q_proj",
+      "input_max_abs": 0.009765625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.009765625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.5.self_attn.k_proj",
+      "input_max_abs": 0.009765625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.5.self_attn.v_proj",
+      "input_max_abs": 0.009765625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.009765625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.5.self_attn.o_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01171875,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.5.mlp.gate_proj",
+      "input_max_abs": 0.01171875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.5.mlp.up_proj",
+      "input_max_abs": 0.01171875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.5.mlp.down_proj",
+      "input_max_abs": 0.01171875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0045166015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.6.self_attn.q_proj",
+      "input_max_abs": 0.01171875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0087890625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.6.self_attn.k_proj",
+      "input_max_abs": 0.01171875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.6.self_attn.v_proj",
+      "input_max_abs": 0.01171875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01171875,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.6.self_attn.o_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01171875,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.6.mlp.gate_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.017578125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.6.mlp.up_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.6.mlp.down_proj",
+      "input_max_abs": 0.01171875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.7.self_attn.q_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.7.self_attn.k_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.7.self_attn.v_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01171875,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.7.self_attn.o_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.7.mlp.gate_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.7.mlp.up_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01171875,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.7.mlp.down_proj",
+      "input_max_abs": 0.013671875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.8.self_attn.q_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.013580322265625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.8.self_attn.k_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01318359375,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.8.self_attn.v_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.009765625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.8.self_attn.o_proj",
+      "input_max_abs": 0.0078125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0078125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.8.mlp.gate_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01953125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.8.mlp.up_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01171875,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.8.mlp.down_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.005859375,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.9.self_attn.q_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01171875,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.9.self_attn.k_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.9.self_attn.v_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.011474609375,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.9.self_attn.o_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.9.mlp.gate_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0234375,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.9.mlp.up_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01171875,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.9.mlp.down_proj",
+      "input_max_abs": 0.0234375,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.10.self_attn.q_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.10.self_attn.k_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01953125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.10.self_attn.v_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01171875,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.10.self_attn.o_proj",
+      "input_max_abs": 0.01171875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.10.mlp.gate_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.10.mlp.up_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.10.mlp.down_proj",
+      "input_max_abs": 0.01171875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.11.self_attn.q_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.013671875,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.11.self_attn.k_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.11.self_attn.v_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.11.self_attn.o_proj",
+      "input_max_abs": 0.01171875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0234375,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.11.mlp.gate_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.11.mlp.up_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.11.mlp.down_proj",
+      "input_max_abs": 0.0625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.12.self_attn.q_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0166015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.12.self_attn.k_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.12.self_attn.v_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.015625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.12.self_attn.o_proj",
+      "input_max_abs": 0.01171875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.12.mlp.gate_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.12.mlp.up_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.01953125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.12.mlp.down_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.13.self_attn.q_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0234375,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.13.self_attn.k_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.13.self_attn.v_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0234375,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.13.self_attn.o_proj",
+      "input_max_abs": 0.015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.13.mlp.gate_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03515625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.13.mlp.up_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.13.mlp.down_proj",
+      "input_max_abs": 0.0625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.14.self_attn.q_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0234375,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.14.self_attn.k_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.14.self_attn.v_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.14.self_attn.o_proj",
+      "input_max_abs": 0.0087890625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.14.mlp.gate_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.04296875,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.14.mlp.up_proj",
+      "input_max_abs": 0.03125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.14.mlp.down_proj",
+      "input_max_abs": 0.0625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.15.self_attn.q_proj",
+      "input_max_abs": 0.0625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.15.self_attn.k_proj",
+      "input_max_abs": 0.0625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.03125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.15.self_attn.v_proj",
+      "input_max_abs": 0.0625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.025390625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.15.self_attn.o_proj",
+      "input_max_abs": 0.0166015625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.15.mlp.gate_proj",
+      "input_max_abs": 0.0625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0579833984375,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.15.mlp.up_proj",
+      "input_max_abs": 0.0625,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.0625,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "model.layers.15.mlp.down_proj",
+      "input_max_abs": 0.125,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.125,
+      "output_bitwise_equal": false
+    },
+    {
+      "module": "lm_head",
+      "input_max_abs": 0.1875,
+      "input_bitwise_equal": false,
+      "output_max_abs": 0.25,
+      "output_bitwise_equal": false
+    }
+  ]
+}

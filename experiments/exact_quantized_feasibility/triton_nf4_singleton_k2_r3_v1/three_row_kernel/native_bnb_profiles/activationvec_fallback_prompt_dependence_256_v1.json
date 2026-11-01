@@ -1,0 +1,187 @@
+{
+  "schema": "zassd-activationvec-fallback-prompt-dependence-256-v1",
+  "classification": "exploratory prompt-cluster association; not causal",
+  "decode_length": 256,
+  "overall": {
+    "prompt_clusters": 12,
+    "pearson_r_cycles_vs_fallback_speedup": 0.9587225677652695,
+    "pearson_prompt_stratified_bootstrap_95pct": [
+      0.795618767408187,
+      0.9922205936523818
+    ],
+    "spearman_rho_cycles_vs_fallback_speedup": 0.8671328671328671,
+    "spearman_prompt_stratified_bootstrap_95pct": [
+      0.6630824372759857,
+      0.9927007299270073
+    ]
+  },
+  "within_workload_adjusted_pearson_r": 0.9192629449508422,
+  "within_workload_adjusted_bootstrap_95pct": [
+    0.5472084372479713,
+    0.9855893074572044
+  ],
+  "by_workload": {
+    "HumanEval": {
+      "prompt_clusters": 6,
+      "pearson_r_cycles_vs_fallback_speedup": 0.974870572467196,
+      "pearson_prompt_stratified_bootstrap_95pct": [
+        0.7265207545267192,
+        0.9999659608942729
+      ],
+      "spearman_rho_cycles_vs_fallback_speedup": 0.8285714285714286,
+      "spearman_prompt_stratified_bootstrap_95pct": [
+        0.0,
+        1.0
+      ]
+    },
+    "CNN/DailyMail": {
+      "prompt_clusters": 6,
+      "pearson_r_cycles_vs_fallback_speedup": 0.45618149470753816,
+      "pearson_prompt_stratified_bootstrap_95pct": [
+        -0.5339879452679992,
+        0.9848886465892447
+      ],
+      "spearman_rho_cycles_vs_fallback_speedup": 0.3142857142857143,
+      "spearman_prompt_stratified_bootstrap_95pct": [
+        -0.8064516129032258,
+        1.0
+      ]
+    }
+  },
+  "prompt_rows": [
+    {
+      "workload": "HumanEval",
+      "prompt_id": "HumanEval/114",
+      "no_proposal_cycles": 116,
+      "fallback_cycle_fraction": 0.453125,
+      "fallback_speedup_vs_activationvec": 1.1125906827031553,
+      "fallback_speedup_vs_original_bnb_latency": 1.147757168757755
+    },
+    {
+      "workload": "HumanEval",
+      "prompt_id": "HumanEval/112",
+      "no_proposal_cycles": 22,
+      "fallback_cycle_fraction": 0.0859375,
+      "fallback_speedup_vs_activationvec": 1.0359620559185316,
+      "fallback_speedup_vs_original_bnb_latency": 1.4615879484189813
+    },
+    {
+      "workload": "HumanEval",
+      "prompt_id": "HumanEval/116",
+      "no_proposal_cycles": 19,
+      "fallback_cycle_fraction": 0.07421875,
+      "fallback_speedup_vs_activationvec": 1.0281450173719004,
+      "fallback_speedup_vs_original_bnb_latency": 1.60605760398769
+    },
+    {
+      "workload": "HumanEval",
+      "prompt_id": "HumanEval/123",
+      "no_proposal_cycles": 109,
+      "fallback_cycle_fraction": 0.42578125,
+      "fallback_speedup_vs_activationvec": 1.127347479610922,
+      "fallback_speedup_vs_original_bnb_latency": 1.0894917847837844
+    },
+    {
+      "workload": "HumanEval",
+      "prompt_id": "HumanEval/121",
+      "no_proposal_cycles": 68,
+      "fallback_cycle_fraction": 0.265625,
+      "fallback_speedup_vs_activationvec": 1.0928011046098014,
+      "fallback_speedup_vs_original_bnb_latency": 1.3005103487797556
+    },
+    {
+      "workload": "HumanEval",
+      "prompt_id": "HumanEval/124",
+      "no_proposal_cycles": 105,
+      "fallback_cycle_fraction": 0.41015625,
+      "fallback_speedup_vs_activationvec": 1.1243079462228251,
+      "fallback_speedup_vs_original_bnb_latency": 1.076554178502722
+    },
+    {
+      "workload": "CNN/DailyMail",
+      "prompt_id": "cnndm_002",
+      "no_proposal_cycles": 122,
+      "fallback_cycle_fraction": 0.4765625,
+      "fallback_speedup_vs_activationvec": 1.1316140326585449,
+      "fallback_speedup_vs_original_bnb_latency": 1.1262361121935398
+    },
+    {
+      "workload": "CNN/DailyMail",
+      "prompt_id": "cnndm_003",
+      "no_proposal_cycles": 112,
+      "fallback_cycle_fraction": 0.4375,
+      "fallback_speedup_vs_activationvec": 1.1353822960810593,
+      "fallback_speedup_vs_original_bnb_latency": 1.2071446157334278
+    },
+    {
+      "workload": "CNN/DailyMail",
+      "prompt_id": "cnndm_001",
+      "no_proposal_cycles": 121,
+      "fallback_cycle_fraction": 0.47265625,
+      "fallback_speedup_vs_activationvec": 1.1616919617637014,
+      "fallback_speedup_vs_original_bnb_latency": 1.1743768773760879
+    },
+    {
+      "workload": "CNN/DailyMail",
+      "prompt_id": "cnndm_004",
+      "no_proposal_cycles": 148,
+      "fallback_cycle_fraction": 0.578125,
+      "fallback_speedup_vs_activationvec": 1.1660679826297775,
+      "fallback_speedup_vs_original_bnb_latency": 1.0321412858327597
+    },
+    {
+      "workload": "CNN/DailyMail",
+      "prompt_id": "cnndm_005",
+      "no_proposal_cycles": 131,
+      "fallback_cycle_fraction": 0.51171875,
+      "fallback_speedup_vs_activationvec": 1.1508636337274598,
+      "fallback_speedup_vs_original_bnb_latency": 1.1686095108290628
+    },
+    {
+      "workload": "CNN/DailyMail",
+      "prompt_id": "cnndm_006",
+      "no_proposal_cycles": 154,
+      "fallback_cycle_fraction": 0.6015625,
+      "fallback_speedup_vs_activationvec": 1.146358504098916,
+      "fallback_speedup_vs_original_bnb_latency": 1.0398956117884643
+    }
+  ],
+  "input_summary_sha256": {
+    "activationvec_no_proposal_fallback_humaneval_256_summary_v2.json": "c255bba615e060544c43acae6a635a9a393a8c0ed864657040b2553a95ba3a20",
+    "activationvec_no_proposal_fallback_cnndm_256_summary_v2.json": "33186c55af9b88e8d64f5083fd9a7d51f19d5bed18643dc1b08bbb4aa34df790"
+  },
+  "input_process_artifact_sha256": {
+    "activationvec_no_proposal_fallback_humaneval114_256_v1.json": "ec6fbaa2f3fc5e3df31b973b4533fe0ef0adf6db0b26039bd9905d2c91eaa581",
+    "activationvec_no_proposal_fallback_humaneval114_256_rep2_v1.json": "3bcb3ed93098fb6cf47e020c705710044d6a604d16188cf47703a795a1eb3b48",
+    "activationvec_no_proposal_fallback_humaneval112_256_v1.json": "9033c5e641d84f056241be68c4b6833eff5fccb08229c99f42538168cf6f2997",
+    "activationvec_no_proposal_fallback_humaneval112_256_rep2_v1.json": "fefe3cbc887a744810efb6cd11c4b7285864fffc7b37836f3b35b32be19603c9",
+    "activationvec_no_proposal_fallback_humaneval116_256_v1.json": "4ff65871dc6b6b3271d6a6d98f6cbd2e6eecb2ead56e5488c3a82554551e915d",
+    "activationvec_no_proposal_fallback_humaneval116_256_rep2_v1.json": "c48fb131441c7dec76ffa39c6b53ad45b2bd0dfcc8f3145ffe124e78ec4f0c99",
+    "activationvec_no_proposal_fallback_humaneval123_256_v1.json": "eb6def993ed4e08ae03716751dcf36b72880cccc2e87ee8969ce3c665b9de6d3",
+    "activationvec_no_proposal_fallback_humaneval123_256_rep2_v1.json": "8c452dd3d777097bd9a8f9b6266604208a2569c6c90067e8667c4de3e02e050a",
+    "activationvec_no_proposal_fallback_humaneval121_256_v1.json": "a192b426eb23a44c3ece40a911fb47b68f30e0f37a7dbbfb9bcb1503528d71a3",
+    "activationvec_no_proposal_fallback_humaneval121_256_rep2_v1.json": "ef50ccc09dc1b056bccffbe2df3f54e95100f92b09ad6b2bd558c333337cb8f8",
+    "activationvec_no_proposal_fallback_humaneval124_256_v1.json": "6ddefc12bf625d155ff29024f8deb94f7a062358470a532e69425b42ced48f61",
+    "activationvec_no_proposal_fallback_humaneval124_256_rep2_v1.json": "74f550e9af201fa8156ecb64f974a2f940d5ebb6f7079f6f5c7041687af85aa8",
+    "activationvec_no_proposal_fallback_cnndm002_256_v1.json": "8c25db20bef1ed08a7cd8570e2faaabed0de8fcbf86ff5ed8c51f83b1db1c59d",
+    "activationvec_no_proposal_fallback_cnndm002_256_rep2_v1.json": "fe612e6d859405c322a1815a8bfbb3468da7fe1a6d9ef4fd5a4919d18d7ea8c4",
+    "activationvec_no_proposal_fallback_cnndm003_256_v1.json": "29a675146bebeba192b10385e55f1c0383cba118244b3bf0c8af27f477690a6b",
+    "activationvec_no_proposal_fallback_cnndm003_256_rep2_v1.json": "a31b61fc8c3e99f04dd30bab37017aec1ffa2acb41f24ffda186aca4fa68ad2a",
+    "activationvec_no_proposal_fallback_cnndm001_256_v1.json": "d7a4f1f7fe43338bf52d155350065889cbb07a31f3a3b9e32d5c63d2a5b84ae7",
+    "activationvec_no_proposal_fallback_cnndm001_256_rep2_v1.json": "9c8702c9a23b11de5926a51a9318644e1fd511a12a10999bb9ea7f12c3486b6c",
+    "activationvec_no_proposal_fallback_cnndm004_256_v1.json": "434d0af1dff25fe5ba8654381e71b1bcb7a21446918f74967c31101e5dac3370",
+    "activationvec_no_proposal_fallback_cnndm004_256_rep2_v1.json": "b8b06068de751d2a40846a5713cab861a557c087ee9cd9d026cef0def222dd16",
+    "activationvec_no_proposal_fallback_cnndm005_256_v1.json": "71df3ff0a01d2ae5306ecb0faa6e127941e388d4457272ec58c11b13329fdc2f",
+    "activationvec_no_proposal_fallback_cnndm005_256_rep2_v1.json": "8307eff641b3166a98dac0e14ec69ff8dc34d21bbc53f400a769e355e56df2cc",
+    "activationvec_no_proposal_fallback_cnndm006_256_v1.json": "790ba96459739afabeb7b1c1fc16d5c35c2bcff66c1c1af895d9705ce5338fea",
+    "activationvec_no_proposal_fallback_cnndm006_256_rep2_v1.json": "1c5b0949d4966f2984dc4aed413723947a3b4e4a27231956f6d1deea2748dc71"
+  },
+  "heldout_used": false,
+  "limits": [
+    "Only twelve selected prompt clusters across two development workloads on one model and one GPU.",
+    "The exploratory correlation does not establish that fallback frequency causes speedup.",
+    "Prompt bootstrap is stratified by workload and does not estimate a broad task population."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/analyze_activationvec_fallback_prompt_dependence.py",
+  "source_sha256": "c6900aacba978d970e059d307fd6c0fe8a846cfb9179c979ad48773158cc1b60"
+}

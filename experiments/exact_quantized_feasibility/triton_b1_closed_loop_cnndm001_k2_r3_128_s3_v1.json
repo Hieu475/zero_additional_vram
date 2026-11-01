@@ -1,0 +1,3256 @@
+{
+  "experiment": "triton_fixed_row_sdpa_b1_closed_loop",
+  "scope": "development_prompt_only; B1 fixed-row schedule; not BNB equivalence",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "cnndm_001",
+  "prompt_sha256": "cd2e1cf268a6af0e0f6abc69c1a6cdfda6f009a42a51ff2084648e605b8075ee",
+  "input_ids_sha256": "bba094299d5d0fa60cfecdab34719b4c4c48a2637f9511232de8b4385bb85db3",
+  "session": 3,
+  "parameters": {
+    "k": 2,
+    "physical_rows": 3,
+    "block_k": 32,
+    "max_new_tokens": 128,
+    "attention_strategy": "bnb_rowwise",
+    "quantized_linear_strategy": "fixed_rows",
+    "timing_rounds": 1
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "triton": "3.6.0"
+  },
+  "source_sha256": {
+    "scripts/audit_triton_b1_closed_loop.py": "b6ae69aa6c65fcd1dba200e12e7db1724908cce86ae8428eb9f3ea0f0b5edf17",
+    "scripts/prototype_fixed_row_sdpa_triton.py": "a85d93459790af17d6da14e7acd66754c956709465c6ec0f153836fc86278795",
+    "src/zassd/decoding/b1_exact.py": "e19b4e6440697fc96e6e6e7b1902da843fa45b8cae0e62700c4ac331f99b0d63",
+    "src/zassd/certification/qwen2_padded.py": "a59746db8d3c4ee5a998b6680eb7e533b77857e7a2864af73fe3ce851d196c70",
+    "src/zassd/certification/fixed_row_dispatch.py": "0422f2d06dcd93da94377a45a5094f4e12e48d5a3dbef1a489559911b4ddfb38"
+  },
+  "reference": {
+    "token_ids": [
+      362,
+      61390,
+      5562,
+      6941,
+      576,
+      685,
+      25882,
+      1283,
+      1660,
+      4201,
+      553,
+      264,
+      1803,
+      11,
+      4201,
+      389,
+      279,
+      1968,
+      11,
+      323,
+      26918,
+      13675,
+      13,
+      2932,
+      572,
+      1730,
+      3040,
+      2849,
+      2937,
+      11,
+      34806,
+      15532,
+      714,
+      13675,
+      11,
+      323,
+      374,
+      1431,
+      12308,
+      2453,
+      518,
+      264,
+      68240,
+      8777,
+      13,
+      576,
+      685,
+      594,
+      90713,
+      19661,
+      323,
+      14195,
+      6457,
+      3880,
+      614,
+      14606,
+      36319,
+      8869,
+      311,
+      1824,
+      1059,
+      6380,
+      624,
+      785,
+      4549,
+      16555,
+      279,
+      15050,
+      3364,
+      315,
+      264,
+      61390,
+      5562,
+      6941,
+      576,
+      685,
+      879,
+      25882,
+      264,
+      4013,
+      315,
+      53186,
+      4357,
+      11,
+      2670,
+      1660,
+      4201,
+      553,
+      264,
+      1803,
+      11,
+      4201,
+      389,
+      279,
+      1968,
+      11,
+      323,
+      26918,
+      13675,
+      13,
+      17715,
+      1493,
+      4855,
+      24181,
+      11449,
+      11,
+      576,
+      685,
+      8975,
+      311,
+      17697,
+      323,
+      374,
+      1431,
+      12308,
+      2453,
+      518,
+      264,
+      68240,
+      8777,
+      13,
+      6252,
+      3364,
+      702,
+      14606,
+      36319,
+      8869,
+      311
+    ],
+    "instrumented_audit_wall_s": 7.422801439999603,
+    "instrumented_audit_prefill_s": 0.5729127990052802,
+    "target_forwards": 127,
+    "state_prefixes": 128
+  },
+  "block": {
+    "token_ids": [
+      362,
+      61390,
+      5562,
+      6941,
+      576,
+      685,
+      25882,
+      1283,
+      1660,
+      4201,
+      553,
+      264,
+      1803,
+      11,
+      4201,
+      389,
+      279,
+      1968,
+      11,
+      323,
+      26918,
+      13675,
+      13,
+      2932,
+      572,
+      1730,
+      3040,
+      2849,
+      2937,
+      11,
+      34806,
+      15532,
+      714,
+      13675,
+      11,
+      323,
+      374,
+      1431,
+      12308,
+      2453,
+      518,
+      264,
+      68240,
+      8777,
+      13,
+      576,
+      685,
+      594,
+      90713,
+      19661,
+      323,
+      14195,
+      6457,
+      3880,
+      614,
+      14606,
+      36319,
+      8869,
+      311,
+      1824,
+      1059,
+      6380,
+      624,
+      785,
+      4549,
+      16555,
+      279,
+      15050,
+      3364,
+      315,
+      264,
+      61390,
+      5562,
+      6941,
+      576,
+      685,
+      879,
+      25882,
+      264,
+      4013,
+      315,
+      53186,
+      4357,
+      11,
+      2670,
+      1660,
+      4201,
+      553,
+      264,
+      1803,
+      11,
+      4201,
+      389,
+      279,
+      1968,
+      11,
+      323,
+      26918,
+      13675,
+      13,
+      17715,
+      1493,
+      4855,
+      24181,
+      11449,
+      11,
+      576,
+      685,
+      8975,
+      311,
+      17697,
+      323,
+      374,
+      1431,
+      12308,
+      2453,
+      518,
+      264,
+      68240,
+      8777,
+      13,
+      6252,
+      3364,
+      702,
+      14606,
+      36319,
+      8869,
+      311
+    ],
+    "instrumented_audit_wall_s": 5.780213503996492,
+    "instrumented_audit_prefill_s": 0.19373099399672356,
+    "instrumented_audit_verify_s": 3.8197074420168065,
+    "cycles": [
+      {
+        "output_start": 0,
+        "pending": 362,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          362
+        ],
+        "draft_s": 5.9277008404023945e-05,
+        "verify_s": 0.034322238992899656,
+        "commit_s": 3.8641010178253055e-05,
+        "cycle_s": 0.03448276199924294,
+        "cache_len_after": 399,
+        "next_pending": 61390
+      },
+      {
+        "output_start": 1,
+        "pending": 61390,
+        "draft_tokens": [
+          82710,
+          331
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          61390
+        ],
+        "draft_s": 5.820200021844357e-05,
+        "verify_s": 0.06489099201280624,
+        "commit_s": 7.865500811021775e-05,
+        "cycle_s": 0.06506956400698982,
+        "cache_len_after": 400,
+        "next_pending": 5562
+      },
+      {
+        "output_start": 2,
+        "pending": 5562,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          5562
+        ],
+        "draft_s": 5.458800296764821e-05,
+        "verify_s": 0.03343799999856856,
+        "commit_s": 3.446100163273513e-05,
+        "cycle_s": 0.03356596699450165,
+        "cache_len_after": 401,
+        "next_pending": 6941
+      },
+      {
+        "output_start": 3,
+        "pending": 6941,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          6941
+        ],
+        "draft_s": 5.328199767973274e-05,
+        "verify_s": 0.034963569007231854,
+        "commit_s": 3.8323007174767554e-05,
+        "cycle_s": 0.035097287996904925,
+        "cache_len_after": 402,
+        "next_pending": 576
+      },
+      {
+        "output_start": 4,
+        "pending": 576,
+        "draft_tokens": [
+          685,
+          1177
+        ],
+        "accepted": 1,
+        "rejected_at": 1,
+        "emitted_tokens": [
+          576,
+          685
+        ],
+        "draft_s": 5.910900654271245e-05,
+        "verify_s": 0.04751058199326508,
+        "commit_s": 7.219999679364264e-05,
+        "cycle_s": 0.047680681993369944,
+        "cache_len_after": 404,
+        "next_pending": 25882
+      },
+      {
+        "output_start": 6,
+        "pending": 25882,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          25882
+        ],
+        "draft_s": 5.4334988817572594e-05,
+        "verify_s": 0.03692806999606546,
+        "commit_s": 4.019901098217815e-05,
+        "cycle_s": 0.03707037300046068,
+        "cache_len_after": 405,
+        "next_pending": 1283
+      },
+      {
+        "output_start": 7,
+        "pending": 1283,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1283
+        ],
+        "draft_s": 5.67379902349785e-05,
+        "verify_s": 0.033952031008084305,
+        "commit_s": 3.589499101508409e-05,
+        "cycle_s": 0.03409448199090548,
+        "cache_len_after": 406,
+        "next_pending": 1660
+      },
+      {
+        "output_start": 8,
+        "pending": 1660,
+        "draft_tokens": [
+          4201,
+          553
+        ],
+        "accepted": 2,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1660,
+          4201,
+          553
+        ],
+        "draft_s": 6.054800178389996e-05,
+        "verify_s": 0.047373887995490804,
+        "commit_s": 4.7227993491105735e-05,
+        "cycle_s": 0.047523236004053615,
+        "cache_len_after": 409,
+        "next_pending": 264
+      },
+      {
+        "output_start": 11,
+        "pending": 264,
+        "draft_tokens": [
+          1803,
+          11
+        ],
+        "accepted": 2,
+        "rejected_at": null,
+        "emitted_tokens": [
+          264,
+          1803,
+          11
+        ],
+        "draft_s": 4.361799801699817e-05,
+        "verify_s": 0.04930985099053942,
+        "commit_s": 4.656000237446278e-05,
+        "cycle_s": 0.04945577899343334,
+        "cache_len_after": 412,
+        "next_pending": 4201
+      },
+      {
+        "output_start": 14,
+        "pending": 4201,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          4201
+        ],
+        "draft_s": 5.616700218524784e-05,
+        "verify_s": 0.03482755999721121,
+        "commit_s": 3.760799882002175e-05,
+        "cycle_s": 0.034970356995472685,
+        "cache_len_after": 413,
+        "next_pending": 389
+      },
+      {
+        "output_start": 15,
+        "pending": 389,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          389
+        ],
+        "draft_s": 6.400200072675943e-05,
+        "verify_s": 0.034736108005745336,
+        "commit_s": 4.1000006604008377e-05,
+        "cycle_s": 0.03488321699842345,
+        "cache_len_after": 414,
+        "next_pending": 279
+      },
+      {
+        "output_start": 16,
+        "pending": 279,
+        "draft_tokens": [
+          1968,
+          448
+        ],
+        "accepted": 1,
+        "rejected_at": 1,
+        "emitted_tokens": [
+          279,
+          1968
+        ],
+        "draft_s": 7.039299816824496e-05,
+        "verify_s": 0.04820260799897369,
+        "commit_s": 5.654300912283361e-05,
+        "cycle_s": 0.04837919698911719,
+        "cache_len_after": 416,
+        "next_pending": 11
+      },
+      {
+        "output_start": 18,
+        "pending": 11,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          11
+        ],
+        "draft_s": 6.008600757922977e-05,
+        "verify_s": 0.03416076299617998,
+        "commit_s": 3.18060046993196e-05,
+        "cycle_s": 0.03429637000954244,
+        "cache_len_after": 417,
+        "next_pending": 323
+      },
+      {
+        "output_start": 19,
+        "pending": 323,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          323
+        ],
+        "draft_s": 5.5894008255563676e-05,
+        "verify_s": 0.03513853601180017,
+        "commit_s": 0.00011244299821555614,
+        "cycle_s": 0.035341787996003404,
+        "cache_len_after": 418,
+        "next_pending": 26918
+      },
+      {
+        "output_start": 20,
+        "pending": 26918,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          26918
+        ],
+        "draft_s": 5.6545992265455425e-05,
+        "verify_s": 0.033315034001134336,
+        "commit_s": 3.345900040585548e-05,
+        "cycle_s": 0.033442210988141596,
+        "cache_len_after": 419,
+        "next_pending": 13675
+      },
+      {
+        "output_start": 21,
+        "pending": 13675,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          13675
+        ],
+        "draft_s": 5.557700933422893e-05,
+        "verify_s": 0.03360825001436751,
+        "commit_s": 3.292299516033381e-05,
+        "cycle_s": 0.033729536007740535,
+        "cache_len_after": 420,
+        "next_pending": 13
+      },
+      {
+        "output_start": 22,
+        "pending": 13,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          13
+        ],
+        "draft_s": 5.316200258675963e-05,
+        "verify_s": 0.03325826300715562,
+        "commit_s": 3.846499021165073e-05,
+        "cycle_s": 0.03338764600630384,
+        "cache_len_after": 421,
+        "next_pending": 2932
+      },
+      {
+        "output_start": 23,
+        "pending": 2932,
+        "draft_tokens": [
+          594,
+          1083
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          2932
+        ],
+        "draft_s": 6.78549986332655e-05,
+        "verify_s": 0.04938737700285856,
+        "commit_s": 5.982299626339227e-05,
+        "cycle_s": 0.04955584499111865,
+        "cache_len_after": 422,
+        "next_pending": 572
+      },
+      {
+        "output_start": 24,
+        "pending": 572,
+        "draft_tokens": [
+          4429,
+          304
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          572
+        ],
+        "draft_s": 4.4849992264062166e-05,
+        "verify_s": 0.0486872549954569,
+        "commit_s": 0.00012063900067005306,
+        "cycle_s": 0.048896282009081915,
+        "cache_len_after": 423,
+        "next_pending": 1730
+      },
+      {
+        "output_start": 25,
+        "pending": 1730,
+        "draft_tokens": [
+          553,
+          264
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          1730
+        ],
+        "draft_s": 6.273499457165599e-05,
+        "verify_s": 0.04716598099912517,
+        "commit_s": 5.4652991821058095e-05,
+        "cycle_s": 0.0473218759871088,
+        "cache_len_after": 424,
+        "next_pending": 3040
+      },
+      {
+        "output_start": 26,
+        "pending": 3040,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          3040
+        ],
+        "draft_s": 5.747599061578512e-05,
+        "verify_s": 0.033431771997129545,
+        "commit_s": 3.4957993193529546e-05,
+        "cycle_s": 0.0335585870052455,
+        "cache_len_after": 425,
+        "next_pending": 2849
+      },
+      {
+        "output_start": 27,
+        "pending": 2849,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          2849
+        ],
+        "draft_s": 6.384198786690831e-05,
+        "verify_s": 0.03266489399538841,
+        "commit_s": 3.47580062225461e-05,
+        "cycle_s": 0.03281009799684398,
+        "cache_len_after": 426,
+        "next_pending": 2937
+      },
+      {
+        "output_start": 28,
+        "pending": 2937,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          2937
+        ],
+        "draft_s": 5.236201104708016e-05,
+        "verify_s": 0.03292891501041595,
+        "commit_s": 3.332601045258343e-05,
+        "cycle_s": 0.03304908399877604,
+        "cache_len_after": 427,
+        "next_pending": 11
+      },
+      {
+        "output_start": 29,
+        "pending": 11,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          11
+        ],
+        "draft_s": 7.937500777188689e-05,
+        "verify_s": 0.033039857997209765,
+        "commit_s": 3.2392010325565934e-05,
+        "cycle_s": 0.033189846988534555,
+        "cache_len_after": 428,
+        "next_pending": 34806
+      },
+      {
+        "output_start": 30,
+        "pending": 34806,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          34806
+        ],
+        "draft_s": 5.656199937220663e-05,
+        "verify_s": 0.032830039999680594,
+        "commit_s": 4.2796003981493413e-05,
+        "cycle_s": 0.032970151005429216,
+        "cache_len_after": 429,
+        "next_pending": 15532
+      },
+      {
+        "output_start": 31,
+        "pending": 15532,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          15532
+        ],
+        "draft_s": 6.217299960553646e-05,
+        "verify_s": 0.03386054300062824,
+        "commit_s": 3.2101001124829054e-05,
+        "cycle_s": 0.033996618003584445,
+        "cache_len_after": 430,
+        "next_pending": 714
+      },
+      {
+        "output_start": 32,
+        "pending": 714,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          714
+        ],
+        "draft_s": 5.645799683406949e-05,
+        "verify_s": 0.03339905399479903,
+        "commit_s": 3.609599662013352e-05,
+        "cycle_s": 0.03352991899009794,
+        "cache_len_after": 431,
+        "next_pending": 13675
+      },
+      {
+        "output_start": 33,
+        "pending": 13675,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          13675
+        ],
+        "draft_s": 5.9815996792167425e-05,
+        "verify_s": 0.03441033398848958,
+        "commit_s": 3.329099854454398e-05,
+        "cycle_s": 0.034546276001492515,
+        "cache_len_after": 432,
+        "next_pending": 11
+      },
+      {
+        "output_start": 34,
+        "pending": 11,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          11
+        ],
+        "draft_s": 5.4992997320368886e-05,
+        "verify_s": 0.03337768699566368,
+        "commit_s": 3.269899752922356e-05,
+        "cycle_s": 0.033504812003229745,
+        "cache_len_after": 433,
+        "next_pending": 323
+      },
+      {
+        "output_start": 35,
+        "pending": 323,
+        "draft_tokens": [
+          26918,
+          13675
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          323
+        ],
+        "draft_s": 6.777500675525516e-05,
+        "verify_s": 0.04817192000336945,
+        "commit_s": 5.6891993153840303e-05,
+        "cycle_s": 0.04834317999484483,
+        "cache_len_after": 434,
+        "next_pending": 374
+      },
+      {
+        "output_start": 36,
+        "pending": 374,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          374
+        ],
+        "draft_s": 5.7500990806147456e-05,
+        "verify_s": 0.033103552006650716,
+        "commit_s": 3.188899427186698e-05,
+        "cycle_s": 0.03323368399287574,
+        "cache_len_after": 435,
+        "next_pending": 1431
+      },
+      {
+        "output_start": 37,
+        "pending": 1431,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1431
+        ],
+        "draft_s": 5.900200631003827e-05,
+        "verify_s": 0.03847223900083918,
+        "commit_s": 0.00011061900295317173,
+        "cycle_s": 0.038686113999574445,
+        "cache_len_after": 436,
+        "next_pending": 12308
+      },
+      {
+        "output_start": 38,
+        "pending": 12308,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          12308
+        ],
+        "draft_s": 5.3979005315341055e-05,
+        "verify_s": 0.035058241002843715,
+        "commit_s": 6.325000140350312e-05,
+        "cycle_s": 0.035225922998506576,
+        "cache_len_after": 437,
+        "next_pending": 2453
+      },
+      {
+        "output_start": 39,
+        "pending": 2453,
+        "draft_tokens": [
+          518,
+          279
+        ],
+        "accepted": 1,
+        "rejected_at": 1,
+        "emitted_tokens": [
+          2453,
+          518
+        ],
+        "draft_s": 6.15310127614066e-05,
+        "verify_s": 0.04796345099748578,
+        "commit_s": 7.39009992685169e-05,
+        "cycle_s": 0.048168664987315424,
+        "cache_len_after": 439,
+        "next_pending": 264
+      },
+      {
+        "output_start": 41,
+        "pending": 264,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          264
+        ],
+        "draft_s": 5.770901043433696e-05,
+        "verify_s": 0.03400505099853035,
+        "commit_s": 3.4110998967662454e-05,
+        "cycle_s": 0.03414797500590794,
+        "cache_len_after": 440,
+        "next_pending": 68240
+      },
+      {
+        "output_start": 42,
+        "pending": 68240,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          68240
+        ],
+        "draft_s": 5.7981000281870365e-05,
+        "verify_s": 0.03438286000164226,
+        "commit_s": 3.58179968316108e-05,
+        "cycle_s": 0.03452185000060126,
+        "cache_len_after": 441,
+        "next_pending": 8777
+      },
+      {
+        "output_start": 43,
+        "pending": 8777,
+        "draft_tokens": [
+          594,
+          7684
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          8777
+        ],
+        "draft_s": 6.338600360322744e-05,
+        "verify_s": 0.04831861400452908,
+        "commit_s": 0.0001237070100614801,
+        "cycle_s": 0.04855463400599547,
+        "cache_len_after": 442,
+        "next_pending": 13
+      },
+      {
+        "output_start": 44,
+        "pending": 13,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          13
+        ],
+        "draft_s": 5.5823009461164474e-05,
+        "verify_s": 0.03299768800206948,
+        "commit_s": 4.3099993490614e-05,
+        "cycle_s": 0.03313954999612179,
+        "cache_len_after": 443,
+        "next_pending": 576
+      },
+      {
+        "output_start": 45,
+        "pending": 576,
+        "draft_tokens": [
+          68240,
+          8777
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          576
+        ],
+        "draft_s": 6.655999459326267e-05,
+        "verify_s": 0.04750361299375072,
+        "commit_s": 6.787999882362783e-05,
+        "cycle_s": 0.0476874379965011,
+        "cache_len_after": 444,
+        "next_pending": 685
+      },
+      {
+        "output_start": 46,
+        "pending": 685,
+        "draft_tokens": [
+          25882,
+          1283
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          685
+        ],
+        "draft_s": 6.925599882379174e-05,
+        "verify_s": 0.04577463799796533,
+        "commit_s": 5.607999628409743e-05,
+        "cycle_s": 0.04594586200255435,
+        "cache_len_after": 445,
+        "next_pending": 594
+      },
+      {
+        "output_start": 47,
+        "pending": 594,
+        "draft_tokens": [
+          23281,
+          315
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          594
+        ],
+        "draft_s": 4.319300933275372e-05,
+        "verify_s": 0.045377065005595796,
+        "commit_s": 5.8407997130416334e-05,
+        "cycle_s": 0.045517192003899254,
+        "cache_len_after": 446,
+        "next_pending": 90713
+      },
+      {
+        "output_start": 48,
+        "pending": 90713,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          90713
+        ],
+        "draft_s": 5.851700552739203e-05,
+        "verify_s": 0.03236781699524727,
+        "commit_s": 3.195801400579512e-05,
+        "cycle_s": 0.032503614987945184,
+        "cache_len_after": 447,
+        "next_pending": 19661
+      },
+      {
+        "output_start": 49,
+        "pending": 19661,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          19661
+        ],
+        "draft_s": 5.641300231218338e-05,
+        "verify_s": 0.032633547991281375,
+        "commit_s": 3.03619890473783e-05,
+        "cycle_s": 0.03275686599954497,
+        "cache_len_after": 448,
+        "next_pending": 323
+      },
+      {
+        "output_start": 50,
+        "pending": 323,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          323
+        ],
+        "draft_s": 5.637599679175764e-05,
+        "verify_s": 0.032515795988729224,
+        "commit_s": 3.736600046977401e-05,
+        "cycle_s": 0.03264794799906667,
+        "cache_len_after": 449,
+        "next_pending": 14195
+      },
+      {
+        "output_start": 51,
+        "pending": 14195,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          14195
+        ],
+        "draft_s": 5.8039004215970635e-05,
+        "verify_s": 0.03398858600121457,
+        "commit_s": 0.00011087099846918136,
+        "cycle_s": 0.03419708499859553,
+        "cache_len_after": 450,
+        "next_pending": 6457
+      },
+      {
+        "output_start": 52,
+        "pending": 6457,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          6457
+        ],
+        "draft_s": 5.640700692310929e-05,
+        "verify_s": 0.03242819700972177,
+        "commit_s": 3.163999645039439e-05,
+        "cycle_s": 0.03255184699082747,
+        "cache_len_after": 451,
+        "next_pending": 3880
+      },
+      {
+        "output_start": 53,
+        "pending": 3880,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          3880
+        ],
+        "draft_s": 5.694599531125277e-05,
+        "verify_s": 0.03244380099931732,
+        "commit_s": 4.74419939564541e-05,
+        "cycle_s": 0.03258552998886444,
+        "cache_len_after": 452,
+        "next_pending": 614
+      },
+      {
+        "output_start": 54,
+        "pending": 614,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          614
+        ],
+        "draft_s": 5.8061006711795926e-05,
+        "verify_s": 0.032881503997487016,
+        "commit_s": 3.479899896774441e-05,
+        "cycle_s": 0.03301938700315077,
+        "cache_len_after": 453,
+        "next_pending": 14606
+      },
+      {
+        "output_start": 55,
+        "pending": 14606,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          14606
+        ],
+        "draft_s": 5.687499651685357e-05,
+        "verify_s": 0.03237351099960506,
+        "commit_s": 3.431900404393673e-05,
+        "cycle_s": 0.03249959599634167,
+        "cache_len_after": 454,
+        "next_pending": 36319
+      },
+      {
+        "output_start": 56,
+        "pending": 36319,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          36319
+        ],
+        "draft_s": 5.811799201183021e-05,
+        "verify_s": 0.03309971799899358,
+        "commit_s": 3.5380988265387714e-05,
+        "cycle_s": 0.03323715900478419,
+        "cache_len_after": 455,
+        "next_pending": 8869
+      },
+      {
+        "output_start": 57,
+        "pending": 8869,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          8869
+        ],
+        "draft_s": 6.231199949979782e-05,
+        "verify_s": 0.033858747003250755,
+        "commit_s": 4.238399560563266e-05,
+        "cycle_s": 0.03401172300800681,
+        "cache_len_after": 456,
+        "next_pending": 311
+      },
+      {
+        "output_start": 58,
+        "pending": 311,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          311
+        ],
+        "draft_s": 5.8120000176131725e-05,
+        "verify_s": 0.0324256250023609,
+        "commit_s": 3.343600837979466e-05,
+        "cycle_s": 0.03255692399397958,
+        "cache_len_after": 457,
+        "next_pending": 1824
+      },
+      {
+        "output_start": 59,
+        "pending": 1824,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1824
+        ],
+        "draft_s": 5.5015989346429706e-05,
+        "verify_s": 0.03256250300910324,
+        "commit_s": 3.160499909427017e-05,
+        "cycle_s": 0.032683277007890865,
+        "cache_len_after": 458,
+        "next_pending": 1059
+      },
+      {
+        "output_start": 60,
+        "pending": 1059,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1059
+        ],
+        "draft_s": 5.828001303598285e-05,
+        "verify_s": 0.03393108599993866,
+        "commit_s": 0.0001119130029110238,
+        "cycle_s": 0.034140737989218906,
+        "cache_len_after": 459,
+        "next_pending": 6380
+      },
+      {
+        "output_start": 61,
+        "pending": 6380,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          6380
+        ],
+        "draft_s": 5.871900066267699e-05,
+        "verify_s": 0.03235342500556726,
+        "commit_s": 4.056000034324825e-05,
+        "cycle_s": 0.03248853900004178,
+        "cache_len_after": 460,
+        "next_pending": 624
+      },
+      {
+        "output_start": 62,
+        "pending": 624,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          624
+        ],
+        "draft_s": 5.882099503651261e-05,
+        "verify_s": 0.032622447004541755,
+        "commit_s": 3.069099329877645e-05,
+        "cycle_s": 0.03275161099736579,
+        "cache_len_after": 461,
+        "next_pending": 785
+      },
+      {
+        "output_start": 63,
+        "pending": 785,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          785
+        ],
+        "draft_s": 5.722699279431254e-05,
+        "verify_s": 0.032151645005797036,
+        "commit_s": 3.40750120813027e-05,
+        "cycle_s": 0.032278594007948413,
+        "cache_len_after": 462,
+        "next_pending": 4549
+      },
+      {
+        "output_start": 64,
+        "pending": 4549,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          4549
+        ],
+        "draft_s": 5.876700743101537e-05,
+        "verify_s": 0.03283976099919528,
+        "commit_s": 3.188899427186698e-05,
+        "cycle_s": 0.03297453898994718,
+        "cache_len_after": 463,
+        "next_pending": 16555
+      },
+      {
+        "output_start": 65,
+        "pending": 16555,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          16555
+        ],
+        "draft_s": 5.941301060374826e-05,
+        "verify_s": 0.03239015401049983,
+        "commit_s": 3.6757992347702384e-05,
+        "cycle_s": 0.03252765400975477,
+        "cache_len_after": 464,
+        "next_pending": 279
+      },
+      {
+        "output_start": 66,
+        "pending": 279,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          279
+        ],
+        "draft_s": 6.397400284186006e-05,
+        "verify_s": 0.03259891401103232,
+        "commit_s": 4.006900417152792e-05,
+        "cycle_s": 0.032741589995566756,
+        "cache_len_after": 465,
+        "next_pending": 15050
+      },
+      {
+        "output_start": 67,
+        "pending": 15050,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          15050
+        ],
+        "draft_s": 6.014401151333004e-05,
+        "verify_s": 0.032692723005311564,
+        "commit_s": 3.2302996260114014e-05,
+        "cycle_s": 0.032827574003022164,
+        "cache_len_after": 466,
+        "next_pending": 3364
+      },
+      {
+        "output_start": 68,
+        "pending": 3364,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          3364
+        ],
+        "draft_s": 5.967899051029235e-05,
+        "verify_s": 0.03234482400876004,
+        "commit_s": 3.5208999179303646e-05,
+        "cycle_s": 0.032481444999575615,
+        "cache_len_after": 467,
+        "next_pending": 315
+      },
+      {
+        "output_start": 69,
+        "pending": 315,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          315
+        ],
+        "draft_s": 5.817999772261828e-05,
+        "verify_s": 0.032385849990532734,
+        "commit_s": 0.0010008060053223744,
+        "cycle_s": 0.03348471599747427,
+        "cache_len_after": 468,
+        "next_pending": 264
+      },
+      {
+        "output_start": 70,
+        "pending": 264,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          264
+        ],
+        "draft_s": 6.07230031164363e-05,
+        "verify_s": 0.03295495099155232,
+        "commit_s": 0.0009941250027623028,
+        "cycle_s": 0.03405083100369666,
+        "cache_len_after": 469,
+        "next_pending": 61390
+      },
+      {
+        "output_start": 71,
+        "pending": 61390,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          61390
+        ],
+        "draft_s": 6.284700066316873e-05,
+        "verify_s": 0.03272879899304826,
+        "commit_s": 3.0629991670139134e-05,
+        "cycle_s": 0.03286669099179562,
+        "cache_len_after": 470,
+        "next_pending": 5562
+      },
+      {
+        "output_start": 72,
+        "pending": 5562,
+        "draft_tokens": [
+          6941,
+          576
+        ],
+        "accepted": 2,
+        "rejected_at": null,
+        "emitted_tokens": [
+          5562,
+          6941,
+          576
+        ],
+        "draft_s": 6.818700057920069e-05,
+        "verify_s": 0.0461598980036797,
+        "commit_s": 6.33449963061139e-05,
+        "cycle_s": 0.046334949001902714,
+        "cache_len_after": 473,
+        "next_pending": 685
+      },
+      {
+        "output_start": 75,
+        "pending": 685,
+        "draft_tokens": [
+          25882,
+          1283
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          685
+        ],
+        "draft_s": 4.7873996663838625e-05,
+        "verify_s": 0.047282045998144895,
+        "commit_s": 0.00011596299009397626,
+        "cycle_s": 0.0475046299980022,
+        "cache_len_after": 474,
+        "next_pending": 879
+      },
+      {
+        "output_start": 76,
+        "pending": 879,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          879
+        ],
+        "draft_s": 6.103799387346953e-05,
+        "verify_s": 0.03287485599867068,
+        "commit_s": 3.6820012610405684e-05,
+        "cycle_s": 0.03301581299456302,
+        "cache_len_after": 475,
+        "next_pending": 25882
+      },
+      {
+        "output_start": 77,
+        "pending": 25882,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          25882
+        ],
+        "draft_s": 6.174700683914125e-05,
+        "verify_s": 0.03309608100971673,
+        "commit_s": 4.130900197196752e-05,
+        "cycle_s": 0.03323926200391725,
+        "cache_len_after": 476,
+        "next_pending": 264
+      },
+      {
+        "output_start": 78,
+        "pending": 264,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          264
+        ],
+        "draft_s": 6.31809962214902e-05,
+        "verify_s": 0.03287446500326041,
+        "commit_s": 3.51269991369918e-05,
+        "cycle_s": 0.03301631999784149,
+        "cache_len_after": 477,
+        "next_pending": 4013
+      },
+      {
+        "output_start": 79,
+        "pending": 4013,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          4013
+        ],
+        "draft_s": 6.173900328576565e-05,
+        "verify_s": 0.032856113990419544,
+        "commit_s": 3.392099461052567e-05,
+        "cycle_s": 0.03299694899760652,
+        "cache_len_after": 478,
+        "next_pending": 315
+      },
+      {
+        "output_start": 80,
+        "pending": 315,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          315
+        ],
+        "draft_s": 5.9960002545267344e-05,
+        "verify_s": 0.034494238992920145,
+        "commit_s": 0.0001060089998645708,
+        "cycle_s": 0.03470156701223459,
+        "cache_len_after": 479,
+        "next_pending": 53186
+      },
+      {
+        "output_start": 81,
+        "pending": 53186,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          53186
+        ],
+        "draft_s": 6.25369866611436e-05,
+        "verify_s": 0.03310360398609191,
+        "commit_s": 3.332299820613116e-05,
+        "cycle_s": 0.033246148988837376,
+        "cache_len_after": 480,
+        "next_pending": 4357
+      },
+      {
+        "output_start": 82,
+        "pending": 4357,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          4357
+        ],
+        "draft_s": 6.24980020802468e-05,
+        "verify_s": 0.03372050399775617,
+        "commit_s": 3.1871997634880245e-05,
+        "cycle_s": 0.033863201999338344,
+        "cache_len_after": 481,
+        "next_pending": 11
+      },
+      {
+        "output_start": 83,
+        "pending": 11,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          11
+        ],
+        "draft_s": 6.469400250352919e-05,
+        "verify_s": 0.03279500699136406,
+        "commit_s": 0.0009973650012398139,
+        "cycle_s": 0.03390207700431347,
+        "cache_len_after": 482,
+        "next_pending": 2670
+      },
+      {
+        "output_start": 84,
+        "pending": 2670,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          2670
+        ],
+        "draft_s": 6.176500755827874e-05,
+        "verify_s": 0.03381657499994617,
+        "commit_s": 0.0001109529985114932,
+        "cycle_s": 0.03403399500530213,
+        "cache_len_after": 483,
+        "next_pending": 1660
+      },
+      {
+        "output_start": 85,
+        "pending": 1660,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1660
+        ],
+        "draft_s": 6.25829998170957e-05,
+        "verify_s": 0.033954166996409185,
+        "commit_s": 0.00010865699732676148,
+        "cycle_s": 0.03416992699203547,
+        "cache_len_after": 484,
+        "next_pending": 4201
+      },
+      {
+        "output_start": 86,
+        "pending": 4201,
+        "draft_tokens": [
+          553,
+          264
+        ],
+        "accepted": 2,
+        "rejected_at": null,
+        "emitted_tokens": [
+          4201,
+          553,
+          264
+        ],
+        "draft_s": 7.286400068551302e-05,
+        "verify_s": 0.04696746300032828,
+        "commit_s": 4.6315006329678e-05,
+        "cycle_s": 0.04713080199144315,
+        "cache_len_after": 487,
+        "next_pending": 1803
+      },
+      {
+        "output_start": 89,
+        "pending": 1803,
+        "draft_tokens": [
+          11,
+          4201
+        ],
+        "accepted": 2,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1803,
+          11,
+          4201
+        ],
+        "draft_s": 5.048800085205585e-05,
+        "verify_s": 0.047980919989640824,
+        "commit_s": 3.9413993363268673e-05,
+        "cycle_s": 0.04812078201211989,
+        "cache_len_after": 490,
+        "next_pending": 389
+      },
+      {
+        "output_start": 92,
+        "pending": 389,
+        "draft_tokens": [
+          279,
+          1968
+        ],
+        "accepted": 2,
+        "rejected_at": null,
+        "emitted_tokens": [
+          389,
+          279,
+          1968
+        ],
+        "draft_s": 4.840298788622022e-05,
+        "verify_s": 0.047137550995103084,
+        "commit_s": 5.029099702369422e-05,
+        "cycle_s": 0.04728047800017521,
+        "cache_len_after": 493,
+        "next_pending": 11
+      },
+      {
+        "output_start": 95,
+        "pending": 11,
+        "draft_tokens": [
+          323,
+          26918
+        ],
+        "accepted": 2,
+        "rejected_at": null,
+        "emitted_tokens": [
+          11,
+          323,
+          26918
+        ],
+        "draft_s": 5.199399311095476e-05,
+        "verify_s": 0.04822536800929811,
+        "commit_s": 5.383999086916447e-05,
+        "cycle_s": 0.04838632099563256,
+        "cache_len_after": 496,
+        "next_pending": 13675
+      },
+      {
+        "output_start": 98,
+        "pending": 13675,
+        "draft_tokens": [
+          13,
+          2932
+        ],
+        "accepted": 1,
+        "rejected_at": 1,
+        "emitted_tokens": [
+          13675,
+          13
+        ],
+        "draft_s": 4.790398816112429e-05,
+        "verify_s": 0.04701428300177213,
+        "commit_s": 7.067099795676768e-05,
+        "cycle_s": 0.04718750299070962,
+        "cache_len_after": 498,
+        "next_pending": 17715
+      },
+      {
+        "output_start": 100,
+        "pending": 17715,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          17715
+        ],
+        "draft_s": 6.69169967295602e-05,
+        "verify_s": 0.033748763002222404,
+        "commit_s": 3.50010086549446e-05,
+        "cycle_s": 0.03390296800353099,
+        "cache_len_after": 499,
+        "next_pending": 1493
+      },
+      {
+        "output_start": 101,
+        "pending": 1493,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          1493
+        ],
+        "draft_s": 6.616000609938055e-05,
+        "verify_s": 0.033884500997373834,
+        "commit_s": 3.390100027900189e-05,
+        "cycle_s": 0.03403694998996798,
+        "cache_len_after": 500,
+        "next_pending": 4855
+      },
+      {
+        "output_start": 102,
+        "pending": 4855,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          4855
+        ],
+        "draft_s": 6.382500578183681e-05,
+        "verify_s": 0.03366507600003388,
+        "commit_s": 0.00011214699770789593,
+        "cycle_s": 0.033884841002873145,
+        "cache_len_after": 501,
+        "next_pending": 24181
+      },
+      {
+        "output_start": 103,
+        "pending": 24181,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          24181
+        ],
+        "draft_s": 6.809899059589952e-05,
+        "verify_s": 0.03278710300219245,
+        "commit_s": 4.3813008232973516e-05,
+        "cycle_s": 0.03294729800836649,
+        "cache_len_after": 502,
+        "next_pending": 11449
+      },
+      {
+        "output_start": 104,
+        "pending": 11449,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          11449
+        ],
+        "draft_s": 6.309400487225503e-05,
+        "verify_s": 0.03258151700720191,
+        "commit_s": 3.109799581579864e-05,
+        "cycle_s": 0.03271774199674837,
+        "cache_len_after": 503,
+        "next_pending": 11
+      },
+      {
+        "output_start": 105,
+        "pending": 11,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          11
+        ],
+        "draft_s": 6.376201054081321e-05,
+        "verify_s": 0.03314914500515442,
+        "commit_s": 3.263700637035072e-05,
+        "cycle_s": 0.03328913700534031,
+        "cache_len_after": 504,
+        "next_pending": 576
+      },
+      {
+        "output_start": 106,
+        "pending": 576,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          576
+        ],
+        "draft_s": 6.475400005001575e-05,
+        "verify_s": 0.03284537699073553,
+        "commit_s": 3.2827010727487504e-05,
+        "cycle_s": 0.03299254800367635,
+        "cache_len_after": 505,
+        "next_pending": 685
+      },
+      {
+        "output_start": 107,
+        "pending": 685,
+        "draft_tokens": [
+          879,
+          25882
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          685
+        ],
+        "draft_s": 7.517599442508072e-05,
+        "verify_s": 0.04763134301174432,
+        "commit_s": 6.6920998506248e-05,
+        "cycle_s": 0.0478212410089327,
+        "cache_len_after": 506,
+        "next_pending": 8975
+      },
+      {
+        "output_start": 108,
+        "pending": 8975,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          8975
+        ],
+        "draft_s": 6.525999924633652e-05,
+        "verify_s": 0.032787154996185564,
+        "commit_s": 4.73990075988695e-05,
+        "cycle_s": 0.03294365400506649,
+        "cache_len_after": 507,
+        "next_pending": 311
+      },
+      {
+        "output_start": 109,
+        "pending": 311,
+        "draft_tokens": [
+          39156,
+          311
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          311
+        ],
+        "draft_s": 7.021399505902082e-05,
+        "verify_s": 0.04814814998826478,
+        "commit_s": 0.00011993000225629658,
+        "cycle_s": 0.04838459599704947,
+        "cache_len_after": 508,
+        "next_pending": 17697
+      },
+      {
+        "output_start": 110,
+        "pending": 17697,
+        "draft_tokens": [
+          13,
+          2938
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          17697
+        ],
+        "draft_s": 7.151899626478553e-05,
+        "verify_s": 0.0456681930081686,
+        "commit_s": 6.47979904897511e-05,
+        "cycle_s": 0.04584988398710266,
+        "cache_len_after": 509,
+        "next_pending": 323
+      },
+      {
+        "output_start": 111,
+        "pending": 323,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          323
+        ],
+        "draft_s": 6.693899922538549e-05,
+        "verify_s": 0.03259489299671259,
+        "commit_s": 3.787699097301811e-05,
+        "cycle_s": 0.0327501119900262,
+        "cache_len_after": 510,
+        "next_pending": 374
+      },
+      {
+        "output_start": 112,
+        "pending": 374,
+        "draft_tokens": [
+          1431,
+          12308
+        ],
+        "accepted": 2,
+        "rejected_at": null,
+        "emitted_tokens": [
+          374,
+          1431,
+          12308
+        ],
+        "draft_s": 7.157500658649951e-05,
+        "verify_s": 0.0476647790055722,
+        "commit_s": 0.00011234199337195605,
+        "cycle_s": 0.04788936401018873,
+        "cache_len_after": 513,
+        "next_pending": 2453
+      },
+      {
+        "output_start": 115,
+        "pending": 2453,
+        "draft_tokens": [
+          518,
+          264
+        ],
+        "accepted": 2,
+        "rejected_at": null,
+        "emitted_tokens": [
+          2453,
+          518,
+          264
+        ],
+        "draft_s": 5.398299254011363e-05,
+        "verify_s": 0.04581730399513617,
+        "commit_s": 0.0009903729951474816,
+        "cycle_s": 0.04691669599560555,
+        "cache_len_after": 516,
+        "next_pending": 68240
+      },
+      {
+        "output_start": 118,
+        "pending": 68240,
+        "draft_tokens": [
+          8777,
+          13
+        ],
+        "accepted": 2,
+        "rejected_at": null,
+        "emitted_tokens": [
+          68240,
+          8777,
+          13
+        ],
+        "draft_s": 5.126799806021154e-05,
+        "verify_s": 0.04689107900776435,
+        "commit_s": 8.171700756065547e-05,
+        "cycle_s": 0.04707643500296399,
+        "cache_len_after": 519,
+        "next_pending": 6252
+      },
+      {
+        "output_start": 121,
+        "pending": 6252,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          6252
+        ],
+        "draft_s": 6.985101208556443e-05,
+        "verify_s": 0.032694890003767796,
+        "commit_s": 3.369600744917989e-05,
+        "cycle_s": 0.032842087995959446,
+        "cache_len_after": 520,
+        "next_pending": 3364
+      },
+      {
+        "output_start": 122,
+        "pending": 3364,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          3364
+        ],
+        "draft_s": 6.69290020596236e-05,
+        "verify_s": 0.032655882998369634,
+        "commit_s": 3.196399484295398e-05,
+        "cycle_s": 0.03280018499935977,
+        "cache_len_after": 521,
+        "next_pending": 702
+      },
+      {
+        "output_start": 123,
+        "pending": 702,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          702
+        ],
+        "draft_s": 6.639400089625269e-05,
+        "verify_s": 0.035663554997881874,
+        "commit_s": 3.392400685697794e-05,
+        "cycle_s": 0.03580650700314436,
+        "cache_len_after": 522,
+        "next_pending": 14606
+      },
+      {
+        "output_start": 124,
+        "pending": 14606,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          14606
+        ],
+        "draft_s": 6.602299981750548e-05,
+        "verify_s": 0.03338043999974616,
+        "commit_s": 3.601799835450947e-05,
+        "cycle_s": 0.03352133699809201,
+        "cache_len_after": 523,
+        "next_pending": 36319
+      },
+      {
+        "output_start": 125,
+        "pending": 36319,
+        "draft_tokens": [
+          8869,
+          311
+        ],
+        "accepted": 2,
+        "rejected_at": null,
+        "emitted_tokens": [
+          36319,
+          8869,
+          311
+        ],
+        "draft_s": 7.486299728043377e-05,
+        "verify_s": 0.04927223699633032,
+        "commit_s": 4.135900235269219e-05,
+        "cycle_s": 0.049437394001870416,
+        "cache_len_after": 526,
+        "next_pending": 1492
+      }
+    ],
+    "state_prefixes": 128
+  },
+  "token_match": true,
+  "shared_state_prefixes": 128,
+  "all_shared_states_equal": true,
+  "same_prefix_domain": true,
+  "state_mismatches": [],
+  "state_trace": [
+    {
+      "generated_prefix_tokens": 0,
+      "reference_sha256": "c7efa4285b69821c9a3404f9b3104898dc3e18bcf7281e3d0f0325ba58968383",
+      "block_sha256": "c7efa4285b69821c9a3404f9b3104898dc3e18bcf7281e3d0f0325ba58968383",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 1,
+      "reference_sha256": "2cb26a265bb7a888d710cb39d80b93799580eeee490f7063ee150d5b962167b1",
+      "block_sha256": "2cb26a265bb7a888d710cb39d80b93799580eeee490f7063ee150d5b962167b1",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 2,
+      "reference_sha256": "a6a3248fca105145b784d85243d26a9ccd79b585ca09ac35a028c87d5e2b8040",
+      "block_sha256": "a6a3248fca105145b784d85243d26a9ccd79b585ca09ac35a028c87d5e2b8040",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 3,
+      "reference_sha256": "d2207f2a2519137357c150f7613fd39883f4e8a5b60523d510bb1d18b19717a7",
+      "block_sha256": "d2207f2a2519137357c150f7613fd39883f4e8a5b60523d510bb1d18b19717a7",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 4,
+      "reference_sha256": "8376bb50d1f1e1fade5f7cfc83c604001535d7207297391f3f1c0683ffa89ea0",
+      "block_sha256": "8376bb50d1f1e1fade5f7cfc83c604001535d7207297391f3f1c0683ffa89ea0",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 5,
+      "reference_sha256": "6654d15ce664179559f2312965c79c81ab91d8ddeda2f1cc89e76e2e424af94a",
+      "block_sha256": "6654d15ce664179559f2312965c79c81ab91d8ddeda2f1cc89e76e2e424af94a",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 6,
+      "reference_sha256": "80779e0bf37df387e036eb599c2009bdf49dbb814a3ea3d7f0e2930d0e143a40",
+      "block_sha256": "80779e0bf37df387e036eb599c2009bdf49dbb814a3ea3d7f0e2930d0e143a40",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 7,
+      "reference_sha256": "62ac3f72ddd85782c28bb1ea80e2ce6ca99fd64b27f2d591cbb6c37c75d282b1",
+      "block_sha256": "62ac3f72ddd85782c28bb1ea80e2ce6ca99fd64b27f2d591cbb6c37c75d282b1",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 8,
+      "reference_sha256": "1513fdde85f9ea45a597a52ab24656db3704827b601c89b863ea4d76ca687638",
+      "block_sha256": "1513fdde85f9ea45a597a52ab24656db3704827b601c89b863ea4d76ca687638",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 9,
+      "reference_sha256": "580ad8b75865bd61199e8793794865fbefa67e776b591c3a5574122f06403c5f",
+      "block_sha256": "580ad8b75865bd61199e8793794865fbefa67e776b591c3a5574122f06403c5f",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 10,
+      "reference_sha256": "1fefe8b23b3a50d47901f8761855b63c8b54c5e1220d501f13bc38252fca999d",
+      "block_sha256": "1fefe8b23b3a50d47901f8761855b63c8b54c5e1220d501f13bc38252fca999d",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 11,
+      "reference_sha256": "61cf5feb9b3a5d3e5965ccca2876e36981c88633d76e389930fe3a03a5f248f7",
+      "block_sha256": "61cf5feb9b3a5d3e5965ccca2876e36981c88633d76e389930fe3a03a5f248f7",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 12,
+      "reference_sha256": "6f766eaa898d4f2f91e41e7bcb8706fa399982dc70661aa0528b9d19c4a650aa",
+      "block_sha256": "6f766eaa898d4f2f91e41e7bcb8706fa399982dc70661aa0528b9d19c4a650aa",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 13,
+      "reference_sha256": "2069b77589a5d0b5c7bb8c43fe68693c07b30783d3af7de09abb52b033f054b8",
+      "block_sha256": "2069b77589a5d0b5c7bb8c43fe68693c07b30783d3af7de09abb52b033f054b8",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 14,
+      "reference_sha256": "00d6316a96d006654ba1a318a95c99024205b4768a7ce2c9c4fadfbf9f973299",
+      "block_sha256": "00d6316a96d006654ba1a318a95c99024205b4768a7ce2c9c4fadfbf9f973299",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 15,
+      "reference_sha256": "1c57966091d58c16eb0df4a920fe33d453eebda1d2ab5ba7267c19bfb0063148",
+      "block_sha256": "1c57966091d58c16eb0df4a920fe33d453eebda1d2ab5ba7267c19bfb0063148",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 16,
+      "reference_sha256": "97ef6d4de9d43565b46c61454dd1aa74ae4df59565584d0efef2ecc50f5c2371",
+      "block_sha256": "97ef6d4de9d43565b46c61454dd1aa74ae4df59565584d0efef2ecc50f5c2371",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 17,
+      "reference_sha256": "99f80a59459eee0a8664f37b7827cddac49678eac2d0fa4d977240facc9c9d02",
+      "block_sha256": "99f80a59459eee0a8664f37b7827cddac49678eac2d0fa4d977240facc9c9d02",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 18,
+      "reference_sha256": "353d3375b514af5a60533b49eaef6dca65b9f540293d58c01d033fbb8ffb4c8d",
+      "block_sha256": "353d3375b514af5a60533b49eaef6dca65b9f540293d58c01d033fbb8ffb4c8d",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 19,
+      "reference_sha256": "170b6fb4f32a94a2f37157af5d4df5983159fd2f17b2887c930fb5401026e5ee",
+      "block_sha256": "170b6fb4f32a94a2f37157af5d4df5983159fd2f17b2887c930fb5401026e5ee",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 20,
+      "reference_sha256": "c4a0fbbc3921a72c8d7fc02fcb405b334bf6f7879b6517d78badd8e2c7879b22",
+      "block_sha256": "c4a0fbbc3921a72c8d7fc02fcb405b334bf6f7879b6517d78badd8e2c7879b22",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 21,
+      "reference_sha256": "71485bf05a7a30a917cabebecd416318d51f05a2cb4b9bb461d42c2ee46fe9ba",
+      "block_sha256": "71485bf05a7a30a917cabebecd416318d51f05a2cb4b9bb461d42c2ee46fe9ba",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 22,
+      "reference_sha256": "42136eecdb45bedb2e5e7063e6672be5c1a8899cbfd077e5b52f3c35e52dc121",
+      "block_sha256": "42136eecdb45bedb2e5e7063e6672be5c1a8899cbfd077e5b52f3c35e52dc121",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 23,
+      "reference_sha256": "cb7f25b3acc6faf578804ebc829337f914ae7d81ab8aeb6df3915d658fbce81d",
+      "block_sha256": "cb7f25b3acc6faf578804ebc829337f914ae7d81ab8aeb6df3915d658fbce81d",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 24,
+      "reference_sha256": "702786711cdc9d94e613d81d3a45a1e035fe4f9a75640a9afad08abcd0475b64",
+      "block_sha256": "702786711cdc9d94e613d81d3a45a1e035fe4f9a75640a9afad08abcd0475b64",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 25,
+      "reference_sha256": "02edbfdd95bd177802f8a67dd71b0c90306fe2ef401c8b901c6526886ae225a2",
+      "block_sha256": "02edbfdd95bd177802f8a67dd71b0c90306fe2ef401c8b901c6526886ae225a2",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 26,
+      "reference_sha256": "cfef98821ecc562c535d704cd74050e29ce911124cf11a8c01c9490c6aa4dce8",
+      "block_sha256": "cfef98821ecc562c535d704cd74050e29ce911124cf11a8c01c9490c6aa4dce8",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 27,
+      "reference_sha256": "80ca03b78759849b92d678764a3afbeac44f3d16cd807e29dd194722fcb50a99",
+      "block_sha256": "80ca03b78759849b92d678764a3afbeac44f3d16cd807e29dd194722fcb50a99",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 28,
+      "reference_sha256": "b510a9e1d3b9dcca5e9707da2c7d6f876272a02cdb50d18ed4f78297fbf76a17",
+      "block_sha256": "b510a9e1d3b9dcca5e9707da2c7d6f876272a02cdb50d18ed4f78297fbf76a17",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 29,
+      "reference_sha256": "b5d1b863cdc57497c0ed61d9a32d3f9ff412601625f1e6375ffedd9d80ab1af4",
+      "block_sha256": "b5d1b863cdc57497c0ed61d9a32d3f9ff412601625f1e6375ffedd9d80ab1af4",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 30,
+      "reference_sha256": "850715a4a5ec4ebeb4093d6c80ed8558e45aa732d6f210057d629ee16126e2bf",
+      "block_sha256": "850715a4a5ec4ebeb4093d6c80ed8558e45aa732d6f210057d629ee16126e2bf",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 31,
+      "reference_sha256": "99fb8d19fde4bc031affadf378687ccac173cf9b6ad1c21f38244eb80e879b57",
+      "block_sha256": "99fb8d19fde4bc031affadf378687ccac173cf9b6ad1c21f38244eb80e879b57",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 32,
+      "reference_sha256": "6969fe82bf49f382d411fe94fee2ec6e312dd9dde9bd5e09cb4c05f180df7cb4",
+      "block_sha256": "6969fe82bf49f382d411fe94fee2ec6e312dd9dde9bd5e09cb4c05f180df7cb4",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 33,
+      "reference_sha256": "ec40552ae14efd163789d04e065fc0b38fb6660ac0ff8a83474e9016c3d8de04",
+      "block_sha256": "ec40552ae14efd163789d04e065fc0b38fb6660ac0ff8a83474e9016c3d8de04",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 34,
+      "reference_sha256": "5f4f00089ed729fc1800ec04aa78589c40db77269d44862f198953be53933731",
+      "block_sha256": "5f4f00089ed729fc1800ec04aa78589c40db77269d44862f198953be53933731",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 35,
+      "reference_sha256": "8986ab40fe2e999cdf9e77ad0070a04500d0ce42e9e7b7b32858938e1636c239",
+      "block_sha256": "8986ab40fe2e999cdf9e77ad0070a04500d0ce42e9e7b7b32858938e1636c239",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 36,
+      "reference_sha256": "86d4b6221ce2a0b8392c637c2eff5387d45848d54d66de00627a1fe9114aacda",
+      "block_sha256": "86d4b6221ce2a0b8392c637c2eff5387d45848d54d66de00627a1fe9114aacda",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 37,
+      "reference_sha256": "ded2bda1d215da4983f4f55d0c54c1d4c593d5f2a08eae7f5b89bd792a4a9911",
+      "block_sha256": "ded2bda1d215da4983f4f55d0c54c1d4c593d5f2a08eae7f5b89bd792a4a9911",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 38,
+      "reference_sha256": "b159df68700038f25db357643035cf589809beec3ba10bc87f69f623e67c3686",
+      "block_sha256": "b159df68700038f25db357643035cf589809beec3ba10bc87f69f623e67c3686",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 39,
+      "reference_sha256": "90cabce5c0f46c116d9618e0b630131dbd39eddfc5ebb836fc5bbab1efddd377",
+      "block_sha256": "90cabce5c0f46c116d9618e0b630131dbd39eddfc5ebb836fc5bbab1efddd377",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 40,
+      "reference_sha256": "7b4a8c61d1586f248e377f58a513a490c2bade5f9ef7be0fa869037d6823c001",
+      "block_sha256": "7b4a8c61d1586f248e377f58a513a490c2bade5f9ef7be0fa869037d6823c001",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 41,
+      "reference_sha256": "ceedc7ef3bf6297f9bd493ae76a3d897fa107818e13bfcd7f17cf2f671b6231c",
+      "block_sha256": "ceedc7ef3bf6297f9bd493ae76a3d897fa107818e13bfcd7f17cf2f671b6231c",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 42,
+      "reference_sha256": "4bfe957114c1d1c9bb0cd122c22d490b88d37ed6d78d11c76e6f351ff17833d4",
+      "block_sha256": "4bfe957114c1d1c9bb0cd122c22d490b88d37ed6d78d11c76e6f351ff17833d4",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 43,
+      "reference_sha256": "f73e471130cc72a8a95c376328a433b6d9314d734803957e7d2335427ee81a36",
+      "block_sha256": "f73e471130cc72a8a95c376328a433b6d9314d734803957e7d2335427ee81a36",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 44,
+      "reference_sha256": "c9889661f2853ba968fa788c3a060485360f54add54acf2933dc635507eed602",
+      "block_sha256": "c9889661f2853ba968fa788c3a060485360f54add54acf2933dc635507eed602",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 45,
+      "reference_sha256": "dd47dee31b95d9d2cf4b2e9ce21ab74a7f5dbe1cd08d1164bdcfeb6119066adf",
+      "block_sha256": "dd47dee31b95d9d2cf4b2e9ce21ab74a7f5dbe1cd08d1164bdcfeb6119066adf",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 46,
+      "reference_sha256": "e1411d3d267e2674f51bb7707af360eeb6a94de0b9d16c11fa6eaa3ecc6e4381",
+      "block_sha256": "e1411d3d267e2674f51bb7707af360eeb6a94de0b9d16c11fa6eaa3ecc6e4381",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 47,
+      "reference_sha256": "4dacd49ca76a19e05f0f7bf7621e8faac85eb088b132898cb4ae48b0d6313bfc",
+      "block_sha256": "4dacd49ca76a19e05f0f7bf7621e8faac85eb088b132898cb4ae48b0d6313bfc",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 48,
+      "reference_sha256": "6c79943ba0f25367941d025b503404a8ebd551dff5c0f586b4904824f3e0de6f",
+      "block_sha256": "6c79943ba0f25367941d025b503404a8ebd551dff5c0f586b4904824f3e0de6f",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 49,
+      "reference_sha256": "370b73624dd4b03a951283d3cf6ddcc506974aad8b7d2fd696d4530836553b15",
+      "block_sha256": "370b73624dd4b03a951283d3cf6ddcc506974aad8b7d2fd696d4530836553b15",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 50,
+      "reference_sha256": "efe5e7c8badca023be4d75f120feb29c469a2773882edcd6179b48eb0774cddf",
+      "block_sha256": "efe5e7c8badca023be4d75f120feb29c469a2773882edcd6179b48eb0774cddf",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 51,
+      "reference_sha256": "92fed33572aa45b4f36b33b5d682f10de5a9dfbbedbeb25d84c346b44001149a",
+      "block_sha256": "92fed33572aa45b4f36b33b5d682f10de5a9dfbbedbeb25d84c346b44001149a",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 52,
+      "reference_sha256": "efda2cd07e76be2fa002ed5cab8ee6c9082a5e2ba0368bc0efe1d15f680ca394",
+      "block_sha256": "efda2cd07e76be2fa002ed5cab8ee6c9082a5e2ba0368bc0efe1d15f680ca394",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 53,
+      "reference_sha256": "55017fcb249a995180d077d9835c3051c50b5eae78261abc0cddb2394fb241b1",
+      "block_sha256": "55017fcb249a995180d077d9835c3051c50b5eae78261abc0cddb2394fb241b1",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 54,
+      "reference_sha256": "2f8229b110d5a59f695d99cb041d29ecae4a141d6a2e18cfdc5ece1744a9d42a",
+      "block_sha256": "2f8229b110d5a59f695d99cb041d29ecae4a141d6a2e18cfdc5ece1744a9d42a",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 55,
+      "reference_sha256": "f949c5dfd7650bd68181cdc86286a11326e0f5282d37c7dd5f135d83a157e156",
+      "block_sha256": "f949c5dfd7650bd68181cdc86286a11326e0f5282d37c7dd5f135d83a157e156",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 56,
+      "reference_sha256": "cf5a0ab8828201e316bace945aaf21c9ce3845fbb07e0faad6d5eea330c85b5b",
+      "block_sha256": "cf5a0ab8828201e316bace945aaf21c9ce3845fbb07e0faad6d5eea330c85b5b",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 57,
+      "reference_sha256": "3629c8ba4dc24d3763b0e18310c5bc2065b892048e2e8d8ee9cfb157ca3fb0c8",
+      "block_sha256": "3629c8ba4dc24d3763b0e18310c5bc2065b892048e2e8d8ee9cfb157ca3fb0c8",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 58,
+      "reference_sha256": "f4e4913cfc02856d571bf551884b2500e5f88e98d4e018b2978281d89cc078b3",
+      "block_sha256": "f4e4913cfc02856d571bf551884b2500e5f88e98d4e018b2978281d89cc078b3",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 59,
+      "reference_sha256": "ed7368826124f873c7029c7e5f37d76796bf6f0d00650599dadc64578a57da89",
+      "block_sha256": "ed7368826124f873c7029c7e5f37d76796bf6f0d00650599dadc64578a57da89",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 60,
+      "reference_sha256": "2b4eb4a9dbc1a2a9ff4ffd54b5adb38cc2bcc355bea9922daff635c88727a396",
+      "block_sha256": "2b4eb4a9dbc1a2a9ff4ffd54b5adb38cc2bcc355bea9922daff635c88727a396",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 61,
+      "reference_sha256": "bc5da25a7462ce7e129fbeebc2fd7ce541a8e2c0a4fa7a7cf1a4a3778d970ac1",
+      "block_sha256": "bc5da25a7462ce7e129fbeebc2fd7ce541a8e2c0a4fa7a7cf1a4a3778d970ac1",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 62,
+      "reference_sha256": "7454cb7340eb42d503f6ed7e3befb5b2579db07bced80ca9f4891ceb2d273518",
+      "block_sha256": "7454cb7340eb42d503f6ed7e3befb5b2579db07bced80ca9f4891ceb2d273518",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 63,
+      "reference_sha256": "5e0d96aacbe44a95f5a1c08779bd13b024c432359fd41ba6e481cbbefab322f8",
+      "block_sha256": "5e0d96aacbe44a95f5a1c08779bd13b024c432359fd41ba6e481cbbefab322f8",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 64,
+      "reference_sha256": "5a70036ca8e72541808a16bf3b4068b6b40e1f3c73d45ae416b39e0c27575baf",
+      "block_sha256": "5a70036ca8e72541808a16bf3b4068b6b40e1f3c73d45ae416b39e0c27575baf",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 65,
+      "reference_sha256": "5af6c0605fee297a7b53f3bb1ea3be617df233bfa95f38be8379e7f218f12226",
+      "block_sha256": "5af6c0605fee297a7b53f3bb1ea3be617df233bfa95f38be8379e7f218f12226",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 66,
+      "reference_sha256": "2773b36b8ea34b18737e012162f8079a01fa6b3652c1feec0f487f0938780bc8",
+      "block_sha256": "2773b36b8ea34b18737e012162f8079a01fa6b3652c1feec0f487f0938780bc8",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 67,
+      "reference_sha256": "4a36d8410677b978a97435cc7366b1b2b9a82cf9ee5d5e2c9759f1e2a651709f",
+      "block_sha256": "4a36d8410677b978a97435cc7366b1b2b9a82cf9ee5d5e2c9759f1e2a651709f",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 68,
+      "reference_sha256": "3001c7ec1cc9aa2a2b855f3f92492f07a5630c8f964966dee5dce6918db765ba",
+      "block_sha256": "3001c7ec1cc9aa2a2b855f3f92492f07a5630c8f964966dee5dce6918db765ba",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 69,
+      "reference_sha256": "efe8bd1968b6ca3d2590181d2c692c41d411312e2d57ee18dff00751eeaba0ad",
+      "block_sha256": "efe8bd1968b6ca3d2590181d2c692c41d411312e2d57ee18dff00751eeaba0ad",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 70,
+      "reference_sha256": "eac113022084785c625fa76afe0a394dd5fdb01be78d75187a38c8b9174c6b9f",
+      "block_sha256": "eac113022084785c625fa76afe0a394dd5fdb01be78d75187a38c8b9174c6b9f",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 71,
+      "reference_sha256": "15cdbe5c9d81717400c548f26c93f2eef55a46befcbec3658a367ebc7902e62b",
+      "block_sha256": "15cdbe5c9d81717400c548f26c93f2eef55a46befcbec3658a367ebc7902e62b",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 72,
+      "reference_sha256": "1f3716736d9db79fe1a4531044630668a1aa433d7e2c2931450d98bfe80b0664",
+      "block_sha256": "1f3716736d9db79fe1a4531044630668a1aa433d7e2c2931450d98bfe80b0664",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 73,
+      "reference_sha256": "9d6bb6a14e717702de058b2dc2fdafc6c27466da4b4f87a16a108db23fd3758c",
+      "block_sha256": "9d6bb6a14e717702de058b2dc2fdafc6c27466da4b4f87a16a108db23fd3758c",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 74,
+      "reference_sha256": "39bfb9736d90411bc4859d15de9fbc47ecdd11bad7e523d3776b63db896c32c5",
+      "block_sha256": "39bfb9736d90411bc4859d15de9fbc47ecdd11bad7e523d3776b63db896c32c5",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 75,
+      "reference_sha256": "347e51b86cc86568d9b278475f428e390e9c5e37ffebf63c32c0dce3bb9d4b8f",
+      "block_sha256": "347e51b86cc86568d9b278475f428e390e9c5e37ffebf63c32c0dce3bb9d4b8f",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 76,
+      "reference_sha256": "15f7d2d593ba27c2de99b7ad5d69ed37a5440b56995a4cc8aaea5ea5ecec12a6",
+      "block_sha256": "15f7d2d593ba27c2de99b7ad5d69ed37a5440b56995a4cc8aaea5ea5ecec12a6",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 77,
+      "reference_sha256": "9b63c64ef4e28ae60e9d8a6a343bed7ff3c2801a878f2eed7fd0c89317427b28",
+      "block_sha256": "9b63c64ef4e28ae60e9d8a6a343bed7ff3c2801a878f2eed7fd0c89317427b28",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 78,
+      "reference_sha256": "b3d139d03cca212f107d5d04dee51ef04025d960daafb53ef1c76fc26f22c0c2",
+      "block_sha256": "b3d139d03cca212f107d5d04dee51ef04025d960daafb53ef1c76fc26f22c0c2",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 79,
+      "reference_sha256": "8d33f2cdf5289017e63f8508b7f41ea612c9d4387cd9cc383dbff058c494fd61",
+      "block_sha256": "8d33f2cdf5289017e63f8508b7f41ea612c9d4387cd9cc383dbff058c494fd61",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 80,
+      "reference_sha256": "7bfe552dd75da074254af23a763f3797db78808466d73b3589052674321620aa",
+      "block_sha256": "7bfe552dd75da074254af23a763f3797db78808466d73b3589052674321620aa",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 81,
+      "reference_sha256": "4328bcf8a09512650b823614eb173aa2d511a59607f30f464f75805b9e0d102e",
+      "block_sha256": "4328bcf8a09512650b823614eb173aa2d511a59607f30f464f75805b9e0d102e",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 82,
+      "reference_sha256": "60692ca01192440e6c84d4cd7051021fceb17c53eabeba79ef53d870d8f54361",
+      "block_sha256": "60692ca01192440e6c84d4cd7051021fceb17c53eabeba79ef53d870d8f54361",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 83,
+      "reference_sha256": "cdc72a1119432b43d8ebef745fd71727d83ebc3abe4d0cc4f37fa998c09b46a7",
+      "block_sha256": "cdc72a1119432b43d8ebef745fd71727d83ebc3abe4d0cc4f37fa998c09b46a7",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 84,
+      "reference_sha256": "93000f3d6aae76f2d2d2198de76a9ecca221b1b3a7c687076852a0e1469652ff",
+      "block_sha256": "93000f3d6aae76f2d2d2198de76a9ecca221b1b3a7c687076852a0e1469652ff",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 85,
+      "reference_sha256": "b33109f4ff30fc3c6d25994aa2fa60ffaf12b1d87d0549724126f0c5dfe50e7d",
+      "block_sha256": "b33109f4ff30fc3c6d25994aa2fa60ffaf12b1d87d0549724126f0c5dfe50e7d",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 86,
+      "reference_sha256": "18ba268b0325787eeaf779271e9b29e60fe64887c19a2b9a3f087928d1651d97",
+      "block_sha256": "18ba268b0325787eeaf779271e9b29e60fe64887c19a2b9a3f087928d1651d97",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 87,
+      "reference_sha256": "3aac33b15702e634b04b8fd2660c2bf0d7514196e31d4c2c78f5f2262d2edfd6",
+      "block_sha256": "3aac33b15702e634b04b8fd2660c2bf0d7514196e31d4c2c78f5f2262d2edfd6",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 88,
+      "reference_sha256": "3d4a841ee7472d5383acd2a1054eebb7b23926e19906f0e45113f34402f78172",
+      "block_sha256": "3d4a841ee7472d5383acd2a1054eebb7b23926e19906f0e45113f34402f78172",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 89,
+      "reference_sha256": "abf7ad19eac095af2c30c51863c76c5c4b8bbd103e5bbedafb425123f2d47f4c",
+      "block_sha256": "abf7ad19eac095af2c30c51863c76c5c4b8bbd103e5bbedafb425123f2d47f4c",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 90,
+      "reference_sha256": "7aa60ef7cab99d8b2c29957cc69c95de0a02382dccd71f62da527055a5304c5f",
+      "block_sha256": "7aa60ef7cab99d8b2c29957cc69c95de0a02382dccd71f62da527055a5304c5f",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 91,
+      "reference_sha256": "356c42edaec4a3c5e51d651a6f46f1047954d95e1e562bd01ed6c1a28049a2fa",
+      "block_sha256": "356c42edaec4a3c5e51d651a6f46f1047954d95e1e562bd01ed6c1a28049a2fa",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 92,
+      "reference_sha256": "a1dbf6546e00e9772407aab634cb53897a8f96e6144c8c9948fbcf21dc8bd86e",
+      "block_sha256": "a1dbf6546e00e9772407aab634cb53897a8f96e6144c8c9948fbcf21dc8bd86e",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 93,
+      "reference_sha256": "f698e4fbcd3d479109efe48361328b879822702f8737b721ecd1e52e33c21562",
+      "block_sha256": "f698e4fbcd3d479109efe48361328b879822702f8737b721ecd1e52e33c21562",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 94,
+      "reference_sha256": "f74726f0b850dd7c8666a0a7afb55c16c9cb88e17e3c9d453b390965d103a59c",
+      "block_sha256": "f74726f0b850dd7c8666a0a7afb55c16c9cb88e17e3c9d453b390965d103a59c",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 95,
+      "reference_sha256": "9f5d327ae1eda41dae4517daa367bf8acf568bec4addb1e8eba3cb710f580ed4",
+      "block_sha256": "9f5d327ae1eda41dae4517daa367bf8acf568bec4addb1e8eba3cb710f580ed4",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 96,
+      "reference_sha256": "5fe4f33919f53caad5bfdf7ee8f71faf886cac5041e3fb28668d495210242f79",
+      "block_sha256": "5fe4f33919f53caad5bfdf7ee8f71faf886cac5041e3fb28668d495210242f79",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 97,
+      "reference_sha256": "1164bc1a5c4c9d83bf198c6185deb8aaac2520cb9ce36c50418788b5c712e043",
+      "block_sha256": "1164bc1a5c4c9d83bf198c6185deb8aaac2520cb9ce36c50418788b5c712e043",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 98,
+      "reference_sha256": "3dc363bed8b8a3840e45acc809132fdd1e6220504d3d82b87e8266aa9befca74",
+      "block_sha256": "3dc363bed8b8a3840e45acc809132fdd1e6220504d3d82b87e8266aa9befca74",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 99,
+      "reference_sha256": "429400478838acc74bb220b7effcb5e02f69129778626b54889fec91d1d7f91e",
+      "block_sha256": "429400478838acc74bb220b7effcb5e02f69129778626b54889fec91d1d7f91e",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 100,
+      "reference_sha256": "bd04360d28309833ad304d989ce1f9dcdbb200661840f3812ffbc99404b17717",
+      "block_sha256": "bd04360d28309833ad304d989ce1f9dcdbb200661840f3812ffbc99404b17717",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 101,
+      "reference_sha256": "1a592bf0e484d3867ba0888cc66fd5c7368b3bfe824e6ea166045ebf5c020da9",
+      "block_sha256": "1a592bf0e484d3867ba0888cc66fd5c7368b3bfe824e6ea166045ebf5c020da9",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 102,
+      "reference_sha256": "5aaa04a1c0dae89a4e91777acb79c058dcfebce99fdd28f8b9a001d2b4649446",
+      "block_sha256": "5aaa04a1c0dae89a4e91777acb79c058dcfebce99fdd28f8b9a001d2b4649446",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 103,
+      "reference_sha256": "2e245ea41c740cb0ef72d3a61ae86216cd6b7cf7abfe794e012c1a048e966c2d",
+      "block_sha256": "2e245ea41c740cb0ef72d3a61ae86216cd6b7cf7abfe794e012c1a048e966c2d",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 104,
+      "reference_sha256": "37a297aa32f3331aa1bc4709df4271a00a78eb60d87bc83ed373739aafebb289",
+      "block_sha256": "37a297aa32f3331aa1bc4709df4271a00a78eb60d87bc83ed373739aafebb289",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 105,
+      "reference_sha256": "3901cdd78bfaa8bf3903f122599251ca950483750ddfebe707ddda6f9f97ef7c",
+      "block_sha256": "3901cdd78bfaa8bf3903f122599251ca950483750ddfebe707ddda6f9f97ef7c",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 106,
+      "reference_sha256": "f6ab0153b81ca02682fdb0460d0a1c28640aad19da3420b517a479772a0cea1e",
+      "block_sha256": "f6ab0153b81ca02682fdb0460d0a1c28640aad19da3420b517a479772a0cea1e",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 107,
+      "reference_sha256": "d6857608b605764141313f6a6845d01eeed86821a62ac042b45a0e6b2bbd903e",
+      "block_sha256": "d6857608b605764141313f6a6845d01eeed86821a62ac042b45a0e6b2bbd903e",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 108,
+      "reference_sha256": "b083f75220371c0cb31ba451ebd6628069692d945b4df0814f902015fd761dea",
+      "block_sha256": "b083f75220371c0cb31ba451ebd6628069692d945b4df0814f902015fd761dea",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 109,
+      "reference_sha256": "1795bdb18a6e149c0560db17ca7ad6bb0fcd57c8daa700abd1923c64412f5745",
+      "block_sha256": "1795bdb18a6e149c0560db17ca7ad6bb0fcd57c8daa700abd1923c64412f5745",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 110,
+      "reference_sha256": "466ddc124bff7573f77cd5ed7c94b456a0b7c366125e773ad72bd569ebb9c2f7",
+      "block_sha256": "466ddc124bff7573f77cd5ed7c94b456a0b7c366125e773ad72bd569ebb9c2f7",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 111,
+      "reference_sha256": "b6f5e02a4380b804e55e8aa95516c7d979885b60572480369ae72930a8f3454c",
+      "block_sha256": "b6f5e02a4380b804e55e8aa95516c7d979885b60572480369ae72930a8f3454c",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 112,
+      "reference_sha256": "3bdf2dae93073c6410c04b5c29134ba708d593eca818e7bb73174a89acb251a9",
+      "block_sha256": "3bdf2dae93073c6410c04b5c29134ba708d593eca818e7bb73174a89acb251a9",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 113,
+      "reference_sha256": "89a25e84b8b0254933ad008bd172fc8d5ed055f3b7d1e4a0c65abe9efe52fe59",
+      "block_sha256": "89a25e84b8b0254933ad008bd172fc8d5ed055f3b7d1e4a0c65abe9efe52fe59",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 114,
+      "reference_sha256": "08f2477f1dfcbe9b4dd314ea29e8bb0278ba05787fe47ae7bde1a48cd9b370aa",
+      "block_sha256": "08f2477f1dfcbe9b4dd314ea29e8bb0278ba05787fe47ae7bde1a48cd9b370aa",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 115,
+      "reference_sha256": "89bb6e946cd588c09eebb8dbcb67a0a1c4036abd037a683d253166233703b55d",
+      "block_sha256": "89bb6e946cd588c09eebb8dbcb67a0a1c4036abd037a683d253166233703b55d",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 116,
+      "reference_sha256": "a1401c91f2b9c613796aa1ab27dca9194c50adea104a64a6cc37f17dcdc3d798",
+      "block_sha256": "a1401c91f2b9c613796aa1ab27dca9194c50adea104a64a6cc37f17dcdc3d798",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 117,
+      "reference_sha256": "85de22d5cb1ff20cda12ac7bd7354d9e683adb40f2865ce2204dc466d9e26bd4",
+      "block_sha256": "85de22d5cb1ff20cda12ac7bd7354d9e683adb40f2865ce2204dc466d9e26bd4",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 118,
+      "reference_sha256": "2767c62ee73c362e586489189dab2c62d529ad9ffa97462c8de06b8fd7bce0ae",
+      "block_sha256": "2767c62ee73c362e586489189dab2c62d529ad9ffa97462c8de06b8fd7bce0ae",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 119,
+      "reference_sha256": "815c341f931bcb1bb115a03cf4cae2c6b935263c2f9f59f157a8adff93e30e6a",
+      "block_sha256": "815c341f931bcb1bb115a03cf4cae2c6b935263c2f9f59f157a8adff93e30e6a",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 120,
+      "reference_sha256": "cca00bcc91bc5ab956c9333af5022242dcfe4e5ebbaf65d24c2ac0b8662322c3",
+      "block_sha256": "cca00bcc91bc5ab956c9333af5022242dcfe4e5ebbaf65d24c2ac0b8662322c3",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 121,
+      "reference_sha256": "b05d42d2b741f97e7ab7c324515cdd8137bc0c4da89ba6fae6290cade27e2e8c",
+      "block_sha256": "b05d42d2b741f97e7ab7c324515cdd8137bc0c4da89ba6fae6290cade27e2e8c",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 122,
+      "reference_sha256": "58fc6f8dc5586cd473909b922e14417999951353d14ae0ef349af8858fcf90c9",
+      "block_sha256": "58fc6f8dc5586cd473909b922e14417999951353d14ae0ef349af8858fcf90c9",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 123,
+      "reference_sha256": "fd4e25d1e576fc07570329400d762d5887813819ab79c55864f13a137a7ad2a7",
+      "block_sha256": "fd4e25d1e576fc07570329400d762d5887813819ab79c55864f13a137a7ad2a7",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 124,
+      "reference_sha256": "2f8b26d2b77d2d32d2c17fe71b1f96a966e7250ca7a9655d2d9af5f94c979785",
+      "block_sha256": "2f8b26d2b77d2d32d2c17fe71b1f96a966e7250ca7a9655d2d9af5f94c979785",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 125,
+      "reference_sha256": "472121f4a8daa573b4bdafd00b89319883aaee3ce1da3f27ea7615249af11239",
+      "block_sha256": "472121f4a8daa573b4bdafd00b89319883aaee3ce1da3f27ea7615249af11239",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 126,
+      "reference_sha256": "848398314eb4f697cbddc97f89d2334e9cb53cee598397895f77a06f2de17da9",
+      "block_sha256": "848398314eb4f697cbddc97f89d2334e9cb53cee598397895f77a06f2de17da9",
+      "equal": true
+    },
+    {
+      "generated_prefix_tokens": 127,
+      "reference_sha256": "0ce7cd4be929631dfdf25086baa155484388c146c6cfb242daf43543f7e2a861",
+      "block_sha256": "0ce7cd4be929631dfdf25086baa155484388c146c6cfb242daf43543f7e2a861",
+      "equal": true
+    }
+  ],
+  "timing": {
+    "observer_hashing_in_timed_region": false,
+    "note": "Separate uninstrumented pass; audit_wall_s above includes KV hash callbacks and is not benchmark data.",
+    "paired_rounds": [
+      {
+        "round": 0,
+        "method_order": [
+          "b1_fixed_row_block",
+          "b1_fixed_row_singleton",
+          "original_bnb_greedy"
+        ],
+        "methods": {
+          "b1_fixed_row_block": {
+            "token_ids": [
+              362,
+              61390,
+              5562,
+              6941,
+              576,
+              685,
+              25882,
+              1283,
+              1660,
+              4201,
+              553,
+              264,
+              1803,
+              11,
+              4201,
+              389,
+              279,
+              1968,
+              11,
+              323,
+              26918,
+              13675,
+              13,
+              2932,
+              572,
+              1730,
+              3040,
+              2849,
+              2937,
+              11,
+              34806,
+              15532,
+              714,
+              13675,
+              11,
+              323,
+              374,
+              1431,
+              12308,
+              2453,
+              518,
+              264,
+              68240,
+              8777,
+              13,
+              576,
+              685,
+              594,
+              90713,
+              19661,
+              323,
+              14195,
+              6457,
+              3880,
+              614,
+              14606,
+              36319,
+              8869,
+              311,
+              1824,
+              1059,
+              6380,
+              624,
+              785,
+              4549,
+              16555,
+              279,
+              15050,
+              3364,
+              315,
+              264,
+              61390,
+              5562,
+              6941,
+              576,
+              685,
+              879,
+              25882,
+              264,
+              4013,
+              315,
+              53186,
+              4357,
+              11,
+              2670,
+              1660,
+              4201,
+              553,
+              264,
+              1803,
+              11,
+              4201,
+              389,
+              279,
+              1968,
+              11,
+              323,
+              26918,
+              13675,
+              13,
+              17715,
+              1493,
+              4855,
+              24181,
+              11449,
+              11,
+              576,
+              685,
+              8975,
+              311,
+              17697,
+              323,
+              374,
+              1431,
+              12308,
+              2453,
+              518,
+              264,
+              68240,
+              8777,
+              13,
+              6252,
+              3364,
+              702,
+              14606,
+              36319,
+              8869,
+              311
+            ],
+            "total_s": 4.159501578003983,
+            "prefill_s": 0.1903769290074706,
+            "verify_s": 3.9495079800253734,
+            "accepted_draft_tokens": 26,
+            "draft_tokens": 56
+          },
+          "b1_fixed_row_singleton": {
+            "token_ids": [
+              362,
+              61390,
+              5562,
+              6941,
+              576,
+              685,
+              25882,
+              1283,
+              1660,
+              4201,
+              553,
+              264,
+              1803,
+              11,
+              4201,
+              389,
+              279,
+              1968,
+              11,
+              323,
+              26918,
+              13675,
+              13,
+              2932,
+              572,
+              1730,
+              3040,
+              2849,
+              2937,
+              11,
+              34806,
+              15532,
+              714,
+              13675,
+              11,
+              323,
+              374,
+              1431,
+              12308,
+              2453,
+              518,
+              264,
+              68240,
+              8777,
+              13,
+              576,
+              685,
+              594,
+              90713,
+              19661,
+              323,
+              14195,
+              6457,
+              3880,
+              614,
+              14606,
+              36319,
+              8869,
+              311,
+              1824,
+              1059,
+              6380,
+              624,
+              785,
+              4549,
+              16555,
+              279,
+              15050,
+              3364,
+              315,
+              264,
+              61390,
+              5562,
+              6941,
+              576,
+              685,
+              879,
+              25882,
+              264,
+              4013,
+              315,
+              53186,
+              4357,
+              11,
+              2670,
+              1660,
+              4201,
+              553,
+              264,
+              1803,
+              11,
+              4201,
+              389,
+              279,
+              1968,
+              11,
+              323,
+              26918,
+              13675,
+              13,
+              17715,
+              1493,
+              4855,
+              24181,
+              11449,
+              11,
+              576,
+              685,
+              8975,
+              311,
+              17697,
+              323,
+              374,
+              1431,
+              12308,
+              2453,
+              518,
+              264,
+              68240,
+              8777,
+              13,
+              6252,
+              3364,
+              702,
+              14606,
+              36319,
+              8869,
+              311
+            ],
+            "total_s": 4.653554393997183,
+            "prefill_s": 0.18998680300137494
+          },
+          "original_bnb_greedy": {
+            "token_ids": [
+              362,
+              61390,
+              5562,
+              6941,
+              576,
+              685,
+              25882,
+              1283,
+              1660,
+              4201,
+              553,
+              264,
+              1803,
+              11,
+              4201,
+              389,
+              279,
+              1968,
+              11,
+              323,
+              26918,
+              13675,
+              13,
+              2932,
+              572,
+              1730,
+              3040,
+              2849,
+              1283,
+              1059,
+              9981,
+              4545,
+              323,
+              374,
+              1431,
+              12308,
+              6380,
+              518,
+              264,
+              68240,
+              8777,
+              13,
+              576,
+              685,
+              594,
+              19661,
+              323,
+              14195,
+              2453,
+              614,
+              14606,
+              36319,
+              8869,
+              311,
+              1492,
+              3421,
+              1059,
+              6457,
+              18024,
+              624,
+              785,
+              4549,
+              16555,
+              279,
+              90713,
+              19661,
+              315,
+              264,
+              5562,
+              6941,
+              576,
+              685,
+              11,
+              879,
+              572,
+              4201,
+              553,
+              264,
+              1803,
+              11,
+              4201,
+              389,
+              279,
+              1968,
+              11,
+              323,
+              26918,
+              13675,
+              714,
+              8975,
+              311,
+              17697,
+              323,
+              572,
+              1730,
+              3040,
+              2849,
+              2937,
+              13,
+              576,
+              5562,
+              11,
+              1431,
+              12308,
+              6380,
+              518,
+              264,
+              68240,
+              8777,
+              11,
+              702,
+              14606,
+              36319,
+              8869,
+              311,
+              1492,
+              3421,
+              1059,
+              6457,
+              18024,
+              13,
+              151643,
+              33975,
+              25,
+              2980,
+              498,
+              3291,
+              752
+            ],
+            "total_s": 3.3555994759954046,
+            "prefill_s": 0.1952360630093608,
+            "decode_s": 3.160359720000997
+          }
+        },
+        "block_matches_b1": true,
+        "block_matches_original_bnb": false
+      }
+    ],
+    "block_speedup_vs_b1_samples": [
+      1.1187769271697887
+    ],
+    "block_speedup_vs_original_bnb_samples": [
+      0.8067311462845156
+    ],
+    "geometric_mean_speedup_vs_b1": 1.1187769271697887,
+    "geometric_mean_speedup_vs_original_bnb": 0.8067311462845156
+  }
+}

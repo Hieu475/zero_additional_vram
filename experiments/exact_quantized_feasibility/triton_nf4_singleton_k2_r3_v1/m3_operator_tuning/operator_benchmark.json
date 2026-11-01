@@ -1,0 +1,534 @@
+{
+  "schema": "zassd-nf4-k2r3-m3-operator-tile-benchmark-v1",
+  "status": "finite operator-only screen at actual K2/R3 M=3; no runtime schedule changed",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "schedule_candidates": [
+    {
+      "block_n": 8,
+      "block_k": 256,
+      "num_warps": 1
+    },
+    {
+      "block_n": 8,
+      "block_k": 256,
+      "num_warps": 2
+    },
+    {
+      "block_n": 16,
+      "block_k": 256,
+      "num_warps": 1
+    },
+    {
+      "block_n": 16,
+      "block_k": 256,
+      "num_warps": 2
+    },
+    {
+      "block_n": 16,
+      "block_k": 256,
+      "num_warps": 4
+    },
+    {
+      "block_n": 32,
+      "block_k": 256,
+      "num_warps": 1
+    },
+    {
+      "block_n": 16,
+      "block_k": 128,
+      "num_warps": 1
+    }
+  ],
+  "iterations_per_sample": 15,
+  "alternating_rounds": 7,
+  "reference_schedule": "N=16/K=256/num_warps=1; existing experimental K2/R3 kernel",
+  "interpretation_limits": [
+    "Only first-layer representative linear shapes were measured; full-model exactness and speed were not tested for alternative tiles.",
+    "A candidate that is shape-invariant to its own singleton can still differ from the current reference schedule; cross-schedule bitwise equality is recorded separately.",
+    "CUDA-event results are finite operator measurements on one RTX 4050."
+  ],
+  "results": {
+    "q_proj_2048x2048": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "measured_rows": 3,
+      "physical_rows": 3,
+      "correctness": {
+        "n8_k256_w1_m1_rowwise_singleton_equal": true,
+        "n8_k256_w1_m2_rowwise_singleton_equal": true,
+        "n8_k256_w1_m3_rowwise_singleton_equal": true,
+        "n8_k256_w2_m1_rowwise_singleton_equal": true,
+        "n8_k256_w2_m2_rowwise_singleton_equal": true,
+        "n8_k256_w2_m3_rowwise_singleton_equal": true,
+        "n16_k256_w1_m1_rowwise_singleton_equal": true,
+        "n16_k256_w1_m2_rowwise_singleton_equal": true,
+        "n16_k256_w1_m3_rowwise_singleton_equal": true,
+        "n16_k256_w2_m1_rowwise_singleton_equal": true,
+        "n16_k256_w2_m2_rowwise_singleton_equal": true,
+        "n16_k256_w2_m3_rowwise_singleton_equal": true,
+        "n16_k256_w4_m1_rowwise_singleton_equal": true,
+        "n16_k256_w4_m2_rowwise_singleton_equal": true,
+        "n16_k256_w4_m3_rowwise_singleton_equal": true,
+        "n32_k256_w1_m1_rowwise_singleton_equal": true,
+        "n32_k256_w1_m2_rowwise_singleton_equal": true,
+        "n32_k256_w1_m3_rowwise_singleton_equal": true,
+        "n16_k128_w1_m1_rowwise_singleton_equal": true,
+        "n16_k128_w1_m2_rowwise_singleton_equal": true,
+        "n16_k128_w1_m3_rowwise_singleton_equal": true,
+        "n8_k256_w1_m3_bitwise_equals_n16_k256_w1": false,
+        "n8_k256_w2_m3_bitwise_equals_n16_k256_w1": false,
+        "n16_k256_w2_m3_bitwise_equals_n16_k256_w1": false,
+        "n16_k256_w4_m3_bitwise_equals_n16_k256_w1": false,
+        "n32_k256_w1_m3_bitwise_equals_n16_k256_w1": false,
+        "n16_k128_w1_m3_bitwise_equals_n16_k256_w1": false
+      },
+      "median_cuda_ms_at_m3": {
+        "n8_k256_w1": 0.03979946772257487,
+        "n8_k256_w2": 0.041375998655954996,
+        "n16_k256_w1": 0.039867734909057616,
+        "n16_k256_w2": 0.037956265608469646,
+        "n16_k256_w4": 0.04150613149007162,
+        "n32_k256_w1": 0.051541332403818765,
+        "n16_k128_w1": 0.04109653234481812
+      },
+      "ratio_vs_n16_k256_w1": {
+        "n8_k256_w1": 0.998287658262039,
+        "n8_k256_w2": 1.0378316889669776,
+        "n16_k256_w1": 1.0,
+        "n16_k256_w2": 0.9520547303490347,
+        "n16_k256_w4": 1.0410958030284727,
+        "n32_k256_w1": 1.292808144766434,
+        "n16_k128_w1": 1.0308218522713546
+      },
+      "samples_ms": {
+        "n8_k256_w1": [
+          0.04206720193227132,
+          0.03979946772257487,
+          0.03979946772257487,
+          0.039654401938120525,
+          0.03979946772257487,
+          0.03959253231684367,
+          0.03979946772257487
+        ],
+        "n8_k256_w2": [
+          0.04157439867655436,
+          0.0414250651995341,
+          0.041375998655954996,
+          0.041375998655954996,
+          0.041356801986694336,
+          0.041305601596832275,
+          0.04266666571299235
+        ],
+        "n16_k256_w1": [
+          0.040209066867828366,
+          0.03993599812189738,
+          0.039867734909057616,
+          0.041365333398183185,
+          0.03986560106277466,
+          0.039741865793863934,
+          0.03979093233744303
+        ],
+        "n16_k256_w2": [
+          0.03845333258310954,
+          0.037956265608469646,
+          0.038158933321634926,
+          0.03809279998143514,
+          0.037894399960835774,
+          0.03784106572469075,
+          0.037887998421986896
+        ],
+        "n16_k256_w4": [
+          0.04150613149007162,
+          0.04150613149007162,
+          0.04164266586303711,
+          0.04156373341878255,
+          0.03979946772257487,
+          0.04143999814987183,
+          0.04130133390426636
+        ],
+        "n32_k256_w1": [
+          0.05180799961090088,
+          0.04991573492685954,
+          0.051837865511576334,
+          0.05181440114974976,
+          0.04983466863632202,
+          0.05140479803085327,
+          0.051541332403818765
+        ],
+        "n16_k128_w1": [
+          0.04096000194549561,
+          0.10779306888580323,
+          0.04109653234481812,
+          0.04108800093332927,
+          0.041154134273529056,
+          0.04112000068028768,
+          0.04102826515833537
+        ]
+      }
+    },
+    "k_proj_2048x512": {
+      "in_features": 2048,
+      "out_features": 256,
+      "measured_rows": 3,
+      "physical_rows": 3,
+      "correctness": {
+        "n8_k256_w1_m1_rowwise_singleton_equal": true,
+        "n8_k256_w1_m2_rowwise_singleton_equal": true,
+        "n8_k256_w1_m3_rowwise_singleton_equal": true,
+        "n8_k256_w2_m1_rowwise_singleton_equal": true,
+        "n8_k256_w2_m2_rowwise_singleton_equal": true,
+        "n8_k256_w2_m3_rowwise_singleton_equal": true,
+        "n16_k256_w1_m1_rowwise_singleton_equal": true,
+        "n16_k256_w1_m2_rowwise_singleton_equal": true,
+        "n16_k256_w1_m3_rowwise_singleton_equal": true,
+        "n16_k256_w2_m1_rowwise_singleton_equal": true,
+        "n16_k256_w2_m2_rowwise_singleton_equal": true,
+        "n16_k256_w2_m3_rowwise_singleton_equal": true,
+        "n16_k256_w4_m1_rowwise_singleton_equal": true,
+        "n16_k256_w4_m2_rowwise_singleton_equal": true,
+        "n16_k256_w4_m3_rowwise_singleton_equal": true,
+        "n32_k256_w1_m1_rowwise_singleton_equal": true,
+        "n32_k256_w1_m2_rowwise_singleton_equal": true,
+        "n32_k256_w1_m3_rowwise_singleton_equal": true,
+        "n16_k128_w1_m1_rowwise_singleton_equal": true,
+        "n16_k128_w1_m2_rowwise_singleton_equal": true,
+        "n16_k128_w1_m3_rowwise_singleton_equal": true,
+        "n8_k256_w1_m3_bitwise_equals_n16_k256_w1": false,
+        "n8_k256_w2_m3_bitwise_equals_n16_k256_w1": true,
+        "n16_k256_w2_m3_bitwise_equals_n16_k256_w1": false,
+        "n16_k256_w4_m3_bitwise_equals_n16_k256_w1": true,
+        "n32_k256_w1_m3_bitwise_equals_n16_k256_w1": false,
+        "n16_k128_w1_m3_bitwise_equals_n16_k256_w1": false
+      },
+      "median_cuda_ms_at_m3": {
+        "n8_k256_w1": 0.024115200837453207,
+        "n8_k256_w2": 0.02430079976717631,
+        "n16_k256_w1": 0.023871999979019166,
+        "n16_k256_w2": 0.02391466697057088,
+        "n16_k256_w4": 0.02349226673444112,
+        "n32_k256_w1": 0.03540906508763631,
+        "n16_k128_w1": 0.02373973329861959
+      },
+      "ratio_vs_n16_k256_w1": {
+        "n8_k256_w1": 1.0101877035291467,
+        "n8_k256_w2": 1.0179624576296085,
+        "n16_k256_w1": 1.0,
+        "n16_k256_w2": 1.0017873237093338,
+        "n16_k256_w4": 0.9840929438290973,
+        "n32_k256_w1": 1.483288585738813,
+        "n16_k128_w1": 0.9944593381151213
+      },
+      "samples_ms": {
+        "n8_k256_w1": [
+          0.026649600267410277,
+          0.02348373333613078,
+          0.024576000372568765,
+          0.023886932929356893,
+          0.024177066485087075,
+          0.024115200837453207,
+          0.023756800095240276
+        ],
+        "n8_k256_w2": [
+          0.023756800095240276,
+          0.024972800413767496,
+          0.02305919925371806,
+          0.024573866526285806,
+          0.02430079976717631,
+          0.024358399709065757,
+          0.023347200949986775
+        ],
+        "n16_k256_w1": [
+          0.024701867500940958,
+          0.023603200912475586,
+          0.023347200949986775,
+          0.023552000522613525,
+          0.023957333962122598,
+          0.024098134040832518,
+          0.023871999979019166
+        ],
+        "n16_k256_w2": [
+          0.02414720058441162,
+          0.0264192004998525,
+          0.023756800095240276,
+          0.02321066657702128,
+          0.02397226691246033,
+          0.02391466697057088,
+          0.02259626587231954
+        ],
+        "n16_k256_w4": [
+          0.024576000372568765,
+          0.022937599817911783,
+          0.02339199980099996,
+          0.023961599667867026,
+          0.023961599667867026,
+          0.02349226673444112,
+          0.022323199113210044
+        ],
+        "n32_k256_w1": [
+          0.03556693394978841,
+          0.03536213239034017,
+          0.03543039957682292,
+          0.03535999854405721,
+          0.03543893496195475,
+          0.03534719944000244,
+          0.03540906508763631
+        ],
+        "n16_k128_w1": [
+          0.02373973329861959,
+          0.02375040054321289,
+          0.023487999041875204,
+          0.024780799945195515,
+          0.016861865917841595,
+          0.01686826745669047,
+          0.024106667439142863
+        ]
+      }
+    },
+    "gate_proj_2048x11008": {
+      "in_features": 2048,
+      "out_features": 11008,
+      "measured_rows": 3,
+      "physical_rows": 3,
+      "correctness": {
+        "n8_k256_w1_m1_rowwise_singleton_equal": true,
+        "n8_k256_w1_m2_rowwise_singleton_equal": true,
+        "n8_k256_w1_m3_rowwise_singleton_equal": true,
+        "n8_k256_w2_m1_rowwise_singleton_equal": true,
+        "n8_k256_w2_m2_rowwise_singleton_equal": true,
+        "n8_k256_w2_m3_rowwise_singleton_equal": true,
+        "n16_k256_w1_m1_rowwise_singleton_equal": true,
+        "n16_k256_w1_m2_rowwise_singleton_equal": true,
+        "n16_k256_w1_m3_rowwise_singleton_equal": true,
+        "n16_k256_w2_m1_rowwise_singleton_equal": true,
+        "n16_k256_w2_m2_rowwise_singleton_equal": true,
+        "n16_k256_w2_m3_rowwise_singleton_equal": true,
+        "n16_k256_w4_m1_rowwise_singleton_equal": true,
+        "n16_k256_w4_m2_rowwise_singleton_equal": true,
+        "n16_k256_w4_m3_rowwise_singleton_equal": true,
+        "n32_k256_w1_m1_rowwise_singleton_equal": true,
+        "n32_k256_w1_m2_rowwise_singleton_equal": true,
+        "n32_k256_w1_m3_rowwise_singleton_equal": true,
+        "n16_k128_w1_m1_rowwise_singleton_equal": true,
+        "n16_k128_w1_m2_rowwise_singleton_equal": true,
+        "n16_k128_w1_m3_rowwise_singleton_equal": true,
+        "n8_k256_w1_m3_bitwise_equals_n16_k256_w1": false,
+        "n8_k256_w2_m3_bitwise_equals_n16_k256_w1": false,
+        "n16_k256_w2_m3_bitwise_equals_n16_k256_w1": false,
+        "n16_k256_w4_m3_bitwise_equals_n16_k256_w1": false,
+        "n32_k256_w1_m3_bitwise_equals_n16_k256_w1": false,
+        "n16_k128_w1_m3_bitwise_equals_n16_k256_w1": false
+      },
+      "median_cuda_ms_at_m3": {
+        "n8_k256_w1": 0.19442346890767415,
+        "n8_k256_w2": 0.20889600118001303,
+        "n16_k256_w1": 0.17013546625773113,
+        "n16_k256_w2": 0.1911466598510742,
+        "n16_k256_w4": 0.20534613927205403,
+        "n32_k256_w1": 0.26042453447977704,
+        "n16_k128_w1": 0.1806335926055908
+      },
+      "ratio_vs_n16_k256_w1": {
+        "n8_k256_w1": 1.1427568465539697,
+        "n8_k256_w2": 1.2278216046004493,
+        "n16_k256_w1": 1.0,
+        "n16_k256_w2": 1.1234968466922357,
+        "n16_k256_w4": 1.2069566903880213,
+        "n32_k256_w1": 1.5306892807715398,
+        "n16_k128_w1": 1.0617045145187807
+      },
+      "samples_ms": {
+        "n8_k256_w1": [
+          0.19574186007181804,
+          0.19442346890767415,
+          0.1942186673482259,
+          0.19399040540059406,
+          0.1946282704671224,
+          0.19447894096374513,
+          0.19417600631713866
+        ],
+        "n8_k256_w2": [
+          0.2818645477294922,
+          0.2086911996205648,
+          0.20896426836649576,
+          0.20874667167663574,
+          0.20896426836649576,
+          0.20889600118001303,
+          0.20889172554016114
+        ],
+        "n16_k256_w1": [
+          0.1682773272196452,
+          0.16841386159261068,
+          0.17005227406819662,
+          0.17025705973307292,
+          0.2423466682434082,
+          0.17013546625773113,
+          0.18071680068969725
+        ],
+        "n16_k256_w2": [
+          0.18056532541910808,
+          0.2522453308105469,
+          0.18070185979207357,
+          0.1911466598510742,
+          0.17872212727864584,
+          0.19217066764831542,
+          0.19162453015645345
+        ],
+        "n16_k256_w4": [
+          0.2050048033396403,
+          0.20561493237813314,
+          0.20568745930989582,
+          0.20534613927205403,
+          0.20541440645853679,
+          0.2050048033396403,
+          0.20520960489908854
+        ],
+        "n32_k256_w1": [
+          0.2601642608642578,
+          0.26104532877604164,
+          0.25995945930480957,
+          0.2603669325510661,
+          0.2605738639831543,
+          0.26042453447977704,
+          0.26077866554260254
+        ],
+        "n16_k128_w1": [
+          0.1806335926055908,
+          0.18055893580118815,
+          0.18076799710591634,
+          0.18108587265014647,
+          0.24999893506368,
+          0.17872212727864584,
+          0.18056532541910808
+        ]
+      }
+    },
+    "down_proj_11008x2048": {
+      "in_features": 11008,
+      "out_features": 2048,
+      "measured_rows": 3,
+      "physical_rows": 3,
+      "correctness": {
+        "n8_k256_w1_m1_rowwise_singleton_equal": true,
+        "n8_k256_w1_m2_rowwise_singleton_equal": true,
+        "n8_k256_w1_m3_rowwise_singleton_equal": true,
+        "n8_k256_w2_m1_rowwise_singleton_equal": true,
+        "n8_k256_w2_m2_rowwise_singleton_equal": true,
+        "n8_k256_w2_m3_rowwise_singleton_equal": true,
+        "n16_k256_w1_m1_rowwise_singleton_equal": true,
+        "n16_k256_w1_m2_rowwise_singleton_equal": true,
+        "n16_k256_w1_m3_rowwise_singleton_equal": true,
+        "n16_k256_w2_m1_rowwise_singleton_equal": true,
+        "n16_k256_w2_m2_rowwise_singleton_equal": true,
+        "n16_k256_w2_m3_rowwise_singleton_equal": true,
+        "n16_k256_w4_m1_rowwise_singleton_equal": true,
+        "n16_k256_w4_m2_rowwise_singleton_equal": true,
+        "n16_k256_w4_m3_rowwise_singleton_equal": true,
+        "n32_k256_w1_m1_rowwise_singleton_equal": true,
+        "n32_k256_w1_m2_rowwise_singleton_equal": true,
+        "n32_k256_w1_m3_rowwise_singleton_equal": true,
+        "n16_k128_w1_m1_rowwise_singleton_equal": true,
+        "n16_k128_w1_m2_rowwise_singleton_equal": true,
+        "n16_k128_w1_m3_rowwise_singleton_equal": true,
+        "n8_k256_w1_m3_bitwise_equals_n16_k256_w1": false,
+        "n8_k256_w2_m3_bitwise_equals_n16_k256_w1": false,
+        "n16_k256_w2_m3_bitwise_equals_n16_k256_w1": false,
+        "n16_k256_w4_m3_bitwise_equals_n16_k256_w1": false,
+        "n32_k256_w1_m3_bitwise_equals_n16_k256_w1": false,
+        "n16_k128_w1_m3_bitwise_equals_n16_k256_w1": false
+      },
+      "median_cuda_ms_at_m3": {
+        "n8_k256_w1": 0.2062122662862142,
+        "n8_k256_w2": 0.21243093808492025,
+        "n16_k256_w1": 0.2075818697611491,
+        "n16_k256_w2": 0.19967999458312988,
+        "n16_k256_w4": 0.20445866584777833,
+        "n32_k256_w1": 0.28131628036499023,
+        "n16_k128_w1": 0.20745174090067545
+      },
+      "ratio_vs_n16_k256_w1": {
+        "n8_k256_w1": 0.9934021045454943,
+        "n8_k256_w2": 1.0233597872942886,
+        "n16_k256_w1": 1.0,
+        "n16_k256_w2": 0.9619336930189935,
+        "n16_k256_w4": 0.9849543511821893,
+        "n32_k256_w1": 1.3552064093491523,
+        "n16_k128_w1": 0.9993731202988807
+      },
+      "samples_ms": {
+        "n8_k256_w1": [
+          0.20712960561116536,
+          0.20568745930989582,
+          0.20589226086934406,
+          0.2062122662862142,
+          0.21635626157124838,
+          0.21676373481750488,
+          0.20604799588521322
+        ],
+        "n8_k256_w2": [
+          0.21442559560139973,
+          0.22173013687133789,
+          0.21224106152852376,
+          0.2121280034383138,
+          0.212445863087972,
+          0.212172794342041,
+          0.21243093808492025
+        ],
+        "n16_k256_w1": [
+          0.2077354590098063,
+          0.20714453061421711,
+          0.20752213795979818,
+          0.20759894053141276,
+          0.20753067334493,
+          0.2075818697611491,
+          0.20759894053141276
+        ],
+        "n16_k256_w2": [
+          0.2621290683746338,
+          0.19086933135986328,
+          0.20036266644795736,
+          0.19064319928487142,
+          0.19967999458312988,
+          0.20022613207499187,
+          0.19092267354329426
+        ],
+        "n16_k256_w4": [
+          0.20241066614786785,
+          0.20402347246805827,
+          0.20445866584777833,
+          0.20451626777648926,
+          0.20445866584777833,
+          0.2051413377126058,
+          0.2047317345937093
+        ],
+        "n32_k256_w1": [
+          0.2810538609822591,
+          0.2811903953552246,
+          0.2811221440633138,
+          0.2813738822937012,
+          0.28180052439371744,
+          0.281442133585612,
+          0.28131628036499023
+        ],
+        "n16_k128_w1": [
+          0.2786645253499349,
+          0.20507307052612306,
+          0.2099199930826823,
+          0.20745174090067545,
+          0.2782464027404785,
+          0.2054848035176595,
+          0.20723199844360352
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "classification": "development-only 256-token repeat; timing rounds nested in two sessions per prompt; not certification",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "configuration": {
+    "K": 2,
+    "R": 3,
+    "physical_rows": 3,
+    "max_new_tokens": 256,
+    "strategy": "triton_nf4_fixed_three_rows_group_scale_packed"
+  },
+  "correctness_vs_b1": {
+    "sessions_matched": 8,
+    "sessions_total": 8,
+    "state_prefixes_matched": 2048,
+    "state_prefixes_expected": 2048
+  },
+  "performance": {
+    "geomean_speedup_vs_b1": 1.7093605267334728,
+    "geomean_speedup_vs_original_bnb": 1.5337946020828994,
+    "speedup_ranges": {
+      "vs_b1": [
+        1.295317464492286,
+        2.7905605664310538
+      ],
+      "vs_original_bnb": [
+        1.1517580768967708,
+        2.478587468658341
+      ]
+    },
+    "bnb_token_match_timing_rounds": 4,
+    "timing_rounds": 16,
+    "prompts": 4,
+    "unique_session_acceptance": {
+      "accepted": 824,
+      "drafted": 1322,
+      "rate": 0.6232980332829047
+    }
+  },
+  "prompt_clusters": {
+    "HumanEval/112": {
+      "sessions": [
+        38,
+        39
+      ],
+      "timing_rounds": 4,
+      "geomean_speedup_vs_b1": 2.750934784124453,
+      "geomean_speedup_vs_original_bnb": 2.445240654417684,
+      "bnb_token_match_rounds": 0
+    },
+    "HumanEval/113": {
+      "sessions": [
+        38,
+        39
+      ],
+      "timing_rounds": 4,
+      "geomean_speedup_vs_b1": 1.709348100838797,
+      "geomean_speedup_vs_original_bnb": 1.5260672897650307,
+      "bnb_token_match_rounds": 4
+    },
+    "HumanEval/114": {
+      "sessions": [
+        38,
+        39
+      ],
+      "timing_rounds": 4,
+      "geomean_speedup_vs_b1": 1.36355821910283,
+      "geomean_speedup_vs_original_bnb": 1.251910731068693,
+      "bnb_token_match_rounds": 0
+    },
+    "HumanEval/115": {
+      "sessions": [
+        38,
+        39
+      ],
+      "timing_rounds": 4,
+      "geomean_speedup_vs_b1": 1.3315276499324056,
+      "geomean_speedup_vs_original_bnb": 1.1846775719708376,
+      "bnb_token_match_rounds": 0
+    }
+  },
+  "runs": [
+    {
+      "artifact": "actual_fixed_three_rows_humaneval112_256_s38.json",
+      "prompt_id": "HumanEval/112",
+      "session": 38,
+      "state_prefixes_matched": 256,
+      "timing_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 2.7905605664310538,
+          "speedup_vs_original_bnb": 2.464244906497377,
+          "matches_bnb_tokens": false
+        }
+      ],
+      "accepted_draft_tokens": 166,
+      "draft_tokens": 168
+    },
+    {
+      "artifact": "actual_fixed_three_rows_humaneval112_256_s39.json",
+      "prompt_id": "HumanEval/112",
+      "session": 39,
+      "state_prefixes_matched": 256,
+      "timing_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 2.7881591950115965,
+          "speedup_vs_original_bnb": 2.478587468658341,
+          "matches_bnb_tokens": false
+        },
+        {
+          "round": 1,
+          "speedup_vs_b1": 2.730634474332333,
+          "speedup_vs_original_bnb": 2.445962486312547,
+          "matches_bnb_tokens": false
+        },
+        {
+          "round": 2,
+          "speedup_vs_b1": 2.6955574377401783,
+          "speedup_vs_original_bnb": 2.393032086139636,
+          "matches_bnb_tokens": false
+        }
+      ],
+      "accepted_draft_tokens": 166,
+      "draft_tokens": 168
+    },
+    {
+      "artifact": "actual_fixed_three_rows_humaneval113_256_s38.json",
+      "prompt_id": "HumanEval/113",
+      "session": 38,
+      "state_prefixes_matched": 256,
+      "timing_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 1.7075004570103074,
+          "speedup_vs_original_bnb": 1.5287806657584913,
+          "matches_bnb_tokens": true
+        }
+      ],
+      "accepted_draft_tokens": 110,
+      "draft_tokens": 164
+    },
+    {
+      "artifact": "actual_fixed_three_rows_humaneval113_256_s39.json",
+      "prompt_id": "HumanEval/113",
+      "session": 39,
+      "state_prefixes_matched": 256,
+      "timing_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 1.7319020498962818,
+          "speedup_vs_original_bnb": 1.5495503267733601,
+          "matches_bnb_tokens": true
+        },
+        {
+          "round": 1,
+          "speedup_vs_b1": 1.7181351509808367,
+          "speedup_vs_original_bnb": 1.5519092079620416,
+          "matches_bnb_tokens": true
+        },
+        {
+          "round": 2,
+          "speedup_vs_b1": 1.6802758181812067,
+          "speedup_vs_original_bnb": 1.4752905380613588,
+          "matches_bnb_tokens": true
+        }
+      ],
+      "accepted_draft_tokens": 110,
+      "draft_tokens": 164
+    },
+    {
+      "artifact": "actual_fixed_three_rows_humaneval114_256_s38.json",
+      "prompt_id": "HumanEval/114",
+      "session": 38,
+      "state_prefixes_matched": 256,
+      "timing_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 1.3418403774305987,
+          "speedup_vs_original_bnb": 1.2430785594576508,
+          "matches_bnb_tokens": false
+        }
+      ],
+      "accepted_draft_tokens": 69,
+      "draft_tokens": 142
+    },
+    {
+      "artifact": "actual_fixed_three_rows_humaneval114_256_s39.json",
+      "prompt_id": "HumanEval/114",
+      "session": 39,
+      "state_prefixes_matched": 256,
+      "timing_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 1.3844840840141284,
+          "speedup_vs_original_bnb": 1.3357055782970695,
+          "matches_bnb_tokens": false
+        },
+        {
+          "round": 1,
+          "speedup_vs_b1": 1.3677259835327376,
+          "speedup_vs_original_bnb": 1.2110289053487848,
+          "matches_bnb_tokens": false
+        },
+        {
+          "round": 2,
+          "speedup_vs_b1": 1.3605259223030954,
+          "speedup_vs_original_bnb": 1.2216016867402075,
+          "matches_bnb_tokens": false
+        }
+      ],
+      "accepted_draft_tokens": 69,
+      "draft_tokens": 142
+    },
+    {
+      "artifact": "actual_fixed_three_rows_humaneval115_256_s38.json",
+      "prompt_id": "HumanEval/115",
+      "session": 38,
+      "state_prefixes_matched": 256,
+      "timing_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 1.341578764052355,
+          "speedup_vs_original_bnb": 1.199570755215951,
+          "matches_bnb_tokens": false
+        }
+      ],
+      "accepted_draft_tokens": 67,
+      "draft_tokens": 187
+    },
+    {
+      "artifact": "actual_fixed_three_rows_humaneval115_256_s39.json",
+      "prompt_id": "HumanEval/115",
+      "session": 39,
+      "state_prefixes_matched": 256,
+      "timing_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 1.3491256273374586,
+          "speedup_vs_original_bnb": 1.191074068208796,
+          "matches_bnb_tokens": false
+        },
+        {
+          "round": 1,
+          "speedup_vs_b1": 1.3407752012172396,
+          "speedup_vs_original_bnb": 1.1969465603015503,
+          "matches_bnb_tokens": false
+        },
+        {
+          "round": 2,
+          "speedup_vs_b1": 1.295317464492286,
+          "speedup_vs_original_bnb": 1.1517580768967708,
+          "matches_bnb_tokens": false
+        }
+      ],
+      "accepted_draft_tokens": 67,
+      "draft_tokens": 187
+    }
+  ],
+  "limitations": [
+    "Four fixed development prompts on one RTX 4050; timing rounds are nested within two sessions per prompt.",
+    "No prompt-general confidence interval; timing repeats are not independent prompts.",
+    "B1 equality is empirical relative to the experimental singleton reference; no formal proof.",
+    "BNB token identity is not established across prompts.",
+    "Held-out GSM8K indices 300\u2013349 were not used."
+  ]
+}

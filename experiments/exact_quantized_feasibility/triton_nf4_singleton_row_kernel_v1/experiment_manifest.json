@@ -1,0 +1,66 @@
+{
+  "schema": "zassd-nf4-singleton-experiment-manifest-v1",
+  "classification": "development-only reproducibility manifest; runner requires opt-in, verifies pinned source/runtime before model load and validates loaded base B1 model/tokenizer/quantized-state identity before decoding; does not prove experimental singleton equivalence or authorize product runtime",
+  "model": {
+    "id": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1"
+  },
+  "schedule": {
+    "k": 1,
+    "ngram_size": 3,
+    "physical_rows": 2,
+    "attention": "triton_batched",
+    "attention_block_k": 32,
+    "singleton_linear": "nf4_fixed_row_singleton_group_scale_packed_rows_linear N=16/K=256/num_warps=1",
+    "block_linear": "nf4_fixed_rows_group_scale_packed_rows_linear N=16/K=256/num_warps=1",
+    "cache": "TargetKVCache; temporary verification and exact-prefix observer in audit harness",
+    "base_identity_contract": "experiments/exact_quantized_feasibility/b1_triton_batched_k1r2_n16_reference_contract_v5.json"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "triton": "3.6.0",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "source_sha256": {
+    "src/zassd/certification/nf4_fixed_row_singleton_group_scale_packed.py": "12fc40f3d80109d99a8197a3e6c55e5223af85bcfc61869f50352c31d79521f2",
+    "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows.py": "262fe0fe09b53b0296892a6e60f313340bbf6581fbb2057affb2aa4da03fe278",
+    "src/zassd/certification/fixed_row_dispatch.py": "0422f2d06dcd93da94377a45a5094f4e12e48d5a3dbef1a489559911b4ddfb38",
+    "src/zassd/certification/qwen2_padded.py": "c7e459453502cf3e184082940c18944a0bb342b09ecaa8b72e4eb1f0b41f0848",
+    "scripts/audit_nf4_singleton_optimized_closed_loop.py": "5c7159afc74a9de7c67eed9731bc43149d2fc31fcb580827f8577c4cb1d13c50",
+    "scripts/audit_triton_b1_closed_loop.py": "69ffa08de5a9620baefee7526653085f390b72eddac0c5f94e22ddd4baf51e4a",
+    "src/zassd/decoding/b1_exact.py": "e19b4e6440697fc96e6e6e7b1902da843fa45b8cae0e62700c4ac331f99b0d63",
+    "src/zassd/cache/kv_cache.py": "a56a3ad4ee163e7456e236515e8848173face82426b0fe3c0e7489b170ed3934",
+    "scripts/validate_nf4_singleton_experiment_manifest.py": "2fd858d448070d22bca0819de22ce2da3ccaedd7e413416526349c4fe4c184a9",
+    "experiments/exact_quantized_feasibility/b1_triton_batched_k1r2_n16_reference_contract_v5.json": "87c55049144629b60015efd72d693d01859d2c50e4c193cdbca6fb4e2ab40761"
+  },
+  "evidence": {
+    "operator_audit": "all_module_operator_audit_cnnd003.json",
+    "closed_loop_256_summary": "closed_loop_256_summary.json",
+    "humaneval_128_summary": "humaneval_128_summary.json",
+    "closed_loop_harness": "../../../../scripts/audit_nf4_singleton_optimized_closed_loop.py",
+    "gated_runner_smoke": "gated_smoke_humaneval110_8_s15.json",
+    "humaneval_112_256_summary": "humaneval_112_256_summary.json",
+    "humaneval_256_two_prompt_summary": "humaneval_256_two_prompt_summary.json",
+    "acceptance_speed_tradeoff_256_analysis": "acceptance_speed_tradeoff_256_analysis.json",
+    "humaneval_256_four_prompt_summary": "humaneval_256_four_prompt_summary.json",
+    "base_b1_reference_contract": "../../b1_triton_batched_k1r2_n16_reference_contract_v5.json",
+    "live_identity_smoke": "live_identity_smoke_humaneval114_8_s28.json",
+    "memory_telemetry_smoke": "memory_telemetry_smoke_humaneval115_8_s29.json",
+    "memory_telemetry_summary": "memory_telemetry_summary.json",
+    "memory_telemetry_humaneval115_repeat": "memory_telemetry_humaneval115_256_s33_v1.json",
+    "generation_budget_humaneval114_summary": "generation_budget_humaneval114_summary.json",
+    "generation_budget_humaneval114_115_summary": "generation_budget_humaneval114_115_summary.json",
+    "bnb_divergence_horizons": "bnb_divergence_horizons_humaneval_sweep.json"
+  },
+  "scope_limits": [
+    "Exactness evidence is finite and relative to the experimental singleton schedule.",
+    "No BNB-original token/state equivalence claim.",
+    "Does not modify or authorize the live B1 runtime contract.",
+    "Held-out GSM8K indices 300-349 are excluded.",
+    "The baseline B1 contract fingerprint verifies model/tokenizer/quantized-state/runtime identity and its established two-row schedule; it does not prove equivalence of the experimental one-row singleton kernel."
+  ]
+}

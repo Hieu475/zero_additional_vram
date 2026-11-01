@@ -1,0 +1,195 @@
+{
+  "schema": "zassd-bnb-nf4-activationvec-all-layer-summary-v1",
+  "classification": "development-only operator-level audit; no whole-model state proof or decoder integration",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompts": [
+    "cnndm_002",
+    "cnndm_003"
+  ],
+  "runs": [
+    {
+      "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_all36_cnndm002_s1_v1.json",
+      "prompt_id": "cnndm_002",
+      "captured_operator_count": 252,
+      "exact_operator_count": 252,
+      "exact_elements": 3096576,
+      "total_elements": 3096576,
+      "all_outputs_bitwise_exact": true,
+      "paired_timing_rows": 21
+    },
+    {
+      "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_all36_cnndm003_s1_v1.json",
+      "prompt_id": "cnndm_003",
+      "captured_operator_count": 252,
+      "exact_operator_count": 252,
+      "exact_elements": 3096576,
+      "total_elements": 3096576,
+      "all_outputs_bitwise_exact": true,
+      "paired_timing_rows": 21
+    }
+  ],
+  "aggregate": {
+    "captured_operator_count": 504,
+    "exact_operator_count": 504,
+    "exact_elements": 6193152,
+    "total_elements": 6193152,
+    "all_outputs_bitwise_exact": true
+  },
+  "paired_timing_method": "8 alternating order rounds per (prompt, layer 0/18/35, projection), 4 calls per sample",
+  "timing_by_projection": {
+    "q_proj": {
+      "paired_rounds": 48,
+      "paired_median_speedup": 2.2817453832044055,
+      "paired_geomean_speedup": 2.281862693384762,
+      "bootstrap_95pct_ci_median_speedup": [
+        2.14605067519153,
+        2.4081634168254444
+      ],
+      "per_prompt": {
+        "cnndm_002": {
+          "paired_rounds": 24,
+          "median_speedup": 2.2568002827764495
+        },
+        "cnndm_003": {
+          "paired_rounds": 24,
+          "median_speedup": 2.307270664974701
+        }
+      }
+    },
+    "k_proj": {
+      "paired_rounds": 48,
+      "paired_median_speedup": 2.577069564081511,
+      "paired_geomean_speedup": 2.5817714924754496,
+      "bootstrap_95pct_ci_median_speedup": [
+        2.3829400636460094,
+        2.86320168187956
+      ],
+      "per_prompt": {
+        "cnndm_002": {
+          "paired_rounds": 24,
+          "median_speedup": 2.4212252627865904
+        },
+        "cnndm_003": {
+          "paired_rounds": 24,
+          "median_speedup": 2.6500477979080435
+        }
+      }
+    },
+    "v_proj": {
+      "paired_rounds": 48,
+      "paired_median_speedup": 2.629391885009909,
+      "paired_geomean_speedup": 2.69976546594302,
+      "bootstrap_95pct_ci_median_speedup": [
+        2.4701291444975877,
+        2.9125902942292354
+      ],
+      "per_prompt": {
+        "cnndm_002": {
+          "paired_rounds": 24,
+          "median_speedup": 2.677305041326077
+        },
+        "cnndm_003": {
+          "paired_rounds": 24,
+          "median_speedup": 2.520067415926759
+        }
+      }
+    },
+    "o_proj": {
+      "paired_rounds": 48,
+      "paired_median_speedup": 1.692302908231564,
+      "paired_geomean_speedup": 1.6522969768359028,
+      "bootstrap_95pct_ci_median_speedup": [
+        1.6346828662451274,
+        1.7971939600343514
+      ],
+      "per_prompt": {
+        "cnndm_002": {
+          "paired_rounds": 24,
+          "median_speedup": 1.6881783601410507
+        },
+        "cnndm_003": {
+          "paired_rounds": 24,
+          "median_speedup": 1.702094020177204
+        }
+      }
+    },
+    "gate_proj": {
+      "paired_rounds": 48,
+      "paired_median_speedup": 1.3916619870704245,
+      "paired_geomean_speedup": 1.426796499166467,
+      "bootstrap_95pct_ci_median_speedup": [
+        1.3743455066580728,
+        1.415730309521686
+      ],
+      "per_prompt": {
+        "cnndm_002": {
+          "paired_rounds": 24,
+          "median_speedup": 1.3889299976432707
+        },
+        "cnndm_003": {
+          "paired_rounds": 24,
+          "median_speedup": 1.4072499465433381
+        }
+      }
+    },
+    "up_proj": {
+      "paired_rounds": 48,
+      "paired_median_speedup": 1.3874383780207733,
+      "paired_geomean_speedup": 1.3977473799843703,
+      "bootstrap_95pct_ci_median_speedup": [
+        1.3826815619749828,
+        1.4094488910752834
+      ],
+      "per_prompt": {
+        "cnndm_002": {
+          "paired_rounds": 24,
+          "median_speedup": 1.3858898401559352
+        },
+        "cnndm_003": {
+          "paired_rounds": 24,
+          "median_speedup": 1.3895938915564012
+        }
+      }
+    },
+    "down_proj": {
+      "paired_rounds": 48,
+      "paired_median_speedup": 1.3680758246109828,
+      "paired_geomean_speedup": 1.3699326114484889,
+      "bootstrap_95pct_ci_median_speedup": [
+        1.3524853693601042,
+        1.3857120180149727
+      ],
+      "per_prompt": {
+        "cnndm_002": {
+          "paired_rounds": 24,
+          "median_speedup": 1.3664842699401782
+        },
+        "cnndm_003": {
+          "paired_rounds": 24,
+          "median_speedup": 1.3703652311763772
+        }
+      }
+    }
+  },
+  "sources": {
+    "audit_script": "scripts/audit_bnb_nf4_activationvec_all_layers.py",
+    "audit_script_sha256": "007f431455d05a7e2747f9381a53a6ce858d753f1ef2aa01dd37b2b31e62e69e",
+    "kernel_script": "scripts/benchmark_bnb_nf4_fused_inline_ldcs_activationvec_tailmask_half2.py",
+    "kernel_script_sha256": "322da0c917025d9879761fce33b1b5c29880badd41fb79f14b0978e4ac4a4c7a"
+  },
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "triton": "3.6.0",
+    "cuda": "12.8",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "scope_limits": [
+    "Teacher-forced M=3 operator comparison at one block position per prompt.",
+    "Does not compare full block tokens, KV state, or decoder end-to-end latency.",
+    "Paired operator timings are from three sampled layers, not all 36 layers.",
+    "Two prompts, one GPU/toolchain; timings do not imply prompt-level generalization.",
+    "GSM8K held-out indices 300-349 excluded."
+  ]
+}

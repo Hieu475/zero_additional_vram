@@ -1,0 +1,209 @@
+{
+  "classification": "K=2/R=3 teacher-forced block vs BNB singleton; empirical operator/runtime probe",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "quantized_linear_strategy": "triton_nf4_fixed_three_rows_group_scale_packed",
+  "attention_strategy": "Qwen2 bnb_rowwise: native GQA SDPA, singleton RMSNorm and LM head per row",
+  "details": [
+    {
+      "prompt_id": "HumanEval/112",
+      "expected_bnb_tokens": [
+        262,
+        671,
+        4615
+      ],
+      "fresh_bnb_tokens": [
+        262,
+        671,
+        4615
+      ],
+      "tokens_match_saved_artifact": true,
+      "block_call_input_shape": [
+        1,
+        3
+      ],
+      "block_logits_shape": [
+        1,
+        3,
+        151936
+      ],
+      "per_prefix": [
+        {
+          "consumed_tokens": 1,
+          "logits": {
+            "shape_reference": [
+              1,
+              1,
+              151936
+            ],
+            "shape_candidate": [
+              1,
+              1,
+              151936
+            ],
+            "bitwise_equal": false,
+            "argmax_reference": 671,
+            "argmax_candidate": 671,
+            "max_abs_diff": 0.1484375,
+            "mean_abs_diff": 0.026675023138523102
+          },
+          "kv_sha256_reference": "1616fbb5b48df49477de6a1890f50f36a3190d5e7b8d94d27dcda28126b8239e",
+          "kv_sha256_candidate": "e4f5e8d0cf3ba3c4d172cdc84e5b61d95fba82ac18accd0e37be9277a915be69",
+          "kv_equal": false
+        },
+        {
+          "consumed_tokens": 2,
+          "logits": {
+            "shape_reference": [
+              1,
+              1,
+              151936
+            ],
+            "shape_candidate": [
+              1,
+              1,
+              151936
+            ],
+            "bitwise_equal": false,
+            "argmax_reference": 4615,
+            "argmax_candidate": 4615,
+            "max_abs_diff": 0.125,
+            "mean_abs_diff": 0.020615674555301666
+          },
+          "kv_sha256_reference": "e0a246a25fd3c911ab22206541219990a4727e6c4f7054cf1311a0166fd0fb08",
+          "kv_sha256_candidate": "2ad79e67917a3a3e75e15cfd4fbaf71bb361c14fd09f7f026f4fdbdfb7537196",
+          "kv_equal": false
+        },
+        {
+          "consumed_tokens": 3,
+          "logits": {
+            "shape_reference": [
+              1,
+              1,
+              151936
+            ],
+            "shape_candidate": [
+              1,
+              1,
+              151936
+            ],
+            "bitwise_equal": false,
+            "argmax_reference": 2038,
+            "argmax_candidate": 2038,
+            "max_abs_diff": 0.404296875,
+            "mean_abs_diff": 0.06432526558637619
+          },
+          "kv_sha256_reference": "a3233533b39d02060599be286f3788d7d5575d21ad97b86482844af2b1f7f248",
+          "kv_sha256_candidate": "b470420589828829b76584f62d997ceb57eb0b9133a2dfb60a117424b42340e8",
+          "kv_equal": false
+        }
+      ],
+      "all_logits_argmax_match": true,
+      "all_logits_bitwise_match": false,
+      "all_kv_prefixes_match": false
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "expected_bnb_tokens": [
+        362,
+        26356,
+        3822
+      ],
+      "fresh_bnb_tokens": [
+        362,
+        26356,
+        3822
+      ],
+      "tokens_match_saved_artifact": true,
+      "block_call_input_shape": [
+        1,
+        3
+      ],
+      "block_logits_shape": [
+        1,
+        3,
+        151936
+      ],
+      "per_prefix": [
+        {
+          "consumed_tokens": 1,
+          "logits": {
+            "shape_reference": [
+              1,
+              1,
+              151936
+            ],
+            "shape_candidate": [
+              1,
+              1,
+              151936
+            ],
+            "bitwise_equal": false,
+            "argmax_reference": 26356,
+            "argmax_candidate": 26356,
+            "max_abs_diff": 0.1875,
+            "mean_abs_diff": 0.029630260542035103
+          },
+          "kv_sha256_reference": "8c6042b2b7b648b80a1934fda95f45d5e6c3c1c062169b7411e4f31db6e02998",
+          "kv_sha256_candidate": "4505c3ddc524ddddf1923a8916d95aa054ba1478e6e5e2c5321c90a69db8b12d",
+          "kv_equal": false
+        },
+        {
+          "consumed_tokens": 2,
+          "logits": {
+            "shape_reference": [
+              1,
+              1,
+              151936
+            ],
+            "shape_candidate": [
+              1,
+              1,
+              151936
+            ],
+            "bitwise_equal": false,
+            "argmax_reference": 3822,
+            "argmax_candidate": 3822,
+            "max_abs_diff": 0.25,
+            "mean_abs_diff": 0.038875941187143326
+          },
+          "kv_sha256_reference": "58807bad345afafb429990ac652973a8918caa901c8ba44d522423fb36fdeddf",
+          "kv_sha256_candidate": "a0a8610aeb7109cdacde7b965f7cd45840660cd6f2d25247c74dbcddfee7d02a",
+          "kv_equal": false
+        },
+        {
+          "consumed_tokens": 3,
+          "logits": {
+            "shape_reference": [
+              1,
+              1,
+              151936
+            ],
+            "shape_candidate": [
+              1,
+              1,
+              151936
+            ],
+            "bitwise_equal": false,
+            "argmax_reference": 5458,
+            "argmax_candidate": 5458,
+            "max_abs_diff": 0.25,
+            "mean_abs_diff": 0.04501848667860031
+          },
+          "kv_sha256_reference": "fb72a567354934596fc5bf9fd41020a581a7ba946c2a2c16abb940cfa955a00f",
+          "kv_sha256_candidate": "a8534ddc00155d25498b32d7b634f36e1a1c76da20abe51855c01e51fed6a058",
+          "kv_equal": false
+        }
+      ],
+      "all_logits_argmax_match": true,
+      "all_logits_bitwise_match": false,
+      "all_kv_prefixes_match": false
+    }
+  ],
+  "limitations": [
+    "Two development prompts only.",
+    "Does not exercise the speculative decoder's commit/rollback state machine.",
+    "No held-out prompts used; finite evidence is not a proof."
+  ]
+}

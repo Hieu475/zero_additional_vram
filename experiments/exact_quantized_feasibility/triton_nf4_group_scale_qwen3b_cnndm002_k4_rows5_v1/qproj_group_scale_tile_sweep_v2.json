@@ -1,0 +1,225 @@
+{
+  "status": "finite q_proj tile tuning; each tile uses its own checked fixed-row schedule",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "backend_metadata": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa",
+    "model_dtype": "torch.float16"
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "physical_rows": 5,
+  "iterations_per_sample": 20,
+  "rounds": 5,
+  "results": [
+    {
+      "m": 1,
+      "median_cuda_ms": {
+        "original": 0.07398399710655212,
+        "n8_k64": 0.05541279911994934,
+        "n8_k128": 0.04229120016098022,
+        "n8_k256": 0.03997440040111542,
+        "n16_k64": 0.06721439957618713,
+        "n16_k128": 0.06000639796257019,
+        "n16_k256": 0.05934079885482788,
+        "n32_k128": 0.11919360160827637
+      },
+      "relative_to_original": {
+        "original": 1.0,
+        "n8_k64": 0.7489835814107685,
+        "n8_k128": 0.5716263221095262,
+        "n8_k256": 0.540311445237868,
+        "n16_k64": 0.9084991647502448,
+        "n16_k128": 0.8110726685413966,
+        "n16_k256": 0.8020761404573068,
+        "n32_k128": 1.6110727491056362
+      },
+      "tile_checks": [
+        {
+          "block_n": 8,
+          "block_k": 64,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 8,
+          "block_k": 128,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 8,
+          "block_k": 256,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 16,
+          "block_k": 64,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 16,
+          "block_k": 128,
+          "bitwise_equal_to_original": true,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 16,
+          "block_k": 256,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 32,
+          "block_k": 128,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        }
+      ]
+    },
+    {
+      "m": 3,
+      "median_cuda_ms": {
+        "original": 0.20321280956268312,
+        "n8_k64": 0.1344879984855652,
+        "n8_k128": 0.11176960468292237,
+        "n8_k256": 0.10249760150909423,
+        "n16_k64": 0.18534400463104247,
+        "n16_k128": 0.16829440593719483,
+        "n16_k256": 0.1608847975730896,
+        "n32_k128": 0.2983839988708496
+      },
+      "relative_to_original": {
+        "original": 1.0,
+        "n8_k64": 0.6618086663679583,
+        "n8_k128": 0.5500125947938624,
+        "n8_k256": 0.5043855342075657,
+        "n16_k64": 0.9120685109856285,
+        "n16_k128": 0.8281682946039022,
+        "n16_k256": 0.7917059850671618,
+        "n32_k128": 1.468332628799219
+      },
+      "tile_checks": [
+        {
+          "block_n": 8,
+          "block_k": 64,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 8,
+          "block_k": 128,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 8,
+          "block_k": 256,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 16,
+          "block_k": 64,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 16,
+          "block_k": 128,
+          "bitwise_equal_to_original": true,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 16,
+          "block_k": 256,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 32,
+          "block_k": 128,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        }
+      ]
+    },
+    {
+      "m": 5,
+      "median_cuda_ms": {
+        "original": 0.32332799434661863,
+        "n8_k64": 0.21770238876342773,
+        "n8_k128": 0.18243839740753173,
+        "n8_k256": 0.1651792049407959,
+        "n16_k64": 0.29460480213165285,
+        "n16_k128": 0.26705920696258545,
+        "n16_k256": 0.2556063890457153,
+        "n32_k128": 0.47128801345825194
+      },
+      "relative_to_original": {
+        "original": 1.0,
+        "n8_k64": 0.6733174750406652,
+        "n8_k128": 0.5642517833205359,
+        "n8_k256": 0.5108719561218017,
+        "n16_k64": 0.911163918011462,
+        "n16_k128": 0.8259699488819668,
+        "n16_k256": 0.7905482776468051,
+        "n32_k128": 1.4576158628349858
+      },
+      "tile_checks": [
+        {
+          "block_n": 8,
+          "block_k": 64,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 8,
+          "block_k": 128,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 8,
+          "block_k": 256,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 16,
+          "block_k": 64,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 16,
+          "block_k": 128,
+          "bitwise_equal_to_original": true,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 16,
+          "block_k": 256,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        },
+        {
+          "block_n": 32,
+          "block_k": 128,
+          "bitwise_equal_to_original": false,
+          "row0_bitwise_invariant_across_M": true
+        }
+      ]
+    }
+  ]
+}

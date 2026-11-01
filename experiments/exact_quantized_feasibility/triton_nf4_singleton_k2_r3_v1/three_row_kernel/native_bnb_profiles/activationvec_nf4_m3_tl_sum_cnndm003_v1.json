@@ -1,0 +1,192 @@
+{
+  "schema": "zassd-activationvec-nf4-m3-launch-sweep-v1",
+  "classification": "operator screen; tl.sum lets Triton lower the reduction for its inferred layout; latency only after BNB bitwise gate",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "cnndm_003",
+  "prompt_sha256": "baea8efa9760531deacd4b71b497fe768b9b4c9445fecba57b015e44b57e9f51",
+  "forced_tokens": [
+    20924,
+    3693,
+    18478
+  ],
+  "scope": "layer 0 q_proj/gate_proj/down_proj",
+  "configs": [
+    {
+      "out_tile": 8,
+      "num_warps": 8
+    }
+  ],
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "triton": "3.6.0",
+    "cuda": "12.8",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "results": {
+    "q_proj": {
+      "input_shape": [
+        3,
+        2048
+      ],
+      "output_shape": [
+        3,
+        2048
+      ],
+      "input_sha256": "8c4e484ba9555c4ea25a6111522d71b5db427937e2e6707e89bb768e30945547",
+      "configs": [
+        {
+          "out_tile": 8,
+          "num_warps": 8,
+          "exact_elements": 6144,
+          "total_elements": 6144,
+          "bitwise_exact": true,
+          "max_abs_diff": 0.0,
+          "candidate_median_ms": 0.027583999559283257,
+          "bnb_median_ms": 0.035068001598119736,
+          "bnb_over_candidate_median": 1.3407104495285092,
+          "paired_ratios": [
+            1.7832734049584473,
+            1.302788842773681,
+            1.5522583448733287,
+            1.2710280615325695,
+            1.6515151336982974,
+            1.2305919411422377,
+            1.423963155890716,
+            3.7317162882367416,
+            1.3981042510212203,
+            1.1836453650771082,
+            1.3762376152032652,
+            1.1712963203124458,
+            1.3596059198050416,
+            1.0326530718914495,
+            1.3218149792519769,
+            1.1539773195173924,
+            1.3826530919071525,
+            1.1813954502047996,
+            1.3857868564000024,
+            1.1748492633814618
+          ],
+          "paired_rounds": 20,
+          "repeats_per_round": 8
+        }
+      ]
+    },
+    "gate_proj": {
+      "input_shape": [
+        3,
+        2048
+      ],
+      "output_shape": [
+        3,
+        11008
+      ],
+      "input_sha256": "2828866fc96f942732fd554b03af0809103d33aa02936a4180711f686dc1d989",
+      "configs": [
+        {
+          "out_tile": 8,
+          "num_warps": 8,
+          "exact_elements": 33024,
+          "total_elements": 33024,
+          "bitwise_exact": true,
+          "max_abs_diff": 0.0,
+          "candidate_median_ms": 0.09463599696755409,
+          "bnb_median_ms": 0.13126400113105774,
+          "bnb_over_candidate_median": 1.3956403084354359,
+          "paired_ratios": [
+            1.5057933164843549,
+            1.3302991169920277,
+            1.3611852028131142,
+            1.3723091962777676,
+            1.4145294859757502,
+            1.4029460087799048,
+            1.4068477020378407,
+            1.3783783549932696,
+            1.4024721889462097,
+            1.3783783549932696,
+            1.4024557121488999,
+            1.375931587298562,
+            1.397475276936206,
+            1.3783783549932696,
+            1.402706030815332,
+            1.379729716655328,
+            1.403393546366492,
+            1.3788762024763817,
+            1.4113435063002282,
+            1.3938053399346657
+          ],
+          "paired_rounds": 20,
+          "repeats_per_round": 8
+        }
+      ]
+    },
+    "down_proj": {
+      "input_shape": [
+        3,
+        11008
+      ],
+      "output_shape": [
+        3,
+        2048
+      ],
+      "input_sha256": "4f98c200929d10b36ec7b3a35ba272fba49f133dde393370d2ddec21f7931d0f",
+      "configs": [
+        {
+          "out_tile": 8,
+          "num_warps": 8,
+          "exact_elements": 6144,
+          "total_elements": 6144,
+          "bitwise_exact": true,
+          "max_abs_diff": 0.0,
+          "candidate_median_ms": 0.09676799923181534,
+          "bnb_median_ms": 0.12990600615739822,
+          "bnb_over_candidate_median": 1.3427761306693264,
+          "paired_ratios": [
+            1.4375821102840167,
+            1.3254663088876395,
+            1.370320878294472,
+            1.332892995327009,
+            1.3596256095657289,
+            1.3291113274592514,
+            1.3564753730302845,
+            1.33613413697427,
+            1.3551402493774733,
+            1.3064935031555733,
+            1.3929058439856794,
+            1.3368569393859302,
+            1.3659517319588625,
+            1.3302509672890632,
+            1.355187426235965,
+            1.3342728264558463,
+            1.3075916808757357,
+            1.1842465289934596,
+            1.3654329212976264,
+            1.3486953219527227
+          ],
+          "paired_rounds": 20,
+          "repeats_per_round": 8
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "one development prompt and one layer",
+    "does not establish B1 singleton or end-to-end speedup",
+    "GSM8K held-out indices 300-349 excluded"
+  ],
+  "reduction_schedule": {
+    "baseline": "five guarded tl.gather stages at xor distances 16,8,4,2,1",
+    "candidate": "tl.sum over logical reduction axis 2",
+    "fp_fusion": false,
+    "launch_geometry": {
+      "out_tile": 8,
+      "num_warps": 8
+    }
+  },
+  "source_hashes": {
+    "base_kernel": "322da0c917025d9879761fce33b1b5c29880badd41fb79f14b0978e4ac4a4c7a",
+    "tl_sum_driver": "4ca790d4a629d9d12cf0bbbd031822455d3dda9793d2ad99459dfc1ad5a304b5",
+    "generated_tl_sum_kernel": "3fc274be3d1316c0893ec93085ac57039562c58649ef953c6f533d3e60a78bed"
+  }
+}

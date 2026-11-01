@@ -1,0 +1,210 @@
+{
+  "classification": "development-only CNN/DailyMail transfer screen; two sessions per prompt; not certification",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "configuration": {
+    "K": 2,
+    "R": 3,
+    "physical_rows": 3,
+    "max_new_tokens": 128,
+    "strategy": "triton_nf4_fixed_three_rows_group_scale_packed"
+  },
+  "sample_scope": {
+    "benchmark": "data/benchmarks/cnndm_eval.jsonl",
+    "prompts": [
+      "cnndm_003",
+      "cnndm_004",
+      "cnndm_005"
+    ],
+    "independent_sessions": 6,
+    "paired_timing_rounds": 12,
+    "held_out_used": false
+  },
+  "correctness_vs_b1": {
+    "sessions_matched": 6,
+    "sessions_total": 6,
+    "state_prefixes_matched": 768,
+    "state_prefixes_expected": 768
+  },
+  "performance": {
+    "pooled_geomean_speedup_vs_b1": 1.2701601301423548,
+    "pooled_geomean_speedup_vs_original_bnb": 1.1623987019788644,
+    "speedup_ranges": {
+      "vs_b1": [
+        1.0820246699006855,
+        1.4223723526582
+      ],
+      "vs_original_bnb": [
+        0.9675383541137085,
+        1.3734923045522296
+      ]
+    },
+    "bnb_token_match_rounds": 4,
+    "timing_rounds": 12,
+    "unique_session_acceptance": {
+      "accepted": 178,
+      "drafted": 368,
+      "rate": 0.483695652173913
+    }
+  },
+  "prompt_clusters": {
+    "cnndm_003": {
+      "sessions": [
+        40,
+        41
+      ],
+      "timing_rounds": 4,
+      "geomean_speedup_vs_b1": 1.344033406303908,
+      "geomean_speedup_vs_original_bnb": 1.2263071223928177,
+      "bnb_token_match_rounds": 0
+    },
+    "cnndm_004": {
+      "sessions": [
+        40,
+        41
+      ],
+      "timing_rounds": 4,
+      "geomean_speedup_vs_b1": 1.0932840057323385,
+      "geomean_speedup_vs_original_bnb": 0.9958385789534412,
+      "bnb_token_match_rounds": 0
+    },
+    "cnndm_005": {
+      "sessions": [
+        40,
+        41
+      ],
+      "timing_rounds": 4,
+      "geomean_speedup_vs_b1": 1.3945444796607591,
+      "geomean_speedup_vs_original_bnb": 1.2861071463147256,
+      "bnb_token_match_rounds": 4
+    }
+  },
+  "runs": [
+    {
+      "artifact": "actual_fixed_three_rows_cnndm_003_128_s40.json",
+      "prompt_id": "cnndm_003",
+      "session": 40,
+      "state_prefixes_matched": 128,
+      "paired_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 1.3561408184333503,
+          "speedup_vs_original_bnb": 1.2445966975323608,
+          "matches_bnb_tokens": false
+        },
+        {
+          "round": 1,
+          "speedup_vs_b1": 1.3467389702191008,
+          "speedup_vs_original_bnb": 1.2286328230931454,
+          "matches_bnb_tokens": false
+        }
+      ]
+    },
+    {
+      "artifact": "actual_fixed_three_rows_cnndm_003_128_s41.json",
+      "prompt_id": "cnndm_003",
+      "session": 41,
+      "state_prefixes_matched": 128,
+      "paired_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 1.293672240126104,
+          "speedup_vs_original_bnb": 1.1822698519259363,
+          "matches_bnb_tokens": false
+        },
+        {
+          "round": 1,
+          "speedup_vs_b1": 1.3811084391907074,
+          "speedup_vs_original_bnb": 1.2509202697147617,
+          "matches_bnb_tokens": false
+        }
+      ]
+    },
+    {
+      "artifact": "actual_fixed_three_rows_cnndm_004_128_s40.json",
+      "prompt_id": "cnndm_004",
+      "session": 40,
+      "state_prefixes_matched": 128,
+      "paired_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 1.1078594469200311,
+          "speedup_vs_original_bnb": 0.9675383541137085,
+          "matches_bnb_tokens": false
+        },
+        {
+          "round": 1,
+          "speedup_vs_b1": 1.0820246699006855,
+          "speedup_vs_original_bnb": 1.0209254286434601,
+          "matches_bnb_tokens": false
+        }
+      ]
+    },
+    {
+      "artifact": "actual_fixed_three_rows_cnndm_004_128_s41.json",
+      "prompt_id": "cnndm_004",
+      "session": 41,
+      "state_prefixes_matched": 128,
+      "paired_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 1.0902203970922792,
+          "speedup_vs_original_bnb": 0.9988111983682255,
+          "matches_bnb_tokens": false
+        },
+        {
+          "round": 1,
+          "speedup_vs_b1": 1.0931904959863306,
+          "speedup_vs_original_bnb": 0.9968049219746539,
+          "matches_bnb_tokens": false
+        }
+      ]
+    },
+    {
+      "artifact": "actual_fixed_three_rows_cnndm_005_128_s40.json",
+      "prompt_id": "cnndm_005",
+      "session": 40,
+      "state_prefixes_matched": 128,
+      "paired_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 1.3831619701675117,
+          "speedup_vs_original_bnb": 1.2175328650117103,
+          "matches_bnb_tokens": true
+        },
+        {
+          "round": 1,
+          "speedup_vs_b1": 1.361274545578639,
+          "speedup_vs_original_bnb": 1.2034621075852414,
+          "matches_bnb_tokens": true
+        }
+      ]
+    },
+    {
+      "artifact": "actual_fixed_three_rows_cnndm_005_128_s41.json",
+      "prompt_id": "cnndm_005",
+      "session": 41,
+      "state_prefixes_matched": 128,
+      "paired_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1": 1.4122039372738542,
+          "speedup_vs_original_bnb": 1.3734923045522296,
+          "matches_bnb_tokens": true
+        },
+        {
+          "round": 1,
+          "speedup_vs_b1": 1.4223723526582,
+          "speedup_vs_original_bnb": 1.3594688522516065,
+          "matches_bnb_tokens": true
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Three CNN/DailyMail development prompts on one RTX 4050; timing rounds are nested within sessions.",
+    "BNB-relative performance is prompt dependent; no prompt-general confidence interval.",
+    "B1 equality is empirical relative to the experimental singleton reference; no formal proof.",
+    "Held-out GSM8K indices 300\u2013349 were not used."
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "status": "complete; direct KV transaction audit at partial-reject/correction-token output caps",
+  "contract": "experimental K=2/R=3 fixed-row singleton reference (B1)",
+  "scope": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "prompt_id": "HumanEval/114",
+    "session": 11,
+    "budgets": [
+      53,
+      54
+    ],
+    "held_out_gsm8k_300_349_used": false
+  },
+  "aggregate": {
+    "cases": 2,
+    "token_match_cases": 2,
+    "matched_state_prefixes": 107,
+    "three_row_verification_calls": 54,
+    "all_existing_prefixes_preserved": true,
+    "rollback_events": 52,
+    "all_cropped_prefixes_match": true,
+    "all_layer_lengths_uniform": true
+  },
+  "limitations": [
+    "Finite evidence on one prompt and session; equality is relative to the experimental singleton reference.",
+    "Shared backing buffers can retain stale bytes beyond logical cropped lengths; this audit compares canonical active prefixes.",
+    "No original BNB equivalence or performance claim."
+  ],
+  "cases": [
+    {
+      "max_new_tokens": 53,
+      "artifact": "cache_boundary_humaneval114_53.json",
+      "token_match": true,
+      "shared_state_prefixes": 53,
+      "three_row_verification_calls": 27,
+      "all_verifications_preserved_preexisting_kv_prefix": true,
+      "verification_layer_lengths_uniform": true,
+      "rollback_events": 26,
+      "all_cropped_active_prefixes_match_singleton": true,
+      "rollback_layer_lengths_uniform": true,
+      "partial_reject_cycles": [
+        {
+          "output_start": 50,
+          "draft_tokens": [
+            284,
+            2224
+          ],
+          "accepted": 1,
+          "rejected_at": 1,
+          "emitted_tokens": [
+            10160,
+            284
+          ],
+          "next_pending": 1308
+        }
+      ],
+      "final_cycles": [
+        {
+          "output_start": 49,
+          "pending": 1308,
+          "draft_tokens": [],
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_tokens": [
+            1308
+          ],
+          "next_pending": 10160
+        },
+        {
+          "output_start": 50,
+          "pending": 10160,
+          "draft_tokens": [
+            284,
+            2224
+          ],
+          "accepted": 1,
+          "rejected_at": 1,
+          "emitted_tokens": [
+            10160,
+            284
+          ],
+          "next_pending": 1308
+        }
+      ]
+    },
+    {
+      "max_new_tokens": 54,
+      "artifact": "cache_boundary_humaneval114_54.json",
+      "token_match": true,
+      "shared_state_prefixes": 54,
+      "three_row_verification_calls": 27,
+      "all_verifications_preserved_preexisting_kv_prefix": true,
+      "verification_layer_lengths_uniform": true,
+      "rollback_events": 26,
+      "all_cropped_active_prefixes_match_singleton": true,
+      "rollback_layer_lengths_uniform": true,
+      "partial_reject_cycles": [
+        {
+          "output_start": 50,
+          "draft_tokens": [
+            284,
+            2224
+          ],
+          "accepted": 1,
+          "rejected_at": 1,
+          "emitted_tokens": [
+            10160,
+            284
+          ],
+          "next_pending": 1308
+        }
+      ],
+      "final_cycles": [
+        {
+          "output_start": 50,
+          "pending": 10160,
+          "draft_tokens": [
+            284,
+            2224
+          ],
+          "accepted": 1,
+          "rejected_at": 1,
+          "emitted_tokens": [
+            10160,
+            284
+          ],
+          "next_pending": 1308
+        },
+        {
+          "output_start": 52,
+          "pending": 1308,
+          "draft_tokens": [],
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_tokens": [
+            1308
+          ],
+          "next_pending": 14146
+        }
+      ]
+    }
+  ]
+}

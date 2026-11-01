@@ -1,0 +1,271 @@
+{
+  "status": "experimental packed K256 two-row CTA K1/R2; paired finite diagnostic, not a proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "strategy": "triton_nf4_group_scale_packed_rows2_k256",
+  "k": 1,
+  "physical_rows": 2,
+  "max_new_tokens": 32,
+  "attention": "padded",
+  "model_dtype": "float16",
+  "sessions_per_prompt": 3,
+  "prompt_ids": [
+    "cnndm000",
+    "cnndm001",
+    "cnndm002"
+  ],
+  "reference_contract_id": "40df82dc76c21bd085eff4836559fe22348a3d5797d5c9193489ebe258c46660",
+  "records": [
+    {
+      "prompt_id": "cnndm001",
+      "pilot_session": 0,
+      "session_index": 1,
+      "latency_s": {
+        "b1_singleton": 1.0882517599966377,
+        "b1_block": 0.995039050001651,
+        "original_bnb": 0.8955642869987059
+      },
+      "latency_ratio_block_over_singleton": 0.9143463733104602,
+      "latency_ratio_block_over_bnb": 1.1110749551395285,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "block_target_forwards": 27,
+      "block_target_rows": 36,
+      "draft_tokens": 9,
+      "accepted_draft_tokens": 4
+    },
+    {
+      "prompt_id": "cnndm001",
+      "pilot_session": 1,
+      "session_index": 2,
+      "latency_s": {
+        "b1_singleton": 1.0800663179979892,
+        "b1_block": 0.976256611997087,
+        "original_bnb": 0.8609238060016651
+      },
+      "latency_ratio_block_over_singleton": 0.9038858037964521,
+      "latency_ratio_block_over_bnb": 1.133964010742199,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "block_target_forwards": 27,
+      "block_target_rows": 36,
+      "draft_tokens": 9,
+      "accepted_draft_tokens": 4
+    },
+    {
+      "prompt_id": "cnndm001",
+      "pilot_session": 2,
+      "session_index": 3,
+      "latency_s": {
+        "b1_singleton": 1.146327565998945,
+        "b1_block": 1.0679705149959773,
+        "original_bnb": 0.904831194995495
+      },
+      "latency_ratio_block_over_singleton": 0.9316451480998061,
+      "latency_ratio_block_over_bnb": 1.1802980720633691,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "block_target_forwards": 27,
+      "block_target_rows": 36,
+      "draft_tokens": 9,
+      "accepted_draft_tokens": 4
+    },
+    {
+      "prompt_id": "cnndm002",
+      "pilot_session": 0,
+      "session_index": 0,
+      "latency_s": {
+        "b1_singleton": 1.0898243880001246,
+        "b1_block": 1.027828316000523,
+        "original_bnb": 0.954181310000422
+      },
+      "latency_ratio_block_over_singleton": 0.9431137046645037,
+      "latency_ratio_block_over_bnb": 1.0771834505960598,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "block_target_forwards": 29,
+      "block_target_rows": 35,
+      "draft_tokens": 6,
+      "accepted_draft_tokens": 2
+    },
+    {
+      "prompt_id": "cnndm002",
+      "pilot_session": 1,
+      "session_index": 2,
+      "latency_s": {
+        "b1_singleton": 1.091931744995236,
+        "b1_block": 1.0549188549994142,
+        "original_bnb": 0.9009432640013983
+      },
+      "latency_ratio_block_over_singleton": 0.9661032933922228,
+      "latency_ratio_block_over_bnb": 1.1709048695410156,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "block_target_forwards": 29,
+      "block_target_rows": 35,
+      "draft_tokens": 6,
+      "accepted_draft_tokens": 2
+    },
+    {
+      "prompt_id": "cnndm002",
+      "pilot_session": 2,
+      "session_index": 3,
+      "latency_s": {
+        "b1_singleton": 1.1280308599962154,
+        "b1_block": 1.1163144029997056,
+        "original_bnb": 0.9289630339990254
+      },
+      "latency_ratio_block_over_singleton": 0.9896133541979968,
+      "latency_ratio_block_over_bnb": 1.2016779593415736,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "block_target_forwards": 29,
+      "block_target_rows": 35,
+      "draft_tokens": 6,
+      "accepted_draft_tokens": 2
+    },
+    {
+      "prompt_id": "cnndm000",
+      "pilot_session": 0,
+      "session_index": 1,
+      "latency_s": {
+        "b1_singleton": 1.1056741450011032,
+        "b1_block": 0.8720149329965352,
+        "original_bnb": 0.9088095280021662
+      },
+      "latency_ratio_block_over_singleton": 0.7886726274092853,
+      "latency_ratio_block_over_bnb": 0.9595134141182295,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "block_target_forwards": 23,
+      "block_target_rows": 35,
+      "draft_tokens": 12,
+      "accepted_draft_tokens": 8
+    },
+    {
+      "prompt_id": "cnndm000",
+      "pilot_session": 1,
+      "session_index": 2,
+      "latency_s": {
+        "b1_singleton": 1.0936111350019928,
+        "b1_block": 0.8652725420033676,
+        "original_bnb": 0.8798176619966398
+      },
+      "latency_ratio_block_over_singleton": 0.7912067775368717,
+      "latency_ratio_block_over_bnb": 0.9834680290910917,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "block_target_forwards": 23,
+      "block_target_rows": 35,
+      "draft_tokens": 12,
+      "accepted_draft_tokens": 8
+    },
+    {
+      "prompt_id": "cnndm000",
+      "pilot_session": 2,
+      "session_index": 3,
+      "latency_s": {
+        "b1_singleton": 1.112478466995526,
+        "b1_block": 0.9326153809961397,
+        "original_bnb": 0.8896973340015393
+      },
+      "latency_ratio_block_over_singleton": 0.8383221865991319,
+      "latency_ratio_block_over_bnb": 1.0482389295262586,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "block_target_forwards": 23,
+      "block_target_rows": 35,
+      "draft_tokens": 12,
+      "accepted_draft_tokens": 8
+    }
+  ],
+  "pooled_descriptive_summary": {
+    "latency_ratio_block_over_singleton": {
+      "geometric_mean": 0.8935628018719305,
+      "median": 0.9143463733104602,
+      "range": [
+        0.7886726274092853,
+        0.9896133541979968
+      ],
+      "paired_log_t_95ci_tcrit_df8": [
+        0.8377633524901307,
+        0.9530787883188304
+      ]
+    },
+    "latency_ratio_block_over_bnb": {
+      "geometric_mean": 1.0931744597319173,
+      "median": 1.1110749551395285,
+      "range": [
+        0.9595134141182295,
+        1.2016779593415736
+      ],
+      "paired_log_t_95ci_tcrit_df8": [
+        1.0278957195407912,
+        1.1625988674649261
+      ]
+    },
+    "token_match_b1_all": true,
+    "token_match_bnb_all": true,
+    "state_match_all": true,
+    "shared_kv_prefixes_each": [
+      32
+    ],
+    "mean_block_target_rows": 35.333333333333336,
+    "acceptance_rate": 0.5185185185185185
+  },
+  "per_prompt": {
+    "000": {
+      "block_over_singleton": [
+        0.7886726274092853,
+        0.7912067775368717,
+        0.8383221865991319
+      ],
+      "block_over_bnb": [
+        0.9595134141182295,
+        0.9834680290910917,
+        1.0482389295262586
+      ]
+    },
+    "001": {
+      "block_over_singleton": [
+        0.9143463733104602,
+        0.9038858037964521,
+        0.9316451480998061
+      ],
+      "block_over_bnb": [
+        1.1110749551395285,
+        1.133964010742199,
+        1.1802980720633691
+      ]
+    },
+    "002": {
+      "block_over_singleton": [
+        0.9431137046645037,
+        0.9661032933922228,
+        0.9896133541979968
+      ],
+      "block_over_bnb": [
+        1.0771834505960598,
+        1.1709048695410156,
+        1.2016779593415736
+      ]
+    }
+  }
+}

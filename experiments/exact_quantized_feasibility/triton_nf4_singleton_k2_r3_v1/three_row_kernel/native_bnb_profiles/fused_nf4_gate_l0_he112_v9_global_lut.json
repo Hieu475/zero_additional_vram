@@ -1,0 +1,100 @@
+{
+  "schema": "zassd-bnb-fused-nf4-simt-triton-prototype-v2",
+  "classification": "single-operator fused prototype; output identity is tested, timing is diagnostic only",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "HumanEval/112",
+  "layer": 0,
+  "projection": "gate_proj",
+  "forced_tokens": [
+    262,
+    671,
+    4615
+  ],
+  "nf4_lookup": "cached per-nibble codebook loads",
+  "activation_shape": [
+    3,
+    2048
+  ],
+  "output_shape": [
+    3,
+    11008
+  ],
+  "model_compute_dtype": "torch.float16",
+  "activation_dtype_before_cast": "torch.bfloat16",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "kernel_candidates": [
+    {
+      "output_tile": 1,
+      "num_warps": 1,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "bitwise_exact": true,
+      "max_abs_diff": 0.0,
+      "triton_operator_ms": 0.8713863924145698
+    },
+    {
+      "output_tile": 2,
+      "num_warps": 2,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "bitwise_exact": true,
+      "max_abs_diff": 0.0,
+      "triton_operator_ms": 0.4248562940844783
+    },
+    {
+      "output_tile": 4,
+      "num_warps": 4,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "bitwise_exact": true,
+      "max_abs_diff": 0.0,
+      "triton_operator_ms": 0.264675734937191
+    },
+    {
+      "output_tile": 8,
+      "num_warps": 4,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "bitwise_exact": true,
+      "max_abs_diff": 0.0,
+      "triton_operator_ms": 0.19076887342062862
+    },
+    {
+      "output_tile": 8,
+      "num_warps": 8,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "bitwise_exact": true,
+      "max_abs_diff": 0.0,
+      "triton_operator_ms": 0.1856969993095845
+    },
+    {
+      "output_tile": 16,
+      "num_warps": 8,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "bitwise_exact": true,
+      "max_abs_diff": 0.0,
+      "triton_operator_ms": 0.1810245170227943
+    }
+  ],
+  "bnb_operator_ms": 0.1477537505561486,
+  "best_triton_fused_operator_ms": 0.1810245170227943,
+  "best_operator_speedup": 0.8162085058210303,
+  "best_exact_configuration": {
+    "output_tile": 16,
+    "num_warps": 8
+  },
+  "source_sha256": "50fca2adc3adc867485c9d3b2929feea0b92a8d6376a7edeee7462bad83a526f",
+  "limits": [
+    "One Linear4bit module, one prompt, one GPU and one software/model configuration.",
+    "Kernel has not been integrated into model runtime; no KV/state or end-to-end performance result.",
+    "Timing uses a preallocated Triton output and is only an operator diagnostic.",
+    "GSM8K held-out indices 300-349 were not used."
+  ]
+}

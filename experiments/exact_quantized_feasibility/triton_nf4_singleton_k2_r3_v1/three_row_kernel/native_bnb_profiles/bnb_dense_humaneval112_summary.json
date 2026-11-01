@@ -1,0 +1,56 @@
+{
+  "schema": "zassd-bnb-fused-vs-dense-actual-activation-summary-v1",
+  "classification": "six selected MLP operator cases on one real three-row block; finite diagnostic, not a full numerical contract",
+  "prompt_id": "HumanEval/112",
+  "prompt_tokens": 157,
+  "layers": [
+    0,
+    17,
+    35
+  ],
+  "activation_dtype": "torch.bfloat16",
+  "bnb_compute_dtype": "torch.float16",
+  "operator_cases": 6,
+  "bnb_fused_vs_dense_direct_fp32_to_fp16": {
+    "bitwise_equal_cases": 0,
+    "max_abs_diff_range": [
+      0.00390625,
+      0.03125
+    ],
+    "mean_abs_diff_range": [
+      7.479155465262011e-05,
+      0.000446806923719123
+    ]
+  },
+  "triton_vs_dense_direct_fp32_to_fp16": {
+    "bitwise_equal_cases": 0,
+    "max_abs_diff_range": [
+      0.001953125,
+      0.015625
+    ],
+    "mean_abs_diff_range": [
+      2.865892554382299e-07,
+      3.971729711338412e-06
+    ]
+  },
+  "fp16_code_and_scale_rounding_variant": {
+    "bitwise_equal_cases": 0,
+    "mean_abs_diff_range": [
+      3.581775672500953e-05,
+      0.00024114243569783866
+    ]
+  },
+  "median_operator_ms": {
+    "bnb_fused": 0.12505599856376648,
+    "dense_direct_fp32_to_compute": 0.2491391897201538,
+    "triton_nf4": 0.11233279705047608
+  },
+  "interpretation": "BNB fused output differs from dense F.linear in every selected case even when dense weights are reconstructed directly FP32-to-FP16; a low-precision code+scale variant reduces average error but remains non-bitwise. Triton stays much closer to the direct dense result than BNB in this screen. This points toward a fused-BNB-specific arithmetic schedule but does not distinguish internal dequant rounding from accumulation/reduction order.",
+  "limitations": [
+    "One prompt, three forced token rows, six selected gate/up operators at layers 0,17,35.",
+    "Dense F.linear is a separate GEMM implementation and its mismatch does not prove reduction order is the only cause.",
+    "Operator timings exclude dequantization and do not predict end-to-end decoder performance.",
+    "Held-out GSM8K indices 300\u2013349 were not used."
+  ],
+  "artifact": "bnb_dense_humaneval112_layers_0_17_35_v3.json"
+}

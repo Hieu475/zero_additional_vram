@@ -1,0 +1,61 @@
+{
+  "status": "completed",
+  "scope": "single-prefix shape diagnostic; not full-sequence exactness or a universal guarantee",
+  "protocol_sha256": "61ce798959d8ae9b9ce66d8475ebff5aa7dd64076ea9777db7a01bdf882d78b3",
+  "cohort_sha256": "12f1b072d375bdcbc819a24d125e73b3307ed0d37a802d6f0e377e193aaf48e3",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "family": "Qwen2",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "HumanEval/10",
+  "task": "humaneval",
+  "prompt_sha256": "60e80406bde04ba96808271e9ba8fd58129b6e8570d3ef23a2eb4c8a79370913",
+  "prompt_token_count": 137,
+  "prompt_token_ids_sha256": "0706d28bf0207d1587e5a6a37a68fcbb5a0f3755700328c1ef21416252b34028",
+  "M": 3,
+  "candidate_ids": [
+    262,
+    421,
+    537
+  ],
+  "candidate_length": 3,
+  "linear_singleton_counts": {
+    "patched_modules": 253,
+    "split_forward_calls": 253,
+    "single_row_kernel_calls": 759
+  },
+  "ordinary_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.21875,
+      0.1875,
+      0.15625
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.25,
+    "kv_value_max_abs": 0.1484375,
+    "first_kv_different_layer": 1
+  },
+  "singleton_linear_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.21875,
+      0.1875,
+      0.15625
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.25,
+    "kv_value_max_abs": 0.1484375,
+    "first_kv_different_layer": 1
+  },
+  "model_manifest": "experiments/exact_quantized_feasibility/crossmodel_shape_sweep_v1/manifests/qwen25_3b.json"
+}
