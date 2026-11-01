@@ -32,7 +32,7 @@ def reference_payload(manifest: dict[str, Any]) -> dict[str, Any]:
         "runtime": {
             key: identity[key]
             for key in ("gpu", "python", "torch", "cuda", "transformers",
-                        "bitsandbytes", "model_attention_implementation",
+                        "bitsandbytes", "triton", "model_attention_implementation",
                         "backend_flags", "source_sha256")
         },
         "operator_schedule": {

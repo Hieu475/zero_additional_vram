@@ -15,6 +15,7 @@ from transformers.models.qwen2.modeling_qwen2 import Qwen2Attention, Qwen2RMSNor
 from zassd.backends.base import load_backend
 from zassd.cache.kv_cache import TargetKVCache
 from zassd.certification.qwen2_padded import fixed_row_qwen2_schedule
+from zassd.decoding.b1_exact import b1_fixed_row_block_generate, b1_fixed_row_generate
 from zassd.decoding.speculative import diagnostic_cache_digest
 from build_b1_reference_contract import canonical_hash, reference_payload
 from run_b1_block_pilot import runtime_identity
@@ -28,8 +29,19 @@ def main():
     parser.add_argument("--prompt-id", default="gsm8k_000")
     parser.add_argument("--input", default="data/benchmarks/gsm8k_eval.jsonl")
     parser.add_argument("--device", default="cuda:0")
+    parser.add_argument("--model-dtype", choices=("config", "float16"), default="config")
     parser.add_argument("--physical-rows", type=int, default=5)
+    parser.add_argument("--capacity", type=int, default=2048)
     parser.add_argument("--attention-strategy", choices=("rowwise", "padded"), default="rowwise")
+    parser.add_argument("--quantized-linear-strategy",
+                        choices=("fixed_rows", "triton_nf4", "triton_nf4_group_scale",
+                                 "triton_nf4_group_scale_k256",
+                                 "triton_nf4_group_scale_packed_k256",
+                                 "triton_nf4_group_scale_packed_rows2_k256",
+                                 "triton_nf4_group_scale_packed_rows2_n16_k256",
+                                 "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+                                 "triton_nf4_split8_downproj_warp1_k256"),
+                        default="fixed_rows")
     parser.add_argument("--diagnose", action="store_true")
     parser.add_argument("--reference-contract", default=None)
     args = parser.parse_args()
@@ -39,8 +51,39 @@ def main():
     prompts = {str(row["id"]): row["prompt"] for line in Path(args.input).read_text().splitlines()
                if (row := json.loads(line))}
     prompt = prompts[args.prompt_id]
-    loaded = load_backend("hf_bnb_nf4", args.model, args.revision, args.device, "sdpa")
+    model_dtype = torch.float16 if args.model_dtype == "float16" else None
+    loaded = load_backend("hf_bnb_nf4", args.model, args.revision, args.device, "sdpa",
+                          model_dtype=model_dtype)
     model, tokenizer = loaded.model, loaded.tokenizer
+    prompt_ids = tokenizer(prompt, return_tensors="pt")["input_ids"].to(args.device)
+    if prompt_ids.shape[1] + 2 > args.capacity:
+        raise ValueError("capacity must leave room for the two-token strategy warmup")
+    if args.quantized_linear_strategy in {
+        "triton_nf4", "triton_nf4_group_scale", "triton_nf4_group_scale_k256",
+        "triton_nf4_group_scale_packed_k256",
+        "triton_nf4_group_scale_packed_rows2_k256",
+        "triton_nf4_group_scale_packed_rows2_n16_k256",
+        "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+        "triton_nf4_split8_downproj_warp1_k256",
+    }:
+        # Match the pilot runner's warmup before hashing loaded model state.
+        b1_fixed_row_generate(
+            model, tokenizer, prompt_ids, k=max(1, args.physical_rows - 1),
+            max_new_tokens=2, device=args.device,
+            kv_cache_max_capacity=args.capacity,
+            physical_rows=args.physical_rows,
+            attention_strategy=args.attention_strategy,
+            quantized_linear_strategy=args.quantized_linear_strategy,
+        )
+        b1_fixed_row_block_generate(
+            model, tokenizer, prompt_ids, k=max(1, args.physical_rows - 1),
+            max_new_tokens=2, device=args.device,
+            kv_cache_max_capacity=args.capacity,
+            physical_rows=args.physical_rows,
+            attention_strategy=args.attention_strategy,
+            quantized_linear_strategy=args.quantized_linear_strategy,
+        )
+        torch.cuda.synchronize(args.device)
     reference_contract_id = None
     if args.reference_contract:
         def package_version(name):
@@ -48,24 +91,37 @@ def main():
                 return importlib.metadata.version(name)
             except importlib.metadata.PackageNotFoundError:
                 return None
-        identity = runtime_identity(model, tokenizer, args.device, package_version)
+        identity = runtime_identity(
+            model, tokenizer, args.device, package_version,
+            quantized_linear_strategy=args.quantized_linear_strategy,
+        )
         contract_manifest = {
             "model": args.model, "revision": args.revision,
             "backend": loaded.metadata, "runtime_identity": identity,
-            "reference_schedule": "qwen2_fixed_row_singleton",
+            "reference_schedule": (
+                "qwen2_fixed_row_singleton"
+                if args.quantized_linear_strategy == "fixed_rows"
+                else f"qwen2_fixed_row_{args.attention_strategy}_"
+                     f"{args.quantized_linear_strategy}_singleton"
+            ),
             "attention_strategy": args.attention_strategy,
             "physical_rows": args.physical_rows,
-            "cache_backend": "StaticPreallocatedKVCache", "capacity": 2048,
+            "cache_backend": "StaticPreallocatedKVCache", "capacity": args.capacity,
             "greedy_tie_rule": "torch.argmax_first_index",
             "eos_token_id": tokenizer.eos_token_id,
         }
         contract = json.loads(Path(args.reference_contract).read_text())
         expected = {key: value for key, value in contract.items()
                     if key not in {"reference_contract_id", "provenance"}}
-        if reference_payload(contract_manifest) != expected or canonical_hash(expected) != contract.get("reference_contract_id"):
-            raise ValueError("operator probe runtime does not match reference contract")
+        actual = reference_payload(contract_manifest)
+        if actual != expected or canonical_hash(expected) != contract.get("reference_contract_id"):
+            mismatches = [key for key in expected if expected[key] != actual.get(key)]
+            if canonical_hash(expected) != contract.get("reference_contract_id"):
+                mismatches.append("reference_contract_id integrity")
+            raise ValueError(
+                f"operator probe runtime does not match reference contract: {mismatches}"
+            )
         reference_contract_id = contract["reference_contract_id"]
-    prompt_ids = tokenizer(prompt, return_tensors="pt")["input_ids"].to(args.device)
     rows = []
     phase = ["idle"]
     active_row = [0]
@@ -80,10 +136,11 @@ def main():
 
     with fixed_row_qwen2_schedule(model, physical_rows=args.physical_rows,
                                   attention_strategy=args.attention_strategy,
+                                  quantized_linear_strategy=args.quantized_linear_strategy,
                                   observer=observe_attention if args.diagnose else None):
         for m in range(1, args.physical_rows + 1):
-            sequential = TargetKVCache(backend="static", max_capacity=2048)
-            block = TargetKVCache(backend="static", max_capacity=2048)
+            sequential = TargetKVCache(backend="static", max_capacity=args.capacity)
+            block = TargetKVCache(backend="static", max_capacity=args.capacity)
             captures = {"sequential": {}, "block": {}}
             attention_captures = {"sequential": [], "block": []}
             phase[0] = "sequential"
@@ -181,6 +238,7 @@ def main():
         "prompt_id": args.prompt_id, "prompt_length": int(prompt_ids.shape[1]),
         "reference_contract_id": reference_contract_id,
         "physical_rows": args.physical_rows, "attention_strategy": args.attention_strategy,
+        "quantized_linear_strategy": args.quantized_linear_strategy,
         "rows": rows,
     }
     output.parent.mkdir(parents=True, exist_ok=True)

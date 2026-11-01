@@ -44,14 +44,17 @@ class ArchitectureOperatorProfile:
 FIXED_ROW_ADAPTERS: dict[str, FixedRowAdapterSpec] = {
     "qwen2": FixedRowAdapterSpec(
         model_type="qwen2",
-        allowed_model_ids=(),
-        allowed_model_revisions=(),
+        allowed_model_ids=("Qwen/Qwen2.5-3B-Instruct",),
+        allowed_model_revisions=("aa8e72537993ba99e69dfaafa59ed015b17504d1",),
         attention_class="Qwen2Attention",
         allowed_attention_implementations=("sdpa",),
-        attention_strategies=("rowwise", "padded"),
+        attention_strategies=("rowwise", "padded", "bnb_rowwise", "triton_padded",
+                              "triton_batched"),
         adapter_name="qwen2_padded.fixed_row_qwen2_schedule",
         status="experimental_empirically_validated_prototype",
-        evidence="Pinned Qwen2 BNB NF4/SDPA probes and B1 development runs; no formal all-input proof.",
+        evidence=("Qwen/Qwen2.5-3B-Instruct at revision "
+                  "aa8e72537993ba99e69dfaafa59ed015b17504d1; BNB NF4/SDPA probes and "
+                  "B1 development runs only; no formal all-input proof."),
     ),
     "llama": FixedRowAdapterSpec(
         model_type="llama",
@@ -256,6 +259,11 @@ def inspect_b1_fixed_row_capability(
         "supported": not reasons,
         "mode": "experimental_only",
         "proof_status": "not_formally_proven",
+        "exactness_claim_allowed": False,
+        "exactness_claim_block_reason": (
+            "The registered schedule has finite empirical evidence only; "
+            "operator-level and whole-sequence exactness are not formally proven."
+        ),
         "model_type": model_type,
         "model_id": model_id,
         "model_revision": model_revision,

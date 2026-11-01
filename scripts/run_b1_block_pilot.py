@@ -103,7 +103,8 @@ def quantized_model_state_sha256(model, *, chunk_bytes: int = 8 * 1024 * 1024) -
     return digest.hexdigest()
 
 
-def runtime_identity(model, tokenizer, device: str, package_version) -> dict:
+def runtime_identity(model, tokenizer, device: str, package_version,
+                     quantized_linear_strategy: str = "fixed_rows") -> dict:
     props = torch.cuda.get_device_properties(device)
     device_index = torch.device(device).index
     if device_index is None:
@@ -145,8 +146,54 @@ def runtime_identity(model, tokenizer, device: str, package_version) -> dict:
         "phi3": "src/zassd/certification/phi3_padded.py",
         "olmo2": "src/zassd/certification/olmo2_padded.py",
     }.get(model.config.model_type)
+    quantized_kernel_sources = []
+    if model.config.model_type == "qwen2":
+        if quantized_linear_strategy in {
+            "triton_nf4_group_scale", "triton_nf4_group_scale_k256"
+        }:
+            quantized_kernel_sources = [
+                "src/zassd/certification/nf4_fixed_rows.py",
+                "src/zassd/certification/nf4_fixed_rows_group_scale.py",
+            ]
+        elif quantized_linear_strategy == "triton_nf4_group_scale_packed_k256":
+            quantized_kernel_sources = [
+                "src/zassd/certification/nf4_fixed_rows.py",
+                "src/zassd/certification/nf4_fixed_rows_group_scale_packed.py",
+            ]
+        elif quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_k256":
+            quantized_kernel_sources = [
+                "src/zassd/certification/nf4_fixed_rows.py",
+                "src/zassd/certification/nf4_fixed_rows_group_scale_packed.py",
+                "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows.py",
+            ]
+        elif quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_n16_k256":
+            quantized_kernel_sources = [
+                "src/zassd/certification/nf4_fixed_rows.py",
+                "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows.py",
+            ]
+        elif quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_n16_warp1_k256":
+            quantized_kernel_sources = [
+                "src/zassd/certification/nf4_fixed_rows.py",
+                "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows_warp_sweep.py",
+            ]
+        elif quantized_linear_strategy == "triton_nf4_split8_downproj_warp1_k256":
+            quantized_kernel_sources = [
+                "src/zassd/certification/nf4_fixed_rows.py",
+                "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows_warp_sweep.py",
+                "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows_splitk.py",
+            ]
+        elif quantized_linear_strategy == "triton_nf4_m3_tl_sum":
+            quantized_kernel_sources = ["src/zassd/certification/nf4_m3_tl_sum.py"]
+        elif quantized_linear_strategy == "triton_nf4_fixed_three_rows_group_scale_packed":
+            quantized_kernel_sources = [
+                "src/zassd/certification/nf4_fixed_rows.py",
+                "src/zassd/certification/nf4_fixed_three_rows_group_scale_packed.py",
+            ]
+        elif quantized_linear_strategy == "triton_nf4":
+            quantized_kernel_sources = ["src/zassd/certification/nf4_fixed_rows.py"]
     source_files = tuple(path for path in (
         adapter_module,
+        *quantized_kernel_sources,
         "src/zassd/certification/fixed_row_dispatch.py",
         "src/zassd/certification/model_capabilities.py",
         "src/zassd/decoding/b1_exact.py",
@@ -173,6 +220,7 @@ def runtime_identity(model, tokenizer, device: str, package_version) -> dict:
         "python": platform.python_version(), "torch": torch.__version__,
         "cuda": torch.version.cuda, "transformers": package_version("transformers"),
         "bitsandbytes": package_version("bitsandbytes"),
+        "triton": package_version("triton"),
         "model_type": model.config.model_type,
         "model_config_sha256": hashlib.sha256(config_json.encode()).hexdigest(),
         "model_attention_implementation": getattr(model.config, "_attn_implementation", None),
@@ -194,8 +242,18 @@ def main():
                         help="Optional unquantized-module/activation dtype experiment")
     parser.add_argument("--reuse-linear-padding-buffer", action="store_true",
                         help="Experimental Llama-only reusable linear padding buffers")
-    parser.add_argument("--quantized-linear-strategy", choices=("fixed_rows", "rowwise"), default="fixed_rows",
-                        help="Experimental Llama BNB linear path")
+    parser.add_argument("--quantized-linear-strategy",
+                        choices=("fixed_rows", "rowwise", "triton_nf4",
+                                 "triton_nf4_group_scale", "triton_nf4_group_scale_k256",
+                                 "triton_nf4_group_scale_packed_k256",
+                                 "triton_nf4_group_scale_packed_rows2_k256",
+                                 "triton_nf4_group_scale_packed_rows2_n16_k256",
+                                 "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+                                 "triton_nf4_fixed_three_rows_group_scale_packed",
+                                 "triton_nf4_m3_tl_sum",
+                                 "triton_nf4_split8_downproj_warp1_k256"),
+                        default="fixed_rows",
+                        help="Experimental fixed-row linear path; triton_nf4 is Qwen2-only")
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--per-task", type=int, default=1)
     parser.add_argument("--start-index", type=int, default=0,
@@ -204,9 +262,12 @@ def main():
                         help="Independent process-session index; rotates method order across sessions")
     parser.add_argument("--max-new-tokens", type=int, default=64)
     parser.add_argument("--k", type=int, default=4)
+    parser.add_argument("--ngram-size", type=int, default=3,
+                        help="Maximum n-gram match length for the PLD draft proposer")
     parser.add_argument("--physical-rows", type=int, default=9,
                         help="Pinned B1 reference M dimension; keep fixed while tuning K")
-    parser.add_argument("--attention-strategy", choices=("rowwise", "padded"), default="rowwise")
+    parser.add_argument("--attention-strategy",
+                        choices=("rowwise", "padded", "bnb_rowwise"), default="rowwise")
     parser.add_argument("--capacity", type=int, default=2048)
     parser.add_argument("--audit-state", action="store_true")
     parser.add_argument("--reference-contract", default=None,
@@ -216,7 +277,7 @@ def main():
     if output.exists() and any(output.iterdir()):
         raise FileExistsError(f"refusing to overwrite {output}")
     output.mkdir(parents=True, exist_ok=True)
-    if (not torch.cuda.is_available() or args.k < 1 or args.max_new_tokens < 1 or
+    if (not torch.cuda.is_available() or args.k < 1 or args.ngram_size < 2 or args.max_new_tokens < 1 or
             args.per_task < 1 or args.start_index < 0):
         raise ValueError("CUDA and positive k/output budget are required")
     if args.physical_rows < args.k + 1:
@@ -247,6 +308,43 @@ def main():
     loaded = load_backend("hf_bnb_nf4", args.model, args.revision, args.device, "sdpa",
                           model_dtype=model_dtype)
     model, tokenizer = loaded.model, loaded.tokenizer
+    triton_warmup = None
+    if args.quantized_linear_strategy in {
+        "triton_nf4", "triton_nf4_group_scale", "triton_nf4_group_scale_k256",
+        "triton_nf4_group_scale_packed_k256",
+        "triton_nf4_group_scale_packed_rows2_k256",
+        "triton_nf4_group_scale_packed_rows2_n16_k256",
+        "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+        "triton_nf4_fixed_three_rows_group_scale_packed",
+        "triton_nf4_m3_tl_sum",
+        "triton_nf4_split8_downproj_warp1_k256",
+    }:
+        warmup_task, warmup_id, warmup_prompt = prompts[0]
+        warmup_ids = tokenizer(warmup_prompt, return_tensors="pt")["input_ids"].to(args.device)
+        if warmup_ids.shape[1] + 2 > args.capacity:
+            raise ValueError("capacity must leave room for the two-token Triton warmup")
+        # Compile every layer's fixed-row Triton linear before timed methods.
+        # Both singleton and block paths are warmed under the selected contract.
+        b1_fixed_row_generate(
+            model, tokenizer, warmup_ids, k=args.k, ngram_size=args.ngram_size, max_new_tokens=2,
+            device=args.device, kv_cache_max_capacity=args.capacity,
+            physical_rows=args.physical_rows,
+            attention_strategy=args.attention_strategy,
+            quantized_linear_strategy=args.quantized_linear_strategy,
+        )
+        b1_fixed_row_block_generate(
+            model, tokenizer, warmup_ids, k=args.k, ngram_size=args.ngram_size, max_new_tokens=2,
+            device=args.device, kv_cache_max_capacity=args.capacity,
+            physical_rows=args.physical_rows,
+            attention_strategy=args.attention_strategy,
+            quantized_linear_strategy=args.quantized_linear_strategy,
+        )
+        torch.cuda.synchronize(args.device)
+        triton_warmup = {
+            "strategy": args.quantized_linear_strategy,
+            "task": warmup_task, "prompt_id": warmup_id,
+            "new_tokens": 2, "methods": ["b1_reference", "b1_block"],
+        }
 
     def package_version(name):
         try:
@@ -263,6 +361,7 @@ def main():
         "model_dtype_override": args.model_dtype,
         "reuse_linear_padding_buffer": args.reuse_linear_padding_buffer,
         "quantized_linear_strategy": args.quantized_linear_strategy,
+        "kernel_warmup": triton_warmup,
         "backend": loaded.metadata, "gpu": torch.cuda.get_device_name(args.device),
         "git_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
         "python": platform.python_version(), "torch": torch.__version__,
@@ -272,8 +371,11 @@ def main():
         "attention_strategy": args.attention_strategy,
         "reuse_linear_padding_buffer": args.reuse_linear_padding_buffer,
         "quantized_linear_strategy": args.quantized_linear_strategy,
-        "ngram_size": 3,
-        "reference_schedule": f"{model.config.model_type}_fixed_row_{args.attention_strategy}_singleton",
+        "ngram_size": args.ngram_size,
+        "reference_schedule": (
+            f"{model.config.model_type}_fixed_row_{args.attention_strategy}_"
+            f"{args.quantized_linear_strategy}_singleton"
+        ),
         "cache_backend": "StaticPreallocatedKVCache",
         "greedy_tie_rule": "torch.argmax_first_index",
         "max_new_tokens": args.max_new_tokens, "capacity": args.capacity,
@@ -285,7 +387,10 @@ def main():
         "state_audit_granularity": "every_output_prefix" if args.audit_state else None,
         "input_hashes": input_hashes,
     }
-    runtime = runtime_identity(model, tokenizer, args.device, package_version)
+    runtime = runtime_identity(
+        model, tokenizer, args.device, package_version,
+        quantized_linear_strategy=args.quantized_linear_strategy,
+    )
     manifest["runtime_identity"] = runtime
     if args.reference_contract:
         reference_path = Path(args.reference_contract)
@@ -309,7 +414,7 @@ def main():
         "attention_strategy": args.attention_strategy,
         "reuse_linear_padding_buffer": args.reuse_linear_padding_buffer,
         "quantized_linear_strategy": args.quantized_linear_strategy,
-        "ngram_size": 3, "cache_backend": "StaticPreallocatedKVCache",
+        "ngram_size": args.ngram_size, "cache_backend": "StaticPreallocatedKVCache",
         "greedy_tie_rule": "torch.argmax_first_index",
         "capacity": args.capacity, "max_new_tokens": args.max_new_tokens,
         "input_hashes": input_hashes, "prompt_file": args.prompt_file,
@@ -341,7 +446,7 @@ def main():
                                   "decode_s": decode_ms / 1000}
             elif method == "b1_reference":
                 _, metrics = b1_fixed_row_generate(
-                    model, tokenizer, ids, k=args.k,
+                    model, tokenizer, ids, k=args.k, ngram_size=args.ngram_size,
                     max_new_tokens=args.max_new_tokens, device=args.device,
                     kv_cache_max_capacity=args.capacity,
                     physical_rows=args.physical_rows,
@@ -356,7 +461,7 @@ def main():
                                    "physical_rows": metrics.physical_rows}
             else:
                 _, metrics = b1_fixed_row_block_generate(
-                    model, tokenizer, ids, k=args.k,
+                    model, tokenizer, ids, k=args.k, ngram_size=args.ngram_size,
                     max_new_tokens=args.max_new_tokens, device=args.device,
                     kv_cache_max_capacity=args.capacity,
                     physical_rows=args.physical_rows,
@@ -398,10 +503,11 @@ def main():
         if args.audit_state:
             reference_states, block_states = [], []
             b1_fixed_row_generate(
-                model, tokenizer, ids, k=args.k, max_new_tokens=args.max_new_tokens,
+                model, tokenizer, ids, k=args.k, ngram_size=args.ngram_size, max_new_tokens=args.max_new_tokens,
                 device=args.device, kv_cache_max_capacity=args.capacity,
                 physical_rows=args.physical_rows,
                 attention_strategy=args.attention_strategy,
+                quantized_linear_strategy=args.quantized_linear_strategy,
                 state_observer=lambda n, c: reference_states.append((n, diagnostic_cache_digest(c))),
             )
             def observe_all_block_prefixes(n, cache):
@@ -416,10 +522,11 @@ def main():
                     ))
 
             b1_fixed_row_block_generate(
-                model, tokenizer, ids, k=args.k, max_new_tokens=args.max_new_tokens,
+                model, tokenizer, ids, k=args.k, ngram_size=args.ngram_size, max_new_tokens=args.max_new_tokens,
                 device=args.device, kv_cache_max_capacity=args.capacity,
                 physical_rows=args.physical_rows,
                 attention_strategy=args.attention_strategy,
+                quantized_linear_strategy=args.quantized_linear_strategy,
                 state_observer=observe_all_block_prefixes,
             )
             ref_map, block_map = dict(reference_states), dict(block_states)

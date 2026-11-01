@@ -89,6 +89,8 @@ def run_vanilla(
 
 def handle_benchmark(args: argparse.Namespace) -> None:
     """Execute benchmark subcommand."""
+    if args.method in {"b1_exact", "b1_reference", "b1_block_experimental"} and args.temperature != 0.0:
+        raise ValueError("B1 methods currently support greedy decoding only")
     device = args.device
     print(f"\n[ZASSD Benchmark] Loading model: {args.model} ...")
 
@@ -159,6 +161,7 @@ def handle_benchmark(args: argparse.Namespace) -> None:
         vanilla_tps_list.append(tps)
     baseline_tps = float(np.mean(vanilla_tps_list))
 
+
     results = []
     for p_idx, prompt in enumerate(prompts):
         if args.method == "vanilla":
@@ -167,6 +170,38 @@ def handle_benchmark(args: argparse.Namespace) -> None:
         elif args.method == "prompt_lookup":
             text, m = prompt_lookup_generate(model, tokenizer, prompt, k=args.k, max_new_tokens=args.max_new_tokens, temperature=args.temperature, device=device)
             res = {"prompt_idx": p_idx, "tps": m.tokens_per_second, "tokens": m.total_tokens, "acc_rate": m.acceptance_rate, "speedup": m.tokens_per_second / baseline_tps}
+        elif args.method in {"b1_exact", "b1_reference", "b1_block_experimental"}:
+            from zassd.decoding.b1_exact import (
+                b1_exact_generate, b1_fixed_row_block_generate, b1_fixed_row_generate,
+            )
+            if args.method == "b1_exact":
+                text, m = b1_exact_generate(
+                    model, tokenizer, prompt, k=args.k,
+                    max_new_tokens=args.max_new_tokens, device=device,
+                )
+            elif args.method == "b1_reference":
+                text, m = b1_fixed_row_generate(
+                    model, tokenizer, prompt, k=args.k,
+                    max_new_tokens=args.max_new_tokens, device=device,
+                )
+            else:
+                text, m = b1_fixed_row_block_generate(
+                    model, tokenizer, prompt, k=args.k,
+                    max_new_tokens=args.max_new_tokens, device=device,
+                )
+            acceptance = (m.accepted_draft_tokens / m.draft_tokens
+                          if m.draft_tokens else 0.0)
+            tps = len(m.generated_token_ids) / max(m.total_time_s, 1e-9)
+            res = {"prompt_idx": p_idx, "tps": tps,
+                   "tokens": len(m.generated_token_ids), "acc_rate": acceptance,
+                   "speedup": tps / baseline_tps,
+                   "target_forwards": m.target_forwards,
+                   "target_rows": m.target_rows,
+                   "reference_schedule": m.reference_schedule,
+                   "physical_rows": m.physical_rows,
+                   "draft_tokens": m.draft_tokens,
+                   "accepted_draft_tokens": m.accepted_draft_tokens,
+                   "capability_report": m.capability_report}
         elif args.method == "knapspec":
             ctrl = KnapSpecController(total_layers=adapter.num_layers, budget_ratio=0.75, fixed_k=args.k)
             text, m = self_speculative_generate(model, tokenizer, layer_mgr, ctrl.skip_indices, prompt, k=args.k, controller=ctrl, max_new_tokens=args.max_new_tokens, temperature=args.temperature, device=device)
@@ -323,7 +358,8 @@ def main() -> None:
         "--method",
         type=str,
         default="zassd",
-        choices=["vanilla", "zassd", "prompt_lookup", "hybrid", "routed", "knapspec", "specbound"],
+        choices=["vanilla", "zassd", "prompt_lookup", "hybrid", "routed", "knapspec", "specbound",
+                 "b1_exact", "b1_reference", "b1_block_experimental"],
         help="Decoding method to benchmark",
     )
     bench_parser.add_argument("--k", type=int, default=2, help="Speculative draft length K")

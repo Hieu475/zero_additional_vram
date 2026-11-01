@@ -9,6 +9,7 @@ is a prototype operator schedule, not a proven production kernel.
 from __future__ import annotations
 
 from contextlib import contextmanager
+import inspect
 from types import MethodType
 
 import torch
@@ -25,7 +26,8 @@ from zassd.cache.kv_cache import StaticPreallocatedKVCache
 
 @contextmanager
 def fixed_row_qwen2_schedule(model, *, physical_rows: int = 9,
-                             attention_strategy: str = "rowwise", observer=None):
+                             attention_strategy: str = "rowwise", observer=None,
+                             quantized_linear_strategy: str = "fixed_rows"):
     """Patch Qwen2 operators for a fixed row count, restoring them on exit.
 
     Scope: Qwen2 modules, batch=1 unpadded prompt, eval mode, static KV,
@@ -33,10 +35,37 @@ def fixed_row_qwen2_schedule(model, *, physical_rows: int = 9,
     Unsupported attention inputs fail closed. Prefill uses the ordinary Qwen2
     attention path; singleton and block decode use the selected fixed-row path.
     """
+    from zassd.certification.model_capabilities import require_b1_fixed_row_capability
+
+    require_b1_fixed_row_capability(model, attention_strategy=attention_strategy)
     if physical_rows < 2 or model.training:
         raise ValueError("fixed-row schedule requires physical_rows >= 2 and eval mode")
-    if attention_strategy not in {"rowwise", "padded"}:
-        raise ValueError("attention_strategy must be rowwise or padded")
+    if attention_strategy not in {
+        "rowwise", "padded", "bnb_rowwise", "triton_padded", "triton_batched"
+    }:
+        raise ValueError(
+            "unsupported Qwen2 fixed-row attention strategy"
+        )
+    if quantized_linear_strategy not in {
+        "fixed_rows", "triton_nf4", "triton_nf4_group_scale",
+        "triton_nf4_group_scale_k256",
+        "triton_nf4_group_scale_packed_k256",
+        "triton_nf4_group_scale_packed_rows2_k256",
+        "triton_nf4_group_scale_packed_rows2_n16_k256",
+        "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+        "triton_nf4_fixed_three_rows_group_scale_packed",
+        "triton_nf4_m3_tl_sum",
+        "triton_nf4_split8_downproj_warp1_k256",
+    }:
+        raise ValueError("unsupported Qwen2 quantized_linear_strategy")
+    if (quantized_linear_strategy == "triton_nf4_split8_downproj_warp1_k256"
+            and physical_rows != 2):
+        raise ValueError("split8 down-projection schedule requires physical_rows=2")
+    if (quantized_linear_strategy == "triton_nf4_fixed_three_rows_group_scale_packed"
+            and physical_rows != 3):
+        raise ValueError("fixed-three-row NF4 schedule requires physical_rows=3")
+    if quantized_linear_strategy == "triton_nf4_m3_tl_sum" and physical_rows != 3:
+        raise ValueError("NF4 tl.sum fixed-row strategy requires physical_rows=3")
     model_config = getattr(model, "config", None)
     if getattr(model_config, "model_type", None) != "qwen2":
         raise TypeError("fixed-row schedule requires a Qwen2 model configuration")
@@ -49,18 +78,21 @@ def fixed_row_qwen2_schedule(model, *, physical_rows: int = 9,
     if any(module.sliding_window for module in attention_modules):
         raise ValueError("fixed-row schedule does not support sliding-window attention")
     replacements = []
+    call_state = {"decode": False}
 
     original_model_forward = model.forward
+    model_forward_signature = inspect.signature(original_model_forward)
 
     def guarded_model_forward(self, *args, _original=original_model_forward, **kwargs):
         forbidden = ("attention_mask", "position_ids", "inputs_embeds", "cache_position",
                      "block_sequence_ids", "position_embeddings")
-        if any(kwargs.get(name) is not None for name in forbidden):
+        bound = model_forward_signature.bind_partial(*args, **kwargs)
+        if any(bound.arguments.get(name) is not None for name in forbidden):
             raise ValueError("fixed-row schedule requires implicit positions and no external mask")
-        if ((len(args) > 1 and args[1] is not None) or
-                (len(args) > 2 and args[2] is not None) or
-                (len(args) > 4 and args[4] is not None)):
-            raise ValueError("fixed-row schedule requires implicit positions and no external mask")
+        cache = bound.arguments.get("past_key_values")
+        call_state["decode"] = (
+            cache is not None and int(cache.get_seq_length()) > 0
+        )
         return _original(*args, **kwargs)
 
     model.forward = MethodType(guarded_model_forward, model)
@@ -71,12 +103,162 @@ def fixed_row_qwen2_schedule(model, *, physical_rows: int = 9,
             original = module.forward
 
             def fixed_linear(self, x, _original=original):
-                if x.ndim != 3 or x.shape[0] != 1 or x.shape[1] > physical_rows:
+                if x.ndim != 3 or x.shape[0] != 1 or x.shape[1] < 1:
+                    raise ValueError(
+                        "fixed-row Qwen2 linear requires a nonempty rank-3 batch-one input"
+                    )
+                if x.shape[1] > physical_rows:
+                    if call_state["decode"]:
+                        raise ValueError(
+                            "fixed-row Qwen2 decode linear rows exceed physical_rows"
+                        )
+                    # Long prefill is shared by the reference and block paths;
+                    # retain the ordinary prefill kernel schedule in both.
                     return _original(x)
                 rows = x.shape[1]
+                if (attention_strategy == "bnb_rowwise"
+                        and self is getattr(model, "lm_head", None)):
+                    # The LM head's very wide output can dispatch to a
+                    # different BNB GEMM for M>1. Keep B2's singleton logit
+                    # arithmetic by evaluating each real row independently.
+                    return torch.cat([
+                        _original(x[:, row:row + 1, :].contiguous())
+                        for row in range(rows)
+                    ], dim=1)
+                if (attention_strategy == "triton_batched"
+                        and self is getattr(model, "lm_head", None)):
+                    # Keep the vocabulary projection's row dimension fixed
+                    # for singleton and block verification. Padded rows are
+                    # discarded after projection and never enter the cache.
+                    if rows < physical_rows:
+                        x = F.pad(x, (0, 0, 0, physical_rows - rows))
+                    return _original(x.contiguous())[:, :rows, :]
+                if (quantized_linear_strategy != "fixed_rows"
+                        and isinstance(self, torch.nn.Linear)
+                        and not isinstance(self, Linear4bit)
+                        and self is not getattr(model, "lm_head", None)):
+                    raise TypeError(
+                        "Triton NF4 fixed-row schedule encountered an unquantized "
+                        "projection outside the explicitly supported lm_head"
+                    )
+                if (isinstance(self, Linear4bit) and
+                        quantized_linear_strategy ==
+                        "triton_nf4_fixed_three_rows_group_scale_packed"):
+                    from zassd.certification.nf4_fixed_three_rows_group_scale_packed import (
+                        nf4_fixed_three_rows_group_scale_packed_linear,
+                    )
+
+                    return nf4_fixed_three_rows_group_scale_packed_linear(
+                        x.contiguous(), self, block_n=16, block_k=256,
+                        num_warps=1,
+                    )
+                if (isinstance(self, Linear4bit) and
+                        quantized_linear_strategy == "triton_nf4_m3_tl_sum" and
+                        self is not getattr(model, "lm_head", None)):
+                    from zassd.certification.nf4_m3_tl_sum import nf4_m3_tl_sum_linear
+
+                    return nf4_m3_tl_sum_linear(
+                        x.contiguous(), self, physical_rows=physical_rows
+                    )
+                if (isinstance(self, Linear4bit) and
+                        quantized_linear_strategy == "triton_nf4"):
+                    from zassd.certification.nf4_fixed_rows import nf4_fixed_rows_linear
+
+                    return nf4_fixed_rows_linear(
+                        x.contiguous(), self, physical_rows=physical_rows
+                    )
+                if (isinstance(self, Linear4bit) and
+                        quantized_linear_strategy in {
+                            "triton_nf4_group_scale", "triton_nf4_group_scale_k256"
+                        }):
+                    from zassd.certification.nf4_fixed_rows_group_scale import (
+                        nf4_fixed_rows_group_scale_linear,
+                    )
+
+                    return nf4_fixed_rows_group_scale_linear(
+                        x.contiguous(), self, physical_rows=physical_rows,
+                        block_n=8,
+                        block_k=(256 if quantized_linear_strategy.endswith("k256") else 128),
+                    )
+                if (isinstance(self, Linear4bit) and
+                        quantized_linear_strategy == "triton_nf4_group_scale_packed_k256"):
+                    from zassd.certification.nf4_fixed_rows_group_scale_packed import (
+                        nf4_fixed_rows_group_scale_packed_linear,
+                    )
+
+                    return nf4_fixed_rows_group_scale_packed_linear(
+                        x.contiguous(), self, physical_rows=physical_rows,
+                        block_n=8, block_k=256,
+                    )
+                if (isinstance(self, Linear4bit) and
+                        quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_k256"):
+                    if rows == 2:
+                        from zassd.certification.nf4_fixed_rows_group_scale_packed_rows import (
+                            nf4_fixed_rows_group_scale_packed_rows_linear,
+                        )
+
+                        return nf4_fixed_rows_group_scale_packed_rows_linear(
+                            x.contiguous(), self, physical_rows=physical_rows,
+                            block_n=8, block_k=256,
+                        )
+                    from zassd.certification.nf4_fixed_rows_group_scale_packed import (
+                        nf4_fixed_rows_group_scale_packed_linear,
+                    )
+
+                    return nf4_fixed_rows_group_scale_packed_linear(
+                        x.contiguous(), self, physical_rows=physical_rows,
+                        block_n=8, block_k=256,
+                    )
+                if (isinstance(self, Linear4bit) and
+                        quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_n16_k256"):
+                    from zassd.certification.nf4_fixed_rows_group_scale_packed_rows import (
+                        nf4_fixed_rows_group_scale_packed_rows_linear,
+                    )
+
+                    return nf4_fixed_rows_group_scale_packed_rows_linear(
+                        x.contiguous(), self, physical_rows=physical_rows,
+                        block_n=16, block_k=256,
+                    )
+                if (isinstance(self, Linear4bit) and
+                        quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_n16_warp1_k256"):
+                    from zassd.certification.nf4_fixed_rows_group_scale_packed_rows_warp_sweep import (
+                        nf4_fixed_rows_group_scale_packed_rows_linear,
+                    )
+
+                    return nf4_fixed_rows_group_scale_packed_rows_linear(
+                        x.contiguous(), self, physical_rows=physical_rows,
+                        block_n=16, block_k=256, num_warps=1,
+                    )
+                if (isinstance(self, Linear4bit) and
+                        quantized_linear_strategy == "triton_nf4_split8_downproj_warp1_k256"):
+                    if self.in_features == 11008 and self.out_features == 2048:
+                        from zassd.certification.nf4_fixed_rows_group_scale_packed_rows_splitk import (
+                            nf4_fixed_rows_group_scale_packed_rows_linear,
+                        )
+
+                        return nf4_fixed_rows_group_scale_packed_rows_linear(
+                            x.contiguous(), self, physical_rows=physical_rows,
+                            block_n=16, block_k=256, num_warps=1, split_parts=8,
+                        )
+                    if not (
+                        self.in_features == 2048
+                        and self.out_features in (256, 2048, 11008)
+                    ):
+                        raise ValueError(
+                            "split8 strategy only supports the pinned Qwen2.5-3B NF4 linear shapes"
+                        )
+                    from zassd.certification.nf4_fixed_rows_group_scale_packed_rows_warp_sweep import (
+                        nf4_fixed_rows_group_scale_packed_rows_linear,
+                    )
+
+                    return nf4_fixed_rows_group_scale_packed_rows_linear(
+                        x.contiguous(), self, physical_rows=physical_rows,
+                        block_n=16, block_k=256, num_warps=1,
+                    )
                 if rows < physical_rows:
                     x = F.pad(x, (0, 0, 0, physical_rows - rows))
-                return _original(x.contiguous())[:, :rows, :]
+                x = x.contiguous()
+                return _original(x)[:, :rows, :]
 
             module.forward = MethodType(fixed_linear, module)
             replacements.append((module, original))
@@ -84,9 +266,26 @@ def fixed_row_qwen2_schedule(model, *, physical_rows: int = 9,
             original = module.forward
 
             def fixed_rmsnorm(self, x, _original=original):
-                if x.ndim != 3 or x.shape[0] != 1 or x.shape[1] > physical_rows:
+                if x.ndim != 3 or x.shape[0] != 1 or x.shape[1] < 1:
+                    raise ValueError(
+                        "fixed-row Qwen2 RMSNorm requires a nonempty rank-3 batch-one input"
+                    )
+                if x.shape[1] > physical_rows:
+                    if call_state["decode"]:
+                        raise ValueError(
+                            "fixed-row Qwen2 decode RMSNorm rows exceed physical_rows"
+                        )
+                    # See the corresponding linear wrapper: prefill is common
+                    # to both paths and is not part of block verification.
                     return _original(x)
                 rows = x.shape[1]
+                if attention_strategy == "bnb_rowwise":
+                    # Qwen RMSNorm can dispatch differently for M=1 and the
+                    # padded physical row count. Preserve BNB singleton math.
+                    return torch.cat([
+                        _original(x[:, row:row + 1, :].contiguous())
+                        for row in range(rows)
+                    ], dim=1)
                 if rows < physical_rows:
                     x = F.pad(x, (0, 0, 0, physical_rows - rows))
                 return _original(x.contiguous())[:, :rows, :]
@@ -119,9 +318,25 @@ def fixed_row_qwen2_schedule(model, *, physical_rows: int = 9,
                 query, key = apply_rotary_pos_emb(query, key, cos, sin)
                 key, value = past_key_values.update(key, value, self.layer_idx)
                 prefix = key.shape[2] - rows
-                key = repeat_kv(key, self.num_key_value_groups)
-                value = repeat_kv(value, self.num_key_value_groups)
-                if attention_strategy == "rowwise":
+                if attention_strategy == "bnb_rowwise":
+                    # Match the pinned Transformers SDPA singleton call:
+                    # native KV-head layout, one query row, no mask, and GQA
+                    # enabled inside PyTorch's SDPA implementation.
+                    outputs = []
+                    for row in range(rows):
+                        length = prefix + row + 1
+                        row_output = F.scaled_dot_product_attention(
+                            query[:, :, row:row + 1, :].contiguous(),
+                            key[:, :, :length, :].contiguous(),
+                            value[:, :, :length, :].contiguous(),
+                            attn_mask=None, dropout_p=0.0, scale=self.scaling,
+                            is_causal=False, enable_gqa=True,
+                        )
+                        outputs.append(row_output)
+                    attn_output = torch.cat(outputs, dim=2)
+                elif attention_strategy == "rowwise":
+                    key = repeat_kv(key, self.num_key_value_groups)
+                    value = repeat_kv(value, self.num_key_value_groups)
                     outputs = []
                     for row in range(rows):
                         length = prefix + row + 1
@@ -140,7 +355,32 @@ def fixed_row_qwen2_schedule(model, *, physical_rows: int = 9,
                                      row_value, row_mask, row_output)
                         outputs.append(row_output)
                     attn_output = torch.cat(outputs, dim=2)
+                elif attention_strategy == "triton_batched":
+                    key = repeat_kv(key, self.num_key_value_groups)
+                    value = repeat_kv(value, self.num_key_value_groups)
+                    attn_output = F.scaled_dot_product_attention(
+                        query.contiguous(), key.contiguous(), value.contiguous(),
+                        attn_mask=None, dropout_p=0.0, scale=self.scaling,
+                        is_causal=False,
+                    )
+                elif attention_strategy == "triton_padded":
+                    key = repeat_kv(key, self.num_key_value_groups)
+                    value = repeat_kv(value, self.num_key_value_groups)
+                    key = F.pad(key, (0, 0, 0, physical_rows - rows)).contiguous()
+                    value = F.pad(value, (0, 0, 0, physical_rows - rows)).contiguous()
+                    mask = torch.full(
+                        (1, 1, rows, prefix + physical_rows),
+                        float("-inf"), dtype=query.dtype, device=query.device,
+                    )
+                    for row in range(rows):
+                        mask[:, :, row, :prefix + row + 1] = 0
+                    attn_output = F.scaled_dot_product_attention(
+                        query.contiguous(), key, value, attn_mask=mask,
+                        dropout_p=0.0, scale=self.scaling, is_causal=False,
+                    )
                 else:
+                    key = repeat_kv(key, self.num_key_value_groups)
+                    value = repeat_kv(value, self.num_key_value_groups)
                     query = F.pad(query, (0, 0, 0, physical_rows - rows)).contiguous()
                     key = F.pad(key, (0, 0, 0, physical_rows - rows)).contiguous()
                     value = F.pad(value, (0, 0, 0, physical_rows - rows)).contiguous()
