@@ -24,15 +24,10 @@ def fixed_row_schedule_for_model(model, *, physical_rows: int = 9,
         raise ValueError("reusable linear padding buffer is implemented only for Llama")
     supported_linear_strategies = {
         "qwen2": {
-            "fixed_rows", "triton_nf4", "triton_nf4_group_scale",
-            "triton_nf4_group_scale_k256",
-            "triton_nf4_group_scale_packed_k256",
-            "triton_nf4_group_scale_packed_rows2_k256",
-            "triton_nf4_group_scale_packed_rows2_n16_k256",
+            "fixed_rows", "triton_nf4",
             "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
             "triton_nf4_fixed_three_rows_group_scale_packed",
             "triton_nf4_m3_tl_sum",
-            "triton_nf4_split8_downproj_warp1_k256",
         },
         "llama": {"fixed_rows", "rowwise"},
         "phi3": {"fixed_rows"},

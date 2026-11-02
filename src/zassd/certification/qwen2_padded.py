@@ -47,20 +47,12 @@ def fixed_row_qwen2_schedule(model, *, physical_rows: int = 9,
             "unsupported Qwen2 fixed-row attention strategy"
         )
     if quantized_linear_strategy not in {
-        "fixed_rows", "triton_nf4", "triton_nf4_group_scale",
-        "triton_nf4_group_scale_k256",
-        "triton_nf4_group_scale_packed_k256",
-        "triton_nf4_group_scale_packed_rows2_k256",
-        "triton_nf4_group_scale_packed_rows2_n16_k256",
+        "fixed_rows", "triton_nf4",
         "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
         "triton_nf4_fixed_three_rows_group_scale_packed",
         "triton_nf4_m3_tl_sum",
-        "triton_nf4_split8_downproj_warp1_k256",
     }:
         raise ValueError("unsupported Qwen2 quantized_linear_strategy")
-    if (quantized_linear_strategy == "triton_nf4_split8_downproj_warp1_k256"
-            and physical_rows != 2):
-        raise ValueError("split8 down-projection schedule requires physical_rows=2")
     if (quantized_linear_strategy == "triton_nf4_fixed_three_rows_group_scale_packed"
             and physical_rows != 3):
         raise ValueError("fixed-three-row NF4 schedule requires physical_rows=3")
@@ -168,85 +160,7 @@ def fixed_row_qwen2_schedule(model, *, physical_rows: int = 9,
                         x.contiguous(), self, physical_rows=physical_rows
                     )
                 if (isinstance(self, Linear4bit) and
-                        quantized_linear_strategy in {
-                            "triton_nf4_group_scale", "triton_nf4_group_scale_k256"
-                        }):
-                    from zassd.certification.nf4_fixed_rows_group_scale import (
-                        nf4_fixed_rows_group_scale_linear,
-                    )
-
-                    return nf4_fixed_rows_group_scale_linear(
-                        x.contiguous(), self, physical_rows=physical_rows,
-                        block_n=8,
-                        block_k=(256 if quantized_linear_strategy.endswith("k256") else 128),
-                    )
-                if (isinstance(self, Linear4bit) and
-                        quantized_linear_strategy == "triton_nf4_group_scale_packed_k256"):
-                    from zassd.certification.nf4_fixed_rows_group_scale_packed import (
-                        nf4_fixed_rows_group_scale_packed_linear,
-                    )
-
-                    return nf4_fixed_rows_group_scale_packed_linear(
-                        x.contiguous(), self, physical_rows=physical_rows,
-                        block_n=8, block_k=256,
-                    )
-                if (isinstance(self, Linear4bit) and
-                        quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_k256"):
-                    if rows == 2:
-                        from zassd.certification.nf4_fixed_rows_group_scale_packed_rows import (
-                            nf4_fixed_rows_group_scale_packed_rows_linear,
-                        )
-
-                        return nf4_fixed_rows_group_scale_packed_rows_linear(
-                            x.contiguous(), self, physical_rows=physical_rows,
-                            block_n=8, block_k=256,
-                        )
-                    from zassd.certification.nf4_fixed_rows_group_scale_packed import (
-                        nf4_fixed_rows_group_scale_packed_linear,
-                    )
-
-                    return nf4_fixed_rows_group_scale_packed_linear(
-                        x.contiguous(), self, physical_rows=physical_rows,
-                        block_n=8, block_k=256,
-                    )
-                if (isinstance(self, Linear4bit) and
-                        quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_n16_k256"):
-                    from zassd.certification.nf4_fixed_rows_group_scale_packed_rows import (
-                        nf4_fixed_rows_group_scale_packed_rows_linear,
-                    )
-
-                    return nf4_fixed_rows_group_scale_packed_rows_linear(
-                        x.contiguous(), self, physical_rows=physical_rows,
-                        block_n=16, block_k=256,
-                    )
-                if (isinstance(self, Linear4bit) and
                         quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_n16_warp1_k256"):
-                    from zassd.certification.nf4_fixed_rows_group_scale_packed_rows_warp_sweep import (
-                        nf4_fixed_rows_group_scale_packed_rows_linear,
-                    )
-
-                    return nf4_fixed_rows_group_scale_packed_rows_linear(
-                        x.contiguous(), self, physical_rows=physical_rows,
-                        block_n=16, block_k=256, num_warps=1,
-                    )
-                if (isinstance(self, Linear4bit) and
-                        quantized_linear_strategy == "triton_nf4_split8_downproj_warp1_k256"):
-                    if self.in_features == 11008 and self.out_features == 2048:
-                        from zassd.certification.nf4_fixed_rows_group_scale_packed_rows_splitk import (
-                            nf4_fixed_rows_group_scale_packed_rows_linear,
-                        )
-
-                        return nf4_fixed_rows_group_scale_packed_rows_linear(
-                            x.contiguous(), self, physical_rows=physical_rows,
-                            block_n=16, block_k=256, num_warps=1, split_parts=8,
-                        )
-                    if not (
-                        self.in_features == 2048
-                        and self.out_features in (256, 2048, 11008)
-                    ):
-                        raise ValueError(
-                            "split8 strategy only supports the pinned Qwen2.5-3B NF4 linear shapes"
-                        )
                     from zassd.certification.nf4_fixed_rows_group_scale_packed_rows_warp_sweep import (
                         nf4_fixed_rows_group_scale_packed_rows_linear,
                     )
