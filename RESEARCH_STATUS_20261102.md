@@ -319,4 +319,10 @@ Fallback đưa các prompt acceptance thấp từ ~0.75x lên ~1.0x và giữ B2
 
 ---
 
+## 11. Held-out GSM8K 300–349 — cấu hình đăng ký trước khi chạy (03/11/2026)
+
+Code khóa ở commit `b004262`. Cohort `data/benchmarks/gsm8k_exactness_holdout.jsonl`, SHA256 `07e43c96...30bf0` khớp `frozen_gsm8k_300_349.json`; chưa từng chạy trước đó. Chạy đúng một lần bằng `scripts/benchmark_b2_fallback_vs_b1.py`: 50 prompt, 128 token, 3 round xoay thứ tự, B2 = `ngram_size=3`, `k=2`, `physical_rows=3`, `bnb_rowwise`, fallback bật; B1 = Triton fixed-three-rows + rowwise attention; tóm tắt bằng `scripts/summarize_b2_fallback_vs_b1.py` (bootstrap theo prompt, 10000 lần, seed 0). Chỉ tiêu chính: số prompt B2 khớp BNB gốc (token ID), geomean tốc độ B2 so với BNB kèm CI. Không đổi cấu hình hay chạy lại sau khi thấy kết quả; kết quả báo cáo nguyên trạng kể cả khi xấu.
+
+---
+
 *Ngày cập nhật: 02/11/2026. Tất cả kết quả trên development prompts, một GPU RTX 4050 Laptop 6 GB, Qwen2.5-3B-Instruct NF4, BNB 0.50.0, Triton 3.6.0, PyTorch 2.11.0.*
