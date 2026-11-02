@@ -27,7 +27,7 @@ from audit_nf4_fused_gate_up_k2_r3 import (
 )
 from audit_nf4_singleton_k2_r3_closed_loop import singleton_kernel_schedule
 from audit_triton_b1_closed_loop import diagnostic_cache_prefix_digest, fixed_row_sdpa_decode
-from run_strong_baseline_comparison import run_vanilla_timed
+from _common import run_vanilla_timed
 
 
 def run_standard_block(model, tokenizer, prompt_ids, common, observer):

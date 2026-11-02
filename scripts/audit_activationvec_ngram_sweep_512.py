@@ -7,7 +7,7 @@ import torch
 from zassd.backends.base import load_backend
 from audit_bnb_nf4_gate_reduction_orders import MODEL,REVISION
 from audit_activationvec_fallback_fraction_ablation_512 import MANIFEST as ABLATION_MANIFEST,validate_manifest,fallback_fraction_schedule,cache_observer,run_candidate
-from run_strong_baseline_comparison import run_vanilla_timed
+from _common import run_vanilla_timed
 from zassd.decoding.b1_exact import b1_fixed_row_generate,b1_fixed_row_block_generate
 ROOT=Path(__file__).resolve().parents[1]
 BASE=ROOT/'experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles'

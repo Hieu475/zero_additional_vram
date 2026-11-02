@@ -11,7 +11,7 @@ from audit_activationvec_fallback_fraction_ablation_512 import (
     cache_observer, run_candidate,
 )
 from audit_triton_b1_closed_loop import diagnostic_cache_prefix_digest
-from run_strong_baseline_comparison import run_vanilla_timed
+from _common import run_vanilla_timed
 from zassd.decoding.b1_exact import b1_fixed_row_generate, b1_fixed_row_block_generate
 
 ROOT = Path(__file__).resolve().parents[1]

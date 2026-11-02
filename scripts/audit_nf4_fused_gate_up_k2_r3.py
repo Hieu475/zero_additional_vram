@@ -23,7 +23,7 @@ from zassd.certification.triton_b1_reference_contract import verify_triton_b1_re
 from benchmark_nf4_fused_gate_up_m3 import fused_gate_up
 from audit_nf4_singleton_k2_r3_closed_loop import singleton_kernel_schedule
 from audit_triton_b1_closed_loop import diagnostic_cache_prefix_digest, fixed_row_sdpa_decode
-from run_strong_baseline_comparison import run_vanilla_timed
+from _common import run_vanilla_timed
 
 
 MODEL = "Qwen/Qwen2.5-3B-Instruct"

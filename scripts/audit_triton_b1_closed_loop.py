@@ -22,9 +22,9 @@ from zassd.cache.kv_cache import TargetKVCache
 from zassd.decoding.b1_exact import b1_fixed_row_block_generate, b1_fixed_row_generate
 from prototype_fixed_row_sdpa_triton import fixed_row_attention_tiled
 try:
-    from run_strong_baseline_comparison import run_vanilla_timed
+    from _common import run_vanilla_timed
 except ModuleNotFoundError:
-    from scripts.run_strong_baseline_comparison import run_vanilla_timed
+    from scripts._common import run_vanilla_timed
 
 
 @contextmanager
@@ -135,10 +135,7 @@ def main() -> None:
                         choices=("bnb_rowwise", "padded", "triton_padded", "triton_batched"),
                         default="bnb_rowwise")
     parser.add_argument("--quantized-linear-strategy",
-                        choices=("fixed_rows", "triton_nf4_group_scale_packed_k256",
-                                 "triton_nf4_group_scale_packed_rows2_k256",
-                                 "triton_nf4_group_scale_packed_rows2_n16_k256",
-                                 "triton_nf4_group_scale_packed_rows2_n16_warp1_k256"),
+                        choices=("fixed_rows", "triton_nf4_group_scale_packed_rows2_n16_warp1_k256"),
                         default="fixed_rows")
     parser.add_argument("--output", required=True)
     args = parser.parse_args()

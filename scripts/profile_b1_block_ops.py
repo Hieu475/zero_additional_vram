@@ -33,11 +33,7 @@ def main() -> None:
     parser.add_argument("--physical-rows", type=int, default=5)
     parser.add_argument("--ngram-size", type=int, default=3)
     parser.add_argument("--quantized-linear-strategy", choices=(
-        "fixed_rows", "triton_nf4", "triton_nf4_group_scale",
-        "triton_nf4_group_scale_k256", "triton_nf4_group_scale_packed_k256",
-        "triton_nf4_group_scale_packed_rows2_k256",
-        "triton_nf4_group_scale_packed_rows2_n16_k256",
-        "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+        "fixed_rows", "triton_nf4", "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
     ), default="fixed_rows")
     parser.add_argument("--model-dtype", choices=("default", "float16"), default="default")
     parser.add_argument("--max-new-tokens", type=int, default=24)

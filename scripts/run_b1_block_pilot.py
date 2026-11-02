@@ -15,9 +15,9 @@ from collections.abc import Mapping
 import torch
 
 try:
-    from run_strong_baseline_comparison import run_vanilla_timed
+    from _common import run_vanilla_timed
 except ModuleNotFoundError:
-    from scripts.run_strong_baseline_comparison import run_vanilla_timed
+    from scripts._common import run_vanilla_timed
 from zassd.backends.base import load_backend
 from zassd.decoding.b1_exact import b1_fixed_row_block_generate, b1_fixed_row_generate
 from zassd.decoding.speculative import diagnostic_cache_digest
@@ -148,39 +148,10 @@ def runtime_identity(model, tokenizer, device: str, package_version,
     }.get(model.config.model_type)
     quantized_kernel_sources = []
     if model.config.model_type == "qwen2":
-        if quantized_linear_strategy in {
-            "triton_nf4_group_scale", "triton_nf4_group_scale_k256"
-        }:
-            quantized_kernel_sources = [
-                "src/zassd/certification/nf4_fixed_rows.py",
-                "src/zassd/certification/nf4_fixed_rows_group_scale.py",
-            ]
-        elif quantized_linear_strategy == "triton_nf4_group_scale_packed_k256":
-            quantized_kernel_sources = [
-                "src/zassd/certification/nf4_fixed_rows.py",
-                "src/zassd/certification/nf4_fixed_rows_group_scale_packed.py",
-            ]
-        elif quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_k256":
-            quantized_kernel_sources = [
-                "src/zassd/certification/nf4_fixed_rows.py",
-                "src/zassd/certification/nf4_fixed_rows_group_scale_packed.py",
-                "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows.py",
-            ]
-        elif quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_n16_k256":
-            quantized_kernel_sources = [
-                "src/zassd/certification/nf4_fixed_rows.py",
-                "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows.py",
-            ]
-        elif quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_n16_warp1_k256":
+        if quantized_linear_strategy == "triton_nf4_group_scale_packed_rows2_n16_warp1_k256":
             quantized_kernel_sources = [
                 "src/zassd/certification/nf4_fixed_rows.py",
                 "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows_warp_sweep.py",
-            ]
-        elif quantized_linear_strategy == "triton_nf4_split8_downproj_warp1_k256":
-            quantized_kernel_sources = [
-                "src/zassd/certification/nf4_fixed_rows.py",
-                "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows_warp_sweep.py",
-                "src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows_splitk.py",
             ]
         elif quantized_linear_strategy == "triton_nf4_m3_tl_sum":
             quantized_kernel_sources = ["src/zassd/certification/nf4_m3_tl_sum.py"]
@@ -244,14 +215,9 @@ def main():
                         help="Experimental Llama-only reusable linear padding buffers")
     parser.add_argument("--quantized-linear-strategy",
                         choices=("fixed_rows", "rowwise", "triton_nf4",
-                                 "triton_nf4_group_scale", "triton_nf4_group_scale_k256",
-                                 "triton_nf4_group_scale_packed_k256",
-                                 "triton_nf4_group_scale_packed_rows2_k256",
-                                 "triton_nf4_group_scale_packed_rows2_n16_k256",
                                  "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
                                  "triton_nf4_fixed_three_rows_group_scale_packed",
-                                 "triton_nf4_m3_tl_sum",
-                                 "triton_nf4_split8_downproj_warp1_k256"),
+                                 "triton_nf4_m3_tl_sum"),
                         default="fixed_rows",
                         help="Experimental fixed-row linear path; triton_nf4 is Qwen2-only")
     parser.add_argument("--device", default="cuda:0")
@@ -310,14 +276,10 @@ def main():
     model, tokenizer = loaded.model, loaded.tokenizer
     triton_warmup = None
     if args.quantized_linear_strategy in {
-        "triton_nf4", "triton_nf4_group_scale", "triton_nf4_group_scale_k256",
-        "triton_nf4_group_scale_packed_k256",
-        "triton_nf4_group_scale_packed_rows2_k256",
-        "triton_nf4_group_scale_packed_rows2_n16_k256",
+        "triton_nf4",
         "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
         "triton_nf4_fixed_three_rows_group_scale_packed",
         "triton_nf4_m3_tl_sum",
-        "triton_nf4_split8_downproj_warp1_k256",
     }:
         warmup_task, warmup_id, warmup_prompt = prompts[0]
         warmup_ids = tokenizer(warmup_prompt, return_tensors="pt")["input_ids"].to(args.device)

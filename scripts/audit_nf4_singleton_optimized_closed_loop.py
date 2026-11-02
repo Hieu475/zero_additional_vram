@@ -27,7 +27,7 @@ from zassd.certification.nf4_fixed_row_singleton_group_scale_packed import (
     nf4_fixed_row_singleton_group_scale_packed_rows_linear,
 )
 from audit_triton_b1_closed_loop import diagnostic_cache_prefix_digest, fixed_row_sdpa_decode
-from run_strong_baseline_comparison import run_vanilla_timed
+from _common import run_vanilla_timed
 
 
 STRATEGY = "triton_nf4_group_scale_packed_rows2_n16_warp1_k256"

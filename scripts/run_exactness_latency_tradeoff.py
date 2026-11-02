@@ -17,12 +17,12 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 try:
-    from run_strong_baseline_comparison import (
+    from _common import (
         BENCHMARKS, bootstrap_mean_ci, driver_version, gpu_telemetry,
         package_version, run_vanilla_timed, sha256_file, tokenize_prompt,
     )
 except ModuleNotFoundError:
-    from scripts.run_strong_baseline_comparison import (
+    from scripts._common import (
         BENCHMARKS, bootstrap_mean_ci, driver_version, gpu_telemetry,
         package_version, run_vanilla_timed, sha256_file, tokenize_prompt,
     )

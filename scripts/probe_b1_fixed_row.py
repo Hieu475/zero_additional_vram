@@ -34,13 +34,8 @@ def main():
     parser.add_argument("--capacity", type=int, default=2048)
     parser.add_argument("--attention-strategy", choices=("rowwise", "padded"), default="rowwise")
     parser.add_argument("--quantized-linear-strategy",
-                        choices=("fixed_rows", "triton_nf4", "triton_nf4_group_scale",
-                                 "triton_nf4_group_scale_k256",
-                                 "triton_nf4_group_scale_packed_k256",
-                                 "triton_nf4_group_scale_packed_rows2_k256",
-                                 "triton_nf4_group_scale_packed_rows2_n16_k256",
-                                 "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
-                                 "triton_nf4_split8_downproj_warp1_k256"),
+                        choices=("fixed_rows", "triton_nf4", "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+                                 ),
                         default="fixed_rows")
     parser.add_argument("--diagnose", action="store_true")
     parser.add_argument("--reference-contract", default=None)
@@ -59,13 +54,8 @@ def main():
     if prompt_ids.shape[1] + 2 > args.capacity:
         raise ValueError("capacity must leave room for the two-token strategy warmup")
     if args.quantized_linear_strategy in {
-        "triton_nf4", "triton_nf4_group_scale", "triton_nf4_group_scale_k256",
-        "triton_nf4_group_scale_packed_k256",
-        "triton_nf4_group_scale_packed_rows2_k256",
-        "triton_nf4_group_scale_packed_rows2_n16_k256",
-        "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
-        "triton_nf4_split8_downproj_warp1_k256",
-    }:
+        "triton_nf4", "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+        }:
         # Match the pilot runner's warmup before hashing loaded model state.
         b1_fixed_row_generate(
             model, tokenizer, prompt_ids, k=max(1, args.physical_rows - 1),

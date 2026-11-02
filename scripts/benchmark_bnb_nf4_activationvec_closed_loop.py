@@ -22,7 +22,7 @@ from zassd.decoding.b1_exact import b1_fixed_row_block_generate, b1_fixed_row_ge
 from audit_bnb_nf4_gate_reduction_orders import MODEL, REVISION
 from audit_bnb_nf4_activationvec_block_integration import triton_m3_overrides
 from audit_triton_b1_closed_loop import diagnostic_cache_prefix_digest
-from run_strong_baseline_comparison import run_vanilla_timed
+from _common import run_vanilla_timed
 
 
 ATTENTION = "bnb_rowwise"

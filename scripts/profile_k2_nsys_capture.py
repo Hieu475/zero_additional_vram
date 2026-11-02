@@ -14,7 +14,7 @@ from audit_activationvec_fallback_fraction_ablation_512 import (
     cache_observer,
     fallback_fraction_schedule,
 )
-from run_strong_baseline_comparison import run_vanilla_timed
+from _common import run_vanilla_timed
 from zassd.backends.base import load_backend
 from zassd.decoding.b1_exact import b1_fixed_row_block_generate, b1_fixed_row_generate
 

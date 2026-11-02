@@ -21,7 +21,7 @@ from scripts.audit_triton_b1_closed_loop import (
     diagnostic_cache_prefix_digest,
     fixed_row_sdpa_decode,
 )
-from scripts.run_strong_baseline_comparison import run_vanilla_timed
+from scripts._common import run_vanilla_timed
 from zassd.backends.base import load_backend
 from zassd.certification.triton_b1_reference_contract import (
     ATTENTION_STRATEGY,

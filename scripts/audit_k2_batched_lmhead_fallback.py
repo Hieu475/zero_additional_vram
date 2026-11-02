@@ -19,7 +19,7 @@ from audit_activationvec_fallback_fraction_ablation_512 import (
     fallback_fraction_schedule,
     validate_manifest as validate_base_manifest,
 )
-from run_strong_baseline_comparison import run_vanilla_timed
+from _common import run_vanilla_timed
 from zassd.backends.base import load_backend
 from zassd.decoding.b1_exact import b1_fixed_row_block_generate, b1_fixed_row_generate
 
@@ -32,7 +32,7 @@ SOURCES = (
     "scripts/audit_k2_batched_lmhead_fallback.py",
     "scripts/audit_bnb_nf4_gate_reduction_orders.py",
     "scripts/audit_activationvec_fallback_fraction_ablation_512.py",
-    "scripts/run_strong_baseline_comparison.py",
+    "scripts/_common.py",
     "src/zassd/backends/base.py",
     "src/zassd/decoding/b1_exact.py",
     "src/zassd/decoding/ngram.py",

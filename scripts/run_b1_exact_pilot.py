@@ -18,9 +18,9 @@ from pathlib import Path
 import torch
 
 try:
-    from run_strong_baseline_comparison import run_vanilla_timed
+    from _common import run_vanilla_timed
 except ModuleNotFoundError:
-    from scripts.run_strong_baseline_comparison import run_vanilla_timed
+    from scripts._common import run_vanilla_timed
 from zassd.backends.base import load_backend
 from zassd.cache.kv_cache import TargetKVCache
 from zassd.decoding.b1_exact import b1_exact_generate, one_token_transition
