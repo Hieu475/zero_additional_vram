@@ -22,15 +22,20 @@ the same arithmetic, and draft tokens never enter target KV.
 | Reference | Meaning | Status |
 |---|---|---|
 | **B1** (fixed-row singleton) | Block verification equals fixed-row singleton decoding, token for token and KV prefix for KV prefix | Matched in all recorded runs (finite empirical evidence) |
-| **B2** (original BNB greedy) | Equals the unmodified bitsandbytes greedy output | **Not achieved**: tokens differ on many prompts |
+| **B2** (original BNB greedy) | Equals the unmodified bitsandbytes greedy output | **Token-trajectory achieved** on 23 closed-loop development runs via activationvec kernel; bitwise logits+KV verified on 2 prompts (1 cycle each). Speedup requires sufficient acceptance. |
 
 The B1 reference changes the arithmetic of the model. Speedups against original
 BNB latency are therefore not evidence of BNB trajectory equivalence.
 
+The B2 activationvec path (`_fused_nf4_m3_kernel` + `bnb_rowwise` attention) processes the
+M=3 block with the same per-row arithmetic as the BNB singleton, so block and greedy outputs
+are bitwise identical. Speedup over BNB then depends entirely on acceptance rate.
+
 ## Main development results (Qwen2.5-3B NF4, RTX 4050)
 
-Kernel `triton_nf4_fixed_three_rows_group_scale_packed`, rowwise attention, K=2,
-3 physical rows. Details and caveats: `experiments/exact_quantized_feasibility/FINDINGS.md`.
+Full details and caveats: `experiments/exact_quantized_feasibility/FINDINGS.md`.
+
+### B1 results — `triton_nf4_fixed_three_rows_group_scale_packed`, rowwise attention, K=2, rows=3
 
 | Cohort | Runs | B1 match | Speedup vs B1 singleton | Speedup vs BNB latency | BNB tokens match |
 |---|---:|---:|---:|---:|---:|
@@ -40,6 +45,27 @@ Kernel `triton_nf4_fixed_three_rows_group_scale_packed`, rowwise attention, K=2,
 Intervals are prompt-cluster bootstraps over selected development prompts, not
 workload-level estimates. A frozen held-out GSM8K cohort (indices 300-349,
 `data/benchmarks/gsm8k_exactness_holdout.jsonl`) has not been used yet.
+
+### B2 results — `_fused_nf4_m3_kernel` (activationvec) + `bnb_rowwise` attention, K=2, rows=3
+
+Token trajectory matches original BNB greedy in all 23 closed-loop development runs.
+Speedup above BNB only when acceptance rate is sufficient.
+
+| Prompt / budget | Sessions | B2 match | Acceptance | Speedup vs BNB |
+|---|---:|---|---:|---:|
+| HumanEval/112, 128 tok | 2 | 4/4 | 65.2% | 1.242–1.284x |
+| HumanEval/116, 64 tok | 2 | 6/6 | 87.5% | 1.265–1.275x |
+| HumanEval/119, 64 tok | 2 | 6/6 | 66.7% | 1.162–1.206x |
+| HumanEval/120, 64 tok | 2 | 6/6 | 65.5% | 0.953–0.990x |
+| Low-acceptance prompts (0–39%) | — | all match | <40% | 0.78–0.89x |
+
+With native-BNB M=1 fallback on empty-proposal cycles, token trajectories still match original BNB greedy
+(all rounds), and development-prompt geomean speedup vs BNB is 1.06x (CNN/DM, 2 prompts), 1.09x (GSM8K dev, 6),
+1.15x (HumanEval dev, 6); without fallback it is 0.91-0.97x. A reject/rollback audit (5 scenarios, 1 prompt)
+matched BNB singleton KV prefixes and next logits bitwise. Details: `RESEARCH_STATUS_20261102.md` section 10.
+
+Bitwise logits and KV verified identical to BNB singleton on 2 prompts (1 cycle, all-accepted
+path only). Closed-loop runs check token-ID equality only. See scope limits in FINDINGS.md.
 
 ## Provenance of old runs
 
