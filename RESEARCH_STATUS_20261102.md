@@ -323,6 +323,18 @@ Fallback đưa các prompt acceptance thấp từ ~0.75x lên ~1.0x và giữ B2
 
 Code khóa ở commit `b004262`. Cohort `data/benchmarks/gsm8k_exactness_holdout.jsonl`, SHA256 `07e43c96...30bf0` khớp `frozen_gsm8k_300_349.json`; chưa từng chạy trước đó. Chạy đúng một lần bằng `scripts/benchmark_b2_fallback_vs_b1.py`: 50 prompt, 128 token, 3 round xoay thứ tự, B2 = `ngram_size=3`, `k=2`, `physical_rows=3`, `bnb_rowwise`, fallback bật; B1 = Triton fixed-three-rows + rowwise attention; tóm tắt bằng `scripts/summarize_b2_fallback_vs_b1.py` (bootstrap theo prompt, 10000 lần, seed 0). Chỉ tiêu chính: số prompt B2 khớp BNB gốc (token ID), geomean tốc độ B2 so với BNB kèm CI. Không đổi cấu hình hay chạy lại sau khi thấy kết quả; kết quả báo cáo nguyên trạng kể cả khi xấu.
 
+**Kết quả (một lần chạy, nguyên trạng; `heldout_gsm8k_300_349_b2_fallback_vs_b1_v1.json`, `heldout_gsm8k_300_349_bootstrap_v1.json`).** Lần chạy đầu tiên lỗi ngay từ đầu do cách gọi lệnh của tôi (zsh không tách danh sách ID, `KeyError` trước khi xử lý prompt nào, không có số liệu); chạy lại đúng cấu hình đăng ký.
+
+| Chỉ tiêu | B2 có fallback | B1 |
+|---|---|---|
+| Khớp BNB gốc (token ID, 3 round) | **50/50** | 24/50 |
+| Tốc độ vs BNB, geomean (CI95) | **1.117x [1.100, 1.135]** | 1.108x [1.087, 1.130] |
+| B2/B1 (CI95) | 1.008 [0.995, 1.022] | — |
+| Prompt chậm hơn BNB | 2/50 (thấp nhất 0.975x, cao nhất 1.274x) | 2/50 |
+| B1 block khớp B1 singleton | — | 50/50 |
+
+Kết luận: trên cohort held-out, B2 giữ exact với BNB gốc ở mọi prompt, tốc độ tăng khoảng 12% và không phân biệt được với B1 (CI của B2/B1 chứa 1). Hai prompt B2 chậm hơn BNB nhẹ (tệ nhất 0.975x). Số liệu khớp xu hướng của tập dev (1.121x trên 30 prompt GSM8K dev). Giới hạn: một GPU, một model, K=2, 128 token, chỉ GSM8K; bằng chứng bitwise logits/KV từng bước chỉ có trên tập dev, trên held-out chỉ kiểm token ID; CI chỉ phản ánh biến thiên giữa các prompt; cohort không loại trừ được việc dữ liệu công khai đã lọt vào dữ liệu huấn luyện mô hình.
+
 ---
 
 *Ngày cập nhật: 02/11/2026. Tất cả kết quả trên development prompts, một GPU RTX 4050 Laptop 6 GB, Qwen2.5-3B-Instruct NF4, BNB 0.50.0, Triton 3.6.0, PyTorch 2.11.0.*
