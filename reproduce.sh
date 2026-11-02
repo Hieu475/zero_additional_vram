@@ -1,31 +1,25 @@
 #!/usr/bin/env bash
-# One-command artifact reproduction (RTX 4050 6GB reference; CPU steps need no GPU).
+# Reproduction entry point for the B1 exact quantized speculative-decoding study.
 # Usage: bash reproduce.sh [--quick]
-#   --quick : CPU-only (roofline + router sims + stats + unit tests), ~2 min.
-#   default : above + GPU standard suite N=10 (~30-60 min on RTX 4050).
+#   --quick : CPU-only checks (unit tests + import audit of all scripts).
+#   default : quick checks + one short GPU B1 pilot (needs CUDA, Triton, bitsandbytes).
 set -euo pipefail
 cd "$(dirname "$0")"
-export PYTHONPATH="$PWD/src"
+export PYTHONPATH="$PWD/src:$PWD/scripts"
 
-echo "=== [1/4] unit tests (CPU) ==="
-pytest tests/test_roofline.py tests/test_hybrid_router.py -q
-
-echo "=== [2/4] roofline calibration + cross-GPU sweep (CPU) ==="
-python3 scripts/run_roofline_analysis.py
-
-echo "=== [3/4] hybrid router simulation + margin/robustness sweep (CPU) ==="
-python3 scripts/run_hybrid_router_simulation.py
-python3 scripts/sweep_router_margin.py
-python3 scripts/analyze_benchmark_stats.py
+echo "=== [1/2] unit tests ==="
+python3 -m pytest tests -q
 
 if [[ "${1:-}" == "--quick" ]]; then
-  echo "Quick mode: skipping GPU benchmark."
+  echo "Quick mode: skipping GPU pilot."
   exit 0
 fi
 
-echo "=== [4/4] GPU standard benchmark suite (N=10) ==="
-python3 scripts/run_standard_benchmark_suite.py \
-  --model Qwen/Qwen2.5-3B-Instruct \
-  --samples-per-bench 10 --max-new-tokens 48 \
-  --output experiments/16_hybrid_roofline/standard_suite_repro.json
-echo "ALL DONE. Key artifacts in experiments/16_hybrid_roofline/"
+echo "=== [2/2] GPU B1 pilot (Qwen2.5-3B NF4, K=2, 3 fixed rows, 64 tokens) ==="
+OUT="experiments/exact_quantized_feasibility/repro_$(date +%Y%m%d_%H%M%S)"
+python3 scripts/run_b1_block_pilot.py \
+  --output-dir "$OUT" \
+  --quantized-linear-strategy triton_nf4_fixed_three_rows_group_scale_packed \
+  --attention-strategy rowwise --physical-rows 3 --k 2 \
+  --max-new-tokens 64 --per-task 1 --audit-state
+echo "Done. Rows and manifest in $OUT"
