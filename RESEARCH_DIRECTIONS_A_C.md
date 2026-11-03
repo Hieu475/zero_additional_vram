@@ -144,6 +144,19 @@ Tham chiếu: baseline biên dịch không exact đạt 1.29–1.45x so với ea
 | A4 | Đo tốc độ cạnh nhau so với: BNB eager, baseline graph exact, `torch.compile` | **Dừng nếu** tốc độ so với baseline graph exact < 1.05x |
 | A5 | Held-out mới (cohort chưa dùng) đúng một lần, cấu hình đăng ký trước | Chỉ sau khi khóa mã |
 
+### 2.5b Kết quả A1–A2 (03/11/2026, tham chiếu StaticCache M=1 đã được chọn)
+
+Script: `scripts/a1_rowwise_static_block.py`, `scripts/a2_graph_block.py`. Bằng chứng: `native_bnb_profiles/a1_*`, `a2_*`. Qwen2.5-3B bnb NF4, 30 prompt GSM8K dev, 48 bước, teacher-forcing, một GPU.
+
+| Mốc | Kết quả |
+|---|---|
+| A1 (eager, từng hàng, KV tĩnh) | Đạt: logits từng hàng đã chốt và KV bằng từng bit với tham chiếu M=1, 30/30 prompt, hai mẫu từ chối (mỗi 3 và mỗi 2 chu kỳ) |
+| A2 (chụp graph thân M=3) | Đúng từng bit trên 30/30 prompt (cache dài 768 và 320). Thân M=3: 27.2 ms (cache 768) và 23.6 ms (cache 320) trong graph, so với khoảng 31 ms eager. Mốc ≤ 24 ms chỉ đạt khi cache ngắn |
+
+**Phát hiện kỹ thuật:** `StaticLayer.update` của HF ghi tại `cumulative_length` và bỏ qua `cache_position` khi ghi, nên quay lui phải đặt lại tensor `cumulative_length` tại chỗ (`fill_`). Quên bước này làm sai ngay sau chu kỳ từ chối đầu tiên (đã gặp và sửa).
+
+**Giới hạn:** chi phí thân trong graph phụ thuộc độ dài cache cấp phát (attention từng hàng đọc toàn bộ cache tĩnh); cần phân nhóm theo độ dài nếu muốn chạy ngữ cảnh dài. Mới là teacher-forcing, chưa có vòng giải mã đầy đủ (A3), chưa đo tốc độ đầu-cuối (A4). Thời gian đo bằng đồng hồ tường có đồng bộ, một lần chạy.
+
 ### 2.6 Rủi ro
 - **Tham chiếu mới:** bài toán đổi từ "exact so với bitsandbytes eager" sang "exact so với bước M=1 tĩnh". Cần lập luận rõ và ghi nhận tham chiếu cũ vẫn có giá trị với kết quả B2 hiện tại.
 - **Cache tĩnh với độ dài KV cố định:** attention tính trên toàn độ dài với mặt nạ, khác số học so với cache động; mọi ngữ cảnh phải xử lý nhất quán giữa M=1 và M=3.
