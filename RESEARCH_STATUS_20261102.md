@@ -484,6 +484,29 @@ Kết quả: **lọc bỏ đề xuất yếu không giúp** (ít block gần m�
 
 Kết luận: mức nhỉnh 0.4–1.5% của `vote` trên 20 prompt đầu **không tái lập** (mọi CI chứa 1); **giữ `base` (PLD hiện tại)**. Chỉnh cách chọn n-gram (lọc, bỏ phiếu, ngưỡng lặp) không cải thiện được tốc độ; acceptance cần nguồn draft khác chứ không phải chính sách chọn n-gram. Tốc độ tuyệt đối khác nhau giữa các tập prompt (HumanEval 20–49 đạt 1.31x so với 1.23x ở 0–19), nên so sánh tuyệt đối giữa cohort không có ý nghĩa nếu không cùng prompt. Giới hạn: chỉ tập dev, k=2, một GPU, chưa thử nguồn draft ngoài PLD (ví dụ mô hình nhỏ, bảng n-gram từ văn bản huấn luyện), cũng chưa thử gộp nhiều ứng viên vào một block.
 
+## 19. Đóng bốn việc còn lại (03/11/2026)
+
+**(a) Thứ tự rút gọn của kernel so với bitsandbytes** (`scripts/emulate_nf4_gemv_orders.py`, `nf4_gemv_order_emulation_v1.json`): đọc `csrc/kernels.cu` tag 0.50.0 (`kgemm_4bit_inference_naive<half,128,16>`), mã nguồn cộng tích lũy **tuần tự** (`local_C += p_k`), còn kernel Triton cộng **theo cặp** (`acc + (p0+p1)`); về lý thuyết hai thứ tự này khác nhau. Mô phỏng cả hai thứ tự trong fp32 trên 28,672,000 đầu ra ngẫu nhiên đuôi nặng (lớp 0, 9, 18, 27, 35, đủ bảy phép chiếu): kernel BNB thật và kernel Triton **đều khớp mô phỏng cộng theo cặp 28,672,000/28,672,000 và đều khác mô phỏng tuần tự ở 398 đầu ra**. Phép thử đủ nhạy để phân biệt hai thứ tự và chọn đúng thứ tự theo cặp cho cả hai. Cận trên 95% của tỷ lệ lệch mỗi đầu ra là ~1.0e-7 (quy tắc ba). Chưa giải thích được vì sao bản nhị phân hành xử theo cặp (biến đổi của trình biên dịch, cờ build, hay khác với mã nguồn đã đọc) nên **mọi lần nâng cấp bitsandbytes phải chạy lại script này**. Đã cập nhật `B2_OPERATOR_ARGUMENT.md`. Chưa kiểm ở mức PTX/SASS.
+
+**(b) Giảm chi phí CPU** (kết quả âm): cProfile một forward block cho thấy RMSNorm từng hàng chiếm ~30% thời gian CPU và điều phối Triton ~26 µs/lần; thử gọi thẳng kernel đã biên dịch (cùng nhị phân; bằng nhau từng bit trên 5,160,960 phần tử) nhưng enqueue 252 phép chiếu gần như không đổi (7.22 ms chuẩn so với 7.59 ms trực tiếp), nên bỏ script. RMSNorm và attention từng hàng là các chuỗi phép PyTorch nhỏ; giảm chúng đòi hỏi đổi tập kernel (mất cấu trúc "từng hàng giống tham chiếu"). Không có cải thiện thực.
+
+**(c) Block lớn hơn (M=4, M=5)** (`scripts/simulate_block_size.py`, `block_size_simulation_v1.json`, chỉ mô phỏng CPU): chạy PLD hiện tại trên chuỗi tham chiếu BNB đã ghi để đếm đúng token được chấp nhận, và dùng mô hình chi phí `F − h + s·(hàng−1) + h·(hàng LM head thực tính)` với F=24.0 ms, h=3.3 ms, s hiệu chỉnh để K=2 khớp tốc độ B2 lười đã đo (s = 2.46 ms/hàng ở GSM8K dev 30 prompt, 2.03 ms/hàng ở HumanEval dev 30 prompt). Dự đoán so với eager: GSM8K K=1/2/3/4 = 1.131/1.166/1.164/1.154x; HumanEval = 1.178/1.249/1.265/1.281x; so với K=2, mức thay đổi dự đoán là −1% đến +0% ở GSM8K và tối đa +2.6% ở HumanEval (K=4) với s hiệu chỉnh; nếu s giảm một nửa thì +1.1% (GSM8K) và +4.1% (HumanEval). Mức lợi nhỏ và không chắc chắn, nên **không đáng viết kernel M=5**. Giới hạn: mô hình tuyến tính, hiệu chỉnh chỉ từ K=2, bỏ qua chi phí kernel tăng theo số hàng, chưa kiểm thực nghiệm với K>2 (kernel chỉ có M=3).
+
+**(d) Tái lập:** `reproduce.sh` thêm kiểm tra manifest và chế độ `--b2` (reject-path, KV từng bước, benchmark B2 lười); chế độ `--quick` chạy: 78 test qua. Manifest v3 thay thế v2 (v2 không còn hợp lệ vì `B2_OPERATOR_ARGUMENT.md` được sửa sau khi ghim).
+
+## 20. VRAM: B2 không dùng thêm bộ nhớ (03/11/2026, tập dev, mô hình 3B)
+
+`scripts/measure_vram.py` (`vram_{bnb,b2_lazy}_{short,long3072}_v1.json`): mỗi phương pháp chạy trong một tiến trình riêng, tải mô hình, chạy một lượt khởi động, đặt lại số đo đỉnh rồi đo lượt thứ hai (128 token sinh). Cả hai phía dùng cùng dung lượng cache tĩnh (độ dài prompt + 136 token). Token của hai phương pháp giống hệt (SHA256 trùng) ở cả hai prompt.
+
+| Prompt | Phương pháp | Đỉnh cấp phát (MiB) | Đỉnh dự trữ (MiB) | GPU dùng cuối (MiB) |
+|---|---|---:|---:|---:|
+| `gsm8k_000` (75 token) | BNB eager | 2007.90 | 2042 | 2226.1 |
+| | B2 lười | 2007.97 | 2042 | 2226.1 |
+| `long_3072_a` (3071 token) | BNB eager | 2994.61 | 3356 | 3540.1 |
+| | B2 lười | 2994.68 | 3356 | 3540.1 |
+
+Chênh lệch đỉnh cấp phát chỉ **0.07 MiB** (khoảng 0.003%); đỉnh dự trữ và bộ nhớ GPU thực dùng giống hệt nhau; không có mô hình draft nào. Mô hình sau khi tải chiếm 1969 MiB ở cả hai. Mục tiêu "không thêm VRAM" được xác nhận ở mức cấp phát tensor và tổng bộ nhớ thiết bị. Giới hạn: một mô hình (3B), hai prompt, batch 1, bộ nhớ đỉnh phụ thuộc cache tĩnh được cấp phát theo độ dài; chưa đo trên 0.5B/1.5B.
+
 ---
 
 *Ngày cập nhật: 02/11/2026. Tất cả kết quả trên development prompts, một GPU RTX 4050 Laptop 6 GB, Qwen2.5-3B-Instruct NF4, BNB 0.50.0, Triton 3.6.0, PyTorch 2.11.0.*

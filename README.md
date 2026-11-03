@@ -70,6 +70,9 @@ distinguishable in speed there (B2/B1 = 1.008, CI [0.995, 1.022]); the differenc
 9/12 dev and 25/50 held-out prompts). B2's claim is exactness to
 eager BNB plus a modest speedup over eager, not a speedup over compiled decoding.
 
+Memory: no draft model is used; peak allocated VRAM differs from eager BNB by 0.07 MiB at equal static-cache
+capacity (2008 MiB at 75 tokens, 2995 MiB at 3071 tokens).
+
 The same loop is also equal to BNB (tokens and per-step KV) on Qwen2.5-0.5B and 1.5B development prompts, at
 1.24x and 1.16x over eager.
 

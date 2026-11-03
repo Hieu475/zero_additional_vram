@@ -64,17 +64,29 @@ Read directly from the source:
 * Consequence (**RE-linear**): for any rows `x_0, x_1, x_2` the kernel returns for
   row `i` exactly `f(x_i, W)`, where `f` does not depend on `i` or on the other
   rows. [S]
-* **Equality with the reference:** that `f(x, W)` equals the bitsandbytes
-  `gemv_4bit` M=1 result is **not derived** from the bitsandbytes source here. It
-  is established only by recorded runs: 252/252 modules, 9,289,728 / 9,289,728
-  output elements bitwise equal on three development prompts
-  (`FINDINGS.md`, `bnb_simt_full_operator_audit_summary.json`), plus block-level and
-  closed-loop checks listed below. [E]
+* **Equality with the reference.** Read at source level (bitsandbytes 0.50.0,
+  `csrc/kernels.cu`, `kgemm_4bit_inference_naive<half,128,16>`): each lane accumulates its
+  32 fp16 products **one at a time** (`local_C += (float)(local_A[k] * local_B[k])`), then
+  `cub::WarpReduce::Sum`. The Triton kernel instead adds each adjacent pair of products first
+  (`acc + (p0 + p1)`). Under strict IEEE semantics these association orders differ.
+  The shipped binary does **not** behave like the source-level sequential order:
+  `scripts/emulate_nf4_gemv_orders.py` (`nf4_gemv_order_emulation_v1.json`) emulates both
+  orders in fp32 on random heavy-tailed fp16 activations (layers 0, 9, 18, 27, 35, all seven
+  projections, 28,672,000 outputs). The real BNB M=1 kernel and the real Triton kernel both
+  match the **pairwise** emulation in 28,672,000 / 28,672,000 outputs and both differ from the
+  **sequential** emulation in 398 outputs (the two emulations differ in 398 fp16 outputs and
+  in 394,422 fp32 lane sums). The test therefore can distinguish the two orders and it
+  selects the pairwise one for both implementations. With zero BNB-vs-Triton mismatches in
+  this family of inputs, the one-sided 95% upper bound on the per-output mismatch rate is
+  about 1.0e-7 (rule of three), in addition to the 252-module / 9,289,728-element audit on real
+  activations (`FINDINGS.md`) and the closed-loop checks below. [E]
 
-Open: a proof from the bitsandbytes CUDA source that its M=1 kernel uses the same
-per-lane order and the same five-step combination, including for the tail
-groups when `K` is not a multiple of 1024 (the 0.5B and 1.5B models exercise
-`K = 896, 1536, 4864, 8960`).
+  Not established: *why* the binary is pairwise (compiler transformation of the source,
+  a different build flag, or a different source than the tag read), whether this holds for
+  other GPU architectures or bitsandbytes builds, and the tail-group behaviour for every `K`
+  (covered here by `K = 2048, 11008` only; the 0.5B/1.5B closed-loop audits exercise
+  `K = 896, 1536, 4864, 8960`). Because the source reading disagrees with the binary, any
+  future bitsandbytes upgrade must rerun the emulation script before the B2 claim is trusted.
 
 ## From RE to token equality
 
@@ -116,7 +128,7 @@ operator-level status is the table above.
 
 ## What this does not establish
 
-* Equality of the kernel with the bitsandbytes reduction order on all inputs [O].
+* Equality of the kernel with the bitsandbytes reduction order on all inputs: only measured (28.7M random outputs, 9.29M real), and the CUDA source read literally predicts a different order than the binary shows [O].
 * Independence of the PyTorch SDPA/elementwise dispatch from the number of rows
   in neighbouring calls and from allocator state [O].
 * Stability across Triton, ptxas, CUDA, PyTorch, bitsandbytes versions and GPUs
