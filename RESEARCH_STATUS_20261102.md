@@ -374,6 +374,41 @@ Nhận định: (1) Overhead Python/điều phối gần như hết (dưới 1% 
 
 Không có prompt nào chậm hơn BNB (60/60 trên 1.0x). Lười chậm hơn B2 thường ở 1/60 prompt (HumanEval), nhanh hơn ở 59/60. Reject-path audit riêng cho phiên bản lười (`scripts/audit_activationvec_reject_path_lazy_b2.py`, `lazy_reject_path_{cnndm_003,gsm8k_000,humaneval_0}_v1.json`): 5/5 scenario đạt ở cả 3 prompt. Wrapper dùng lại script audit cũ nên trường `source_sha256` trong JSON là của script audit gốc, không phải wrapper. Giới hạn: chỉ tập dev; CI chỉ phản ánh biến thiên giữa prompt; held-out GSM8K 300–349 đã dùng nên chưa có xác nhận held-out cho phiên bản lười.
 
+## 13. Forward bị giới hạn bởi CPU khởi chạy kernel (03/11/2026, tập dev, 1 prompt)
+
+`scripts/profile_b2_launch_bound.py` (`launch_bound_gsm8k_000_v1.json`): đo thời gian CPU đẩy một forward vào hàng đợi GPU (enqueue) so với tổng wall.
+
+| Forward | Enqueue CPU | Wall | Tỷ lệ CPU/wall |
+|---|---:|---:|---:|
+| BNB M=1 | 18.4 ms | 22.0 ms | 84% |
+| Block M=3, LM head 3 hàng | 25.6 ms | 35.7 ms | 72% |
+| Block M=3, LM head 1 hàng | 25.7 ms | 29.2 ms | 88% |
+
+Micro-benchmark một lớp (`down_proj`, 300 lần): BNB M=1 enqueue 28.5 µs, wall 72 µs; override Triton M=3 enqueue 25.9 µs, wall 89.8 µs; riêng lời gọi kernel Triton chỉ ~10 µs CPU. Nghĩa là: (1) lời gọi Triton không phải điểm nghẽn CPU; chi phí CPU nằm ở Python/HF/wrapper quanh các lớp và số lượng phép toán nhỏ (block M=3 phát khoảng 1.8 lần số kernel của M=1); (2) kernel Triton M=3 chậm hơn BNB M=1 khoảng 25% khi chạy riêng lẻ (89.8 vs 72 µs), tương ứng ~2 ms trên cả 252 lớp, nhưng vì forward bị giới hạn bởi CPU nên tối ưu kernel chỉ thu lại phần nhỏ; (3) tối ưu bớt kernel GPU không làm forward nhanh hơn nếu CPU vẫn là nút thắt. Hướng có thể thu thêm thật sự là giảm overhead CPU (ví dụ CUDA graph hoặc gộp phép rowwise), nhưng cả hai đều phức tạp: HF static cache ở đây dùng độ dài prefix thay đổi theo bước nên khó chụp graph, và gộp phép rowwise phải chứng minh bitwise bằng với từng hàng riêng.
+
+**Lưu ý quan trọng cho việc diễn giải tốc độ:** baseline "BNB gốc" ở mọi bảng trên là HF eager, tức cũng bị giới hạn bởi CPU. Nếu baseline được tăng tốc bằng CUDA graph hay torch.compile, thời gian mỗi token của baseline sẽ giảm mạnh còn B2 thì không hưởng lợi theo cách đó, nên mức tăng ~1.12–1.25x chỉ đúng so với BNB eager và có thể thu hẹp hoặc đảo chiều so với baseline tối ưu hơn. Cần nêu rõ khi báo cáo, và nên đo thêm baseline mạnh hơn nếu muốn tuyên bố tốc độ.
+
+## 14. Baseline mạnh hơn và mở rộng bằng chứng exactness (03/11/2026, tập dev)
+
+**Hướng 1 — baseline đã biên dịch** (`scripts/benchmark_compiled_bnb_baseline.py`, `compiled_bnb_baseline_gsm8k8_v1.json`; 8 prompt GSM8K dev, 128 token, 3 round). HF `generate` tự bỏ qua compile cho mô hình lượng tử hóa ("unable to meet the criteria for compilation"), nên tôi tự dựng vòng decode với `StaticCache` của HF và `torch.compile(mode="reduce-overhead")`; warm-up/biên dịch ~34 s. Kết quả: BNB biên dịch nhanh hơn BNB eager **1.43x** (geomean), nhưng token **chỉ giống eager ở 6/8 prompt** (lệch ở vị trí 101 và 1 ở hai prompt còn lại), tức không phải tham chiếu bitwise của BNB gốc. So sánh gián tiếp: B2 lười đạt ~1.12–1.25x so với BNB eager trên tập dev, trong khi BNB biên dịch đạt ~1.43x; vì vậy **B2 chậm hơn BNB biên dịch** (ước lượng thô, ghép từ hai bảng khác prompt/lần chạy, chưa đo cạnh nhau trong cùng lượt chạy). Kết luận hợp lý: B2 cho tốc độ ~1.1–1.25x *với bảo đảm exact so với BNB eager*; nếu chấp nhận baseline không exact đã biên dịch thì baseline đó nhanh hơn. Chưa thử kết hợp compile với giải mã suy đoán.
+
+**Hướng 2a — mô hình khác** (`scripts/run_with_model.py` mở rộng danh sách cho phép chỉ trong tiến trình thí nghiệm; mặc định fail-closed trong `src` giữ nguyên). Dùng lại nguyên audit KV closed-loop (có/không fallback, 64 token, 4 prompt GSM8K dev) và reject-path lười (5 scenario, `gsm8k_000`):
+
+| Mô hình (revision) | Hidden/MLP | KV closed-loop (8 lượt) | Reject-path (5 scenario) |
+|---|---|---|---|
+| Qwen2.5-0.5B-Instruct (7ae55760…) | 896 / 4864 | 8/8 token+KV khớp BNB | 5/5 |
+| Qwen2.5-1.5B-Instruct (989aa798…) | 1536 / 8960 | 8/8 token+KV khớp BNB | 5/5 |
+
+File: `model05b_*`, `model15b_*`. Giới hạn: 4 prompt, 64 token, chỉ họ Qwen2, cùng GPU/toolchain; chưa đo tốc độ trên hai mô hình này.
+
+**Hướng 2b — nhánh EOS** (`scripts/audit_b2_eos_termination.py`, `eos_termination_synth_chat_v1.json`, mô hình 3B): trước đó 0/90 lượt dev dừng bằng EOS. Thêm 4 prompt tổng hợp có `<|im_end|>` lặp và 8 prompt chat câu trả lời ngắn: cả 12 đều dừng bằng EOS (1–72 token), bản thường và bản lười đều khớp BNB gốc 12/12 (BNB tham chiếu dừng ở EOS); 3 prompt có chu kỳ mà draft chứa EOS. Giới hạn: số prompt nhỏ, thế hệ ngắn; không kiểm KV từng bước ở nhánh này.
+
+Thông tin còn thiếu: kiểm KV từng bước khi dừng bằng EOS, độ dài ≥256 token, tốc độ trên mô hình khác, so sánh cạnh nhau với baseline biên dịch trong cùng lượt chạy.
+
+**Cập nhật cho mục 14 — đo cạnh nhau cùng lượt chạy** (`scripts/benchmark_b2_vs_compiled_bnb.py`, `b2_lazy_vs_compiled_bnb_gsm8k12_v1.json`; 12 prompt GSM8K dev, 128 token, 3 round xoay thứ tự xen kẽ theo từng prompt, trong cùng một tiến trình): so với BNB eager, B2 lười nhanh hơn **1.187x** và BNB biên dịch nhanh hơn **1.447x**; B2 lười chỉ bằng **0.820x** tốc độ BNB biên dịch (chậm hơn ở 12/12 prompt, từ 0.76x đến 0.88x). B2 lười khớp BNB eager 12/12; BNB biên dịch chỉ khớp eager 9/12. Thay thế ước lượng gián tiếp ở trên. Chưa có CI; chưa thử compile kết hợp giải mã suy đoán.
+
+**Kiểm KV từng bước ở nhánh EOS và sinh dài** (`scripts/audit_b2_eos_kv_long.py`, `eos_kv_long_v1.json`; mô hình 3B, ngân sách 384 token, tham chiếu BNB gốc có dừng ở EOS và băm KV từng bước): 18 prompt gồm 6 câu hỏi GSM8K dạng chat, 8 prompt chat ngắn và 4 prompt tổng hợp có EOS trong lịch sử. 17/18 dừng bằng EOS, 3 prompt sinh ≥256 token (tối đa 384); token khớp BNB gốc và KV prefix SHA256 khớp tại mọi prefix không-terminal ở cả bản thường lẫn bản lười, **18/18 và 18/18** (tới 254 prefix mỗi prompt). Giới hạn: không kiểm KV ở trạng thái cuối sau EOS (chỉ các prefix không-terminal), cohort nhỏ, chỉ tập dev, một GPU.
+
 ---
 
 *Ngày cập nhật: 02/11/2026. Tất cả kết quả trên development prompts, một GPU RTX 4050 Laptop 6 GB, Qwen2.5-3B-Instruct NF4, BNB 0.50.0, Triton 3.6.0, PyTorch 2.11.0.*
