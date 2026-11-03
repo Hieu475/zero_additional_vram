@@ -459,6 +459,31 @@ Trước đó mọi bằng chứng dùng prompt tối đa 605 token (đo bằng 
 
 (82–120 prefix KV được so sánh mỗi prompt; KV băm gồm toàn bộ prefix lời nhắc.) Kết luận: **exactness giữ nguyên tới ~3.2k vị trí** (không thấy lệch token hay KV khi độ dài KV tăng), nhưng **lợi thế tốc độ co lại khi ngữ cảnh dài**: B2 thường chỉ còn ngang BNB eager ở 2048–3072 và bản lười còn 1.04–1.06x; hai prompt 1024 và 2048 của B2 thường dưới 1.0x (0.97x, 0.96x). **Nguyên nhân đã đo (hiệu chỉnh giả thuyết ban đầu về attention):** chi phí một forward gần như không đổi theo độ dài (`block_kernel_profile_long_*`, `launch_bound_long_*`, `phase_profile_long_v1.json`): wall BNB M=1 23.2 ms ở 512 so với 23.5 ms ở 3072, block M=3 với 1 hàng LM head 30.9 so với 30.1 ms; thời gian GPU tăng nhẹ (block 28.6→32.2 ms, nhóm attention 0.9→2.1 ms) nhưng bị che bởi giới hạn CPU. Hai yếu tố thực sự gây co lại: (1) acceptance trên prompt tóm tắt dài thấp (0.24–0.29 ở 3072 so với 0.32–0.64 ở 512; token mỗi block cycle 1.5 so với 1.6–2.3, dưới ngưỡng hoà vốn ~1.65), (2) prefill 1.1 s ở 3072 (so với 0.19 s ở 512) là chi phí chung cộng vào cả hai phía và làm loãng tỷ lệ tổng (~25% tổng thời gian). Tốc độ decode riêng của BNB eager gần như không đổi (24.6→25.0 ms/token). Vì vậy bằng chứng hiện tại không cho thấy độ dài ngữ cảnh tự nó làm B2 chậm đi; đây là hiệu ứng của tác vụ (acceptance) và của prefill. Chưa tách tuyệt đối vì chưa có prompt dài mà acceptance cao; tối ưu `.contiguous()` của attention vì thế ít giá trị hơn dự kiến. Giới hạn: 12 prompt, 3 mỗi độ dài, chưa CI, chỉ tập dev, prompt ghép nhân tạo từ một nguồn (tóm tắt), 128 token sinh, chưa thử trên 3072 (GPU 6 GB) hay mô hình khác.
 
+## 18. Chính sách chọn draft (03/11/2026, tập dev, B2 lười, k=2)
+
+`scripts/benchmark_b2_draft_policies.py` (`draft_policies_{gsm8k20,cnndm20,humaneval20}_v1.json`; 20 prompt dev đầu mỗi cohort, 128 token, 2 round, tất cả chính sách khớp BNB eager 20/20 ở mọi cohort). Chính sách chỉ đổi token nào được đề xuất; mọi đề xuất vẫn được kiểm bằng cùng đường exact. `base` giống hệt PLD hiện tại (0 khác biệt trên 600 trường hợp ngẫu nhiên). Tốc độ vs BNB eager (geomean):
+
+| Chính sách | GSM8K | CNN/DM | HumanEval | Block cycle trung bình (GSM8K) |
+|---|---:|---:|---:|---:|
+| `vote` (bỏ phiếu giữa các lần khớp, ngram≤3) | 1.176x | 1.179x | 1.239x | 29.9 |
+| `base` (hiện tại) | 1.159x | 1.175x | 1.230x | 29.9 |
+| `rep2` (n-gram 2 token cần ≥2 lần khớp) | 1.142x | 1.166x | 1.232x | 23.5 |
+| `vote_s3` (bỏ phiếu, n-gram ≥3, ngram≤4) | 1.144x | 1.175x | 1.225x | 18.2 |
+| `s3` (n-gram ≥3) | 1.138x | 1.172x | 1.213x | 18.2 |
+| `s4` (n-gram ≥3, ngram≤4) | 1.135x | 1.171x | 1.223x | 18.1 |
+| `s5` (n-gram ≥4, ngram≤5) | 1.104x | 1.146x | 1.209x | 11.5 |
+
+Kết quả: **lọc bỏ đề xuất yếu không giúp** (ít block gần một nửa nhưng không nhanh hơn, `s5` chậm hơn); giả thuyết ban đầu bị bác bỏ. `vote` đứng đầu ở cả ba cohort nhưng chỉ hơn `base` 0.4–1.5% (cùng cỡ nhiễu đo). **Xác nhận trên prompt dev chưa dùng để chọn** (`draft_policies_confirm_*_v1.json`, tóm tắt `draft_policies_confirm_bootstrap_v1.json`; chỉ `base` và `vote`, 3 round, tỷ số ghép cặp theo prompt, bootstrap 10000 lần seed 0; tất cả khớp BNB eager):
+
+| Cohort | Prompt | `base` | `vote` | `vote`/`base` (CI95) |
+|---|---:|---:|---:|---|
+| GSM8K 20–49 | 30 | 1.174x | 1.176x | 1.001 [0.995, 1.007] |
+| HumanEval 20–49 | 30 | 1.311x | 1.315x | 1.003 [0.996, 1.011] |
+| CNN/DM 20–39 | 20 | 1.155x | 1.159x | 1.003 [0.996, 1.009] |
+| Gộp | 80 | — | — | **1.002 [0.998, 1.007]** |
+
+Kết luận: mức nhỉnh 0.4–1.5% của `vote` trên 20 prompt đầu **không tái lập** (mọi CI chứa 1); **giữ `base` (PLD hiện tại)**. Chỉnh cách chọn n-gram (lọc, bỏ phiếu, ngưỡng lặp) không cải thiện được tốc độ; acceptance cần nguồn draft khác chứ không phải chính sách chọn n-gram. Tốc độ tuyệt đối khác nhau giữa các tập prompt (HumanEval 20–49 đạt 1.31x so với 1.23x ở 0–19), nên so sánh tuyệt đối giữa cohort không có ý nghĩa nếu không cùng prompt. Giới hạn: chỉ tập dev, k=2, một GPU, chưa thử nguồn draft ngoài PLD (ví dụ mô hình nhỏ, bảng n-gram từ văn bản huấn luyện), cũng chưa thử gộp nhiều ứng viên vào một block.
+
 ---
 
 *Ngày cập nhật: 02/11/2026. Tất cả kết quả trên development prompts, một GPU RTX 4050 Laptop 6 GB, Qwen2.5-3B-Instruct NF4, BNB 0.50.0, Triton 3.6.0, PyTorch 2.11.0.*

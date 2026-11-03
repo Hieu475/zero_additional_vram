@@ -1,0 +1,724 @@
+{
+  "schema": "zassd-b2-draft-policies-v1",
+  "benchmark": "data/benchmarks/humaneval_eval.jsonl",
+  "policies": {
+    "base": {
+      "ngram_max": 3,
+      "min_size": 2,
+      "vote": false,
+      "min_reps": 1
+    },
+    "vote": {
+      "ngram_max": 3,
+      "min_size": 2,
+      "vote": true,
+      "min_reps": 1
+    }
+  },
+  "summary": {
+    "base": {
+      "geomean_speedup": 1.3112844004279218,
+      "below_bnb": 0,
+      "exact_prompts": 30,
+      "mean_block_cycles": 36.06666666666667
+    },
+    "vote": {
+      "geomean_speedup": 1.31528421840311,
+      "below_bnb": 0,
+      "exact_prompts": 30,
+      "mean_block_cycles": 35.9
+    }
+  },
+  "per_prompt": [
+    {
+      "prompt_id": "HumanEval/20",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.3299386068197365,
+        "vote": 1.349803753419749
+      },
+      "acceptance": {
+        "base": 0.631578947368421,
+        "vote": 0.6621621621621622
+      },
+      "block_cycles": {
+        "base": 38,
+        "vote": 37
+      },
+      "fallback_cycles": {
+        "base": 41,
+        "vote": 41
+      }
+    },
+    {
+      "prompt_id": "HumanEval/21",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2808577044251823,
+        "vote": 1.2966453215068707
+      },
+      "acceptance": {
+        "base": 0.6461538461538462,
+        "vote": 0.671875
+      },
+      "block_cycles": {
+        "base": 33,
+        "vote": 32
+      },
+      "fallback_cycles": {
+        "base": 53,
+        "vote": 53
+      }
+    },
+    {
+      "prompt_id": "HumanEval/22",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.3487371482192163,
+        "vote": 1.3286871041573411
+      },
+      "acceptance": {
+        "base": 0.75,
+        "vote": 0.7285714285714285
+      },
+      "block_cycles": {
+        "base": 34,
+        "vote": 35
+      },
+      "fallback_cycles": {
+        "base": 42,
+        "vote": 42
+      }
+    },
+    {
+      "prompt_id": "HumanEval/23",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.0906927499824397,
+        "vote": 1.113451702171235
+      },
+      "acceptance": {
+        "base": 0.34782608695652173,
+        "vote": 0.34782608695652173
+      },
+      "block_cycles": {
+        "base": 23,
+        "vote": 23
+      },
+      "fallback_cycles": {
+        "base": 88,
+        "vote": 88
+      }
+    },
+    {
+      "prompt_id": "HumanEval/24",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1803339006709122,
+        "vote": 1.1807627093150133
+      },
+      "acceptance": {
+        "base": 0.5357142857142857,
+        "vote": 0.5357142857142857
+      },
+      "block_cycles": {
+        "base": 28,
+        "vote": 28
+      },
+      "fallback_cycles": {
+        "base": 69,
+        "vote": 69
+      }
+    },
+    {
+      "prompt_id": "HumanEval/25",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.0915654302696305,
+        "vote": 1.089741258158035
+      },
+      "acceptance": {
+        "base": 0.48,
+        "vote": 0.48
+      },
+      "block_cycles": {
+        "base": 31,
+        "vote": 31
+      },
+      "fallback_cycles": {
+        "base": 73,
+        "vote": 73
+      }
+    },
+    {
+      "prompt_id": "HumanEval/26",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.3704034537463263,
+        "vote": 1.40644879014199
+      },
+      "acceptance": {
+        "base": 0.6341463414634146,
+        "vote": 0.6341463414634146
+      },
+      "block_cycles": {
+        "base": 41,
+        "vote": 41
+      },
+      "fallback_cycles": {
+        "base": 34,
+        "vote": 34
+      }
+    },
+    {
+      "prompt_id": "HumanEval/27",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1865537098184995,
+        "vote": 1.1680147768400861
+      },
+      "acceptance": {
+        "base": 0.631578947368421,
+        "vote": 0.631578947368421
+      },
+      "block_cycles": {
+        "base": 19,
+        "vote": 19
+      },
+      "fallback_cycles": {
+        "base": 84,
+        "vote": 84
+      }
+    },
+    {
+      "prompt_id": "HumanEval/28",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2959572647462747,
+        "vote": 1.3090670254646681
+      },
+      "acceptance": {
+        "base": 0.711864406779661,
+        "vote": 0.711864406779661
+      },
+      "block_cycles": {
+        "base": 30,
+        "vote": 30
+      },
+      "fallback_cycles": {
+        "base": 56,
+        "vote": 56
+      }
+    },
+    {
+      "prompt_id": "HumanEval/29",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2669705483467157,
+        "vote": 1.2532879844134701
+      },
+      "acceptance": {
+        "base": 0.7307692307692307,
+        "vote": 0.7307692307692307
+      },
+      "block_cycles": {
+        "base": 26,
+        "vote": 26
+      },
+      "fallback_cycles": {
+        "base": 64,
+        "vote": 64
+      }
+    },
+    {
+      "prompt_id": "HumanEval/30",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.4267551433774743,
+        "vote": 1.545687747794695
+      },
+      "acceptance": {
+        "base": 0.6464646464646465,
+        "vote": 0.7472527472527473
+      },
+      "block_cycles": {
+        "base": 50,
+        "vote": 46
+      },
+      "fallback_cycles": {
+        "base": 14,
+        "vote": 14
+      }
+    },
+    {
+      "prompt_id": "HumanEval/31",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.190108338790211,
+        "vote": 1.1423708739788596
+      },
+      "acceptance": {
+        "base": 0.4909090909090909,
+        "vote": 0.39344262295081966
+      },
+      "block_cycles": {
+        "base": 28,
+        "vote": 31
+      },
+      "fallback_cycles": {
+        "base": 73,
+        "vote": 73
+      }
+    },
+    {
+      "prompt_id": "HumanEval/32",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2378437657886823,
+        "vote": 1.2613122517227477
+      },
+      "acceptance": {
+        "base": 0.5061728395061729,
+        "vote": 0.4878048780487805
+      },
+      "block_cycles": {
+        "base": 41,
+        "vote": 41
+      },
+      "fallback_cycles": {
+        "base": 46,
+        "vote": 46
+      }
+    },
+    {
+      "prompt_id": "HumanEval/33",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1050224031064377,
+        "vote": 1.1319707535763124
+      },
+      "acceptance": {
+        "base": 0.35714285714285715,
+        "vote": 0.35714285714285715
+      },
+      "block_cycles": {
+        "base": 35,
+        "vote": 35
+      },
+      "fallback_cycles": {
+        "base": 68,
+        "vote": 68
+      }
+    },
+    {
+      "prompt_id": "HumanEval/34",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.569136486340912,
+        "vote": 1.5557054520546245
+      },
+      "acceptance": {
+        "base": 0.8313253012048193,
+        "vote": 0.8313253012048193
+      },
+      "block_cycles": {
+        "base": 42,
+        "vote": 42
+      },
+      "fallback_cycles": {
+        "base": 17,
+        "vote": 17
+      }
+    },
+    {
+      "prompt_id": "HumanEval/35",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2937483550133362,
+        "vote": 1.2943747614032208
+      },
+      "acceptance": {
+        "base": 0.5529411764705883,
+        "vote": 0.5529411764705883
+      },
+      "block_cycles": {
+        "base": 43,
+        "vote": 43
+      },
+      "fallback_cycles": {
+        "base": 38,
+        "vote": 38
+      }
+    },
+    {
+      "prompt_id": "HumanEval/36",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.245136650871171,
+        "vote": 1.2502287743542049
+      },
+      "acceptance": {
+        "base": 0.5540540540540541,
+        "vote": 0.5540540540540541
+      },
+      "block_cycles": {
+        "base": 37,
+        "vote": 37
+      },
+      "fallback_cycles": {
+        "base": 49,
+        "vote": 49
+      }
+    },
+    {
+      "prompt_id": "HumanEval/37",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.4862117783920152,
+        "vote": 1.450837593570902
+      },
+      "acceptance": {
+        "base": 0.835820895522388,
+        "vote": 0.835820895522388
+      },
+      "block_cycles": {
+        "base": 34,
+        "vote": 34
+      },
+      "fallback_cycles": {
+        "base": 37,
+        "vote": 37
+      }
+    },
+    {
+      "prompt_id": "HumanEval/38",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.548145346629756,
+        "vote": 1.5521633970644217
+      },
+      "acceptance": {
+        "base": 0.8378378378378378,
+        "vote": 0.8378378378378378
+      },
+      "block_cycles": {
+        "base": 37,
+        "vote": 37
+      },
+      "fallback_cycles": {
+        "base": 28,
+        "vote": 28
+      }
+    },
+    {
+      "prompt_id": "HumanEval/39",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.5240482485445728,
+        "vote": 1.531427257366208
+      },
+      "acceptance": {
+        "base": 0.7816091954022989,
+        "vote": 0.7816091954022989
+      },
+      "block_cycles": {
+        "base": 44,
+        "vote": 44
+      },
+      "fallback_cycles": {
+        "base": 16,
+        "vote": 16
+      }
+    },
+    {
+      "prompt_id": "HumanEval/40",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.3175159997364143,
+        "vote": 1.3345457171565034
+      },
+      "acceptance": {
+        "base": 0.6,
+        "vote": 0.6265060240963856
+      },
+      "block_cycles": {
+        "base": 43,
+        "vote": 42
+      },
+      "fallback_cycles": {
+        "base": 34,
+        "vote": 34
+      }
+    },
+    {
+      "prompt_id": "HumanEval/41",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2638173441270841,
+        "vote": 1.2426440054139587
+      },
+      "acceptance": {
+        "base": 0.6727272727272727,
+        "vote": 0.6727272727272727
+      },
+      "block_cycles": {
+        "base": 28,
+        "vote": 28
+      },
+      "fallback_cycles": {
+        "base": 63,
+        "vote": 63
+      }
+    },
+    {
+      "prompt_id": "HumanEval/42",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.5735705868784338,
+        "vote": 1.623890146595435
+      },
+      "acceptance": {
+        "base": 0.7777777777777778,
+        "vote": 0.8068181818181818
+      },
+      "block_cycles": {
+        "base": 45,
+        "vote": 44
+      },
+      "fallback_cycles": {
+        "base": 12,
+        "vote": 12
+      }
+    },
+    {
+      "prompt_id": "HumanEval/43",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.3593744912224106,
+        "vote": 1.3742141233093628
+      },
+      "acceptance": {
+        "base": 0.676056338028169,
+        "vote": 0.7
+      },
+      "block_cycles": {
+        "base": 36,
+        "vote": 35
+      },
+      "fallback_cycles": {
+        "base": 43,
+        "vote": 43
+      }
+    },
+    {
+      "prompt_id": "HumanEval/44",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2638758606654366,
+        "vote": 1.2355277094407242
+      },
+      "acceptance": {
+        "base": 0.5694444444444444,
+        "vote": 0.5405405405405406
+      },
+      "block_cycles": {
+        "base": 36,
+        "vote": 37
+      },
+      "fallback_cycles": {
+        "base": 51,
+        "vote": 51
+      }
+    },
+    {
+      "prompt_id": "HumanEval/45",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2297409707745663,
+        "vote": 1.2205870508769008
+      },
+      "acceptance": {
+        "base": 0.5344827586206896,
+        "vote": 0.5344827586206896
+      },
+      "block_cycles": {
+        "base": 29,
+        "vote": 29
+      },
+      "fallback_cycles": {
+        "base": 67,
+        "vote": 67
+      }
+    },
+    {
+      "prompt_id": "HumanEval/46",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1403910933329053,
+        "vote": 1.127593786774995
+      },
+      "acceptance": {
+        "base": 0.32894736842105265,
+        "vote": 0.35135135135135137
+      },
+      "block_cycles": {
+        "base": 38,
+        "vote": 37
+      },
+      "fallback_cycles": {
+        "base": 64,
+        "vote": 64
+      }
+    },
+    {
+      "prompt_id": "HumanEval/47",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2459985694796365,
+        "vote": 1.2287700491929838
+      },
+      "acceptance": {
+        "base": 0.5063291139240507,
+        "vote": 0.5063291139240507
+      },
+      "block_cycles": {
+        "base": 40,
+        "vote": 40
+      },
+      "fallback_cycles": {
+        "base": 47,
+        "vote": 47
+      }
+    },
+    {
+      "prompt_id": "HumanEval/48",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.6064458611474344,
+        "vote": 1.6235832085663437
+      },
+      "acceptance": {
+        "base": 0.8426966292134831,
+        "vote": 0.8426966292134831
+      },
+      "block_cycles": {
+        "base": 45,
+        "vote": 45
+      },
+      "fallback_cycles": {
+        "base": 8,
+        "vote": 8
+      }
+    },
+    {
+      "prompt_id": "HumanEval/49",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.5142036531444063,
+        "vote": 1.5076646562403808
+      },
+      "acceptance": {
+        "base": 0.71875,
+        "vote": 0.71875
+      },
+      "block_cycles": {
+        "base": 48,
+        "vote": 48
+      },
+      "fallback_cycles": {
+        "base": 11,
+        "vote": 11
+      }
+    }
+  ]
+}
