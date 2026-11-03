@@ -1,0 +1,191 @@
+# Hai hướng nghiên cứu tiếp theo: A (graph + exact) và C (kiểm toán độ bất biến theo hình dạng)
+
+Ngày: 03/11/2026. Tài liệu này trình bày hai hướng đã chọn để nâng độ mới của công trình, dựa trên các kết quả đã đo trong `RESEARCH_STATUS_20261102.md`. Mọi con số lấy từ các file bằng chứng trong `experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/`. Phần ước lượng được ghi rõ là ước lượng.
+
+---
+
+## 0. Điểm xuất phát và một hiệu chỉnh quan trọng
+
+**Đã có (B2, Qwen2.5-3B NF4, RTX 4050 6 GB, batch 1, greedy, k=2):**
+- Token và KV khớp greedy bitsandbytes gốc ở mọi prompt đã kiểm (held-out 300–349: 50/50, held-out 400–449: 50/50 kèm KV từng bước; dev, EOS, ngữ cảnh tới 3071 token, Qwen2.5-0.5B/1.5B).
+- Không thêm VRAM đáng kể (+0.07 MiB đỉnh cấp phát).
+- Nhanh hơn eager 1.15x (held-out 400–449, CI [1.136, 1.172]), nhưng **chậm hơn** baseline `torch.compile` không exact (0.91x).
+
+**Hiệu chỉnh (03/11/2026):** kernel Triton M=3 **không cần cho tính exact**. Phép đo toán tử (`op_shape_sensitivity_gsm8k20_v1.json`) cho thấy trong ngăn xếp bitsandbytes 0.50.0:
+
+| Toán tử | Phần tử lệch từng bit khi gọi 3 hàng so với từng hàng |
+|---|---:|
+| Phép chiếu NF4 (7 loại, 252 module) | 0 / 990.904.320 |
+| RMSNorm trong lớp | 87 / 141.557.760 |
+| LM head | 281.534 / 145.858.560 (0.19%) |
+| Attention SDPA | 13.196.548 / 70.778.880 (18.6%) |
+
+Cuối-cuối: 960/960 hàng logits không bằng từng bit, 4/960 (0.42%) đổi argmax. B2 không dùng kernel Triton vẫn exact (10/10 prompt, token và KV) nhưng chậm hơn (1.117x so với 1.161x). Kết quả này chỉ cho một phiên bản bitsandbytes, một GPU, M=3.
+
+Hệ quả cho cả hai hướng: nguồn gốc của sai lệch là **attention và LM head** (hiếm hơn: RMSNorm), không phải phép chiếu 4-bit.
+
+---
+
+## 1. Hướng C: kiểm toán độ bất biến theo hình dạng của suy luận lượng tử hóa
+
+### 1.1 Câu hỏi và đóng góp dự kiến
+- **Câu hỏi:** khi một mô hình lượng tử hóa chạy một khối K+1 token thay vì từng token, *toán tử nào* làm kết quả đổi (từng bit), mức đổi bao nhiêu, và hệ quả lên token sinh ra là gì? Điều này phụ thuộc thế nào vào backend, phiên bản thư viện, kích thước khối, độ dài ngữ cảnh, mô hình và GPU?
+- **Đóng góp dự kiến:**
+  1. Một phương pháp kiểm thử vi sai ở mức toán tử (cùng đầu vào thật, hình dạng khác nhau) và công cụ chạy được.
+  2. Một bảng phân loại nguyên nhân (toán tử nào vỡ, ở điều kiện nào) trên nhiều ngăn xếp.
+  3. Số liệu về hệ quả cuối-cuối (tỷ lệ đổi argmax, tỷ lệ lệch quỹ đạo trong vòng giải mã suy đoán).
+  4. Hướng dẫn: toán tử nào cần xử lý riêng để giải mã suy đoán giữ exact.
+
+### 1.2 Đã làm
+- `scripts/audit_op_shape_sensitivity.py`: ghi đầu vào/đầu ra thật của mọi phép chiếu 4-bit, RMSNorm, LM head và mọi lời gọi SDPA khi chạy khối ba token trên trạng thái tuần tự chính xác, gọi lại từng toán tử từng hàng và so từng bit; kèm so logits cuối-cuối (bằng từng bit, đổi argmax, margin).
+- Kết quả đầu tiên: bảng ở Mục 0 (20 prompt GSM8K dev, 960 hàng).
+- Phát hiện phụ: bản nhị phân bitsandbytes cộng tích lũy theo cặp, khác mã nguồn đọc theo nghĩa đen (`nf4_gemv_order_emulation_v1.json`, 28.672.000 đầu ra).
+
+### 1.3 Thiết kế mở rộng (ma trận thí nghiệm)
+
+| Trục | Giá trị cần phủ | Ghi chú |
+|---|---|---|
+| Kích thước khối M | 2, 3, 4, 5, 8, 16 | Hiện mới M=3. bitsandbytes có ngưỡng riêng theo M nên đây là trục quan trọng nhất |
+| Độ dài ngữ cảnh | 128, 512, 1024, 2048, 3072 | Dispatch SDPA có thể đổi theo độ dài KV; hiện chưa đo riêng |
+| Backend lượng tử hóa | bitsandbytes NF4 (có/không lượng tử hóa kép), FP4; HQQ (repo đã có dấu vết); GPTQ/AWQ nếu cài được | Mỗi backend cần adapter nạp mô hình |
+| Mô hình | Qwen2.5 0.5B/1.5B/3B; Llama 3.2 1B/3B (adapter có sẵn trong repo) | Cùng họ trước, khác họ sau |
+| Dtype/attention | fp16 so với bf16; SDPA flash so với memory-efficient so với math | Chỉ rõ backend SDPA đã chọn |
+| Phiên bản | bitsandbytes, PyTorch, Triton | Mỗi lần nâng cấp phải chạy lại |
+| GPU | RTX 4050 (có sẵn); các GPU khác do bạn chạy | Kiến trúc khác có thể chọn kernel khác |
+
+**Chỉ tiêu mỗi ô:** tỷ lệ phần tử lệch từng bit theo toán tử; độ lệch tối đa; tỷ lệ hàng đổi argmax; độ rộng margin top-1/top-2 của các hàng đổi; và (cho một tập con) tỷ lệ chuỗi lệch quỹ đạo khi chạy vòng giải mã suy đoán *không* xử lý riêng, so với vòng B2.
+
+### 1.4 Việc cụ thể, theo thứ tự
+1. **C2 (rẻ):** quét M và độ dài ngữ cảnh trên bitsandbytes NF4 + Qwen2.5-3B, tái dùng script hiện có (thêm tham số `--block-size`).
+2. **C3:** Qwen2.5-0.5B/1.5B và Llama 3.2 (qua `scripts/run_with_model.py` hoặc adapter).
+3. **C4:** thêm một backend lượng tử hóa thứ hai (HQQ là ứng viên rõ nhất vì repo đã có hạ tầng).
+4. **C5:** gộp thành một công cụ dòng lệnh duy nhất, có đầu ra JSON chuẩn và bảng tóm tắt.
+5. **C6:** đo hệ quả cuối-cuối: tỷ lệ lệch quỹ đạo của PLD không xử lý riêng, theo từng cấu hình.
+6. **C7:** chạy các GPU và phiên bản khác (bạn thực hiện), thêm vào ma trận.
+
+### 1.5 Tiêu chí thành công và dừng
+- **Thành công:** có bảng nguyên nhân nhất quán trên ít nhất 2 backend và 2 họ mô hình, và công cụ chạy được từ một lệnh.
+- **Dừng hoặc đổi hướng nếu:** (i) mọi cấu hình ngoài bitsandbytes cho cùng kết luận trivial (ví dụ chỉ attention lệch ở mọi nơi), thì giá trị của bảng phân loại thấp; (ii) khảo sát tài liệu cho thấy phát hiện đã được công bố đầy đủ.
+
+### 1.6 Rủi ro
+- **Tính mới chưa kiểm chứng:** tôi chưa khảo sát tài liệu có hệ thống. Cần tìm: suy luận batch-invariant/xác định (vLLM, SGLang và các bài kỹ thuật liên quan), tính exact của giải mã suy đoán dưới độ chính xác thấp, và ghi nhận về thứ tự rút gọn của kernel bitsandbytes. LLM-42 (SOSP 2026) là công trình gần nhất đã xác nhận.
+- **Phụ thuộc phiên bản:** kết quả có thể chỉ đúng với bitsandbytes 0.50.0. Giảm nhẹ bằng cách đo nhiều phiên bản.
+- **Phạm vi hẹp nếu thiếu backend/GPU:** C chỉ có giá trị lớn khi có độ rộng.
+
+### 1.7 Nơi phù hợp
+MLSys, các track dữ liệu và công cụ, TMLR, hoặc workshop về suy luận hiệu quả. Cần kiểm tra hạn nộp và yêu cầu hiện hành trên trang chính thức.
+
+---
+
+### 1.8 Kết quả đã đo (cập nhật 03/11/2026: C2–C6)
+
+Công cụ: `scripts/shape_audit.py` (`ops`, `trajectory`, `summarize`). Bảng đầy đủ do `summarize` sinh ra: `native_bnb_profiles/C_SHAPE_AUDIT_SUMMARY.md`. Mọi số liệu: một GPU (RTX 4050), bitsandbytes 0.50.0, 20 prompt GSM8K dev (10 prompt cho trục ngữ cảnh), greedy.
+
+| Phát hiện | Bằng chứng |
+|---|---|
+| Phép chiếu NF4 bất biến theo hình dạng khi M ≤ 3, vỡ từ M=4 (khoảng 13–15% phần tử lệch) | Qwen2.5 0.5B/1.5B/3B, OLMo-2-1B, Phi-3.5; M ∈ {2,3,4,5,8,16} trên 3B |
+| Attention (SDPA) lệch khoảng 17–19% ở mọi M và mọi độ dài ngữ cảnh 512–3072; riêng Qwen 0.5B chỉ 3.6% | `c2_*`, `c3_*`, `c4_*` |
+| LM head lệch 0–0.19% (0.5B: 0) | như trên |
+| HQQ+GemLite: phép chiếu lệch khoảng 49% phần tử ngay từ M=3; LM head 1.57%; 0/960 hàng đổi argmax | `c4_qwen3b_hqq_*` |
+| Hàng đổi argmax khoảng 0.1–1% ở bitsandbytes | các bảng trên |
+| PLD ngây thơ làm lệch quỹ đạo 6–14/20 chuỗi 128 token (bitsandbytes), 2/20 (HQQ); K=3 gần như không khác K=2 | `c6_*` |
+
+**Hệ quả:** (i) kết luận "kernel Triton M=3 không cần cho exact" (Mục 0) chỉ đúng cho K ≤ 2 trên bitsandbytes; từ K=3 phép chiếu cũng phải xử lý riêng. (ii) Với HQQ+GemLite, phép chiếu phải xử lý riêng ngay từ M=3. (iii) Cách xử lý attention từng hàng dùng được cho mọi độ dài khảo sát.
+
+**Giới hạn và điểm chưa giải thích:**
+- Mẫu nhỏ (20 prompt, mỗi cấu hình một lần), chưa có khoảng tin cậy; chênh 1–2 chuỗi ở C6 chưa đủ kết luận.
+- Chưa có Llama 3.2 (model gated, cần token HF); chưa có GPTQ/AWQ; chưa có GPU hay phiên bản thư viện khác (C7).
+- Ngưỡng M=4 là suy luận từ số đo, chưa đối chiếu mã nguồn bitsandbytes.
+- Chưa giải thích: SDPA của M=2 trùng M=3 đến 4 chữ số (đã chạy lại, tái lập được); HQQ lệch nhiều phần tử nhưng ít đổi argmax (chưa đo độ lớn sai số so với margin); Qwen 0.5B lệch quỹ đạo nhiều nhất dù attention ít lệch nhất.
+- Các hàng ngữ cảnh dài ghép prompt GSM8K làm đệm, không phải văn bản tự nhiên.
+- Chưa khảo sát tài liệu về tính mới (Mục 1.6).
+
+---
+
+## 2. Hướng A: vòng giải mã exact chạy trong CUDA graph
+
+### 2.1 Động cơ
+Forward decode bị giới hạn bởi CPU khởi chạy kernel (84% thời gian một bước M=1 là CPU enqueue; `launch_bound_gsm8k_000_v1.json`). Đây là lý do baseline `torch.compile` nhanh hơn B2, và các phép từng hàng của B2 làm tăng số kernel. CUDA graph loại bỏ chi phí này mà **giữ nguyên các kernel**, nên về nguyên tắc không đổi số học.
+
+### 2.2 Những gì đã thăm dò
+Dùng `scripts/probe_cuda_graph_decode.py` (chụp thô, không `torch.compile`, mô hình bitsandbytes eager với `StaticCache`):
+
+| Đường | Eager | Graph | Logits bằng từng bit |
+|---|---:|---:|---:|
+| Bước M=1 | 22.5 ms | 17.3 ms (1.30x) | 64/64 bước |
+| Khối chuẩn M=3 (không exact) | 27.4 ms | 23.9 ms | 64/64 bước |
+
+Kết luận khả thi: chụp được, đúng từng bit so với cùng đường eager.
+
+### 2.3 Ước lượng tốc độ (mô phỏng, chưa cài đặt)
+Dùng `scripts/simulate_block_size.py` (PLD trên chuỗi tham chiếu đã ghi, mô hình chi phí hiệu chỉnh khớp số đo K=2). Giả định: LM head lười chạy ngoài graph; chi phí decoder 3 hàng trong graph 21.7–24.0 ms (ước từ số đo kernel).
+
+| Cohort dev (30 prompt), K=2 | So với baseline graph exact | So với BNB eager |
+|---|---:|---:|
+| GSM8K | 1.04–1.08x | 1.36–1.40x |
+| HumanEval | 1.10–1.14x | 1.43–1.48x |
+
+Tham chiếu: baseline biên dịch không exact đạt 1.29–1.45x so với eager. Nghĩa là A có thể **ngang hoặc nhỉnh hơn** baseline biên dịch mà vẫn exact, nhưng chỉ hơn baseline graph exact 4–14%. Đây là dự đoán, không phải số đo.
+
+### 2.4 Thiết kế đề xuất (không cần kernel mới)
+- **Tham chiếu:** định nghĩa lại là bước decode M=1 chạy với `StaticCache` (cùng kernel, chạy eager hoặc trong graph; hai cách này bằng từng bit theo thăm dò). Lưu ý: tham chiếu này **khác** greedy dùng cache động hiện tại, nên mọi tuyên bố exact phải ghi rõ tham chiếu nào.
+- **Phần thân decoder:** giữ các phép từng hàng của B2 (attention SDPA từng hàng, RMSNorm từng hàng) nhưng với độ dài KV tĩnh và mặt nạ, đúng như đường M=1 tham chiếu dùng; chụp thành một graph cho M=1 (nhánh quay về bước gốc) và một graph cho M=3 (khối). Vòng từng hàng nằm trong graph nên không còn tốn CPU.
+- **LM head:** chạy ngoài graph theo từng hàng (mỗi hàng là một graph nhỏ hoặc một lời gọi) để giữ tính lười.
+- **Logic chấp nhận/quay lui:** ở CPU, ngoài graph; quay lui là đổi con trỏ vị trí và độ dài logic (không sao chép KV).
+- **Kernel phép chiếu:** dùng bitsandbytes chuẩn (đã khớp từng hàng) hoặc kernel Triton tùy chọn nếu đo thấy nhanh hơn trong graph.
+
+### 2.5 Mốc và điều kiện dừng
+
+| Mốc | Nội dung | Điều kiện đi tiếp |
+|---|---|---|
+| A1 | Đường từng hàng với KV tĩnh, chạy **eager**, bằng từng bit với tham chiếu `StaticCache` M=1 (token và KV) trên ít nhất 30 prompt dev | Khớp 100% |
+| A2 | Chụp graph M=3 phần thân decoder; đúng từng bit với bản eager A1 | Khớp 100% và chi phí decoder 3 hàng trong graph ≤ 24 ms |
+| A3 | Vòng giải mã đầy đủ (fallback + khối + LM head lười) trong graph; token và KV khớp tham chiếu | Khớp 100% trên dev |
+| A4 | Đo tốc độ cạnh nhau so với: BNB eager, baseline graph exact, `torch.compile` | **Dừng nếu** tốc độ so với baseline graph exact < 1.05x |
+| A5 | Held-out mới (cohort chưa dùng) đúng một lần, cấu hình đăng ký trước | Chỉ sau khi khóa mã |
+
+### 2.6 Rủi ro
+- **Tham chiếu mới:** bài toán đổi từ "exact so với bitsandbytes eager" sang "exact so với bước M=1 tĩnh". Cần lập luận rõ và ghi nhận tham chiếu cũ vẫn có giá trị với kết quả B2 hiện tại.
+- **Cache tĩnh với độ dài KV cố định:** attention tính trên toàn độ dài với mặt nạ, khác số học so với cache động; mọi ngữ cảnh phải xử lý nhất quán giữa M=1 và M=3.
+- **Lợi ích nhỏ so với baseline graph exact (4–14%):** nếu ước lượng đúng thì kết quả khiêm tốn.
+- **Không phải ý tưởng thuật toán mới tuyệt đối:** là kỹ thuật hệ thống, giá trị nằm ở việc chứng minh nó giữ được tính exact.
+- **Giới hạn bộ nhớ:** graph giữ bộ nhớ tĩnh; cần đo VRAM lại.
+
+### 2.7 Nơi phù hợp
+Một đóng góp hệ thống nếu A4 cho kết quả tích cực và ngang baseline biên dịch; phù hợp MLSys nếu kết hợp với C. Riêng A nhiều khả năng chưa đủ cho hội nghị hàng đầu.
+
+---
+
+## 3. Phối hợp và thứ tự khuyến nghị
+
+1. **C2 trước:** rẻ nhất, tận dụng được ngay, và kết quả (đặc biệt là trục M và độ dài) định hướng cho A. Nếu attention lệch rất khác nhau theo độ dài hoặc M, điều đó thay đổi thiết kế A.
+2. **A1–A2 song song:** hai mốc này rẻ và quyết định khả thi. Chạy xong A2 mới quyết định có đi tiếp A3–A5 hay không.
+3. **C3–C4** trong lúc chờ A.
+4. **C5–C6**, rồi tổng hợp.
+
+**Định hướng khi viết bài (nếu cả hai thành công):** "Giải mã suy đoán exact trên mô hình lượng tử hóa: nguồn gốc sai lệch theo toán tử (C) và một vòng giải mã exact chạy trong CUDA graph (A)". C là phần mới và có độ rộng; A là minh chứng ứng dụng giải quyết điểm yếu về tốc độ.
+
+---
+
+## 4. Việc cần bạn
+
+- Chạy các GPU và phiên bản Triton/bitsandbytes khác khi có điều kiện (C7); các script hiện có chạy được bằng `reproduce.sh --b2` cho phần B2 và có thể bổ sung chế độ cho phần C.
+- Quyết định có chuyển tham chiếu sang `StaticCache` cho hướng A hay giữ cache động (nếu giữ cache động thì A phải giải thêm bài toán attention độ dài thay đổi trong graph, khó hơn đáng kể).
+- Chọn cohort held-out mới cho A5 (cohort 300–349 và 400–449 đã dùng).
+
+## 5. Bằng chứng và script liên quan
+
+| Nội dung | Tệp |
+|---|---|
+| Công cụ thống nhất và bảng tổng hợp (C5) | `scripts/shape_audit.py`, `C_SHAPE_AUDIT_SUMMARY.md` |
+| Quét M/ngữ cảnh, mô hình khác, HQQ, quỹ đạo PLD (C2–C6) | `scripts/run_c2_sweep.sh`, `run_c3_models.sh`, `run_c4_families.sh`, `run_c6.sh`, `audit_pld_trajectory_divergence.py` |
+| Phân loại toán tử theo hình dạng (C1) | `scripts/audit_op_shape_sensitivity.py`, `op_shape_sensitivity_gsm8k20_v1.json` |
+| B2 không dùng kernel Triton | `scripts/run_b2_without_triton_linears.py`, `b2_lazy_no_triton_gsm8k10_v1.json` |
+| Thứ tự rút gọn kernel bitsandbytes | `scripts/emulate_nf4_gemv_orders.py`, `nf4_gemv_order_emulation_v1.json` |
+| Thăm dò CUDA graph (A) | `scripts/probe_cuda_graph_decode.py`, `cuda_graph_probe_m{1,3}_v1.json` |
+| Mô phỏng chi phí/tốc độ | `scripts/simulate_block_size.py`, `block_size_simulation_v1.json` |
+| Chi phí CPU của forward | `scripts/profile_b2_launch_bound.py`, `launch_bound_gsm8k_000_v1.json` |
+| Lập luận theo toán tử (đã hiệu chỉnh) | `experiments/exact_quantized_feasibility/B2_OPERATOR_ARGUMENT.md` |
+| Ghi chép trạng thái | `RESEARCH_STATUS_20261102.md`, mục 21 |
+
+**Giới hạn chung của mọi con số trên:** một GPU (RTX 4050 Laptop 6 GB), bitsandbytes 0.50.0, Triton 3.6.0, PyTorch 2.11.0, chủ yếu Qwen2.5-3B, batch 1, greedy, tập dev trừ khi ghi khác.
