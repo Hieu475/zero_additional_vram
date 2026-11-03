@@ -14,15 +14,18 @@ padded to a pinned physical row count, so singleton and block verification run
 the same arithmetic, and draft tokens never enter target KV.
 
 > Status: research prototype, one GPU (RTX 4050 Laptop 6 GB), mostly
-> Qwen2.5-3B-Instruct NF4 on development prompts. Nothing here is a formal
-> proof or a held-out result. See the limits below.
+> Qwen2.5-3B-Instruct NF4. The strongest result is the **B2 loop** (equal to the
+> unmodified bitsandbytes greedy output, ~1.1-1.25x faster than eager BNB); B1 is
+> the earlier, faster-but-different-reference path. Nothing here is a formal proof;
+> see `experiments/exact_quantized_feasibility/B2_OPERATOR_ARGUMENT.md` for what is
+> argued, measured, or open, and the limits below.
 
 ## What "exact" means here
 
 | Reference | Meaning | Status |
 |---|---|---|
 | **B1** (fixed-row singleton) | Block verification equals fixed-row singleton decoding, token for token and KV prefix for KV prefix | Matched in all recorded runs (finite empirical evidence) |
-| **B2** (original BNB greedy) | Equals the unmodified bitsandbytes greedy output | **Token-trajectory achieved** on 23 closed-loop development runs via activationvec kernel; bitwise logits+KV verified on 2 prompts (1 cycle each). Speedup requires sufficient acceptance. |
+| **B2** (original BNB greedy) | Equals the unmodified bitsandbytes greedy output | Tokens and per-step KV-prefix hashes equal to BNB greedy on all recorded runs (about 90 development prompt runs on 3B, up to 384 tokens, 17 EOS-ending; 4 prompts each on Qwen2.5-0.5B/1.5B), and tokens equal on a 50-prompt held-out GSM8K cohort (300-349). Finite evidence, not a proof. |
 
 The B1 reference changes the arithmetic of the model. Speedups against original
 BNB latency are therefore not evidence of BNB trajectory equivalence.
@@ -46,26 +49,31 @@ Intervals are prompt-cluster bootstraps over selected development prompts, not
 workload-level estimates. A frozen held-out GSM8K cohort (indices 300-349,
 `data/benchmarks/gsm8k_exactness_holdout.jsonl`) has not been used yet.
 
-### B2 results — `_fused_nf4_m3_kernel` (activationvec) + `bnb_rowwise` attention, K=2, rows=3
+### B2 results — activationvec kernel + `bnb_rowwise` attention + native-BNB fallback + lazy LM head, K=2, rows=3
 
-Token trajectory matches original BNB greedy in all 23 closed-loop development runs.
-Speedup above BNB only when acceptance rate is sufficient.
+Empty-proposal cycles use the unmodified BNB M=1 step; the block's LM head is projected row by
+row only up to the first rejected draft. Speed is relative to eager HF bitsandbytes greedy.
 
-| Prompt / budget | Sessions | B2 match | Acceptance | Speedup vs BNB |
-|---|---:|---|---:|---:|
-| HumanEval/112, 128 tok | 2 | 4/4 | 65.2% | 1.242–1.284x |
-| HumanEval/116, 64 tok | 2 | 6/6 | 87.5% | 1.265–1.275x |
-| HumanEval/119, 64 tok | 2 | 6/6 | 66.7% | 1.162–1.206x |
-| HumanEval/120, 64 tok | 2 | 6/6 | 65.5% | 0.953–0.990x |
-| Low-acceptance prompts (0–39%) | — | all match | <40% | 0.78–0.89x |
+| Cohort (128 tokens, 3 rounds, prompt-cluster bootstrap) | Prompts | Equal to BNB | Speedup vs eager BNB (95% CI) |
+|---|---:|---:|---|
+| GSM8K dev | 30 | 30/30 | 1.166x [1.145, 1.188] |
+| HumanEval dev | 30 | 30/30 | 1.249x [1.208, 1.296] |
+| GSM8K held-out 300-349 (eager-LM-head variant, run once) | 50 | 50/50 | 1.117x [1.100, 1.135] |
+| GSM8K held-out 400-449 (this variant, run once, tokens and per-step KV) | 50 | 50/50 | 1.154x [1.136, 1.172] |
 
-With native-BNB M=1 fallback on empty-proposal cycles, token trajectories still match original BNB greedy
-(all rounds), and development-prompt geomean speedup vs BNB is 1.06x (CNN/DM, 2 prompts), 1.09x (GSM8K dev, 6),
-1.15x (HumanEval dev, 6); without fallback it is 0.91-0.97x. A reject/rollback audit (5 scenarios, 1 prompt)
-matched BNB singleton KV prefixes and next logits bitwise. Details: `RESEARCH_STATUS_20261102.md` section 10.
+B1 on the same held-out cohort is equal to BNB on only 24/50 prompts at 1.108x. B2 and B1 are not
+distinguishable in speed there (B2/B1 = 1.008, CI [0.995, 1.022]); the difference is exactness.
 
-Bitwise logits and KV verified identical to BNB singleton on 2 prompts (1 cycle, all-accepted
-path only). Closed-loop runs check token-ID equality only. See scope limits in FINDINGS.md.
+**Baseline caveat.** Eager HF is CPU-launch-bound (~84% of a decode step is CPU enqueue). A
+`torch.compile` static-cache BNB decode is 1.29-1.45x faster than eager and **faster than B2 (B2 is
+0.82x of it on dev, 0.91x on held-out 400-449)**, but it is not an exact baseline (tokens equal eager on
+9/12 dev and 25/50 held-out prompts). B2's claim is exactness to
+eager BNB plus a modest speedup over eager, not a speedup over compiled decoding.
+
+The same loop is also equal to BNB (tokens and per-step KV) on Qwen2.5-0.5B and 1.5B development prompts, at
+1.24x and 1.16x over eager.
+
+Details and per-experiment caveats: `RESEARCH_STATUS_20261102.md` and `B2_OPERATOR_ARGUMENT.md`.
 
 ## Provenance of old runs
 
@@ -77,7 +85,9 @@ tag `evidence-pre-cleanup` (commit `06cf0d7`), where the pins match.
 ## Limitations
 
 - One GPU, one main model/revision, greedy decoding, batch size 1, NF4 (bitsandbytes) only.
-- Exactness is backed by recorded token/KV-hash equality, not by an operator-level proof;
+- Exactness is backed by recorded token/KV-hash equality, not by a proof; the operator argument
+  in `B2_OPERATOR_ARGUMENT.md` leaves the kernel's equality with bitsandbytes' reduction order, PyTorch
+  dispatch independence and cross-toolchain stability open;
   `src/zassd/certification/greedy.py` provides a conditional margin certificate with no validated kernel bounds.
 - Triton `tl.sum` reduction order is compiler-defined, so bitwise behavior depends on the Triton/ptxas version.
 - Previously used development prompts; the sample is small.

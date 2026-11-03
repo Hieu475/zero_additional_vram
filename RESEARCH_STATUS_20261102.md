@@ -416,6 +416,36 @@ Cohort `data/benchmarks/gsm8k_exactness_holdout2.jsonl` (GSM8K `main` test, ch�
 2. `scripts/benchmark_b2_vs_compiled_bnb.py`: cùng cohort, đo cạnh nhau B2 lười, BNB eager, BNB biên dịch; chỉ tiêu: tỷ lệ tốc độ B2 lười/biên dịch.
 Kết quả báo cáo nguyên trạng.
 
+**Kết quả (một lần chạy mỗi lệnh, nguyên trạng; `heldout2_gsm8k_400_449_lazy_v1.json`, `heldout2_gsm8k_400_449_vs_compiled_v1.json`, bootstrap trong `heldout2_gsm8k_400_449_bootstrap_v1.json`, 10000 lần, seed 0):**
+
+| Chỉ tiêu (50 prompt, 128 token, 3 round) | Giá trị |
+|---|---|
+| B2 lười khớp BNB eager (token ID) | **50/50** |
+| B2 lười khớp KV prefix từng bước (SHA256, mọi prefix không-terminal) | **50/50** |
+| B2 lười vs BNB eager (CI95) | **1.154x [1.136, 1.172]**; không prompt nào dưới 1.0x |
+| B2 eager-LM-head vs BNB eager (CI95) | 1.097x [1.080, 1.113] |
+| Lười/B2 (CI95) | 1.052 [1.044, 1.060] |
+| BNB biên dịch vs eager (CI95) | 1.285x [1.272, 1.297]; chỉ khớp eager 25/50 prompt |
+| B2 lười vs BNB biên dịch (cùng lượt chạy, CI95) | **0.907x [0.893, 0.920]**; chậm hơn ở 49/50 prompt |
+| B2 lười khớp BNB eager trong lượt đo cạnh nhau | 50/50 |
+
+Kết luận: trên cohort held-out mới, B2 lười giữ exact so với BNB eager ở mọi prompt (token và KV từng bước), nhanh hơn eager khoảng 15%, và vẫn chậm hơn baseline biên dịch không exact (khoảng 9%). Lưu ý: BNB biên dịch chỉ nhanh hơn eager 1.29x ở đây so với 1.45x trên tập dev, và giữ token trùng eager chỉ 25/50 prompt, nên tỷ lệ B2/biên dịch phụ thuộc cohort (0.82x dev, 0.91x held-out); chưa tìm nguyên nhân sự chênh này. Giới hạn: một GPU, một mô hình, K=2, 128 token, chỉ GSM8K; CI chỉ phản ánh biến thiên giữa prompt; cohort không loại trừ được việc dữ liệu công khai đã lọt vào dữ liệu huấn luyện. Cohort này đã dùng, không dùng lại để chọn cấu hình.
+
+## 16. Tốc độ trên mô hình khác, lập luận toán tử, dọn dẹp (03/11/2026)
+
+**Tốc độ + exactness trên 0.5B và 1.5B** (`scripts/run_with_model.py` + `benchmark_b2_lazy_lm_head.py`, 10 prompt GSM8K dev, 128 token, 3 round; `model05b_lazy_speed_gsm8k10_v1.json`, `model15b_lazy_speed_gsm8k10_v1.json`; chưa có CI):
+
+| Mô hình | Token khớp BNB | KV prefix khớp BNB | B2 vs BNB eager | B2 lười vs BNB eager | Lười/B2 |
+|---|---:|---:|---:|---:|---:|
+| Qwen2.5-0.5B-Instruct | 10/10 | 10/10 | 1.207x | 1.243x | 1.030 |
+| Qwen2.5-1.5B-Instruct | 10/10 | 10/10 | 1.125x | 1.163x | 1.034 |
+
+(3B cùng họ: 1.166x lười trên 30 prompt GSM8K dev.) Giới hạn: 10 prompt dev, cùng họ Qwen2, cùng GPU và toolchain.
+
+**Lập luận toán tử** (`experiments/exact_quantized_feasibility/B2_OPERATOR_ARGUMENT.md`): phân loại từng toán tử thành [S] theo cấu trúc mã, [E] thực nghiệm, [O] còn mở. Còn mở chính: kernel Triton bằng đúng thứ tự rút gọn của kernel bitsandbytes M=1 (chỉ có bằng chứng thực nghiệm), dispatch PyTorch không phụ thuộc số hàng, ổn định qua phiên bản toolchain/GPU, kiểm ở mức PTX.
+
+**Dọn dẹp:** README cập nhật; `scripts/validate_activationvec_b2_manifest.py` kiểm hash nguồn/bằng chứng và phiên bản runtime; manifest `activationvec_b2_v2` thay thế v1 (v1 giữ nguyên).
+
 ---
 
 *Ngày cập nhật: 02/11/2026. Tất cả kết quả trên development prompts, một GPU RTX 4050 Laptop 6 GB, Qwen2.5-3B-Instruct NF4, BNB 0.50.0, Triton 3.6.0, PyTorch 2.11.0.*
