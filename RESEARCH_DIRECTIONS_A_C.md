@@ -157,6 +157,22 @@ Script: `scripts/a1_rowwise_static_block.py`, `scripts/a2_graph_block.py`. Bằn
 
 **Giới hạn:** chi phí thân trong graph phụ thuộc độ dài cache cấp phát (attention từng hàng đọc toàn bộ cache tĩnh); cần phân nhóm theo độ dài nếu muốn chạy ngữ cảnh dài. Mới là teacher-forcing, chưa có vòng giải mã đầy đủ (A3), chưa đo tốc độ đầu-cuối (A4). Thời gian đo bằng đồng hồ tường có đồng bộ, một lần chạy.
 
+### 2.5c Kết quả A3–A4 (03/11/2026): điều kiện dừng đã kích hoạt
+
+Script: `scripts/a3_graph_pld_loop.py`; bằng chứng: `native_bnb_profiles/a3_graph_pld_k2_gsm8k30_v1.json`. Vòng đầy đủ (PLD K=2, n-gram 3, 128 token mới, 30 prompt GSM8K dev, cache 448): graph M=1 gồm LM head cho fallback, graph M=3 thân từng hàng, LM head lười ngoài graph, khối M=3 chỉ dùng khi tra n-gram ra đủ 2 bản nháp.
+
+| Chỉ tiêu | Kết quả |
+|---|---|
+| A3: token và KV đã chốt bằng từng bit với tham chiếu M=1 StaticCache | Đạt 30/30 |
+| Tốc độ eager M=1 (tham chiếu) | 41.6 token/s |
+| Baseline graph exact (M=1 trong graph) | 58.1 token/s (1.40x eager) |
+| Vòng A3 | 58.6 token/s (1.41x eager) |
+| **A3 so với baseline graph exact** | **1.009x** |
+
+**Kết luận A4:** tốc độ so với baseline graph exact thấp hơn 1.05x, nên theo điều kiện đã đăng ký (Mục 2.5) hướng A dừng ở đây, không chạy A5 (held-out). Nguyên nhân khả dĩ (chưa kiểm chứng riêng): thân M=3 trong graph tốn khoảng 24–27 ms so với khoảng 17 ms của bước M=1, nên mỗi khối cần chấp nhận nhiều bản nháp mới có lợi; ở đây chỉ khoảng 25 khối M=3 trên 128 token cho mỗi prompt, và nhiều bước rơi vào fallback M=1. Phần lớn lợi ích tốc độ (1.40x) đến từ CUDA graph, không phải từ giải mã suy đoán.
+
+**Ý nghĩa:** CUDA graph cho phép baseline exact nhanh 1.40x so với eager mà không đổi số học; đó là kết quả có giá trị riêng, nhưng giải mã suy đoán exact K=2 không cộng thêm đáng kể trên nền đó trong thiết lập này. Giới hạn: một GPU, một mô hình (Qwen2.5-3B bnb), một lần chạy mỗi prompt, thời gian đo bằng đồng hồ tường, chưa thử K khác hay các nguồn bản nháp khác.
+
 ### 2.6 Rủi ro
 - **Tham chiếu mới:** bài toán đổi từ "exact so với bitsandbytes eager" sang "exact so với bước M=1 tĩnh". Cần lập luận rõ và ghi nhận tham chiếu cũ vẫn có giá trị với kết quả B2 hiện tại.
 - **Cache tĩnh với độ dài KV cố định:** attention tính trên toàn độ dài với mặt nạ, khác số học so với cache động; mọi ngữ cảnh phải xử lý nhất quán giữa M=1 và M=3.
