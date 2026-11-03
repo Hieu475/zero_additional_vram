@@ -409,6 +409,13 @@ Thông tin còn thiếu: kiểm KV từng bước khi dừng bằng EOS, độ d
 
 **Kiểm KV từng bước ở nhánh EOS và sinh dài** (`scripts/audit_b2_eos_kv_long.py`, `eos_kv_long_v1.json`; mô hình 3B, ngân sách 384 token, tham chiếu BNB gốc có dừng ở EOS và băm KV từng bước): 18 prompt gồm 6 câu hỏi GSM8K dạng chat, 8 prompt chat ngắn và 4 prompt tổng hợp có EOS trong lịch sử. 17/18 dừng bằng EOS, 3 prompt sinh ≥256 token (tối đa 384); token khớp BNB gốc và KV prefix SHA256 khớp tại mọi prefix không-terminal ở cả bản thường lẫn bản lười, **18/18 và 18/18** (tới 254 prefix mỗi prompt). Giới hạn: không kiểm KV ở trạng thái cuối sau EOS (chỉ các prefix không-terminal), cohort nhỏ, chỉ tập dev, một GPU.
 
+## 15. Held-out thứ hai GSM8K 400–449 cho phiên bản lười — cấu hình đăng ký trước (03/11/2026)
+
+Cohort `data/benchmarks/gsm8k_exactness_holdout2.jsonl` (GSM8K `main` test, chỉ số 400–449, dataset revision `740312ad…`), manifest `experiments/exact_quantized_feasibility/frozen_gsm8k_400_449.json`: 0 trùng ID/prompt với mọi benchmark cục bộ, 0 ID xuất hiện trong thư mục `experiments`, `data`, `scripts`, `src`. Chọn theo chỉ số công khai trước khi chạy bất kỳ bộ giải mã nào trên cohort này. Mã khóa ở commit chứa mục này. Chạy đúng một lần mỗi lệnh, không đổi cấu hình sau khi thấy kết quả:
+1. `scripts/benchmark_b2_lazy_lm_head.py`: B2 lười (`ngram_size=3`, `k=2`, `physical_rows=3`, `bnb_rowwise`, fallback bật, LM head lười), 128 token, 3 round; chỉ tiêu chính: số prompt khớp BNB eager (token ID) và khớp KV prefix từng bước, geomean tốc độ vs BNB eager kèm CI bootstrap theo prompt (10000 lần, seed 0).
+2. `scripts/benchmark_b2_vs_compiled_bnb.py`: cùng cohort, đo cạnh nhau B2 lười, BNB eager, BNB biên dịch; chỉ tiêu: tỷ lệ tốc độ B2 lười/biên dịch.
+Kết quả báo cáo nguyên trạng.
+
 ---
 
 *Ngày cập nhật: 02/11/2026. Tất cả kết quả trên development prompts, một GPU RTX 4050 Laptop 6 GB, Qwen2.5-3B-Instruct NF4, BNB 0.50.0, Triton 3.6.0, PyTorch 2.11.0.*
