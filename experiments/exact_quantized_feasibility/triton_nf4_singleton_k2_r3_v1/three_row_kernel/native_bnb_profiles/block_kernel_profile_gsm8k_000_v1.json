@@ -1,0 +1,102 @@
+{
+  "schema": "zassd-b2-block-kernel-profile-v1",
+  "prompt_id": "gsm8k_000",
+  "bnb_m1": {
+    "gpu_busy_ms": 14.740323000000002,
+    "by_category_ms": {
+      "other_elementwise": 0.7654680000000134,
+      "copy/cat/pad": 1.3008799999999916,
+      "bnb_4bit_linear": 12.188602999999997,
+      "rmsnorm_parts": 0.27724699999999713,
+      "dense_gemm(lm_head/other)": 0.20812500000000228
+    },
+    "launches": {
+      "other_elementwise": 658,
+      "copy/cat/pad": 798,
+      "bnb_4bit_linear": 254,
+      "rmsnorm_parts": 219,
+      "dense_gemm(lm_head/other)": 36
+    }
+  },
+  "b2_m3_block": {
+    "gpu_busy_ms": 26.198451999999996,
+    "by_category_ms": {
+      "other_elementwise": 1.3048520000001265,
+      "copy/cat/pad": 2.3805239999998755,
+      "bnb_4bit_linear": 9.983049,
+      "rmsnorm_parts": 0.8110039999999336,
+      "triton_nf4_m3_linear": 11.131258000000027,
+      "dense_gemm(lm_head/other)": 0.5877650000000303
+    },
+    "launches": {
+      "other_elementwise": 1103,
+      "copy/cat/pad": 1452,
+      "bnb_4bit_linear": 4,
+      "rmsnorm_parts": 657,
+      "triton_nf4_m3_linear": 252,
+      "dense_gemm(lm_head/other)": 108
+    }
+  },
+  "b2_m3_top_kernels": [
+    {
+      "name": "_fused_nf4_m3_kernel",
+      "ms": 11.131,
+      "count": 252
+    },
+    {
+      "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv",
+      "ms": 9.982,
+      "count": 3
+    },
+    {
+      "name": "void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 32, 4, false, false",
+      "ms": 0.588,
+      "count": 108
+    },
+    {
+      "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:",
+      "ms": 0.569,
+      "count": 324
+    },
+    {
+      "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso",
+      "ms": 0.466,
+      "count": 252
+    },
+    {
+      "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso",
+      "ms": 0.459,
+      "count": 252
+    },
+    {
+      "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::MeanOps<flo",
+      "ms": 0.404,
+      "count": 219
+    },
+    {
+      "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::Tenso",
+      "ms": 0.392,
+      "count": 220
+    },
+    {
+      "name": "void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native:",
+      "ms": 0.267,
+      "count": 219
+    },
+    {
+      "name": "void at::native::vectorized_elementwise_kernel<4, at::native::BinaryFunctor<c10::BFloat16,",
+      "ms": 0.247,
+      "count": 255
+    },
+    {
+      "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native:",
+      "ms": 0.236,
+      "count": 144
+    },
+    {
+      "name": "void at::native::vectorized_elementwise_kernel<4, at::native::rsqrt_kernel_cuda(at::Tensor",
+      "ms": 0.209,
+      "count": 219
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "schema": "zassd-activationvec-reject-path-b2-v1",
+  "classification": "development-only reject/rollback B2 state audit; finite evidence, not a proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "gsm8k_000",
+  "prompt_length": 75,
+  "reference_tokens": [
+    5512,
+    11,
+    582,
+    1184,
+    311,
+    8253
+  ],
+  "scenarios": {
+    "reject_at_0": {
+      "steps": [
+        {
+          "inputs": [
+            5512,
+            12,
+            583
+          ],
+          "predictions": [
+            11
+          ],
+          "rejected_at": 0,
+          "committed": 1,
+          "pending": 11,
+          "pending_matches_bnb": true,
+          "kv_prefix_equal": true,
+          "cache_length_ok": true
+        }
+      ],
+      "next_bnb_m1_logits_bitwise_equal": true,
+      "passed": true
+    },
+    "reject_at_1": {
+      "steps": [
+        {
+          "inputs": [
+            5512,
+            11,
+            583
+          ],
+          "predictions": [
+            11,
+            582
+          ],
+          "rejected_at": 1,
+          "committed": 2,
+          "pending": 582,
+          "pending_matches_bnb": true,
+          "kv_prefix_equal": true,
+          "cache_length_ok": true
+        }
+      ],
+      "next_bnb_m1_logits_bitwise_equal": true,
+      "passed": true
+    },
+    "all_accept": {
+      "steps": [
+        {
+          "inputs": [
+            5512,
+            11,
+            582
+          ],
+          "predictions": [
+            11,
+            582,
+            1184
+          ],
+          "rejected_at": null,
+          "committed": 3,
+          "pending": 1184,
+          "pending_matches_bnb": true,
+          "kv_prefix_equal": true,
+          "cache_length_ok": true
+        }
+      ],
+      "next_bnb_m1_logits_bitwise_equal": true,
+      "passed": true
+    },
+    "reject_at_0_then_partial_accept_reject_at_1": {
+      "steps": [
+        {
+          "inputs": [
+            5512,
+            12,
+            583
+          ],
+          "predictions": [
+            11
+          ],
+          "rejected_at": 0,
+          "committed": 1,
+          "pending": 11,
+          "pending_matches_bnb": true,
+          "kv_prefix_equal": true,
+          "cache_length_ok": true
+        },
+        {
+          "inputs": [
+            11,
+            582,
+            1185
+          ],
+          "predictions": [
+            582,
+            1184
+          ],
+          "rejected_at": 1,
+          "committed": 3,
+          "pending": 1184,
+          "pending_matches_bnb": true,
+          "kv_prefix_equal": true,
+          "cache_length_ok": true
+        }
+      ],
+      "next_bnb_m1_logits_bitwise_equal": true,
+      "passed": true
+    },
+    "all_accept_then_reject_at_0": {
+      "steps": [
+        {
+          "inputs": [
+            5512,
+            11,
+            582
+          ],
+          "predictions": [
+            11,
+            582,
+            1184
+          ],
+          "rejected_at": null,
+          "committed": 3,
+          "pending": 1184,
+          "pending_matches_bnb": true,
+          "kv_prefix_equal": true,
+          "cache_length_ok": true
+        },
+        {
+          "inputs": [
+            1184,
+            312,
+            8254
+          ],
+          "predictions": [
+            311
+          ],
+          "rejected_at": 0,
+          "committed": 4,
+          "pending": 311,
+          "pending_matches_bnb": true,
+          "kv_prefix_equal": true,
+          "cache_length_ok": true
+        }
+      ],
+      "next_bnb_m1_logits_bitwise_equal": true,
+      "passed": true
+    }
+  },
+  "all_passed": true,
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/audit_activationvec_reject_path_b2.py",
+  "source_sha256": "89f665cab2cd715de2fd4944069679b1e172a43e02680a928f3a568114698449",
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "triton": "3.6.0",
+    "cuda": "12.8",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "scope_limits": [
+    "One prompt per invocation, forced draft tokens, K=2/R=3.",
+    "Next-step check uses plain BNB M=1 from the rolled-back cache.",
+    "GSM8K held-out indices 300-349 excluded."
+  ]
+}

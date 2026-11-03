@@ -337,4 +337,43 @@ Kết luận: trên cohort held-out, B2 giữ exact với BNB gốc ở mọi pr
 
 ---
 
+## 12. Profile từng pha của vòng B2 (03/11/2026, tập dev)
+
+`scripts/profile_b2_fallback_phases.py`, 8 prompt GSM8K dev (000–007), 128 token, một lượt đo mỗi prompt sau 1 lượt khởi động; output `phase_profile_gsm8k8_v1.json`. Bản đo có token khớp BNB và khớp `generate()` gốc ở cả 8 prompt.
+
+| Pha | Tỷ lệ thời gian B2 |
+|---|---:|
+| forward fallback (BNB M=1) | 61.0% |
+| forward block (M=3 activationvec) | 36.4% |
+| prefill | 1.8% |
+| chuyển schedule (plain↔patched) | 0.5% |
+| vào/thoát context | 0.2% |
+| tra n-gram | 0.1% |
+| commit/rollback | 0.01% |
+
+| Chỉ số | Giá trị |
+|---|---:|
+| Chi phí 1 forward fallback | 22.5 ms |
+| Chi phí 1 forward block M=3 | 37.1 ms (1.65x fallback) |
+| BNB decode mỗi token | 24.0 ms |
+| Token sinh ra mỗi block cycle | 1.86 |
+| Tỷ lệ cycle phải fallback | 73% |
+
+Nhận định: (1) Overhead Python/điều phối gần như hết (dưới 1% tổng), mục 1 trước đó đã lấy hết phần này. (2) Nút thắt là kernel: một forward block M=3 tốn 1.65 lần một forward M=1, trong khi decode bị giới hạn bởi băng thông bộ nhớ nên về lý thuyết M=3 gần bằng M=1. Block chỉ có lợi khi sinh trên 1.65 token/cycle, tức acceptance trên khoảng 33% (ứng với 2 draft/cycle); dưới ngưỡng đó mỗi block cycle chậm hơn fallback. (3) Ở mức 1.86 token/cycle, mỗi token qua block tốn 37.1/1.86 = 20 ms so với 22.5 ms, tiết kiệm chỉ ~11% mỗi token, và chỉ 27% cycle là block, khớp với tốc độ ~1.12x. Nếu forward M=3 chỉ đắt bằng M=1, tốc độ cùng acceptance sẽ cao hơn rõ rệt: hướng đầu tư có lợi nhất là tối ưu kernel M=3 (giữ nguyên số học từng hàng), không phải chỉnh PLD. Giới hạn: 8 prompt GSM8K dev, một lượt đo mỗi prompt.
+
+**Phân rã kernel GPU của một forward block** (`scripts/profile_b2_block_kernels.py`, `block_kernel_profile_gsm8k_000_v1.json`, 1 prompt): GPU bận 14.7 ms với BNB M=1 so với 26.2 ms với block M=3. Phần chênh ~11.5 ms gồm: LM head chạy 3 lần riêng từng hàng (3 kernel gemv bf16, ~3.3 ms mỗi lần, ~10 ms tổng, +6.6 ms so với M=1), các linear NF4 (Triton M=3 11.1 ms, so với ~8.9 ms của BNB M=1), và các phép rowwise (copy/cat, RMSNorm, attention từng hàng) +~2.7 ms. Phần còn lại giữa thời gian GPU và wall time là GPU rảnh do khởi chạy kernel.
+
+**LM head lười** (`scripts/benchmark_b2_lazy_lm_head.py`, `lazy_lm_head_gsm8k10_v1.json`): chạy decoder (`model.model`) một lần cho cả khối rồi chỉ chiếu LM head từng hàng cho đến hàng bị reject đầu tiên; mỗi hàng vẫn đúng một lời gọi BNB M=1 như trước nên số học không đổi, KV không đổi. Trên 10 prompt GSM8K dev (128 token, 3 round xoay thứ tự): token khớp BNB 10/10, KV prefix SHA256 khớp BNB tại mọi prefix không-terminal (86–119 prefix mỗi prompt) 10/10, số hàng LM head thực tính 43/75 hàng block ở prompt đầu (khoảng 57%). Tốc độ so với BNB: B2 hiện tại 1.113x, B2 lười 1.161x; lười nhanh hơn B2 1.043x (geomean, mỗi prompt từ 1.03x đến 1.06x). Giới hạn: 10 prompt GSM8K dev, chưa có CI, chưa chạy HumanEval/CNN-DM, chưa chạy reject-path audit riêng; held-out GSM8K 300–349 đã dùng nên không thể dùng lại để xác nhận phiên bản này, cần cohort mới nếu muốn tuyên bố số liệu cuối cùng.
+
+**LM head lười, mở rộng 30 prompt mỗi cohort** (`lazy_lm_head_{gsm8k30,humaneval30}_v1.json`, bootstrap theo prompt 10000 lần seed 0 trong `lazy_lm_head_30prompt_bootstrap_v1.json`; 128 token, 3 round, tập dev):
+
+| Cohort | B2 vs BNB (CI95) | B2 lười vs BNB (CI95) | Lười/B2 (CI95) | Token khớp BNB | KV prefix khớp BNB |
+|---|---|---|---|---:|---:|
+| GSM8K dev (30) | 1.116x [1.095, 1.139] | 1.166x [1.145, 1.188] | 1.045 [1.037, 1.051] | 30/30 | 30/30 |
+| HumanEval dev (30) | 1.212x [1.170, 1.260] | 1.249x [1.208, 1.296] | 1.031 [1.025, 1.037] | 30/30 | 30/30 |
+
+Không có prompt nào chậm hơn BNB (60/60 trên 1.0x). Lười chậm hơn B2 thường ở 1/60 prompt (HumanEval), nhanh hơn ở 59/60. Reject-path audit riêng cho phiên bản lười (`scripts/audit_activationvec_reject_path_lazy_b2.py`, `lazy_reject_path_{cnndm_003,gsm8k_000,humaneval_0}_v1.json`): 5/5 scenario đạt ở cả 3 prompt. Wrapper dùng lại script audit cũ nên trường `source_sha256` trong JSON là của script audit gốc, không phải wrapper. Giới hạn: chỉ tập dev; CI chỉ phản ánh biến thiên giữa prompt; held-out GSM8K 300–349 đã dùng nên chưa có xác nhận held-out cho phiên bản lười.
+
+---
+
 *Ngày cập nhật: 02/11/2026. Tất cả kết quả trên development prompts, một GPU RTX 4050 Laptop 6 GB, Qwen2.5-3B-Instruct NF4, BNB 0.50.0, Triton 3.6.0, PyTorch 2.11.0.*
