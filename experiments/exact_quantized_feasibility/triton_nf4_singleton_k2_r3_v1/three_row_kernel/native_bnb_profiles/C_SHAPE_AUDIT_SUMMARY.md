@@ -40,3 +40,20 @@
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | 20 | 128 | 6/20 | 78 | c6_qwen3b_k3_gsm8k20_v1.json |
 | Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 | 2 | 20 | 128 | 2/20 | 36 | c6_qwen3b_hqq_k2_gsm8k20_v1.json |
 | Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 | 3 | 20 | 128 | 2/20 | 105 | c6_qwen3b_hqq_k3_gsm8k20_v1.json |
+
+## Naive PLD trajectory divergence, all prompt ranges merged (Wilson 95% CI)
+
+| Config | K | prompts | diverged | rate | 95% CI |
+|---|---:|---:|---:|---:|---|
+| OLMo-2-0425-1B-Instruct / hf_bnb_nf4 | 2 | 50 | 17 | 34% | [22%, 48%] |
+| OLMo-2-0425-1B-Instruct / hf_bnb_nf4 | 3 | 20 | 6 | 30% | [15%, 52%] |
+| Phi-3.5-mini-instruct / hf_bnb_nf4 | 2 | 50 | 23 | 46% | [33%, 60%] |
+| Phi-3.5-mini-instruct / hf_bnb_nf4 | 3 | 20 | 10 | 50% | [30%, 70%] |
+| Qwen2.5-0.5B-Instruct / hf_bnb_nf4 | 2 | 50 | 33 | 66% | [52%, 78%] |
+| Qwen2.5-0.5B-Instruct / hf_bnb_nf4 | 3 | 20 | 14 | 70% | [48%, 85%] |
+| Qwen2.5-1.5B-Instruct / hf_bnb_nf4 | 2 | 50 | 25 | 50% | [37%, 63%] |
+| Qwen2.5-1.5B-Instruct / hf_bnb_nf4 | 3 | 20 | 9 | 45% | [26%, 66%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 | 2 | 50 | 18 | 36% | [24%, 50%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | 20 | 6 | 30% | [15%, 52%] |
+| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 | 2 | 50 | 3 | 6% | [2%, 16%] |
+| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 | 3 | 20 | 2 | 10% | [3%, 30%] |

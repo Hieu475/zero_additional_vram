@@ -29,6 +29,32 @@ def _label(d: dict) -> str:
     return f"{model} / {d.get('backend', 'hf_bnb_nf4')}"
 
 
+def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    if n == 0:
+        return (0.0, 1.0)
+    p = k / n
+    d = 1 + z * z / n
+    c = (p + z * z / (2 * n)) / d
+    h = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / d
+    return (max(0.0, c - h), min(1.0, c + h))
+
+
+def merged_trajectory(directory: Path) -> str:
+    groups: dict[tuple, dict] = {}
+    for f in sorted(directory.glob("c6*_*.json")):
+        d = json.loads(f.read_text())
+        if d.get("schema") != "zassd-pld-trajectory-divergence-v1":
+            continue
+        g = groups.setdefault((_label(d), d["k"]), {"n": 0, "div": 0, "files": []})
+        g["n"] += d["prompts"]; g["div"] += d["diverged"]; g["files"].append(f.name)
+    lines = ["", "## Naive PLD trajectory divergence, all prompt ranges merged (Wilson 95% CI)", "",
+             "| Config | K | prompts | diverged | rate | 95% CI |", "|---|---:|---:|---:|---:|---|"]
+    for (label, k), g in sorted(groups.items()):
+        lo, hi = wilson(g["div"], g["n"])
+        lines.append(f"| {label} | {k} | {g['n']} | {g['div']} | {g['div'] / g['n']:.0%} | [{lo:.0%}, {hi:.0%}] |")
+    return "\n".join(lines) + "\n"
+
+
 def summarize(directory: Path) -> str:
     ops = []
     for f in sorted(directory.glob("*.json")):
@@ -61,7 +87,7 @@ def summarize(directory: Path) -> str:
     for f, d in sorted(traj, key=lambda x: (_label(x[1]), x[1]["k"])):
         lines.append(f"| {_label(d)} | {d['k']} | {d['prompts']} | {d['max_new']} | {d['diverged']}/{d['prompts']} | "
                      f"{d['first_divergence_median']} | {f.name} |")
-    return "\n".join(lines) + "\n"
+    return "\n".join(lines) + "\n" + merged_trajectory(directory)
 
 
 def main() -> None:

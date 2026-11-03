@@ -30,6 +30,7 @@ def main() -> None:
     ap.add_argument("--k", type=int, default=2)
     ap.add_argument("--ngram", type=int, default=3)
     ap.add_argument("--max-cache-len", type=int, default=448)
+    ap.add_argument("--use-m2", action="store_true", help="also capture an M=2 block graph for single-draft lookups")
     ap.add_argument("--output", type=Path, required=True)
     a = ap.parse_args()
     if a.output.exists():
@@ -40,15 +41,20 @@ def main() -> None:
     dev, M = "cuda:0", a.k + 1
     cache = StaticCache(config=model.config, max_cache_len=a.max_cache_len)
     ids1 = torch.zeros((1, 1), dtype=torch.long, device=dev); cp1 = torch.zeros(1, dtype=torch.long, device=dev)
-    ids3 = torch.zeros((1, M), dtype=torch.long, device=dev); cp3 = torch.arange(M, device=dev)
+    block_sizes = [M] + ([2] if a.use_m2 and M > 2 else [])
+    idsB = {m: torch.zeros((1, m), dtype=torch.long, device=dev) for m in block_sizes}
+    cpB = {m: torch.arange(m, device=dev) for m in block_sizes}
 
     def body1():
         h = model.model(input_ids=ids1, past_key_values=cache, use_cache=True, cache_position=cp1).last_hidden_state
         return model.lm_head(h[:, -1:, :]).argmax(dim=-1)
 
-    def body3():
-        with rowwise_ops():
-            return model.model(input_ids=ids3, past_key_values=cache, use_cache=True, cache_position=cp3).last_hidden_state
+    def bodyB(m):
+        def fn():
+            with rowwise_ops():
+                return model.model(input_ids=idsB[m], past_key_values=cache, use_cache=True,
+                                   cache_position=cpB[m]).last_hidden_state
+        return fn
 
     def prefill(ids, plen):
         if cache.layers[0].is_initialized:
@@ -80,15 +86,17 @@ def main() -> None:
                 with torch.cuda.stream(s):
                     for _ in range(3):
                         rollback(cache, plen); body1()
-                        rollback(cache, plen); body3()
+                        for m in block_sizes:
+                            rollback(cache, plen); bodyB(m)()
                 torch.cuda.current_stream().wait_stream(s)
-                for name, fn in (("g1", body1), ("g3", body3)):
+                for name, fn in [("g1", body1)] + [(f"g{m}", bodyB(m)) for m in block_sizes]:
                     rollback(cache, plen)
                     g = torch.cuda.CUDAGraph()
                     with torch.cuda.graph(g):
                         graphs[name] = (g, fn())
                 lg0 = prefill(ids, plen)
-            g1, out1 = graphs["g1"]; g3, out3 = graphs["g3"]
+            graphs_by_m = set(block_sizes)
+            g1, out1 = graphs["g1"]
             first = int(lg0.argmax(-1).item())
 
             # baseline graph exact: M=1 graph for every token
@@ -113,14 +121,15 @@ def main() -> None:
                 cands = find_candidate_tokens(prompt + gen, ngram_size=a.ngram, max_candidates=a.k)
                 kv_base = plen + len(gen) - 1
                 rollback(cache, kv_base)
-                if len(cands) == a.k:
-                    ids3.copy_(torch.tensor([[pend] + cands], device=dev))
-                    cp3.copy_(torch.arange(kv_base, kv_base + M, device=dev))
-                    g3.replay(); blocks3 += 1
+                bm = len(cands) + 1
+                if bm in graphs_by_m:
+                    idsB[bm].copy_(torch.tensor([[pend] + cands], device=dev))
+                    cpB[bm].copy_(torch.arange(kv_base, kv_base + bm, device=dev))
+                    gB, outB = graphs[f"g{bm}"]; gB.replay(); blocks3 += 1
                     acc = 0
                     while True:
-                        p = int(model.lm_head(out3[:, acc:acc + 1, :]).argmax(-1).item())
-                        if acc < a.k and p == cands[acc] and len(gen) + acc + 1 < n:
+                        p = int(model.lm_head(outB[:, acc:acc + 1, :]).argmax(-1).item())
+                        if acc < len(cands) and p == cands[acc] and len(gen) + acc + 1 < n:
                             acc += 1
                         else:
                             break
@@ -139,7 +148,7 @@ def main() -> None:
         results.append(rec)
         tot["eager"] += t_eager; tot["g1"] += t_g1; tot["a3"] += t_a3; tot["tokens"] += n
         print(json.dumps(rec), flush=True)
-    summary = {"schema": "zassd-a3-graph-pld-v1", "k": a.k, "ngram": a.ngram, "max_new": a.max_new, "max_cache_len": a.max_cache_len,
+    summary = {"schema": "zassd-a3-graph-pld-v1", "k": a.k, "use_m2": a.use_m2, "ngram": a.ngram, "max_new": a.max_new, "max_cache_len": a.max_cache_len,
                "all_exact": all(r["tokens_equal"] and r["committed_kv_bitwise"] and r["baseline_graph_tokens_equal"] for r in results),
                "tok_per_s_eager_m1": tot["tokens"] / tot["eager"], "tok_per_s_graph_m1": tot["tokens"] / tot["g1"],
                "tok_per_s_a3": tot["tokens"] / tot["a3"],

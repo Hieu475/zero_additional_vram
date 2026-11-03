@@ -59,6 +59,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--benchmark", default="data/benchmarks/gsm8k_eval.jsonl")
     ap.add_argument("--n-prompts", type=int, default=20)
+    ap.add_argument("--start", type=int, default=0, help="index of the first benchmark row")
     ap.add_argument("--max-new", type=int, default=128)
     ap.add_argument("--k", type=int, default=2)
     ap.add_argument("--ngram", type=int, default=3)
@@ -69,7 +70,7 @@ def main():
     a = ap.parse_args()
     if a.output.exists():
         raise FileExistsError(a.output)
-    rows = [json.loads(l) for l in Path(a.benchmark).read_text().splitlines() if l.strip()][:a.n_prompts]
+    rows = [json.loads(l) for l in Path(a.benchmark).read_text().splitlines() if l.strip()][a.start:a.start + a.n_prompts]
     loaded = load_backend(a.backend, a.model, a.revision, "cuda:0", "sdpa")
     model, tok = loaded.model.eval(), loaded.tokenizer
     per = []
@@ -85,7 +86,7 @@ def main():
             print(json.dumps(per[-1]), flush=True)
     div = [p for p in per if p["diverged"]]
     out = {"schema": "zassd-pld-trajectory-divergence-v1", "backend": a.backend, "model": a.model, "revision": a.revision,
-           "k": a.k, "ngram": a.ngram, "max_new": a.max_new, "prompts": len(per),
+           "start": a.start, "k": a.k, "ngram": a.ngram, "max_new": a.max_new, "prompts": len(per),
            "diverged": len(div), "diverged_fraction": len(div) / len(per),
            "multi_row_blocks_total": sum(p["multi_row_blocks"] for p in per),
            "first_divergence_median": sorted(p["first_divergence"] for p in div)[len(div) // 2] if div else None,

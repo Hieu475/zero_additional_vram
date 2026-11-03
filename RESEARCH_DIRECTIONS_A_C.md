@@ -88,17 +88,19 @@ Công cụ: `scripts/shape_audit.py` (`ops`, `trajectory`, `summarize`). Bảng 
 | LM head lệch 0–0.19% (0.5B: 0) | như trên |
 | HQQ+GemLite: phép chiếu lệch khoảng 49% phần tử ngay từ M=3; LM head 1.57%; 0/960 hàng đổi argmax | `c4_qwen3b_hqq_*` |
 | Hàng đổi argmax khoảng 0.1–1% ở bitsandbytes | các bảng trên |
-| PLD ngây thơ làm lệch quỹ đạo 6–14/20 chuỗi 128 token (bitsandbytes), 2/20 (HQQ); K=3 gần như không khác K=2 | `c6_*` |
+| PLD ngây thơ K=2 làm lệch quỹ đạo (50 prompt, 128 token, khoảng Wilson 95%): Qwen 0.5B 66% [52, 78]; Qwen 1.5B 50% [37, 63]; Phi-3.5 46% [33, 60]; Qwen 3B 36% [24, 50]; OLMo-2-1B 34% [22, 48]; HQQ+GemLite 6% [2, 16]. HQQ thấp hơn hẳn mọi cấu hình bitsandbytes (khoảng không giao nhau); Qwen 0.5B cao hơn Qwen 3B và OLMo-2. K=3 (chỉ 20 prompt) không khác K=2 đáng kể | `c6_*`, `c6x_*`, bảng gộp trong `C_SHAPE_AUDIT_SUMMARY.md` |
+| Giải thích số đo (chẩn đoán từ số liệu có sẵn): HQQ có sai số logit trung vị 0.062 (bnb: 0.16–0.25) và chỉ 0.8% hàng có margin nhỏ hơn mức đó (bnb 1.5–6%); Qwen 0.5B có 6.0% hàng như vậy, cao nhất | các JSON `end_to_end` |
+| Phép thử SDPA thuần: tỷ lệ lệch của hàng i không phụ thuộc M (M = 2, 3, 4, 6), nên M=2 trùng M=3 vì khác biệt nằm giữa đường q_len=1 và q_len≥2 (chưa đọc kernel để xác nhận) | script tạm, không lưu trong repo |
 
 **Hệ quả:** (i) kết luận "kernel Triton M=3 không cần cho exact" (Mục 0) chỉ đúng cho K ≤ 2 trên bitsandbytes; từ K=3 phép chiếu cũng phải xử lý riêng. (ii) Với HQQ+GemLite, phép chiếu phải xử lý riêng ngay từ M=3. (iii) Cách xử lý attention từng hàng dùng được cho mọi độ dài khảo sát.
 
 **Giới hạn và điểm chưa giải thích:**
-- Mẫu nhỏ (20 prompt, mỗi cấu hình một lần), chưa có khoảng tin cậy; chênh 1–2 chuỗi ở C6 chưa đủ kết luận.
+- Mẫu: ops 20 prompt; C6 K=2 50 prompt (toàn bộ benchmark GSM8K hiện có), K=3 chỉ 20 prompt; mỗi cấu hình chạy một lần.
 - Chưa có Llama 3.2 (model gated, cần token HF); chưa có GPTQ/AWQ; chưa có GPU hay phiên bản thư viện khác (C7).
 - Ngưỡng M=4 là suy luận từ số đo, chưa đối chiếu mã nguồn bitsandbytes.
-- Chưa giải thích: SDPA của M=2 trùng M=3 đến 4 chữ số (đã chạy lại, tái lập được); HQQ lệch nhiều phần tử nhưng ít đổi argmax (chưa đo độ lớn sai số so với margin); Qwen 0.5B lệch quỹ đạo nhiều nhất dù attention ít lệch nhất.
+- Ba điểm từng chưa giải thích (M=2 trùng M=3, HQQ ít đổi argmax, Qwen 0.5B lệch nhiều) đã có giải thích dựa trên số liệu ở bảng trên; chưa kiểm chứng bằng cách đọc kernel.
 - Các hàng ngữ cảnh dài ghép prompt GSM8K làm đệm, không phải văn bản tự nhiên.
-- Chưa khảo sát tài liệu về tính mới (Mục 1.6).
+- Khảo sát tài liệu nhanh đã làm: xem `LITERATURE_NOTES_DIRECTION_C.md`. Ý tưởng độ nhạy theo hình dạng không mới (batch-invariant, LLM-42); phần 4-bit và liên hệ tới giải mã suy đoán chưa xác nhận là mới. Chưa đọc toàn văn bài nào.
 
 ---
 
@@ -170,6 +172,8 @@ Script: `scripts/a3_graph_pld_loop.py`; bằng chứng: `native_bnb_profiles/a3_
 | **A3 so với baseline graph exact** | **1.009x** |
 
 **Kết luận A4:** tốc độ so với baseline graph exact thấp hơn 1.05x, nên theo điều kiện đã đăng ký (Mục 2.5) hướng A dừng ở đây, không chạy A5 (held-out). Nguyên nhân khả dĩ (chưa kiểm chứng riêng): thân M=3 trong graph tốn khoảng 24–27 ms so với khoảng 17 ms của bước M=1, nên mỗi khối cần chấp nhận nhiều bản nháp mới có lợi; ở đây chỉ khoảng 25 khối M=3 trên 128 token cho mỗi prompt, và nhiều bước rơi vào fallback M=1. Phần lớn lợi ích tốc độ (1.40x) đến từ CUDA graph, không phải từ giải mã suy đoán.
+
+**Thử cứu A (graph M=2 cho trường hợp chỉ có 1 bản nháp):** kết quả 1.009x, không đổi (`a3_graph_pld_k2_m2_gsm8k30_v1.json`), vẫn đúng từng bit 30/30. Lý do: trường hợp 1 bản nháp gần như không xảy ra (khoảng 3 trên 3000 bước); 2044 trên khoảng 3000 bước rơi về M=1 vì tra n-gram không có kết quả, và mỗi khối M=3 chấp nhận trung bình 0.86 bản nháp. K=3 hay hơn cần projection xử lý riêng (C2) nên không thử.
 
 **Ý nghĩa:** CUDA graph cho phép baseline exact nhanh 1.40x so với eager mà không đổi số học; đó là kết quả có giá trị riêng, nhưng giải mã suy đoán exact K=2 không cộng thêm đáng kể trên nền đó trong thiết lập này. Giới hạn: một GPU, một mô hình (Qwen2.5-3B bnb), một lần chạy mỗi prompt, thời gian đo bằng đồng hồ tường, chưa thử K khác hay các nguồn bản nháp khác.
 
