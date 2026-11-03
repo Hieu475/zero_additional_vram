@@ -1,0 +1,204 @@
+{
+  "schema": "zassd-b2-fallback-phase-profile-v1",
+  "benchmark": "data/benchmarks/long_context_dev.jsonl",
+  "max_new_tokens": 128,
+  "summary": {
+    "mean_phase_fraction_of_b2_total": {
+      "setup": 0.0015533888972455972,
+      "prefill": 0.16381764952709127,
+      "lookup": 0.005732463851921656,
+      "switch": 0.004884733939836378,
+      "fallback_forward": 0.47886861056444774,
+      "block_forward": 0.34481130556154177,
+      "commit": 0.00013329878545913668
+    },
+    "mean_fallback_ms_per_call": 22.479783198231015,
+    "mean_block_ms_per_call": 37.36810791004299,
+    "mean_bnb_decode_ms_per_token": 24.778395127290413,
+    "mean_tokens_per_block_cycle": 1.704703729427838,
+    "mean_fallback_cycle_fraction": 0.6935492784120502,
+    "all_match_bnb": true
+  },
+  "per_prompt": [
+    {
+      "prompt_id": "long_0512_a",
+      "tokens": 128,
+      "matches_bnb": true,
+      "matches_generate": true,
+      "bnb_total_s": 3.3089875990044675,
+      "bnb_prefill_s": 0.1904787569947075,
+      "bnb_decode_ms_per_token": 24.55516155117318,
+      "b2_total_s": 2.595554677005566,
+      "phases_s": {
+        "setup": 0.0053939010031172074,
+        "prefill": 0.19208795699523762,
+        "lookup": 0.005784570021205582,
+        "switch": 0.011648260973743163,
+        "fallback_forward": 1.0414060900584445,
+        "block_forward": 1.3381412840026314,
+        "commit": 0.00041296699782833457
+      },
+      "counts": {
+        "fallback": 46,
+        "block": 36,
+        "block_rows": 108,
+        "draft": 72,
+        "accepted": 46
+      },
+      "fallback_ms_per_call": 22.63926282735749,
+      "block_ms_per_call": 37.170591222295315,
+      "tokens_per_block_cycle": 2.2777777777777777,
+      "acceptance": 0.6388888888888888
+    },
+    {
+      "prompt_id": "long_0512_b",
+      "tokens": 128,
+      "matches_bnb": true,
+      "matches_generate": true,
+      "bnb_total_s": 3.3211074270002428,
+      "bnb_prefill_s": 0.19154150799295167,
+      "bnb_decode_ms_per_token": 24.642230299238197,
+      "b2_total_s": 2.9324233400038793,
+      "phases_s": {
+        "setup": 0.005435899998701643,
+        "prefill": 0.19192977299826453,
+        "lookup": 0.00776466098614037,
+        "switch": 0.015828498995688278,
+        "fallback_forward": 1.7264133939752355,
+        "block_forward": 0.9840126229973976,
+        "commit": 0.000401461984438356
+      },
+      "counts": {
+        "fallback": 79,
+        "block": 27,
+        "block_rows": 81,
+        "draft": 54,
+        "accepted": 21
+      },
+      "fallback_ms_per_call": 21.85333410095235,
+      "block_ms_per_call": 36.44491196286658,
+      "tokens_per_block_cycle": 1.7777777777777777,
+      "acceptance": 0.3888888888888889
+    },
+    {
+      "prompt_id": "long_0512_c",
+      "tokens": 128,
+      "matches_bnb": true,
+      "matches_generate": true,
+      "bnb_total_s": 3.298503818004974,
+      "bnb_prefill_s": 0.17629654700431274,
+      "bnb_decode_ms_per_token": 24.584290102354753,
+      "b2_total_s": 3.03074904299865,
+      "phases_s": {
+        "setup": 0.005036877999373246,
+        "prefill": 0.17350950399850262,
+        "lookup": 0.008209934014303144,
+        "switch": 0.015244461013935506,
+        "fallback_forward": 1.9588586919999216,
+        "block_forward": 0.8689535060111666,
+        "commit": 0.00034466599754523486
+      },
+      "counts": {
+        "fallback": 89,
+        "block": 24,
+        "block_rows": 71,
+        "draft": 47,
+        "accepted": 15
+      },
+      "fallback_ms_per_call": 22.00964822471822,
+      "block_ms_per_call": 36.20639608379861,
+      "tokens_per_block_cycle": 1.625,
+      "acceptance": 0.3191489361702128
+    },
+    {
+      "prompt_id": "long_3072_a",
+      "tokens": 128,
+      "matches_bnb": true,
+      "matches_generate": true,
+      "bnb_total_s": 4.283775523996155,
+      "bnb_prefill_s": 1.0927268619998358,
+      "bnb_decode_ms_per_token": 25.12634592125051,
+      "b2_total_s": 4.196855732996482,
+      "phases_s": {
+        "setup": 0.005034830006479751,
+        "prefill": 1.0926284509987454,
+        "lookup": 0.036353119008708745,
+        "switch": 0.020114774983085226,
+        "fallback_forward": 1.5621056009986205,
+        "block_forward": 1.4792600930304616,
+        "commit": 0.0006009699718561023
+      },
+      "counts": {
+        "fallback": 68,
+        "block": 38,
+        "block_rows": 114,
+        "draft": 76,
+        "accepted": 22
+      },
+      "fallback_ms_per_call": 22.972141191156183,
+      "block_ms_per_call": 38.92789718501215,
+      "tokens_per_block_cycle": 1.5789473684210527,
+      "acceptance": 0.2894736842105263
+    },
+    {
+      "prompt_id": "long_3072_b",
+      "tokens": 128,
+      "matches_bnb": true,
+      "matches_generate": true,
+      "bnb_total_s": 4.261966897000093,
+      "bnb_prefill_s": 1.1004190409948933,
+      "bnb_decode_ms_per_token": 24.89405703147888,
+      "b2_total_s": 4.24389994199737,
+      "phases_s": {
+        "setup": 0.005368926998926327,
+        "prefill": 1.0978156070050318,
+        "lookup": 0.03823978798754979,
+        "switch": 0.020599263960320968,
+        "fallback_forward": 1.8049155650442117,
+        "block_forward": 1.27570431202912,
+        "commit": 0.0005512619973160326
+      },
+      "counts": {
+        "fallback": 78,
+        "block": 33,
+        "block_rows": 98,
+        "draft": 65,
+        "accepted": 16
+      },
+      "fallback_ms_per_call": 23.139943141592457,
+      "block_ms_per_call": 38.65770642512485,
+      "tokens_per_block_cycle": 1.4848484848484849,
+      "acceptance": 0.24615384615384617
+    },
+    {
+      "prompt_id": "long_3072_c",
+      "tokens": 128,
+      "matches_bnb": true,
+      "matches_generate": true,
+      "bnb_total_s": 4.257413402003294,
+      "bnb_prefill_s": 1.0991379139959463,
+      "bnb_decode_ms_per_token": 24.868285858246963,
+      "b2_total_s": 4.104087628998968,
+      "phases_s": {
+        "setup": 0.005178518003958743,
+        "prefill": 1.0965029940052773,
+        "lookup": 0.03749853303452255,
+        "switch": 0.019479116977890953,
+        "fallback_forward": 1.8034139459923608,
+        "block_forward": 1.140835482015973,
+        "commit": 0.00048005199641920626
+      },
+      "counts": {
+        "fallback": 81,
+        "block": 31,
+        "block_rows": 93,
+        "draft": 62,
+        "accepted": 15
+      },
+      "fallback_ms_per_call": 22.264369703609393,
+      "block_ms_per_call": 36.801144581160415,
+      "tokens_per_block_cycle": 1.4838709677419355,
+      "acceptance": 0.24193548387096775
+    }
+  ]
+}

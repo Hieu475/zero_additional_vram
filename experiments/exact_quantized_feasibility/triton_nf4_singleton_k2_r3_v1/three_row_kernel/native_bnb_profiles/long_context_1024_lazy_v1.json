@@ -1,0 +1,47 @@
+{
+  "schema": "zassd-b2-lazy-lm-head-v1",
+  "benchmark": "data/benchmarks/long_context_dev.jsonl",
+  "summary": {
+    "prompts": 3,
+    "all_tokens_match_bnb": true,
+    "all_kv_prefixes_equal": true,
+    "geomean_b2_speedup": 1.041290439305233,
+    "geomean_lazy_speedup": 1.0849065316163875,
+    "geomean_lazy_over_b2": 1.0418865771400494
+  },
+  "per_prompt": [
+    {
+      "prompt_id": "long_1024_a",
+      "tokens_match_bnb": true,
+      "kv_prefixes_equal": true,
+      "observed_prefixes": 101,
+      "b2_speedup": 1.1090204428660164,
+      "lazy_speedup": 1.1538815161287876,
+      "lazy_over_b2": 1.0404510787437224,
+      "lm_head_rows": 62,
+      "block_rows": 105
+    },
+    {
+      "prompt_id": "long_1024_b",
+      "tokens_match_bnb": true,
+      "kv_prefixes_equal": true,
+      "observed_prefixes": 120,
+      "b2_speedup": 0.9575968807006919,
+      "lazy_speedup": 0.9953598578510535,
+      "lazy_over_b2": 1.0394351505434414,
+      "lm_head_rows": 34,
+      "block_rows": 78
+    },
+    {
+      "prompt_id": "long_1024_c",
+      "tokens_match_bnb": true,
+      "kv_prefixes_equal": true,
+      "observed_prefixes": 103,
+      "b2_speedup": 1.0631471230384015,
+      "lazy_speedup": 1.1118229465936378,
+      "lazy_over_b2": 1.0457846543535048,
+      "lm_head_rows": 65,
+      "block_rows": 120
+    }
+  ]
+}

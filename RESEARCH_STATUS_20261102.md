@@ -446,6 +446,19 @@ Kết luận: trên cohort held-out mới, B2 lười giữ exact so với BNB e
 
 **Dọn dẹp:** README cập nhật; `scripts/validate_activationvec_b2_manifest.py` kiểm hash nguồn/bằng chứng và phiên bản runtime; manifest `activationvec_b2_v2` thay thế v1 (v1 giữ nguyên).
 
+## 17. Ngữ cảnh dài (03/11/2026, tập dev, mô hình 3B)
+
+Trước đó mọi bằng chứng dùng prompt tối đa 605 token (đo bằng tokenizer). `scripts/make_long_context_prompts.py` dựng `data/benchmarks/long_context_dev.jsonl`: 12 prompt ghép nhiều bài CNN/DM dev (`cnndm_ext150`) tới 512, 1024, 2048, 3072 token (3 biến thể mỗi độ dài), kèm chỉ dẫn tóm tắt. Chạy `benchmark_b2_lazy_lm_head.py` (qua `scripts/run_long_context_lazy_benchmark.py`, thay hàm đo BNB eager bằng bản dung lượng cache lớn hơn vì `_common.run_vanilla_timed` mặc định chỉ 2048 token; lần chạy đầu `_v1` hỏng ở 2048/3072 vì lý do này, còn 512/1024 của `_v1` hợp lệ), 128 token sinh, 2 round; kết quả `long_context_{0512,1024,2048,3072}_lazy_v2.json`.
+
+| Độ dài prompt | Prompt | Token khớp BNB | KV prefix khớp BNB (mọi bước) | B2 vs eager | B2 lười vs eager |
+|---:|---:|---:|---:|---:|---:|
+| 512 | 3 | 3/3 | 3/3 | 1.116x | 1.159x |
+| 1024 | 3 | 3/3 | 3/3 | 1.047x | 1.121x |
+| 2048 | 3 | 3/3 | 3/3 | 0.994x | 1.041x |
+| 3072 | 3 | 3/3 | 3/3 | 1.000x | 1.055x |
+
+(82–120 prefix KV được so sánh mỗi prompt; KV băm gồm toàn bộ prefix lời nhắc.) Kết luận: **exactness giữ nguyên tới ~3.2k vị trí** (không thấy lệch token hay KV khi độ dài KV tăng), nhưng **lợi thế tốc độ co lại khi ngữ cảnh dài**: B2 thường chỉ còn ngang BNB eager ở 2048–3072 và bản lười còn 1.04–1.06x; hai prompt 1024 và 2048 của B2 thường dưới 1.0x (0.97x, 0.96x). **Nguyên nhân đã đo (hiệu chỉnh giả thuyết ban đầu về attention):** chi phí một forward gần như không đổi theo độ dài (`block_kernel_profile_long_*`, `launch_bound_long_*`, `phase_profile_long_v1.json`): wall BNB M=1 23.2 ms ở 512 so với 23.5 ms ở 3072, block M=3 với 1 hàng LM head 30.9 so với 30.1 ms; thời gian GPU tăng nhẹ (block 28.6→32.2 ms, nhóm attention 0.9→2.1 ms) nhưng bị che bởi giới hạn CPU. Hai yếu tố thực sự gây co lại: (1) acceptance trên prompt tóm tắt dài thấp (0.24–0.29 ở 3072 so với 0.32–0.64 ở 512; token mỗi block cycle 1.5 so với 1.6–2.3, dưới ngưỡng hoà vốn ~1.65), (2) prefill 1.1 s ở 3072 (so với 0.19 s ở 512) là chi phí chung cộng vào cả hai phía và làm loãng tỷ lệ tổng (~25% tổng thời gian). Tốc độ decode riêng của BNB eager gần như không đổi (24.6→25.0 ms/token). Vì vậy bằng chứng hiện tại không cho thấy độ dài ngữ cảnh tự nó làm B2 chậm đi; đây là hiệu ứng của tác vụ (acceptance) và của prefill. Chưa tách tuyệt đối vì chưa có prompt dài mà acceptance cao; tối ưu `.contiguous()` của attention vì thế ít giá trị hơn dự kiến. Giới hạn: 12 prompt, 3 mỗi độ dài, chưa CI, chỉ tập dev, prompt ghép nhân tạo từ một nguồn (tóm tắt), 128 token sinh, chưa thử trên 3072 (GPU 6 GB) hay mô hình khác.
+
 ---
 
 *Ngày cập nhật: 02/11/2026. Tất cả kết quả trên development prompts, một GPU RTX 4050 Laptop 6 GB, Qwen2.5-3B-Instruct NF4, BNB 0.50.0, Triton 3.6.0, PyTorch 2.11.0.*
