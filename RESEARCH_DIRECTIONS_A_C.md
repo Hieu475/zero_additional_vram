@@ -139,6 +139,26 @@ Danh sách toán tử cần xử lý riêng của **từng mô hình** được 
 
 Mỗi ô 0/50 có khoảng Wilson 95% là [0, 7]%. Các danh sách *khác nhau theo mô hình* (0.5B chỉ cần `sdpa`) vẫn đủ, nghĩa là kiểm toán không chỉ đoán đúng "danh sách chung" mà còn đoán đúng tập tối thiểu theo từng mô hình. Giới hạn: vẫn một GPU, bitsandbytes 0.50.0, K=2, mỗi ô chạy một lần; HumanEval là mã nguồn, có nhiều lặp lại nên thuận lợi cho PLD, chưa thử văn bản tự nhiên.
 
+### 1.11 Backend 4-bit thứ hai hợp lệ: torchao INT4 chỉ trọng số (04/11/2026)
+
+Thay cho HQQ+GemLite (không xác định, Mục 1.9). torchao 0.18.0 `Int4WeightOnlyConfig(group_size=128)`, định dạng `TILE_PACKED_TO_4D` (kernel tinygemm của PyTorch), kích hoạt bf16, Qwen2.5-3B-Instruct, cài trong venv riêng; nạp lên CPU rồi lượng tử hóa từng tầng trên GPU (bản 3B bf16 không vừa 6 GB). Script `run_torchao_chain.sh`; bằng chứng `c8_torchao_*.json`. Điều kiện tiên quyết đã kiểm tra: tham chiếu M=1 chạy hai lần cho kết quả giống hệt (0/20 chuỗi khác nhau).
+
+| Kết quả (20 prompt cho kiểm toán, 50 prompt cho quỹ đạo) | torchao INT4 | bitsandbytes NF4 (so sánh) |
+|---|---|---|
+| Phép chiếu lệch theo hình dạng, M=3 | 0 phần tử | 0 phần tử |
+| Phép chiếu lệch theo hình dạng, M=4 | **0 phần tử** | khoảng 13% phần tử |
+| RMSNorm lớp (M=3) | lệch hiếm, max 0.0156 | lệch hiếm |
+| LM head | 0.16% phần tử | 0.19% |
+| SDPA | 17.4% phần tử | 18.6% |
+| Hàng đổi argmax | 9/960 (M=3), 10/960 (M=4) | 4/960 |
+| `plan` | lm_head, rmsnorm, sdpa (cả M=3 và M=4) | cùng (M=3); thêm linear (M=4) |
+| PLD ngây thơ K=2 / K=3 lệch quỹ đạo | 19/50 / 20/50 | 18/50 / (20 prompt: 6/20) |
+| PLD với danh sách `plan`, K=2 / K=3 | **0/50 / 0/50** | 0/50 (K=2); K=3 cần thêm linear |
+
+**Kết luận:** kiểm toán và bản sửa hoạt động trên một backend 4-bit thứ hai với kernel khác hẳn, và *dự đoán đúng sự khác biệt*: phép chiếu torchao tinygemm không vỡ ở M=4 nên danh sách không cần `linear`, trong khi bitsandbytes cần. Ngưỡng M=4 là đặc thù của bitsandbytes 0.50.0 chứ không phải của mọi backend 4-bit. SDPA/LM head/RMSNorm lệch ở cả hai.
+
+**Giới hạn:** một mô hình (Qwen2.5-3B), một GPU, một lần chạy mỗi ô; torchao chỉ kiểm đến M=4 (chưa thử M lớn hơn); kích hoạt bf16 khác fp16 của bitsandbytes nên so sánh tỷ lệ phần tử lệch giữa hai backend chỉ là gần đúng; danh sách được chọn trên cùng 50 prompt GSM8K dùng để đo (chưa chạy HumanEval cho torchao). GPTQ/AWQ chưa thử (cần biên dịch kernel).
+
 ## 2. Hướng A: vòng giải mã exact chạy trong CUDA graph
 
 ### 2.1 Động cơ

@@ -23,6 +23,8 @@
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | 3072 | 0.000% | 84 | 0.175% | 19.3% | 1/480 | c2_m3_ctx3072_gsm8k10_v1.json |
 | Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] | 3 | nat. | 49.637% | 1704 | 1.571% | 18.2% | 0/960 | c4_qwen3b_hqq_m3_gsm8k20_v1.json |
 | Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] | 4 | nat. | 49.059% | 1827 | 1.570% | 18.2% | 0/960 | c4_qwen3b_hqq_m4_gsm8k20_v1.json |
+| Qwen2.5-3B-Instruct / torchao_int4_wo | 3 | nat. | 0.000% | 65 | 0.164% | 17.4% | 9/960 | c8_torchao_qwen3b_m3_gsm8k20_v1.json |
+| Qwen2.5-3B-Instruct / torchao_int4_wo | 4 | nat. | 0.000% | 83 | 0.164% | 17.4% | 10/960 | c8_torchao_qwen3b_m4_gsm8k20_v1.json |
 
 ## Naive PLD trajectory divergence vs sequential M=1 greedy
 
@@ -80,3 +82,7 @@ Row-wise = operator classes run one row at a time during block verification ('no
 | Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] [GSM8K] | 2 | lm_head+rmsnorm+sdpa | 50 | 7 | 14% | [7%, 26%] |
 | Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] [GSM8K] | 2 | none | 50 | 3 | 6% | [2%, 16%] |
 | Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] [GSM8K] | 3 | none | 20 | 2 | 10% | [3%, 30%] |
+| Qwen2.5-3B-Instruct / torchao_int4_wo [GSM8K] | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
+| Qwen2.5-3B-Instruct / torchao_int4_wo [GSM8K] | 2 | none | 50 | 19 | 38% | [26%, 52%] |
+| Qwen2.5-3B-Instruct / torchao_int4_wo [GSM8K] | 3 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
+| Qwen2.5-3B-Instruct / torchao_int4_wo [GSM8K] | 3 | none | 50 | 20 | 40% | [28%, 54%] |

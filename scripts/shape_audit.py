@@ -45,7 +45,7 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
 def merged_trajectory(directory: Path) -> str:
     groups: dict[tuple, dict] = {}
     for f in sorted(list(directory.glob("c6*_*.json")) + list(directory.glob("fix_*.json"))
-                    + list(directory.glob("heldout_*.json")) + list(directory.glob("c8_*k2_*.json"))):
+                    + list(directory.glob("heldout_*.json")) + list(directory.glob("c8_*_k[0-9]_*.json"))):
         d = json.loads(f.read_text())
         if d.get("schema") != "zassd-pld-trajectory-divergence-v1":
             continue
