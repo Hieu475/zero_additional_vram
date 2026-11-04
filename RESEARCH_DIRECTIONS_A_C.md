@@ -159,6 +159,27 @@ Thay cho HQQ+GemLite (không xác định, Mục 1.9). torchao 0.18.0 `Int4Weigh
 
 **Giới hạn:** một mô hình (Qwen2.5-3B), một GPU, một lần chạy mỗi ô; torchao chỉ kiểm đến M=4 (chưa thử M lớn hơn); kích hoạt bf16 khác fp16 của bitsandbytes nên so sánh tỷ lệ phần tử lệch giữa hai backend chỉ là gần đúng; danh sách được chọn trên cùng 50 prompt GSM8K dùng để đo (chưa chạy HumanEval cho torchao). GPTQ/AWQ chưa thử (cần biên dịch kernel).
 
+### 1.12 CNN/DailyMail (văn bản tự nhiên, ngữ cảnh dài) và một lỗi của bản sửa từng hàng (04/11/2026)
+
+50 prompt `cnndm_eval.jsonl` (164–605 token, trung vị 400), K=2, 128 token; danh sách toán tử là danh sách `plan` từ kiểm toán GSM8K, không chỉnh. Script `run_heldout_generic.sh` (lượt đầu) và `run_gqa_fix_rerun.sh` (sau khi sửa); bằng chứng `heldout_cnndm_*`.
+
+**Lượt đầu cho kết quả âm với mô hình dùng GQA:** Qwen 3B 36/50, 1.5B 33/50, 0.5B 10/50 vẫn lệch dù xử lý riêng đúng danh sách; OLMo-2 và Phi-3.5 (không GQA) 0/50. **Nguyên nhân là lỗi của chính bản sửa từng hàng:** bước M=1 thật gọi SDPA với `enable_gqa=True` và K/V chỉ có số đầu K/V gốc; khối M=3 nhận K/V đã nhân bản (`repeat_kv`), và hàm SDPA từng hàng của tôi gọi với K/V nhân bản, tức một đường kernel khác. Ở ngữ cảnh ngắn (GSM8K, HumanEval) hai đường cho cùng kết quả (tình cờ), ở ngữ cảnh dài thì khác. Sửa: rút gọn K/V về số đầu gốc trước khi gọi từng hàng.
+
+| Mô hình (CNN/DM, K=2) | PLD ngây thơ lệch | Danh sách `plan`, bản sửa lỗi |
+|---|---:|---:|
+| Qwen2.5-3B (bnb) | 33/50 | **0/50** |
+| Qwen2.5-1.5B (bnb) | 36/50 | **0/50** |
+| Qwen2.5-0.5B (bnb) | 38/50 | **0/50** |
+| OLMo-2-1B (bnb) | 27/50 | **0/50** (không GQA, không bị ảnh hưởng) |
+| Phi-3.5-mini (bnb) | 41/50 | **0/50** (không GQA) |
+| Qwen2.5-3B (torchao INT4) | 38/50 | **0/50** |
+
+Khoảng Wilson 95% của mỗi ô 0/50 là [0, 7]%. Các kết quả cũ trước bản sửa vẫn nằm trong bảng tổng hợp, gắn nhãn `PRE-GQA-FIX`, để minh bạch.
+
+**Ảnh hưởng tới các kết quả trước:** (i) Tỷ lệ lệch của *kiểm toán* gần như không đổi sau khi sửa tham chiếu từng hàng (GSM8K: SDPA 18.64%, 18.30%, 3.59% giữ nguyên đến 4 chữ số; ngữ cảnh 512: 19.37% giữ nguyên; 2048: 18.59% → 18.44%), nên các bảng kiểm toán không cần thu hồi. (ii) Các kết quả 0/50 trên GSM8K và HumanEval vẫn đúng, vì chúng đo tính exact so với tham chiếu M=1 thật. (iii) Bài học: một bản sửa đúng ở ngữ cảnh ngắn có thể sai ở ngữ cảnh dài; kiểm chứng exact phải chạy cả hai.
+
+**Giới hạn:** danh sách được chọn từ GSM8K rồi thử trên HumanEval và CNN/DM; bản sửa GQA được viết *sau khi* thấy lỗi trên CNN/DM, nên CNN/DM giờ không còn là kiểm chứng "chưa thấy" thuần túy cho riêng bản sửa này (danh sách `plan` thì chưa bị chỉnh); chưa có bộ dữ liệu thứ ba để kiểm chứng bản sửa GQA độc lập (có thể dùng `cnndm_ext150.jsonl`, 150 prompt chưa chạm tới); mô hình tối đa 3B, một GPU, bitsandbytes 0.50.0, mỗi ô một lần.
+
 ## 2. Hướng A: vòng giải mã exact chạy trong CUDA graph
 
 ### 2.1 Động cơ

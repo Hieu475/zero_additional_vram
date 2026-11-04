@@ -134,8 +134,12 @@ def main() -> None:
                     s["calls"] += 1; s["calls_with_mismatch"] += int(neq > 0); s["elements"] += out3.numel(); s["mismatches"] += neq
                     if neq:
                         s["max_abs_diff"] = max(s["max_abs_diff"], float((per_row.float() - out3.float()).abs().max().item()))
+                n_rep = max(1, getattr(model.config, "num_attention_heads", 1) // getattr(model.config, "num_key_value_heads", 1))
                 for q, k, v, kw, out3 in sdpa_calls:
                     prefix = k.shape[-2] - M
+                    if n_rep > 1 and k.shape[1] == q.shape[1]:
+                        # compact K/V + enable_gqa is what the real M=1 step uses; the block call received repeat_kv'd K/V
+                        k, v = k[:, ::n_rep], v[:, ::n_rep]
                     row_outs = []
                     for i in range(M):
                         length = prefix + i + 1

@@ -52,11 +52,16 @@ def rowwise(model, ops: set[str]):
                 saved.append((m, m.__dict__.get("forward")))
                 m.forward = _rowwise_forward(m.forward)
         if "sdpa" in ops:
+            n_rep = max(1, getattr(model.config, "num_attention_heads", 1) // getattr(model.config, "num_key_value_heads", 1))
+
             def spy(q, k, v, *a, **kw):
                 M = q.shape[-2]
                 if M == 1:
                     return orig_sdpa(q, k, v, *a, **kw)
                 prefix = k.shape[-2] - M
+                if n_rep > 1 and k.shape[1] == q.shape[1]:
+                    # HF repeat_kv'd K/V for the block call; the M=1 step passes the compact K/V with enable_gqa=True.
+                    k, v = k[:, ::n_rep], v[:, ::n_rep]
                 outs = [orig_sdpa(q[:, :, i:i + 1, :].contiguous(), k[:, :, :prefix + i + 1, :].contiguous(),
                                   v[:, :, :prefix + i + 1, :].contiguous(), attn_mask=None, dropout_p=0.0,
                                   scale=kw.get("scale"), is_causal=False, enable_gqa=True) for i in range(M)]
