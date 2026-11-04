@@ -25,8 +25,8 @@ def load_backend(name: str, model_id: str, revision: str, device: str = "cuda:0"
                  attention: str = "sdpa", *,
                  model_dtype: torch.dtype | None = None) -> LoadedBackend:
     """Load a model with a named backend while preserving the HF model API."""
-    if name not in {"hf_bnb_nf4", "hqq_gemlite_w4a16"}:
-        raise ValueError(f"unknown backend {name!r}; expected hf_bnb_nf4 or hqq_gemlite_w4a16")
+    if name not in {"hf_bnb_nf4", "hqq_gemlite_w4a16", "torchao_int4_wo"}:
+        raise ValueError(f"unknown backend {name!r}; expected hf_bnb_nf4, hqq_gemlite_w4a16 or torchao_int4_wo")
     tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision)
     if name == "hf_bnb_nf4":
         quant = BitsAndBytesConfig(
@@ -46,6 +46,24 @@ def load_backend(name: str, model_id: str, revision: str, device: str = "cuda:0"
         if model_dtype is not None:
             metadata["model_dtype"] = str(model_dtype)
         return LoadedBackend(name, model, tokenizer, metadata)
+    if name == "torchao_int4_wo":
+        from torchao.quantization import Int4WeightOnlyConfig, quantize_
+        import torchao
+        # Load on CPU, then quantize layer by layer on the GPU (a 3B bf16 model does not fit in 6 GB before quantization).
+        model = AutoModelForCausalLM.from_pretrained(
+            model_id, revision=revision, dtype=torch.bfloat16, device_map="cpu",
+            attn_implementation=attention,
+        ).eval()
+        from torchao.quantization.quantize_.workflows import Int4PackingFormat
+        cfg = Int4WeightOnlyConfig(group_size=128, int4_packing_format=Int4PackingFormat.TILE_PACKED_TO_4D)
+        for layer in model.model.layers:
+            layer.to(device)
+            quantize_(layer, cfg)
+        model.to(device)
+        return LoadedBackend(name, model, tokenizer, {
+            "quantization": "torchao Int4WeightOnly group_size=128 (tinygemm), bf16 activations",
+            "attention": attention, "torchao_version": torchao.__version__,
+        })
     if name == "hqq_gemlite_w4a16":
         try:
             from gemlite.helper import A16W4_HQQ_INT, patch_model

@@ -45,7 +45,8 @@ def rowwise(model, ops: set[str]):
                 kind = "lm_head"
             elif "rmsnorm" in type(m).__name__.lower():
                 kind = "rmsnorm"
-            elif isinstance(m, Linear4bit) or type(m).__module__.startswith("gemlite"):
+            elif (isinstance(m, Linear4bit) or type(m).__module__.startswith("gemlite")
+                  or (isinstance(m, torch.nn.Linear) and type(getattr(m, "weight", None)).__module__.startswith("torchao"))):
                 kind = "linear"
             if kind in ops:
                 saved.append((m, m.__dict__.get("forward")))

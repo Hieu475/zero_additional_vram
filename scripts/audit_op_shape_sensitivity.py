@@ -27,7 +27,10 @@ def is_rmsnorm(m) -> bool:
 
 
 def is_quant_linear(m) -> bool:
-    return isinstance(m, Linear4bit) or type(m).__module__.startswith("gemlite")
+    if isinstance(m, Linear4bit) or type(m).__module__.startswith("gemlite"):
+        return True
+    w = getattr(m, "weight", None)  # torchao: nn.Linear whose weight is a quantized tensor subclass
+    return isinstance(m, torch.nn.Linear) and w is not None and type(w).__module__.startswith("torchao")
 
 
 def op_class(name: str, module) -> str:
@@ -51,7 +54,7 @@ def main() -> None:
     ap.add_argument("--block-size", type=int, default=3, help="rows M per verification block")
     ap.add_argument("--context-len", type=int, default=0,
                     help="if >0, left-pad the prompt with other benchmark prompts to ~this many tokens (keeps the prompt at the end)")
-    ap.add_argument("--backend", default="hf_bnb_nf4", choices=["hf_bnb_nf4", "hqq_gemlite_w4a16"])
+    ap.add_argument("--backend", default="hf_bnb_nf4", choices=["hf_bnb_nf4", "hqq_gemlite_w4a16", "torchao_int4_wo"])
     ap.add_argument("--model", default=MODEL)
     ap.add_argument("--revision", default=REVISION)
     ap.add_argument("--output", type=Path, required=True)

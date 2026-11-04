@@ -125,6 +125,20 @@ Lệnh `shape_audit.py plan` đọc kết quả kiểm toán và liệt kê lớ
 - Hệ quả: các số "phép chiếu HQQ lệch 49% phần tử", "HQQ ít đổi argmax" và "HQQ lệch quỹ đạo 6%" ở các bảng trước **không** đo độ nhạy theo hình dạng; chúng trộn với nhiễu giữa các lần chạy. Ngay cả khi mọi toán tử chạy từng hàng, HQQ vẫn lệch 3/50 và danh sách thiếu phép chiếu 7/50 — không diễn giải được vì tham chiếu của nó không ổn định. Muốn có số liệu HQQ hợp lệ phải ép GemLite chạy xác định (hoặc dùng backend khác như GPTQ/AWQ có kernel xác định).
 - Lượt trước tôi đã đưa ra một giải thích về HQQ (sai số logit nhỏ hơn nên ít đổi argmax) trước khi kiểm tra nhiễu; giải thích đó bị thu hồi.
 
+### 1.10 Kiểm chứng độc lập trên HumanEval (04/11/2026)
+
+Danh sách toán tử cần xử lý riêng của **từng mô hình** được sinh ra bởi `shape_audit.py plan` từ kiểm toán GSM8K của chính mô hình đó (không chỉnh tay), rồi áp dụng nguyên trạng lên 50 prompt HumanEval (`humaneval_eval.jsonl`, chưa dùng để chọn danh sách), K=2, 128 token, bitsandbytes NF4. Script `run_heldout_humaneval.sh`; bằng chứng `heldout_humaneval_*.json`.
+
+| Mô hình | Danh sách do `plan` sinh ra | PLD ngây thơ lệch | Với danh sách lệch |
+|---|---|---:|---:|
+| Qwen2.5-3B | lm_head, rmsnorm, sdpa | 19/50 (38%) | **0/50** |
+| Qwen2.5-1.5B | lm_head, sdpa | 13/50 (26%) | **0/50** |
+| Qwen2.5-0.5B | sdpa | 26/50 (52%) | **0/50** |
+| OLMo-2-1B | lm_head, rmsnorm, sdpa | 17/50 (34%) | **0/50** |
+| Phi-3.5-mini | lm_head, rmsnorm, sdpa | 31/50 (62%) | **0/50** |
+
+Mỗi ô 0/50 có khoảng Wilson 95% là [0, 7]%. Các danh sách *khác nhau theo mô hình* (0.5B chỉ cần `sdpa`) vẫn đủ, nghĩa là kiểm toán không chỉ đoán đúng "danh sách chung" mà còn đoán đúng tập tối thiểu theo từng mô hình. Giới hạn: vẫn một GPU, bitsandbytes 0.50.0, K=2, mỗi ô chạy một lần; HumanEval là mã nguồn, có nhiều lặp lại nên thuận lợi cho PLD, chưa thử văn bản tự nhiên.
+
 ## 2. Hướng A: vòng giải mã exact chạy trong CUDA graph
 
 ### 2.1 Động cơ
