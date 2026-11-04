@@ -68,6 +68,7 @@ Row-wise = operator classes run one row at a time during block verification ('no
 | Phi-3.5-mini-instruct / hf_bnb_nf4 [GSM8K] | 3 | none | 20 | 10 | 50% | [30%, 70%] |
 | Phi-3.5-mini-instruct / hf_bnb_nf4 [HumanEval] | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
 | Phi-3.5-mini-instruct / hf_bnb_nf4 [HumanEval] | 2 | none | 50 | 31 | 62% | [48%, 74%] |
+| Qwen2.5-0.5B-Instruct / hf_bnb_nf4 [CNN/DM ext150 (independent)] | 2 | sdpa | 60 | 0 | 0% | [0%, 6%] |
 | Qwen2.5-0.5B-Instruct / hf_bnb_nf4 [CNN/DM, PRE-GQA-FIX row-wise SDPA (invalid for GQA models)] | 2 | sdpa | 50 | 10 | 20% | [11%, 33%] |
 | Qwen2.5-0.5B-Instruct / hf_bnb_nf4 [CNN/DM] | 2 | none | 50 | 38 | 76% | [63%, 86%] |
 | Qwen2.5-0.5B-Instruct / hf_bnb_nf4 [CNN/DM] | 2 | sdpa | 50 | 0 | 0% | [0%, 7%] |
@@ -76,6 +77,7 @@ Row-wise = operator classes run one row at a time during block verification ('no
 | Qwen2.5-0.5B-Instruct / hf_bnb_nf4 [GSM8K] | 3 | none | 20 | 14 | 70% | [48%, 85%] |
 | Qwen2.5-0.5B-Instruct / hf_bnb_nf4 [HumanEval] | 2 | none | 50 | 26 | 52% | [39%, 65%] |
 | Qwen2.5-0.5B-Instruct / hf_bnb_nf4 [HumanEval] | 2 | sdpa | 50 | 0 | 0% | [0%, 7%] |
+| Qwen2.5-1.5B-Instruct / hf_bnb_nf4 [CNN/DM ext150 (independent)] | 2 | lm_head+sdpa | 60 | 0 | 0% | [0%, 6%] |
 | Qwen2.5-1.5B-Instruct / hf_bnb_nf4 [CNN/DM, PRE-GQA-FIX row-wise SDPA (invalid for GQA models)] | 2 | lm_head+sdpa | 50 | 33 | 66% | [52%, 78%] |
 | Qwen2.5-1.5B-Instruct / hf_bnb_nf4 [CNN/DM] | 2 | lm_head+sdpa | 50 | 0 | 0% | [0%, 7%] |
 | Qwen2.5-1.5B-Instruct / hf_bnb_nf4 [CNN/DM] | 2 | none | 50 | 36 | 72% | [58%, 83%] |
@@ -84,6 +86,8 @@ Row-wise = operator classes run one row at a time during block verification ('no
 | Qwen2.5-1.5B-Instruct / hf_bnb_nf4 [GSM8K] | 3 | none | 20 | 9 | 45% | [26%, 66%] |
 | Qwen2.5-1.5B-Instruct / hf_bnb_nf4 [HumanEval] | 2 | lm_head+sdpa | 50 | 0 | 0% | [0%, 7%] |
 | Qwen2.5-1.5B-Instruct / hf_bnb_nf4 [HumanEval] | 2 | none | 50 | 13 | 26% | [16%, 40%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 [CNN/DM ext150 (independent)] | 2 | lm_head+rmsnorm+sdpa | 60 | 0 | 0% | [0%, 6%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 [CNN/DM ext150 (independent)] | 2 | none | 60 | 47 | 78% | [66%, 87%] |
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 [CNN/DM, PRE-GQA-FIX row-wise SDPA (invalid for GQA models)] | 2 | lm_head+rmsnorm+sdpa | 50 | 36 | 72% | [58%, 83%] |
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 [CNN/DM] | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 [CNN/DM] | 2 | none | 50 | 33 | 66% | [52%, 78%] |
@@ -100,6 +104,7 @@ Row-wise = operator classes run one row at a time during block verification ('no
 | Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] [GSM8K] | 2 | lm_head+rmsnorm+sdpa | 50 | 7 | 14% | [7%, 26%] |
 | Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] [GSM8K] | 2 | none | 50 | 3 | 6% | [2%, 16%] |
 | Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] [GSM8K] | 3 | none | 20 | 2 | 10% | [3%, 30%] |
+| Qwen2.5-3B-Instruct / torchao_int4_wo [CNN/DM ext150 (independent)] | 2 | lm_head+rmsnorm+sdpa | 60 | 0 | 0% | [0%, 6%] |
 | Qwen2.5-3B-Instruct / torchao_int4_wo [CNN/DM] | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
 | Qwen2.5-3B-Instruct / torchao_int4_wo [CNN/DM] | 2 | none | 50 | 38 | 76% | [63%, 86%] |
 | Qwen2.5-3B-Instruct / torchao_int4_wo [GSM8K] | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |

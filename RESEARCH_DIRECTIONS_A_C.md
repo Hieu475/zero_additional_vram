@@ -180,6 +180,20 @@ Khoảng Wilson 95% của mỗi ô 0/50 là [0, 7]%. Các kết quả cũ trư�
 
 **Giới hạn:** danh sách được chọn từ GSM8K rồi thử trên HumanEval và CNN/DM; bản sửa GQA được viết *sau khi* thấy lỗi trên CNN/DM, nên CNN/DM giờ không còn là kiểm chứng "chưa thấy" thuần túy cho riêng bản sửa này (danh sách `plan` thì chưa bị chỉnh); chưa có bộ dữ liệu thứ ba để kiểm chứng bản sửa GQA độc lập (có thể dùng `cnndm_ext150.jsonl`, 150 prompt chưa chạm tới); mô hình tối đa 3B, một GPU, bitsandbytes 0.50.0, mỗi ô một lần.
 
+### 1.13 Kiểm chứng độc lập của bản sửa GQA trên `cnndm_ext150` (04/11/2026)
+
+60 prompt đầu của `cnndm_ext150.jsonl` (0/150 trùng id và nội dung với `cnndm_eval`; chưa dùng cho bất kỳ quyết định thiết kế nào), K=2, 128 token, mã đã sửa GQA, danh sách `plan` giữ nguyên từ GSM8K. Script `run_cnndm_ext_validation.sh`; bằng chứng `ext150_cnndm_*.json`.
+
+| Cấu hình | Từng hàng | Lệch quỹ đạo |
+|---|---|---:|
+| Qwen2.5-3B, bnb | không (PLD ngây thơ) | 47/60 (78%) |
+| Qwen2.5-3B, bnb | lm_head + rmsnorm + sdpa | **0/60** |
+| Qwen2.5-1.5B, bnb | lm_head + sdpa | **0/60** |
+| Qwen2.5-0.5B, bnb | sdpa | **0/60** |
+| Qwen2.5-3B, torchao INT4 | lm_head + rmsnorm + sdpa | **0/60** |
+
+Khoảng Wilson 95% của mỗi ô 0/60 là [0, 6]%. Tổng hợp qua ba tập dữ liệu (GSM8K, HumanEval, CNN/DM) và hai backend xác định, danh sách do `shape_audit.py plan` sinh ra không có ca lệch nào trong mọi lượt chạy ở bản sửa đúng. Giới hạn: PLD ngây thơ làm mốc chỉ chạy cho Qwen 3B; OLMo-2 và Phi-3.5 chưa chạy trên ext150 (không GQA, đã 0/50 trên CNN/DM); mô hình tối đa 3B, một GPU, bitsandbytes 0.50.0, K=2, mỗi ô một lần; "0 ca lệch" là quan sát trên mẫu, không phải chứng minh.
+
 ## 2. Hướng A: vòng giải mã exact chạy trong CUDA graph
 
 ### 2.1 Động cơ
