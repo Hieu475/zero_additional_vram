@@ -1,6 +1,6 @@
 # Ghi chú khảo sát tài liệu cho hướng C (03/11/2026)
 
-**Phạm vi và độ tin cậy:** đây là khảo sát nhanh, khoảng 6 truy vấn web, chủ yếu đọc đoạn trích và tóm tắt, chưa đọc toàn văn bài nào. Vì vậy nó chỉ đủ để nói "đã thấy các công trình gần dưới đây", không đủ để khẳng định "chưa ai làm". Cần đọc toàn văn các bài ở mục 1 trước khi viết phần so sánh trong bài báo.
+**Phạm vi và độ tin cậy:** mục 1–3 là khảo sát nhanh (khoảng 6 truy vấn web, đoạn trích). Mục 4 (bổ sung 04/11/2026) là lần đọc nội dung hai bài chính qua công cụ tải trang. Hạn chế của mục 4: với LLM-42, chỉ khoảng 39 nghìn ký tự đầu (đến mục 4.2) được trả về nguyên văn; mục 4.3 trở đi, phần Evaluation và Related Works chỉ có bản tóm tắt do mô hình trích, nên các ý đánh dấu [tóm tắt] cần kiểm tra lại với bản gốc. Chưa xem mã nguồn github.com/microsoft/llm-42 và `batch_invariant_ops`. Vì vậy vẫn không đủ để khẳng định "chưa ai làm".
 
 ## 1. Công trình gần nhất đã tìm thấy
 
@@ -32,3 +32,22 @@
 - [Deterministic LLM Inference Across GPU Kernels (arXiv 2609.00363)](https://arxiv.org/pdf/2609.00363)
 - [bitsandbytes PR #1949](https://gh.hhj520.top/bitsandbytes-foundation/bitsandbytes/pull/1949)
 - [vLLM speculative decoding docs](https://docs.vllm.ai/en/v0.21.0/features/speculative_decoding/)
+
+## 4. Kết quả đọc nội dung hai bài chính (04/11/2026)
+
+**LLM-42 (arXiv 2601.17768v2)**
+- **Không đánh giá hay bàn về mô hình lượng tử hóa trọng số.** Chỉ trích dẫn một tài liệu về "w4a16 với split-K" [tóm tắt, chưa kiểm tra]. Mô hình chính Llama-3.1-8B-Instruct; một số mô hình Qwen chỉ để kiểm tra đúng đắn [tóm tắt]; 4 GPU H100 PCIe, SGLang v0.5.3rc0 [tóm tắt].
+- **Không có phép quét độ lệch từng bit theo toán tử.** Bảng 2 chỉ là phân loại định tính (cuBLAS GEMM: không bất biến theo batch; FlashAttention-3 với num_splits=1: bất biến; RMSNorm mặc định của vLLM/SGLang: không bất biến theo batch). Quan sát O2 ("kernel nhất quán theo hình dạng") được khẳng định, không đo từng toán tử. Không có ngưỡng kích thước. LM head không được bàn.
+- **Bộ xác minh** chạy trên số token cố định (ví dụ 10 token; chiều sâu 32–64 token ở Bảng 1) và đệm token giả khi thiếu. Cơ chế decode–verify–rollback lấy cảm hứng từ giải mã suy đoán, nhưng không phải giải mã suy đoán với mô hình nháp. Bài nói rõ nó "chưa tích hợp với suy luận dựa trên giải mã suy đoán" [tóm tắt] và chỉ khẳng định tính xác định, không khẳng định tương đương với một tham chiếu.
+
+**Thinking Machines, "Defeating Nondeterminism in LLM Inference" (10/09/2025)**
+- Không đề cập lượng tử hóa 4-bit/8-bit hay FP8; chỉ có ví dụ matmul bf16. Mô hình chính Qwen3-235B-A22B-Instruct-2507 (thí nghiệm bất định, 1000 lần × 1000 token: 80 chuỗi khác nhau; với kernel bất biến theo batch: 1000 chuỗi giống nhau) và Qwen-3-8B (đo hiệu năng); GPU không nêu tên.
+- Ba toán tử cần xử lý: RMSNorm, matmul (split-K, lệnh tensor-core đổi theo kích thước), attention (split-KV/FlashDecoding, cần kích thước split cố định). Không nêu ngưỡng số.
+- Nguyên tắc nêu rõ: thứ tự rút gọn của một token không được phụ thuộc vào số token khác của cùng chuỗi đang được xử lý đồng thời (ví dụ chunked prefill, prefix caching). Giải mã suy đoán và xác minh nhiều token không được nêu tên.
+
+## 5. Hệ quả cho tính mới của hướng C (cập nhật)
+
+- **Mạnh lên:** trong hai bài chính được đọc, không có bài nào có (a) đo từng bit theo toán tử có số liệu, (b) mô hình lượng tử hóa trọng số 4-bit, (c) quét kích thước khối M, (d) liên hệ tới giải mã suy đoán và độ lệch quỹ đạo. Đây là khoảng trống thật trong hai bài đó.
+- **Vẫn là cảnh báo:** nguyên lý (độ nhạy theo hình dạng, kernel đổi chiến lược theo kích thước) đã được nêu và chấp nhận rộng rãi; đóng góp của ta là *đo đạc có hệ thống trên 4-bit* và liên hệ với suy đoán, không phải phát hiện ra hiện tượng. Cách định vị nên là "kiểm toán thực nghiệm", không phải "phát hiện mới".
+- **Chưa loại trừ:** các bài khác về lượng tử hóa và xác định (đã thấy "The Integer Alibi" cho INT8, chưa đọc nội dung), mã nguồn LLM-42, và các công trình về suy luận xác định cho GPTQ/AWQ/HQQ. Cần tìm thêm trước khi nộp.
+- **Việc còn lại:** đọc nguyên văn phần Evaluation/Related Works của LLM-42; xem mã `microsoft/llm-42` và `batch_invariant_ops`; đọc "The Integer Alibi"; kiểm tra PR #1949 của bitsandbytes.
