@@ -92,13 +92,13 @@ Công cụ: `scripts/shape_audit.py` (`ops`, `trajectory`, `summarize`). Bảng 
 | Qwen 0.5B có 6.0% hàng với margin nhỏ hơn sai số logit trung vị (bnb khác: 1.5–4.6%), cao nhất, khớp với tỷ lệ lệch quỹ đạo cao nhất. (Ý giải thích riêng cho HQQ ở lượt trước đã bị thu hồi, xem Mục 1.9.) | các JSON `end_to_end` |
 | Phép thử SDPA thuần: tỷ lệ lệch của hàng i không phụ thuộc M (M = 2, 3, 4, 6), nên M=2 trùng M=3 vì khác biệt nằm giữa đường q_len=1 và q_len≥2 (chưa đọc kernel để xác nhận) | script tạm, không lưu trong repo |
 
-**Hệ quả:** (i) kết luận "kernel Triton M=3 không cần cho exact" (Mục 0) chỉ đúng cho K ≤ 2 trên bitsandbytes; từ K=3 phép chiếu cũng phải xử lý riêng. (ii) Với HQQ+GemLite, phép chiếu phải xử lý riêng ngay từ M=3. (iii) Cách xử lý attention từng hàng dùng được cho mọi độ dài khảo sát.
+**Hệ quả:** (i) kết luận "kernel Triton M=3 không cần cho exact" (Mục 0) chỉ đúng cho K ≤ 2 trên bitsandbytes; từ K=3 phép chiếu cũng phải xử lý riêng. (ii) Với HQQ+GemLite chưa kết luận được: backend này không lặp lại được nên cần ép xác định hoặc dùng backend khác (Mục 1.9). (iii) Cách xử lý attention từng hàng dùng được cho mọi độ dài khảo sát.
 
 **Giới hạn và điểm chưa giải thích:**
 - Mẫu: ops 20 prompt; C6 K=2 50 prompt (toàn bộ benchmark GSM8K hiện có), K=3 chỉ 20 prompt; mỗi cấu hình chạy một lần.
 - Chưa có Llama 3.2 (model gated, cần token HF); chưa có GPTQ/AWQ; chưa có GPU hay phiên bản thư viện khác (C7).
 - Ngưỡng M=4 là suy luận từ số đo, chưa đối chiếu mã nguồn bitsandbytes.
-- Ba điểm từng chưa giải thích (M=2 trùng M=3, HQQ ít đổi argmax, Qwen 0.5B lệch nhiều) đã có giải thích dựa trên số liệu ở bảng trên; chưa kiểm chứng bằng cách đọc kernel.
+- Hai điểm từng chưa giải thích (M=2 trùng M=3, Qwen 0.5B lệch nhiều) đã có giải thích dựa trên số liệu; điểm về HQQ bị thu hồi (Mục 1.9); chưa kiểm chứng bằng cách đọc kernel.
 - Các hàng ngữ cảnh dài ghép prompt GSM8K làm đệm, không phải văn bản tự nhiên.
 - Khảo sát tài liệu nhanh đã làm: xem `LITERATURE_NOTES_DIRECTION_C.md`. Ý tưởng độ nhạy theo hình dạng không mới (batch-invariant, LLM-42); phần 4-bit và liên hệ tới giải mã suy đoán chưa xác nhận là mới. Chưa đọc toàn văn bài nào.
 
