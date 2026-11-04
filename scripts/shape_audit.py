@@ -3,6 +3,7 @@
 
   shape_audit.py ops         [args of audit_op_shape_sensitivity.py]   per-operator bitwise sensitivity to block shape
   shape_audit.py trajectory  [args of audit_pld_trajectory_divergence.py]   naive-PLD trajectory divergence vs M=1 greedy
+  shape_audit.py plan        OPS_JSON [OPS_JSON ...]                   operator classes to run row-wise (union over the given audits)
   shape_audit.py summarize   [--dir DIR] [--output FILE.md]            Markdown tables from all result JSONs in DIR
 
 Example:
@@ -26,7 +27,9 @@ def _label(d: dict) -> str:
     model = d.get("model", "Qwen/Qwen2.5-3B-Instruct").split("/")[-1]
     if "model" not in d:  # legacy JSONs written before the model field existed (C3 runs via run_with_model.py)
         model = next((v for k, v in LEGACY.items() if k in d.get("_file", "")), model)
-    return f"{model} / {d.get('backend', 'hf_bnb_nf4')}"
+    backend = d.get("backend", "hf_bnb_nf4")
+    note = " [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement]" if backend.startswith("hqq") else ""
+    return f"{model} / {backend}{note}"
 
 
 def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
@@ -41,17 +44,19 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
 
 def merged_trajectory(directory: Path) -> str:
     groups: dict[tuple, dict] = {}
-    for f in sorted(directory.glob("c6*_*.json")):
+    for f in sorted(list(directory.glob("c6*_*.json")) + list(directory.glob("fix_*.json"))):
         d = json.loads(f.read_text())
         if d.get("schema") != "zassd-pld-trajectory-divergence-v1":
             continue
-        g = groups.setdefault((_label(d), d["k"]), {"n": 0, "div": 0, "files": []})
+        key = (_label(d), d["k"], "+".join(d.get("rowwise", [])) or "none")
+        g = groups.setdefault(key, {"n": 0, "div": 0, "files": []})
         g["n"] += d["prompts"]; g["div"] += d["diverged"]; g["files"].append(f.name)
-    lines = ["", "## Naive PLD trajectory divergence, all prompt ranges merged (Wilson 95% CI)", "",
-             "| Config | K | prompts | diverged | rate | 95% CI |", "|---|---:|---:|---:|---:|---|"]
-    for (label, k), g in sorted(groups.items()):
+    lines = ["", "## PLD trajectory divergence vs sequential M=1 greedy, prompt ranges merged (Wilson 95% CI)", "",
+             "Row-wise = operator classes run one row at a time during block verification ('none' = naive PLD).", "",
+             "| Config | K | row-wise ops | prompts | diverged | rate | 95% CI |", "|---|---:|---|---:|---:|---:|---|"]
+    for (label, k, ops), g in sorted(groups.items()):
         lo, hi = wilson(g["div"], g["n"])
-        lines.append(f"| {label} | {k} | {g['n']} | {g['div']} | {g['div'] / g['n']:.0%} | [{lo:.0%}, {hi:.0%}] |")
+        lines.append(f"| {label} | {k} | {ops} | {g['n']} | {g['div']} | {g['div'] / g['n']:.0%} | [{lo:.0%}, {hi:.0%}] |")
     return "\n".join(lines) + "\n"
 
 
@@ -90,10 +95,27 @@ def summarize(directory: Path) -> str:
     return "\n".join(lines) + "\n" + merged_trajectory(directory)
 
 
+def plan(files: list[Path]) -> str:
+    """Operator classes (as accepted by --rowwise) that showed any bitwise mismatch in any given ops audit."""
+    need = set()
+    for f in files:
+        d = json.loads(f.read_text())
+        for k, v in d["per_op_class"].items():
+            if v["mismatches"] == 0:
+                continue
+            if k.startswith("linear"): need.add("linear")
+            elif k.startswith("rmsnorm"): need.add("rmsnorm")
+            elif k == "lm_head": need.add("lm_head")
+            elif k == "sdpa_attention": need.add("sdpa")
+    return ",".join(sorted(need)) or "none"
+
+
 def main() -> None:
-    if len(sys.argv) < 2 or sys.argv[1] not in {"ops", "trajectory", "summarize"}:
+    if len(sys.argv) < 2 or sys.argv[1] not in {"ops", "trajectory", "summarize", "plan"}:
         print(__doc__); sys.exit(2)
     cmd, rest = sys.argv[1], sys.argv[2:]
+    if cmd == "plan":
+        print(plan([Path(x) for x in rest])); return
     here = Path(__file__).parent
     if cmd == "summarize":
         directory, out = DEFAULT_DIR, None

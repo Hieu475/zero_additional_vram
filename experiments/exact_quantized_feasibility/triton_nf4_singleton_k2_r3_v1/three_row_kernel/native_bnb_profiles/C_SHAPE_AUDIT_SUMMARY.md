@@ -21,8 +21,8 @@
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | 1024 | 0.000% | 206 | 0.168% | 19.1% | 3/480 | c2_m3_ctx1024_gsm8k10_v1.json |
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | 2048 | 0.000% | 61 | 0.180% | 18.6% | 3/480 | c2_m3_ctx2048_gsm8k10_v1.json |
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | 3072 | 0.000% | 84 | 0.175% | 19.3% | 1/480 | c2_m3_ctx3072_gsm8k10_v1.json |
-| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 | 3 | nat. | 49.637% | 1704 | 1.571% | 18.2% | 0/960 | c4_qwen3b_hqq_m3_gsm8k20_v1.json |
-| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 | 4 | nat. | 49.059% | 1827 | 1.570% | 18.2% | 0/960 | c4_qwen3b_hqq_m4_gsm8k20_v1.json |
+| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] | 3 | nat. | 49.637% | 1704 | 1.571% | 18.2% | 0/960 | c4_qwen3b_hqq_m3_gsm8k20_v1.json |
+| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] | 4 | nat. | 49.059% | 1827 | 1.570% | 18.2% | 0/960 | c4_qwen3b_hqq_m4_gsm8k20_v1.json |
 
 ## Naive PLD trajectory divergence vs sequential M=1 greedy
 
@@ -38,22 +38,35 @@
 | Qwen2.5-1.5B-Instruct / hf_bnb_nf4 | 3 | 20 | 128 | 9/20 | 57 | c6_qwen15b_k3_gsm8k20_v1.json |
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 | 2 | 20 | 128 | 8/20 | 94 | c6_qwen3b_k2_gsm8k20_v1.json |
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | 20 | 128 | 6/20 | 78 | c6_qwen3b_k3_gsm8k20_v1.json |
-| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 | 2 | 20 | 128 | 2/20 | 36 | c6_qwen3b_hqq_k2_gsm8k20_v1.json |
-| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 | 3 | 20 | 128 | 2/20 | 105 | c6_qwen3b_hqq_k3_gsm8k20_v1.json |
+| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] | 2 | 20 | 128 | 2/20 | 36 | c6_qwen3b_hqq_k2_gsm8k20_v1.json |
+| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] | 3 | 20 | 128 | 2/20 | 105 | c6_qwen3b_hqq_k3_gsm8k20_v1.json |
 
-## Naive PLD trajectory divergence, all prompt ranges merged (Wilson 95% CI)
+## PLD trajectory divergence vs sequential M=1 greedy, prompt ranges merged (Wilson 95% CI)
 
-| Config | K | prompts | diverged | rate | 95% CI |
-|---|---:|---:|---:|---:|---|
-| OLMo-2-0425-1B-Instruct / hf_bnb_nf4 | 2 | 50 | 17 | 34% | [22%, 48%] |
-| OLMo-2-0425-1B-Instruct / hf_bnb_nf4 | 3 | 20 | 6 | 30% | [15%, 52%] |
-| Phi-3.5-mini-instruct / hf_bnb_nf4 | 2 | 50 | 23 | 46% | [33%, 60%] |
-| Phi-3.5-mini-instruct / hf_bnb_nf4 | 3 | 20 | 10 | 50% | [30%, 70%] |
-| Qwen2.5-0.5B-Instruct / hf_bnb_nf4 | 2 | 50 | 33 | 66% | [52%, 78%] |
-| Qwen2.5-0.5B-Instruct / hf_bnb_nf4 | 3 | 20 | 14 | 70% | [48%, 85%] |
-| Qwen2.5-1.5B-Instruct / hf_bnb_nf4 | 2 | 50 | 25 | 50% | [37%, 63%] |
-| Qwen2.5-1.5B-Instruct / hf_bnb_nf4 | 3 | 20 | 9 | 45% | [26%, 66%] |
-| Qwen2.5-3B-Instruct / hf_bnb_nf4 | 2 | 50 | 18 | 36% | [24%, 50%] |
-| Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | 20 | 6 | 30% | [15%, 52%] |
-| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 | 2 | 50 | 3 | 6% | [2%, 16%] |
-| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 | 3 | 20 | 2 | 10% | [3%, 30%] |
+Row-wise = operator classes run one row at a time during block verification ('none' = naive PLD).
+
+| Config | K | row-wise ops | prompts | diverged | rate | 95% CI |
+|---|---:|---|---:|---:|---:|---|
+| OLMo-2-0425-1B-Instruct / hf_bnb_nf4 | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
+| OLMo-2-0425-1B-Instruct / hf_bnb_nf4 | 2 | none | 50 | 17 | 34% | [22%, 48%] |
+| OLMo-2-0425-1B-Instruct / hf_bnb_nf4 | 3 | none | 20 | 6 | 30% | [15%, 52%] |
+| Phi-3.5-mini-instruct / hf_bnb_nf4 | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
+| Phi-3.5-mini-instruct / hf_bnb_nf4 | 2 | none | 50 | 23 | 46% | [33%, 60%] |
+| Phi-3.5-mini-instruct / hf_bnb_nf4 | 3 | none | 20 | 10 | 50% | [30%, 70%] |
+| Qwen2.5-0.5B-Instruct / hf_bnb_nf4 | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
+| Qwen2.5-0.5B-Instruct / hf_bnb_nf4 | 2 | none | 50 | 33 | 66% | [52%, 78%] |
+| Qwen2.5-0.5B-Instruct / hf_bnb_nf4 | 3 | none | 20 | 14 | 70% | [48%, 85%] |
+| Qwen2.5-1.5B-Instruct / hf_bnb_nf4 | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
+| Qwen2.5-1.5B-Instruct / hf_bnb_nf4 | 2 | none | 50 | 25 | 50% | [37%, 63%] |
+| Qwen2.5-1.5B-Instruct / hf_bnb_nf4 | 3 | none | 20 | 9 | 45% | [26%, 66%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 | 2 | lm_head+sdpa | 50 | 3 | 6% | [2%, 16%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 | 2 | none | 50 | 18 | 36% | [24%, 50%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 | 2 | sdpa | 50 | 3 | 6% | [2%, 16%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | linear+lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | lm_head+rmsnorm+sdpa | 50 | 18 | 36% | [24%, 50%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | none | 20 | 6 | 30% | [15%, 52%] |
+| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] | 2 | linear+lm_head+rmsnorm+sdpa | 50 | 3 | 6% | [2%, 16%] |
+| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] | 2 | lm_head+rmsnorm+sdpa | 50 | 7 | 14% | [7%, 26%] |
+| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] | 2 | none | 50 | 3 | 6% | [2%, 16%] |
+| Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] | 3 | none | 20 | 2 | 10% | [3%, 30%] |

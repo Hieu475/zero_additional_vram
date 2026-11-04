@@ -86,10 +86,10 @@ Công cụ: `scripts/shape_audit.py` (`ops`, `trajectory`, `summarize`). Bảng 
 | Phép chiếu NF4 bất biến theo hình dạng khi M ≤ 3, vỡ từ M=4 (khoảng 13–15% phần tử lệch) | Qwen2.5 0.5B/1.5B/3B, OLMo-2-1B, Phi-3.5; M ∈ {2,3,4,5,8,16} trên 3B |
 | Attention (SDPA) lệch khoảng 17–19% ở mọi M và mọi độ dài ngữ cảnh 512–3072; riêng Qwen 0.5B chỉ 3.6% | `c2_*`, `c3_*`, `c4_*` |
 | LM head lệch 0–0.19% (0.5B: 0) | như trên |
-| HQQ+GemLite: phép chiếu lệch khoảng 49% phần tử ngay từ M=3; LM head 1.57%; 0/960 hàng đổi argmax | `c4_qwen3b_hqq_*` |
+| **HQQ+GemLite: số liệu lệch theo hình dạng KHÔNG hợp lệ** (xem Mục 1.9): bản thân GemLite không lặp lại được giữa hai lần chạy cùng đầu vào, nên "49% phần tử lệch" chủ yếu là nhiễu | `c4_qwen3b_hqq_*`, `run_to_run_noise_v1.json` |
 | Hàng đổi argmax khoảng 0.1–1% ở bitsandbytes | các bảng trên |
-| PLD ngây thơ K=2 làm lệch quỹ đạo (50 prompt, 128 token, khoảng Wilson 95%): Qwen 0.5B 66% [52, 78]; Qwen 1.5B 50% [37, 63]; Phi-3.5 46% [33, 60]; Qwen 3B 36% [24, 50]; OLMo-2-1B 34% [22, 48]; HQQ+GemLite 6% [2, 16]. HQQ thấp hơn hẳn mọi cấu hình bitsandbytes (khoảng không giao nhau); Qwen 0.5B cao hơn Qwen 3B và OLMo-2. K=3 (chỉ 20 prompt) không khác K=2 đáng kể | `c6_*`, `c6x_*`, bảng gộp trong `C_SHAPE_AUDIT_SUMMARY.md` |
-| Giải thích số đo (chẩn đoán từ số liệu có sẵn): HQQ có sai số logit trung vị 0.062 (bnb: 0.16–0.25) và chỉ 0.8% hàng có margin nhỏ hơn mức đó (bnb 1.5–6%); Qwen 0.5B có 6.0% hàng như vậy, cao nhất | các JSON `end_to_end` |
+| PLD ngây thơ K=2 làm lệch quỹ đạo (50 prompt, 128 token, khoảng Wilson 95%): Qwen 0.5B 66% [52, 78]; Qwen 1.5B 50% [37, 63]; Phi-3.5 46% [33, 60]; Qwen 3B 36% [24, 50]; OLMo-2-1B 34% [22, 48]; Qwen 0.5B cao hơn Qwen 3B và OLMo-2 (khoảng không giao nhau). HQQ+GemLite 6% [2, 16] nhưng KHÔNG so sánh được với bitsandbytes vì nó không lặp lại được (Mục 1.9). K=3 (chỉ 20 prompt) không khác K=2 đáng kể | `c6_*`, `c6x_*`, bảng gộp trong `C_SHAPE_AUDIT_SUMMARY.md` |
+| Qwen 0.5B có 6.0% hàng với margin nhỏ hơn sai số logit trung vị (bnb khác: 1.5–4.6%), cao nhất, khớp với tỷ lệ lệch quỹ đạo cao nhất. (Ý giải thích riêng cho HQQ ở lượt trước đã bị thu hồi, xem Mục 1.9.) | các JSON `end_to_end` |
 | Phép thử SDPA thuần: tỷ lệ lệch của hàng i không phụ thuộc M (M = 2, 3, 4, 6), nên M=2 trùng M=3 vì khác biệt nằm giữa đường q_len=1 và q_len≥2 (chưa đọc kernel để xác nhận) | script tạm, không lưu trong repo |
 
 **Hệ quả:** (i) kết luận "kernel Triton M=3 không cần cho exact" (Mục 0) chỉ đúng cho K ≤ 2 trên bitsandbytes; từ K=3 phép chiếu cũng phải xử lý riêng. (ii) Với HQQ+GemLite, phép chiếu phải xử lý riêng ngay từ M=3. (iii) Cách xử lý attention từng hàng dùng được cho mọi độ dài khảo sát.
@@ -103,6 +103,27 @@ Công cụ: `scripts/shape_audit.py` (`ops`, `trajectory`, `summarize`). Bảng 
 - Khảo sát tài liệu nhanh đã làm: xem `LITERATURE_NOTES_DIRECTION_C.md`. Ý tưởng độ nhạy theo hình dạng không mới (batch-invariant, LLM-42); phần 4-bit và liên hệ tới giải mã suy đoán chưa xác nhận là mới. Chưa đọc toàn văn bài nào.
 
 ---
+
+### 1.9 Kiểm chứng bản sửa theo kiểm toán, và nhiễu của HQQ+GemLite (04/11/2026)
+
+Lệnh `shape_audit.py plan` đọc kết quả kiểm toán và liệt kê lớp toán tử có bất kỳ phần tử lệch nào; `--rowwise` trong `audit_pld_trajectory_divergence.py` chạy các lớp đó từng hàng khi xác minh khối. 50 prompt GSM8K, 128 token, so với greedy M=1 tuần tự; khoảng Wilson 95%. Bằng chứng: `fix_*.json`, bảng gộp trong `C_SHAPE_AUDIT_SUMMARY.md`.
+
+| Cấu hình (bitsandbytes NF4) | K | Từng hàng | Lệch quỹ đạo |
+|---|---:|---|---:|
+| Qwen 3B | 2 | không (PLD ngây thơ) | 18/50 |
+| Qwen 3B | 2 | RMSNorm + SDPA + LM head (danh sách `plan`) | **0/50** [0, 7]% |
+| Qwen 1.5B, 0.5B, OLMo-2-1B, Phi-3.5 | 2 | cùng danh sách | **0/50** mỗi mô hình |
+| Qwen 3B | 2 | chỉ SDPA, hoặc SDPA + LM head (bỏ RMSNorm) | 3/50 |
+| Qwen 3B | 3 | RMSNorm + SDPA + LM head (thiếu phép chiếu) | 18/50 |
+| Qwen 3B | 3 | tất cả, gồm phép chiếu | **0/50** |
+
+**Kết luận được hỗ trợ (bitsandbytes 0.50.0, sm_89):** kiểm toán theo toán tử dự đoán đúng tập toán tử cần xử lý riêng: danh sách do công cụ sinh ra đưa lệch quỹ đạo về 0/50 trên 5 mô hình/họ; bỏ bất kỳ toán tử nào trong danh sách (kể cả RMSNorm, chỉ lệch hiếm) làm lệch trở lại; K=3 cần thêm phép chiếu, đúng như kiểm toán. "0/50" nghĩa là không thấy lệch trong mẫu, không phải chứng minh exact. Danh sách này được chọn trên chính 50 prompt đã dùng để kiểm toán nên chưa phải kiểm chứng độc lập.
+
+**Phát hiện về HQQ+GemLite (đảo ngược lượt trước):**
+- Tham chiếu M=1 của HQQ+GemLite chạy hai lần trên cùng prompt cho kết quả khác nhau ở 5/50 chuỗi (bitsandbytes: 0/50).
+- Gọi cùng một phép chiếu GemLite 5 lần với cùng đầu vào cho kết quả khác nhau ở 64% phần tử (M=1) và 37% (M=3) (đầu vào ngẫu nhiên fp16, 36 trong 252 module; một lần chạy). Nguyên nhân chưa xác định (chưa kiểm tra cộng nguyên tử/split-K hay autotune).
+- Hệ quả: các số "phép chiếu HQQ lệch 49% phần tử", "HQQ ít đổi argmax" và "HQQ lệch quỹ đạo 6%" ở các bảng trước **không** đo độ nhạy theo hình dạng; chúng trộn với nhiễu giữa các lần chạy. Ngay cả khi mọi toán tử chạy từng hàng, HQQ vẫn lệch 3/50 và danh sách thiếu phép chiếu 7/50 — không diễn giải được vì tham chiếu của nó không ổn định. Muốn có số liệu HQQ hợp lệ phải ép GemLite chạy xác định (hoặc dùng backend khác như GPTQ/AWQ có kernel xác định).
+- Lượt trước tôi đã đưa ra một giải thích về HQQ (sai số logit nhỏ hơn nên ít đổi argmax) trước khi kiểm tra nhiễu; giải thích đó bị thu hồi.
 
 ## 2. Hướng A: vòng giải mã exact chạy trong CUDA graph
 

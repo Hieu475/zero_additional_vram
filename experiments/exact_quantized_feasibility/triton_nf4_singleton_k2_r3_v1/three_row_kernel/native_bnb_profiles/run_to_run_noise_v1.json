@@ -1,0 +1,12 @@
+{
+  "schema": "zassd-run-to-run-noise-v1",
+  "note": "Results printed by scripts/audit_reference_run_to_run.py and scripts/audit_gemlite_run_to_run_noise.py (single run each, RTX 4050, Qwen2.5-3B-Instruct, bitsandbytes 0.50.0, hqq 0.2.8.post1, gemlite 0.6.0.post2).",
+  "m1_reference_decode_run_twice_50_prompts_128_tokens": {
+    "hqq_gemlite_w4a16": {"differing_sequences": 5, "of": 50, "first_differing_token_index": [6, 68, 28, 43, 30]},
+    "hf_bnb_nf4": {"differing_sequences": 0, "of": 50}
+  },
+  "gemlite_linear_same_input_5_calls_random_fp16_inputs_36_of_252_modules": {
+    "m1_mismatching_elements_vs_first_call": [188430, 294912],
+    "m3_mismatching_elements_vs_first_call": [330172, 884736]
+  }
+}
