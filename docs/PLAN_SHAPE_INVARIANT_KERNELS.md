@@ -191,3 +191,22 @@ Tức là tham chiếu bất biến khác tham chiếu mặc định ở 56–70
 Chênh lệch +6 điểm nằm trong nhiễu của 50 prompt (7 cặp bất đồng, 2 so với 5): **không phát hiện giảm độ chính xác, nhưng cũng không chứng minh tương đương**. ext150 không có đáp án chuẩn nên chỉ dùng cho so sánh chuỗi (bộ trích xuất đáp án không trích được ở các prompt đó, bị bỏ).
 
 Giới hạn: một mô hình, một tác vụ, n=50 cho độ chính xác; chưa kiểm tra HumanEval/CNN-DM, chưa thử mô hình khác.
+
+---
+
+## 16. Kết quả WP5 ở quy mô lớn (05/11/2026)
+
+`scripts/run_wp5_scale.sh`, số liệu `results/kernels/wp5_scale_*.json`. PLD K=2, ngram 3, 128 token mới, CUDA graph, bốn toán tử bất biến (LM head, RMSNorm, attention, GEMM NF4). Baseline = giải mã M=1 exact cũng bằng kernel bất biến (cùng phiên, cùng prompt). "Exact" = token sinh ra VÀ KV đã commit bằng từng bit với tham chiếu tuần tự M=1 bất biến, và baseline graph cũng bằng tham chiếu.
+
+| Ô | Prompt | Exact | Baseline tok/s | Vòng PLD tok/s | Tăng (tổng) | Tăng theo prompt: trung vị [min, max] |
+|---|---|---|---|---|---|---|
+| Qwen2.5-3B, GSM8K | 200 | 200/200 | 61.2 | 71.8 | 1.17x | 1.18 [1.01, 1.40] |
+| Qwen2.5-3B, HumanEval | 100 | 100/100 | 58.9 | 77.6 | 1.32x | 1.32 [1.01, 2.22] |
+| Qwen2.5-3B, CNN/DM | 100 | 100/100 | 58.7 | 70.7 | 1.21x | 1.21 [0.98, 1.54] |
+| Qwen2.5-1.5B, GSM8K | 100 | 100/100 | 97.1 | 115.6 | 1.19x | 1.18 [1.01, 1.53] |
+| Qwen2.5-0.5B, GSM8K | 100 | 100/100 | 196.0 | 241.9 | 1.23x | 1.22 [1.05, 1.67] |
+| OLMo-2-1B, GSM8K | 100 | 100/100 | 136.2 | 155.1 | 1.14x | 1.13 [1.02, 1.37] |
+
+700 lượt chạy, 4 mô hình, 3 họ (Qwen2.5, OLMo-2; kiến trúc GQA và MHA, head_dim 64 và 128), 0 lệch. Cận trên Wilson 95% của tỷ lệ lệch: 1.9% (n=200), 3.7% (n=100). Tăng tốc nằm trong khoảng 1.14–1.32x; chỉ 1 prompt (CNN/DM) chậm hơn baseline (0.98x). Không đo được tăng tốc cho Phi-3.5 (head_dim 96 chưa được kernel attention hỗ trợ).
+
+Giới hạn: một GPU (RTX 4050), K=2 cố định, greedy, batch 1; tốc độ phụ thuộc mức PLD tìm được bản nháp (HumanEval cao nhất, 1.32x); đây là PLD, không phải mô hình nháp (xem mục 14: mô hình nháp thật hiện chậm hơn).
