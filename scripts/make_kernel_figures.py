@@ -11,7 +11,7 @@ BLUE, ORANGE, GRAY = "#2a6fb0", "#d9822b", "#8a8a8a"
 plt.rcParams.update({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False, "axes.grid": True, "grid.alpha": .25})
 
 cells = [("Qwen2.5-3B GSM8K", "qwen3b_gsm8k200"), ("Qwen2.5-3B HumanEval", "qwen3b_humaneval100"), ("Qwen2.5-3B CNN/DM", "qwen3b_cnndm100"),
-         ("Qwen2.5-1.5B GSM8K", "qwen15b_gsm8k100"), ("Qwen2.5-0.5B GSM8K", "qwen05b_gsm8k100"), ("OLMo-2-1B GSM8K", "olmo2_1b_gsm8k100")]
+         ("Qwen2.5-1.5B GSM8K", "qwen15b_gsm8k100"), ("Qwen2.5-0.5B GSM8K", "qwen05b_gsm8k100"), ("OLMo-2-1B GSM8K", "olmo2_1b_gsm8k100"), ("Phi-3.5-mini GSM8K", "phi35_gsm8k100")]
 per = {}
 tot = {}
 for name, key in cells:
@@ -22,7 +22,7 @@ for name, key in cells:
 # Fig A: per-prompt speedup distributions
 fig, ax = plt.subplots(figsize=(7.5, 3.8))
 data = [per[n] for n, _ in cells]
-bp = ax.boxplot(data, vert=False, widths=.55, showfliers=True, patch_artist=True, medianprops=dict(color="k"),
+bp = ax.boxplot(data, orientation='horizontal', widths=.55, showfliers=True, patch_artist=True, medianprops=dict(color="k"),
                 flierprops=dict(marker="o", markersize=3, markerfacecolor=GRAY, markeredgecolor="none"))
 for b in bp["boxes"]: b.set(facecolor="#cfe0f1", edgecolor=BLUE)
 ax.axvline(1.0, color=ORANGE, lw=1.2); ax.set_yticks(range(1, len(cells) + 1)); ax.set_yticklabels([n for n, _ in cells]); ax.invert_yaxis()
@@ -47,6 +47,6 @@ naive = [float(r["pct"]) for r in rows if r["method"] == "naive PLD" and "indepe
 fig, ax = plt.subplots(figsize=(5.2, 3.2))
 ax.hist(naive, bins=np.arange(20, 90, 8), color=ORANGE, edgecolor="w")
 ax.set_xlabel("Sequences leaving the sequential greedy trajectory (%)"); ax.set_ylabel("Cells (model x dataset)")
-ax.set_title(f"Naive PLD, 15 cells: {min(naive):.0f}-{max(naive):.0f}%; M-invariant loop: 0 in 700 runs", fontsize=9)
+ax.set_title(f"Naive PLD, 15 cells: {min(naive):.0f}-{max(naive):.0f}%; M-invariant loop: 0 in 800 runs", fontsize=9)
 fig.tight_layout(); fig.savefig(OUT / "kernel_naive_divergence.pdf"); plt.close(fig)
 print("figures ->", OUT)

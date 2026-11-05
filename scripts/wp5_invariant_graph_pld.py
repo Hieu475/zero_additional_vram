@@ -47,8 +47,21 @@ def main() -> None:
     bench = {str(r["id"]): r for r in (json.loads(l) for l in Path(a.benchmark).read_text().splitlines() if l.strip())}
     loaded = load_backend("hf_bnb_nf4", a.model, a.revision, "cuda:0", "sdpa")
     model, tok = loaded.model.eval(), loaded.tokenizer
+    # LongRoPE (Phi-3.5) picks short/long factors with a data-dependent sync; incompatible with CUDA graph capture. For contexts below
+    # original_max_position_embeddings the short factors are always selected, so use the undecorated forward.
+    import types
+    for m in model.modules():
+        if getattr(m, "rope_type", None) == "longrope":
+            orig_max = m.config.rope_parameters["original_max_position_embeddings"]
+            assert a.max_cache_len <= orig_max, "longrope long-factor regime not supported in graph mode"
+            import inspect; m.forward = types.MethodType(inspect.unwrap(type(m).forward), m)
     dev, M = "cuda:0", a.k + 1
-    cache = StaticCache(config=model.config, max_cache_len=a.max_cache_len)
+    import copy
+    cache_cfg = copy.deepcopy(model.config)
+    if getattr(cache_cfg, "sliding_window", None) is not None:  # window >> context here; plain StaticLayer keeps a tensor length (rollback-able)
+        assert cache_cfg.sliding_window >= a.max_cache_len
+        cache_cfg.sliding_window = None
+    cache = StaticCache(config=cache_cfg, max_cache_len=a.max_cache_len)
     prefix_t = torch.zeros(1, dtype=torch.int32, device=dev); IM.PREFIX_TENSOR = prefix_t
     ids1 = torch.zeros((1, 1), dtype=torch.long, device=dev); cp1 = torch.zeros(1, dtype=torch.long, device=dev)
     block_sizes = [M] + ([2] if a.use_m2 and M > 2 else [])
@@ -83,7 +96,7 @@ def main() -> None:
             # eager M=1 reference (timed)
             IM.PREFIX_TENSOR = None  # eager: prefix from K length? static cache returns full capacity -> use prefix tensor too
             IM.PREFIX_TENSOR = prefix_t
-            rc = StaticCache(config=model.config, max_cache_len=a.max_cache_len)
+            rc = StaticCache(config=cache_cfg, max_cache_len=a.max_cache_len)
             lg = model(ids, past_key_values=rc, use_cache=True, cache_position=torch.arange(plen, device=dev)).logits[:, -1:]
             torch.cuda.synchronize(); t0 = time.perf_counter()
             ref = []

@@ -6,7 +6,7 @@ DRAFT v0 (2026-11-05). Written for: ML-systems reviewers (target TMLR or a works
 
 Speculative decoding is supposed to leave the output distribution unchanged. For greedy decoding of 4-bit quantized models it does not leave the output *bits* unchanged. GPU kernels choose their reduction strategy from the number of rows M, so verifying a block of M tokens does not give the same logits as decoding those tokens one at a time. We measured this: prompt-lookup decoding (PLD) leaves the sequential greedy trajectory in 26-82% of sequences (50-prompt cells; up to 92% on an independent CNN/DM set), and a neural draft model in 34-66%. Running the verification row by row restores exactness but gives up the point of batching, which is to read the weights once.
 
-We build 4-bit kernels (LM head, attention, RMSNorm, NF4 GEMM) whose result for each row does not depend on M or on the other rows in the block. The construction is fixed row tiles with zero padding, fixed reduction order, and no split-K, atomics or autotuning. We check the property bitwise on tens of thousands of rows per kernel. On top of these kernels we implement an exact PLD loop captured in a CUDA graph. Over 700 runs on 4 models and 3 datasets (Qwen2.5-0.5B/1.5B/3B, OLMo-2-1B; GSM8K, HumanEval, CNN/DM) we found 0 mismatches in generated tokens and committed KV cache. The loop is 1.14-1.32x faster than exact M=1 decoding built from the same kernels, and 1.27-1.33x faster than the earlier row-wise exact loop. We also report negative results: a real neural draft model is slower than no speculation (0.66x) on this target, and further GEMM tuning is worth at most about 10%. Finally, exactness is only defined relative to a fixed kernel set: our reference differs from stock HF+bitsandbytes decoding in 56-70% of sequences, with no detectable accuracy change in a 50-prompt GSM8K check.
+We build 4-bit kernels (LM head, attention, RMSNorm, NF4 GEMM) whose result for each row does not depend on M or on the other rows in the block. The construction is fixed row tiles with zero padding, fixed reduction order, and no split-K, atomics or autotuning. We check the property bitwise on tens of thousands of rows per kernel. On top of these kernels we implement an exact PLD loop captured in a CUDA graph. Over 800 runs on 5 models and 3 datasets (Qwen2.5-0.5B/1.5B/3B, OLMo-2-1B, Phi-3.5-mini; GSM8K, HumanEval, CNN/DM) we found 0 mismatches in generated tokens and committed KV cache. The loop is 1.14-1.32x faster than exact M=1 decoding built from the same kernels, and 1.27-1.33x faster than the earlier row-wise exact loop. We also report negative results: a real neural draft model is slower than no speculation (0.66x) on this target, and further GEMM tuning is worth at most about 10%. Finally, exactness is only defined relative to a fixed kernel set: our reference differs from stock HF+bitsandbytes decoding in 56-70% of sequences, with no detectable accuracy change in a 50-prompt GSM8K check.
 
 ## 1. Introduction
 
@@ -16,7 +16,7 @@ Prior work on batch-invariant operations addresses the same shape-dependence for
 
 Contributions:
 1. A set of M-invariant kernels for 4-bit decoding: LM head (Triton), attention (Triton, split-KV with absolute chunks), RMSNorm (Triton), NF4 GEMM (CUDA C++). Each is checked bitwise for independence from M and row position.
-2. An exact speculative decoding loop (PLD) that runs as a CUDA graph, with rollback of the KV cache by resetting its length. 700 runs, 0 mismatches, 1.14-1.32x speedup over exact M=1 decoding.
+2. An exact speculative decoding loop (PLD) that runs as a CUDA graph, with rollback of the KV cache by resetting its length. 800 runs, 0 mismatches, 1.14-1.32x speedup over exact M=1 decoding.
 3. A measurement of the problem (per-operator shape sensitivity, trajectory divergence of naive PLD and draft-model SD).
 4. Negative results and a clarification of what "exact" means (Section 7).
 
@@ -77,12 +77,17 @@ Baseline is exact M=1 decoding with the same invariant kernels, in a CUDA graph.
 | Qwen2.5-1.5B GSM8K | 100 | 100/100 | 97.1 | 115.6 | 1.19x | 1.18 [1.01, 1.53] |
 | Qwen2.5-0.5B GSM8K | 100 | 100/100 | 196.0 | 241.9 | 1.23x | 1.22 [1.05, 1.67] |
 | OLMo-2-1B GSM8K | 100 | 100/100 | 136.2 | 155.1 | 1.14x | 1.13 [1.02, 1.37] |
+| Phi-3.5-mini GSM8K | 100 | 100/100 | 72.7 | 85.9 | 1.18x | 1.18 [1.05, 1.41] |
 
 The one-sided 95% Wilson upper bound on the mismatch rate is 1.9% for n=200 and 3.7% for n=100. Only one prompt (CNN/DM) is slower than baseline. Against the earlier row-wise exact loop (100 prompts per dataset, run back to back: old, new, old again; all exact; drift between the two old-loop runs at most 2.4%): GSM8K 79.0 vs 62.7/61.2 tok/s (1.26x/1.29x), CNN/DM 76.5 vs 56.4/57.0 (1.36x/1.34x), HumanEval 81.9 vs 58.9/59.4 (1.39x/1.38x). In these sessions the gain over the invariant M=1 baseline is 1.18x, 1.20x and 1.31x. The invariant M=1 baseline is also faster than the stock-kernel graph baseline (62.4 vs 57.8 tok/s, GSM8K).
+
+Phi-3.5-mini needed three infrastructure fixes, not a kernel redesign: attention head_dim 96 (padded to 128 inside the kernel with masks; 0 mismatches over 700 rows), LongRoPE fixed to the short-factor regime (the stock code selects factors via a data-dependent sync that breaks CUDA-graph capture), and a plain static cache instead of the sliding-window layer. The first Phi run before the cache fix was not exact and showed an implausible 1.74x speedup; the exactness flag caught it.
 
 ### 6.3 Ablations
 
 PLD K=4 is slower than K=2 (1.145x vs 1.206x, 10 prompts). Disabling weight rounding or replacing the LUT dequantization changes the GEMM time by less than 5%; at M=4 the kernel is close to the FMA bound and at M=1 about 20% above the bandwidth bound. We estimate at most 10% of step time is recoverable.
+
+**bitsandbytes versions.** Stock NF4 projections mismatch row-by-row execution in about 60% of elements (random fp16 data) for every M>=2 on 0.49.2, but only from M>=4 on 0.50.0 and 0.50.1 (identical there), so the M=4 threshold is a property of 0.50.x. The invariant kernels do not call bnb's multiply kernel; their unit tests (5/5) and a 20-prompt GSM8K exact loop (20/20, 1.19x and 1.20x) pass on 0.49.2 and 0.50.1 (`scripts/wp7_bnb_versions.py`, `results/kernels/wp7_*`).
 
 ### 6.4 Reference versus stock decoding
 
@@ -98,8 +103,8 @@ Qwen2.5-3B, greedy, invariant vs default mode: identical sequences in 30% (GSM8K
 ## 8. Threats to validity
 
 - One GPU (RTX 4050 Laptop), models up to 3B, batch 1, greedy only. No >=7B model and no second GPU.
-- Invariance is established by construction plus tests, not by proof, and depends on compiler versions (Triton 3.6.0, nvcc 12.8) and on the bitsandbytes layout (0.50.0 only; 0.50.1/0.50.2 untested).
-- Phi-3.5 is unsupported (head_dim 96 in the attention kernel).
+- Invariance is established by construction plus tests, not by proof, and depends on compiler versions (Triton 3.6.0, nvcc 12.8) and on the bitsandbytes layout (kernel tests and a 20-prompt exact loop pass on 0.49.2, 0.50.0 and 0.50.1; 0.50.2 untested; one GPU).
+- Phi-3.5 is supported only in the LongRoPE short-factor regime (context <= 4096) and with a plain static cache (the sliding-window cache layer keeps a Python-int length and cannot be rolled back).
 - Speedup depends on how often PLD finds a draft: HumanEval is highest; the range 1.14-1.32x is modest.
 - Accuracy comparison is small (n=50) and one task.
 - Related work was read from page text and PDF extractions; the evaluation sections of LLM-42 and several preprints were only partly read. Our search was narrow and may have missed work.
