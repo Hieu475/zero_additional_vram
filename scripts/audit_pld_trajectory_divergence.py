@@ -94,6 +94,7 @@ def naive_pld(model, ids, n, k, ngram, cap, device, ops=frozenset()):
     pending = int(model(ids, past_key_values=cache.cache, use_cache=True).logits[:, -1, :].argmax(-1).item())
     prompt = ids[0].tolist()
     gen, blocks, blocks_multi = [], 0, 0
+    margins, fallback_decisions = [], 0
     while len(gen) < n:
         gen.append(pending)  # pending token is committed; its KV is written by the next block's first row
         if len(gen) >= n:
@@ -108,10 +109,16 @@ def naive_pld(model, ids, n, k, ngram, cap, device, ops=frozenset()):
         acc = 0
         while acc < len(cands) and preds[acc] == cands[acc] and len(gen) + acc + 1 < n:
             acc += 1
+        if len(inputs) > 1:  # decisions taken from a multi-row block: rows 0..acc decide committed tokens
+            for r in range(acc + 1):
+                t2 = torch.topk(logits[r].float(), 2).values
+                margins.append(round(float(t2[0] - t2[1]), 4))
+        else:
+            fallback_decisions += 1
         gen.extend(cands[:acc])
         cache.crop(committed_kv + 1 + acc)
         pending = preds[acc]
-    return gen[:n], blocks, blocks_multi
+    return gen[:n], blocks, blocks_multi, margins, fallback_decisions
 
 
 def main():
@@ -142,10 +149,11 @@ def main():
             ids = tok(r["prompt"], return_tensors="pt")["input_ids"].to("cuda:0")
             cap = int(ids.shape[-1]) + a.max_new + a.k + 8
             ref = reference(model, ids, a.max_new, cap)
-            got, blocks, multi = naive_pld(model, ids, a.max_new, a.k, a.ngram, cap, "cuda:0", ops)
+            got, blocks, multi, margins, fb = naive_pld(model, ids, a.max_new, a.k, a.ngram, cap, "cuda:0", ops)
             first = next((i for i, (x, y) in enumerate(zip(ref, got)) if x != y), None)
             per.append({"id": str(r["id"]), "diverged": first is not None, "first_divergence": first,
-                        "blocks": blocks, "multi_row_blocks": multi})
+                        "blocks": blocks, "multi_row_blocks": multi,
+                        "decision_margins": margins, "fallback_decisions": fb})
             print(json.dumps(per[-1]), flush=True)
     div = [p for p in per if p["diverged"]]
     out = {"schema": "zassd-pld-trajectory-divergence-v1", "backend": a.backend, "model": a.model, "revision": a.revision,

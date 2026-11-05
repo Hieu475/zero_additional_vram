@@ -76,6 +76,7 @@ def main() -> None:
                if is_quant_linear(m) or is_rmsnorm(m) or name == "lm_head"}
     stats = defaultdict(lambda: {"calls": 0, "calls_with_mismatch": 0, "elements": 0, "mismatches": 0, "max_abs_diff": 0.0})
     e2e = {"rows": 0, "logits_not_bitwise": 0, "argmax_flips": 0, "max_abs_logit_diff": [], "margins_of_flips": [], "margins_all": []}
+    row_stats = {"gap_seq": [], "gap_shift": [], "tv": [], "kl": []}  # for the flip/divergence prediction model and the sampling analysis
     sdpa_stats = stats["sdpa_attention"]
     with torch.inference_mode():
         for pid in args.prompt_ids:
@@ -161,7 +162,14 @@ def main() -> None:
                     e2e["rows"] += 1
                     e2e["logits_not_bitwise"] += int(not torch.equal(block_logits[0, i], seq_logits[0, i]))
                     e2e["max_abs_logit_diff"].append(float((a - b).abs().max().item()))
-                    top2 = torch.topk(b, 2).values
+                    top2v = torch.topk(b, 2)
+                    top2 = top2v.values
+                    i1, i2 = int(top2v.indices[0]), int(top2v.indices[1])
+                    row_stats["gap_seq"].append(float(top2[0] - top2[1]))
+                    row_stats["gap_shift"].append(float((a[i1] - a[i2]) - (b[i1] - b[i2])))
+                    pa, pb = torch.softmax(a, -1), torch.softmax(b, -1)
+                    row_stats["tv"].append(float(0.5 * (pa - pb).abs().sum()))
+                    row_stats["kl"].append(float((pb * (torch.log(pb + 1e-30) - torch.log(pa + 1e-30))).sum()))
                     margin = float((top2[0] - top2[1]).item())
                     e2e["margins_all"].append(margin)
                     if int(a.argmax()) != int(b.argmax()):
@@ -176,7 +184,7 @@ def main() -> None:
     out = {"schema": "zassd-op-shape-sensitivity-v1", "backend": args.backend, "model": args.model, "revision": args.revision, "prompts": args.prompt_ids, "steps": args.steps, "block_size": M, "context_len": args.context_len,
            "per_op_class": {k: {**v, "mismatch_rate": v["mismatches"] / max(1, v["elements"]),
                                 "call_mismatch_rate": v["calls_with_mismatch"] / max(1, v["calls"])} for k, v in sorted(stats.items())},
-           "end_to_end": e2e}
+           "end_to_end": e2e, "per_row": {k: [round(x, 6) for x in v] for k, v in row_stats.items()}}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(out, indent=2) + "\n")
     for k, v in out["per_op_class"].items():
