@@ -30,6 +30,8 @@ the same arithmetic, and draft tokens never enter target KV.
 The B1 reference changes the arithmetic of the model. Speedups against original
 BNB latency are therefore not evidence of BNB trajectory equivalence.
 
+Correction (2026-11-03): operator-level measurements show that standard bitsandbytes 0.50.0 NF4 projections already agree with per-row execution bit for bit; what breaks block verification is attention, the LM head and (rarely) RMSNorm, which B2 evaluates row by row. The Triton kernel below is an optional ~4% speed-up, not a requirement for exactness.
+
 The B2 activationvec path (`_fused_nf4_m3_kernel` + `bnb_rowwise` attention) processes the
 M=3 block with the same per-row arithmetic as the BNB singleton, so block and greedy outputs
 are bitwise identical. Speedup over BNB then depends entirely on acceptance rate.
@@ -78,6 +80,20 @@ The same loop is also equal to BNB (tokens and per-step KV) on Qwen2.5-0.5B and 
 
 Details and per-experiment caveats: `RESEARCH_STATUS_20261102.md` and `B2_OPERATOR_ARGUMENT.md`.
 
+## Direction C and A results (2026-11-03/04)
+
+- **Shape-invariance audit (direction C).** `scripts/shape_audit.py` (`ops`, `trajectory`, `plan`, `summarize`) measures, per operator,
+  whether a block of M rows is bitwise equal to the same operator applied row by row, and how often naive prompt-lookup decoding leaves
+  the sequential greedy trajectory. Running the operator classes named by `plan` row by row during block verification gave 0 diverged
+  sequences in every run of the corrected code (GSM8K, HumanEval, CNN/DailyMail incl. an untouched 60-prompt split; bitsandbytes NF4 on
+  Qwen2.5 0.5B/1.5B/3B, OLMo-2-1B, Phi-3.5, and torchao INT4 on Qwen2.5-3B), versus 26-82% diverged for naive blocks.
+  Tables: `experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/C_SHAPE_AUDIT_SUMMARY.md`;
+  write-up and caveats: `RESEARCH_DIRECTIONS_A_C.md` (sections 1.8-1.13), literature notes: `LITERATURE_NOTES_DIRECTION_C.md`.
+- **HQQ+GemLite is excluded**: its kernels are not run-to-run deterministic (`run_to_run_noise_v1.json`).
+- **CUDA-graph exact decode loop (direction A).** Bitwise exact against the `StaticCache` M=1 reference (30/30 prompts) and 1.40x faster
+  than eager, but speculative decoding adds only 1.009x on top of the exact CUDA-graph M=1 baseline, so that direction stopped at A4.
+  Note that these use a different reference (`StaticCache` M=1) than the B1/B2 results above.
+
 ## Provenance of old runs
 
 Experiment manifests pin `source_sha256` of the scripts and kernels that produced them.
@@ -87,7 +103,8 @@ tag `evidence-pre-cleanup` (commit `06cf0d7`), where the pins match.
 
 ## Limitations
 
-- One GPU, one main model/revision, greedy decoding, batch size 1, NF4 (bitsandbytes) only.
+- One GPU (RTX 4050), greedy decoding, batch size 1. Main development results are Qwen2.5-3B NF4 (bitsandbytes 0.50.0); direction C also covers
+  other models up to 3B and a torchao INT4 backend, all on the same GPU. Operator-level thresholds depend on bitsandbytes version and GPU.
 - Exactness is backed by recorded token/KV-hash equality, not by a proof; the operator argument
   in `B2_OPERATOR_ARGUMENT.md` leaves the kernel's equality with bitsandbytes' reduction order, PyTorch
   dispatch independence and cross-toolchain stability open;

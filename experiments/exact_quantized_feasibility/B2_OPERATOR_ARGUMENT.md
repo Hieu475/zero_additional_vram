@@ -33,7 +33,7 @@ consuming `x_0..x_{i-1}` one at a time, and `F` writes to the cache at position
 |---|---|---|
 | Token embedding lookup | A gather of row `x_i` from the table; independent of the other rows. | [S] |
 | RMSNorm (all norms) | The `bnb_rowwise` schedule evaluates each row with a separate call on a `(1,1,H)` tensor, i.e. the same call the reference makes. | [S] |
-| q/k/v/o/gate/up/down projections (252 `Linear4bit`) | See *NF4 kernel*. Row independence is structural; equality with the bitsandbytes M=1 kernel is empirical. | [S]+[E] |
+| q/k/v/o/gate/up/down projections (252 `Linear4bit`) | Standard bitsandbytes 0.50.0 (small-M NF4 kernel) already gives three-row output equal to the M=1 output bit for bit: 0 mismatches in 990,904,320 elements (`op_shape_sensitivity_gsm8k20_v1.json`). The optional Triton M=3 kernel (*NF4 kernel* below) is only a speed optimisation; B2 without it is exact on 10/10 dev prompts (tokens and KV). | [E] (standard path); [S]+[E] (optional Triton kernel) |
 | Bias add (q/k/v) | Inside the Triton kernel (`HAS_BIAS`), added to the per-row fp32 sum, same instruction for every row. | [S]+[E] |
 | Rotary embedding | Elementwise multiply/add on per-row `cos/sin` taken at the row's absolute position. IEEE elementwise operations do not depend on how many rows are in the tensor. Vectorized vs scalar PyTorch elementwise kernels were not separately audited. | [S]/[O] |
 | KV cache write | `StaticPreallocatedLayer.update` copies the new K/V rows into `[L, L+R)`. Bytes are copied, not recomputed. | [S] |
@@ -44,7 +44,17 @@ consuming `x_0..x_{i-1}` one at a time, and `F` writes to the cache at position
 | LM head | Evaluated row by row with a separate `(1,1,H)` call into the same module the reference uses (`bnb_rowwise` branch of `fixed_linear`). The lazy variant calls it only for rows up to the first rejected draft; skipped rows write no state, so omitting them cannot change `S`. | [S] |
 | Argmax | Torch `argmax` on a `(1,1,V)` tensor per row; ties follow the same rule as the reference. | [S] |
 
-## NF4 kernel (`_fused_nf4_m3_kernel`)
+> Scope note (2026-11-04): the statement that the standard bitsandbytes projections need no special handling holds for blocks of up to
+> three rows (K <= 2) on bitsandbytes 0.50.0 and an RTX 4050. From four rows on, the same projections differ from per-row execution
+> (about 13% of elements for Qwen2.5-3B, `c2_m4_gsm8k20_v1.json`). Also, when attention is evaluated row by row for grouped-query models,
+> the per-row call must use the compact K/V with `enable_gqa=True` as the single-token step does; passing K/V expanded by `repeat_kv`
+> follows a different kernel path and is not bitwise equal on long contexts (found on CNN/DailyMail with the generic row-wise implementation in
+> `scripts/audit_pld_trajectory_divergence.py`, see `RESEARCH_DIRECTIONS_A_C.md` 1.12; B2's own `bnb_rowwise` attention path was validated separately, including contexts up to 3071 tokens).
+
+## Optional NF4 kernel (`_fused_nf4_m3_kernel`)
+
+Correction (2026-11-03): this kernel is **not required for exactness**; the standard bitsandbytes projections already match per-row execution (see the table above and `op_shape_sensitivity_gsm8k20_v1.json`), and the operators that actually break block verification are attention (18.6% of elements differ), the LM head (0.19%) and, very rarely, RMSNorm (87 of 141.6M). The kernel is kept because it makes the loop about 4% faster (1.161x vs 1.117x over eager on 10 dev prompts). Everything below applies only to this optional kernel.
+
 
 Read directly from the source:
 

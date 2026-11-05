@@ -28,6 +28,8 @@ def _label(d: dict) -> str:
     if "model" not in d:  # legacy JSONs written before the model field existed (C3 runs via run_with_model.py)
         model = next((v for k, v in LEGACY.items() if k in d.get("_file", "")), model)
     backend = d.get("backend", "hf_bnb_nf4")
+    if "bnb0492" in d.get("_file", ""):
+        backend += " (bitsandbytes 0.49.2)"
     note = " [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement]" if backend.startswith("hqq") else ""
     return f"{model} / {backend}{note}"
 
@@ -45,7 +47,7 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
 def merged_trajectory(directory: Path) -> str:
     groups: dict[tuple, dict] = {}
     for f in sorted(set(list(directory.glob("c6*_*.json")) + list(directory.glob("fix_*.json"))
-                    + list(directory.glob("heldout_*.json")) + list(directory.glob("ext150_*.json")) + list(directory.glob("c8_*_k[0-9]_*.json")))):
+                    + list(directory.glob("heldout_*.json")) + list(directory.glob("ext150_*.json")) + list(directory.glob("c8_*_k[0-9]_*.json")) + list(directory.glob("c10_*_k[0-9]_*.json")))):
         d = json.loads(f.read_text())
         if d.get("schema") != "zassd-pld-trajectory-divergence-v1":
             continue
@@ -57,6 +59,7 @@ def merged_trajectory(directory: Path) -> str:
             bench = "HumanEval"
         else:
             bench = "GSM8K"
+        d["_file"] = f.name
         key = (_label(d) + f" [{bench}]", d["k"], "+".join(d.get("rowwise", [])) or "none")
         g = groups.setdefault(key, {"n": 0, "div": 0, "files": []})
         g["n"] += d["prompts"]; g["div"] += d["diverged"]; g["files"].append(f.name)

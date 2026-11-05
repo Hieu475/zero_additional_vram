@@ -26,6 +26,9 @@
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | 2048 | 0.000% | 61 | 0.180% | 18.6% | 3/480 | c2_m3_ctx2048_gsm8k10_v1.json |
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | 2048 | 0.000% | 61 | 0.180% | 18.4% | 3/480 | c9_m3_ctx2048_gsm8k10_gqafix_v2.json |
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 | 3 | 3072 | 0.000% | 84 | 0.175% | 19.3% | 1/480 | c2_m3_ctx3072_gsm8k10_v1.json |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 (bitsandbytes 0.49.2) | 3 | nat. | 34.206% | 119 | 0.193% | 18.6% | 2/960 | c10_bnb0492_qwen3b_m3_gsm8k20_v1.json |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 (bitsandbytes 0.49.2) | 4 | nat. | 34.203% | 312 | 0.192% | 18.6% | 4/960 | c10_bnb0492_qwen3b_m4_gsm8k20_v1.json |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 (bitsandbytes 0.49.2) | 8 | nat. | 34.206% | 212 | 0.194% | 18.6% | 3/960 | c10_bnb0492_qwen3b_m8_gsm8k20_v1.json |
 | Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] | 3 | nat. | 49.637% | 1704 | 1.571% | 18.2% | 0/960 | c4_qwen3b_hqq_m3_gsm8k20_v1.json |
 | Qwen2.5-3B-Instruct / hqq_gemlite_w4a16 [NONDETERMINISTIC run-to-run: not a valid shape-sensitivity measurement] | 4 | nat. | 49.059% | 1827 | 1.570% | 18.2% | 0/960 | c4_qwen3b_hqq_m4_gsm8k20_v1.json |
 | Qwen2.5-3B-Instruct / torchao_int4_wo | 3 | nat. | 0.000% | 65 | 0.164% | 17.4% | 9/960 | c8_torchao_qwen3b_m3_gsm8k20_v1.json |
@@ -86,6 +89,10 @@ Row-wise = operator classes run one row at a time during block verification ('no
 | Qwen2.5-1.5B-Instruct / hf_bnb_nf4 [GSM8K] | 3 | none | 20 | 9 | 45% | [26%, 66%] |
 | Qwen2.5-1.5B-Instruct / hf_bnb_nf4 [HumanEval] | 2 | lm_head+sdpa | 50 | 0 | 0% | [0%, 7%] |
 | Qwen2.5-1.5B-Instruct / hf_bnb_nf4 [HumanEval] | 2 | none | 50 | 13 | 26% | [16%, 40%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 (bitsandbytes 0.49.2) [GSM8K] | 2 | linear+lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 (bitsandbytes 0.49.2) [GSM8K] | 2 | none | 50 | 11 | 22% | [13%, 35%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 (bitsandbytes 0.49.2) [GSM8K] | 3 | linear+lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
+| Qwen2.5-3B-Instruct / hf_bnb_nf4 (bitsandbytes 0.49.2) [GSM8K] | 3 | none | 50 | 12 | 24% | [14%, 37%] |
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 [CNN/DM ext150 (independent)] | 2 | lm_head+rmsnorm+sdpa | 60 | 0 | 0% | [0%, 6%] |
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 [CNN/DM ext150 (independent)] | 2 | none | 60 | 47 | 78% | [66%, 87%] |
 | Qwen2.5-3B-Instruct / hf_bnb_nf4 [CNN/DM, PRE-GQA-FIX row-wise SDPA (invalid for GQA models)] | 2 | lm_head+rmsnorm+sdpa | 50 | 36 | 72% | [58%, 83%] |

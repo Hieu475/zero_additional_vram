@@ -194,6 +194,26 @@ Khoảng Wilson 95% của mỗi ô 0/50 là [0, 7]%. Các kết quả cũ trư�
 
 Khoảng Wilson 95% của mỗi ô 0/60 là [0, 6]%. Tổng hợp qua ba tập dữ liệu (GSM8K, HumanEval, CNN/DM) và hai backend xác định, danh sách do `shape_audit.py plan` sinh ra không có ca lệch nào trong mọi lượt chạy ở bản sửa đúng. Giới hạn: PLD ngây thơ làm mốc chỉ chạy cho Qwen 3B; OLMo-2 và Phi-3.5 chưa chạy trên ext150 (không GQA, đã 0/50 trên CNN/DM); mô hình tối đa 3B, một GPU, bitsandbytes 0.50.0, K=2, mỗi ô một lần; "0 ca lệch" là quan sát trên mẫu, không phải chứng minh.
 
+### 1.14 bitsandbytes 0.49.2 (trước PR #1949) so với 0.50.0 (05/11/2026)
+
+Cùng mô hình (Qwen2.5-3B NF4, GSM8K 20 prompt cho kiểm toán, 50 cho quỹ đạo), cùng GPU (RTX 4050), 0.49.2 cài trong venv riêng. Script `run_bnb0492_chain.sh`; bằng chứng `c10_bnb0492_*.json`.
+
+| Phần tử phép chiếu lệch so với chạy từng hàng | M=3 | M=4 | M=8 |
+|---|---:|---:|---:|
+| bitsandbytes 0.50.0 | **0%** | 13.0% | 13.0% |
+| bitsandbytes 0.49.2 | **34.2%** | 34.2% | 34.2% |
+
+Theo từng phép chiếu, ở 0.50.0 M≥4: `k_proj` và `v_proj` vẫn bằng 0, các phép khác 9–19%; ở 0.49.2 mọi phép chiếu đều lệch 26–45% ngay từ M=3. SDPA (18.6%), LM head (0.19%) và RMSNorm (hiếm) giống nhau ở hai phiên bản.
+
+| Quỹ đạo PLD (50 prompt GSM8K) | K=2 | K=3 |
+|---|---:|---:|
+| 0.49.2, ngây thơ | 11/50 | 12/50 |
+| 0.49.2, từng hàng theo `plan` (linear + lm_head + rmsnorm + sdpa) | **0/50** | **0/50** |
+
+**Kết luận:** (i) Việc phép chiếu NF4 không cần xử lý riêng ở K=2 (Mục 0) là hệ quả của kernel GEMM 4-bit mới có từ 0.50.0, không phải tính chất chung của bitsandbytes; với bản trước PR đó, phép chiếu phải nằm trong danh sách ngay từ M=3. (ii) Công cụ `plan` đoán đúng sự khác biệt giữa hai phiên bản mà không cần biết gì về kernel, và danh sách tương ứng đưa quỹ đạo về 0/50 ở cả hai. (iii) Điều này phù hợp với việc dự án ban đầu cần kernel Triton cho phép chiếu, nhưng tôi **chưa kiểm tra** phiên bản bitsandbytes lúc phát triển kernel đó nên không khẳng định đó là nguyên nhân.
+
+**Giới hạn:** một mô hình, một GPU, mỗi ô một lần; 0.49.2 chạy cùng PyTorch 2.11/CUDA 12.8 với bản 0.50.0 (venv kế thừa gói hệ thống); chưa thử các bản 0.50.1/0.50.2 (đổi heuristic cho GB10) và các GPU khác; cờ "PLD ngây thơ 11/50" ở 0.49.2 thấp hơn 18/50 của 0.50.0 nhưng khác biệt này nằm trong khoảng nhiễu của 50 prompt (hai khoảng Wilson chồng lên nhau), không nên diễn giải.
+
 ## 2. Hướng A: vòng giải mã exact chạy trong CUDA graph
 
 ### 2.1 Động cơ
