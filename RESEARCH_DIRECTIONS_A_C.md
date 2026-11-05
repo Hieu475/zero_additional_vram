@@ -352,3 +352,10 @@ Một đóng góp hệ thống nếu A4 cho kết quả tích cực và ngang ba
 | Ghi chép trạng thái | `RESEARCH_STATUS_20261102.md`, mục 21 |
 
 **Giới hạn chung của mọi con số trên:** một GPU (RTX 4050 Laptop 6 GB), bitsandbytes 0.50.0, Triton 3.6.0, PyTorch 2.11.0, chủ yếu Qwen2.5-3B, batch 1, greedy, tập dev trừ khi ghi khác.
+
+## B. Divergence prediction model (2026-11-05) — NEGATIVE against the pre-set criterion
+
+Model: flip probability of each decision with margin m is P(gap_shift < -m) from the teacher-forced M=3 noise sample; sequence divergence = 1 - prod(1 - q). 24 cells (6 configs x 4 prompt sets), naive PLD K=2.
+Pre-set criterion: R2 >= 0.8 and slope near 1. Result: R2 vs identity = -3.41, slope(obs on pred) = 2.43, mean abs error 35 pp; Pearson r = 0.87. Flat-rate baseline: R2 = -6.08, r = 0.30.
+Reading: the margin model ranks cells well (r 0.87, much better than the flat rate) but under-predicts the observed divergence by about 2.4x, so the criterion is NOT met. Any recalibration of the slope would be post hoc and is not claimed as success. Likely causes (untested): the M=3 teacher-forced noise sample does not match the noise in PLD blocks (other block sizes, contexts), and noise correlated across rows/steps.
+Data: native_bnb_profiles/b_noise_*, b_margins_*, b_divergence_prediction_v1.json.
