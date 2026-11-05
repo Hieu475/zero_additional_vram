@@ -1,0 +1,38 @@
+\chapter{Kết luận và hướng phát triển}
+
+\section{Kết luận}
+
+Đồ án đã xây dựng và khảo sát ZASSD, một hệ thống giải mã suy đoán không cần nạp checkpoint draft độc lập. Hệ thống gồm đường vanilla, Prompt Lookup Decoding (PLD), self-speculation bằng layer-skip, bộ định tuyến kết hợp các hành động, target verification và quản lý KV cache. Các phép đo được tổ chức theo cohort riêng để phân biệt kết quả hiệu năng, numerical fidelity và chẩn đoán kernel.
+
+Trong benchmark paired 150 prompt trên Qwen2.5-3B-Instruct NF4, PLD đạt speedup end-to-end trung bình paired \(1.063\times\) so với vanilla (CI bootstrap 95\%: \([1.036,1.092]\)); router đạt \(1.050\times\), nhưng chậm hơn PLD theo tỷ số paired \(0.989\) (CI: \([0.985,0.993]\)). Kết quả cho thấy PLD có thể tăng throughput trong cấu hình đã thử, còn router chưa chứng minh lợi ích so với baseline cố định mạnh nhất. Exact sequence match 83.3\% cũng cho thấy speedup không đồng nghĩa với bảo toàn hoàn toàn chuỗi đầu ra.
+
+Các phân tích bổ sung cho thấy chi phí cycle, backend và cách tổ chức verification đều liên quan đến hiệu năng và fidelity. Tuy nhiên, cohort chẩn đoán được chọn có chủ đích, phép profiling chỉ chạy trên một prompt, và verification tuần tự chỉ khôi phục sequence identity trong các mẫu đã kiểm tra. Vì vậy, đóng góp chính của đồ án là một hệ thống có thể so sánh các đường giải mã trong cùng framework cùng một đánh giá thực nghiệm có giới hạn rõ ràng; kết quả chưa bảo đảm khả năng khái quát sang cấu hình khác.
+
+Chương 6 mở rộng phần đánh giá sang tính exact: một vòng giải mã suy đoán B2 trên NF4 tái tạo đúng từng token và KV của greedy bitsandbytes gốc ở mọi prompt đã kiểm, gồm hai cohort held-out GSM8K mỗi cohort 50 prompt dùng đúng một lần (khớp $50/50$ ở cả hai), không dùng thêm bộ nhớ đáng kể ($0.07$~MiB ở đỉnh) và nhanh hơn bitsandbytes eager khoảng $1.12$--$1.15\times$. Mức tăng này khiêm tốn và bị giới hạn bởi chi phí khởi chạy kernel của CPU và acceptance của PLD; B2 chậm hơn một baseline \texttt{torch.compile} (khoảng $0.91\times$ tốc độ của nó) vốn không exact, nên đóng góp nằm ở tính exact và quy trình bằng chứng chứ không ở tốc độ tuyệt đối.
+
+Chương 7 đi tiếp từ giới hạn tốc độ của B2: bộ kernel 4-bit bất biến theo số hàng (LM head, attention, RMSNorm, GEMM NF4) cho phép kiểm tra theo khối mà vẫn exact theo bộ kernel của chính nó. Vòng PLD exact trên CUDA graph cho $0$ lệch token và KV trên $1200$ cặp prompt-mô hình, tám mô hình và ba tập dữ liệu, nhanh hơn baseline exact $M{=}1$ cùng kernel $1.14$--$1.32\times$ và nhanh hơn vòng B2 chạy từng hàng khoảng $1.26$--$1.39\times$. Cái giá là tham chiếu exact khác bitsandbytes gốc ở phần lớn chuỗi (chỉ $30$--$44\%$ giống hệt), dù không phát hiện giảm độ chính xác tác vụ ở cỡ mẫu nhỏ; và mô hình nháp thần kinh không có lợi trên đích $3$B ($0.66\times$). Đóng góp nằm ở bộ kernel, định nghĩa exact theo bộ kernel và quy trình bằng chứng, không ở tốc độ tuyệt đối.
+
+\section{Hạn chế}
+
+Kết quả benchmark chính được thu trên một NVIDIA RTX 4050 Laptop GPU, một mô hình Qwen2.5-3B-Instruct, NF4/FP16 compute và SDPA. Số prompt benchmark chính là 150, nhưng các cohort router, numerical fidelity và profiling nhỏ hơn và dùng giao thức khác. Nhiệt độ GPU thay đổi trong các snapshot của benchmark; dù thứ tự phương pháp được xoay vòng, phép đo một thiết bị vẫn có thể chịu ảnh hưởng nhiệt và trạng thái hệ thống.
+
+Một số nhóm numerical fidelity được chọn có chủ đích từ các prompt đã có mismatch trước đó; tỷ lệ đúng/sai ở nhóm này phục vụ chẩn đoán, không ước lượng tỷ lệ lỗi trong traffic tự nhiên. Cohort held-out 14 prompt thuộc cùng prepared-input artifact, không phải đánh giá ngoài độc lập. Phép Nsight có instrumentation và chỉ bao phủ một prompt, còn các thống kê cycle gộp không lưu số candidate draft cho từng cycle. Chưa có đủ bằng chứng để khái quát sang GPU, model, quantization, attention backend hoặc workload khác.
+
+Đối với Chương 6, bằng chứng đều từ một GPU và một bộ công cụ (bitsandbytes 0.50.0, Triton 3.6.0, PyTorch 2.11.0), chủ yếu một họ mô hình (Qwen2) và một backend lượng tử hóa, batch 1, greedy. Tính exact dựa trên bằng chứng hữu hạn chứ chưa phải chứng minh: còn mở sự bằng nhau với kernel bitsandbytes trên mọi đầu vào (mã nguồn CUDA đọc theo nghĩa đen khác với hành vi của bản nhị phân), độc lập của dispatch PyTorch với số hàng, độ ổn định qua phiên bản Triton/ptxas/CUDA và GPU, và kiểm ở mức PTX.
+
+Cuối cùng, exact match với greedy vanilla chỉ đo đồng nhất token ID trong cùng cấu hình. Nó không thay thế đánh giá chất lượng tác vụ, và numerical equivalence của KV/logits cũng không thể được suy ra chỉ từ việc chuỗi đầu ra giống nhau. Các phép đo bộ nhớ dùng peak allocated memory của PyTorch trong một cohort riêng; chúng không đại diện cho toàn bộ VRAM do driver/NVML báo cáo.
+
+\section{Hướng phát triển}
+
+Các công việc tiếp theo được ưu tiên như sau:
+\begin{enumerate}
+    \item Mở rộng benchmark paired sang nhiều GPU, model và backend; lặp phiên chạy độc lập để định lượng biến thiên giữa phiên, nhiệt độ và thứ tự chạy.
+    \item Bổ sung số liệu theo cycle: candidates, accepted/emitted tokens, thời gian không chồng lấn và action fallback. Dùng chúng để kiểm định cost model độc lập.
+    \item Cải thiện router bằng baseline PLD mạnh đã hiệu chỉnh trên tập development, sau đó đánh giá trên held-out traffic; báo cáo riêng lựa chọn action, overhead, speedup và fidelity.
+    \item Tiếp tục phân tích sai khác số học giữa batched và sequential verification, KV history, NF4 và các backend khác; thiết kế chế độ fallback có thể bảo toàn sequence identity với overhead được đo rõ.
+    \item Đo thêm chất lượng tác vụ, latency đầu-cuối, VRAM allocated/reserved/NVML và prompt/đầu ra đa dạng.
+    \item Chạy bộ kernel bất biến trên GPU khác và mô hình $\ge7$B (nơi mô hình nháp thần kinh có thể có lợi), thử bitsandbytes 0.50.1/0.50.2, hỗ trợ $head\_dim$ $96$ (Phi-3.5), và chứng minh hình thức hoặc kiểm ở mức PTX tính bất biến.
+    \item Kiểm tra vòng giải mã exact B2 trên GPU và phiên bản Triton/bitsandbytes khác, ở mức PTX, trên backend lượng tử hóa và họ mô hình khác, và hoàn thiện lập luận theo toán tử; mọi lần nâng cấp bitsandbytes cần chạy lại phép mô phỏng thứ tự rút gọn của kernel.
+\end{enumerate}
+
+Mục tiêu là xác định được miền cấu hình mà lợi ích throughput của speculative decoding đủ lớn, có thể tái lập và đáp ứng ngưỡng chính xác của ứng dụng, thay vì giả định một phương pháp duy nhất luôn tốt nhất.

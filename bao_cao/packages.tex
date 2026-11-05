@@ -1,0 +1,111 @@
+% Biên dịch bằng XeLaTeX để hỗ trợ tiếng Việt Unicode.
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage{polyglossia}
+\setmainlanguage{vietnamese}
+\setotherlanguage{english}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{tocloft,calc}
+\usepackage{amsmath,amsfonts,latexsym}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{eso-pic}
+\usepackage{indentfirst}
+\usepackage{setspace}
+\usepackage[unicode,bookmarks=true,colorlinks=true]{hyperref}
+\usepackage[capitalize]{cleveref}
+% cleveref chưa có bộ tên ngôn ngữ Vietnamese; dùng hook tiếng Anh của nó,
+% còn nhãn tham chiếu tiếng Việt được đặt ngay bên dưới.
+\makeatletter
+\def\cref@language{english}
+\makeatother
+\crefname{figure}{Hình}{Hình}
+\Crefname{figure}{Hình}{Hình}
+\crefname{table}{Bảng}{Bảng}
+\Crefname{table}{Bảng}{Bảng}
+\crefname{chapter}{Chương}{Chương}
+\Crefname{chapter}{Chương}{Chương}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\floatname{algorithm}{Thuật toán}
+\algrenewcommand\algorithmicrequire{\textbf{Đầu vào:}}
+\algrenewcommand\algorithmicensure{\textbf{Đầu ra:}}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage[official]{eurosym}   % biểu tượng euro
+\usepackage{enumitem}
+\usepackage[table]{xcolor}
+\usepackage{float}
+\usepackage{chngcntr}
+\usepackage[version=4]{mhchem}
+\usepackage{fancybox}
+\counterwithout{figure}{chapter}
+
+\hypersetup{
+  pdftitle={Khảo sát giải mã suy đoán không sử dụng bộ nhớ trọng số bổ sung trên GPU giới hạn tài nguyên},
+  pdfauthor={Nguyễn Quốc Hiếu},
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+\onehalfspacing
+
+\geometry{
+    top=3.5cm, 
+    bottom=3.0cm, 
+    left=3.5cm, 
+    right=2.0cm
+  % left=64pt,
+  % right=64pt,
+  % top=64pt,
+  % bottom=64pt,
+}
+
+\usetikzlibrary{calc}
+
+\newcommand{\drawcoverframe}{
+    \AddToShipoutPicture*{%
+    \begin{tikzpicture}[remember picture,overlay]
+        % Khung ngoài
+        \draw[line width=2pt]
+            ($(current page.north west)+(3.5cm,-3.5cm)$)
+            rectangle
+            ($(current page.south east)+(-2cm,3cm)$);
+    
+        % Khung trong
+        \draw[line width=1pt]
+            ($(current page.north west)+(3.65cm,-3.65cm)$)
+            rectangle
+            ($(current page.south east)+(-2.15cm,3.15cm)$);
+    \end{tikzpicture}
+    }
+}
+
+\setlength{\headheight}{16pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{}
+\rhead{}
+\cfoot{\thepage}
+
+% Hide the printed "Chương <n>" heading label, but keep chapter numbering internally
+\makeatletter
+\def\@makechapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \interlinepenalty\@M
+    \Huge\bfseries #1\par\nobreak
+    \vskip 40\p@
+  }}
+\def\@makeschapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \interlinepenalty\@M
+    \Huge\bfseries #1\par\nobreak
+    \vskip 40\p@
+  }}
+\makeatother

@@ -1,0 +1,101 @@
+\chapter{Cơ sở lý thuyết và các nghiên cứu liên quan}
+
+\section{Cơ sở lý thuyết}
+\subsection{Giải mã tự hồi quy và speculative decoding}
+\subsubsection{Giải mã tự hồi quy}
+Với chuỗi token $x_{1:T}$, mô hình ngôn ngữ tự hồi quy phân rã xác suất như sau:
+\begin{equation}
+    p(x_{1:T})=\prod_{t=1}^{T}p(x_t\mid x_{1:t-1}).
+\end{equation}
+Ở mỗi bước, mô hình tính phân phối của token kế tiếp rồi chọn token theo greedy decoding hoặc sampling. Token mới được thêm vào lịch sử và trở thành điều kiện cho bước tiếp theo. Do đó, các bước sinh nối tiếp có phụ thuộc tuần tự, dù phép tính trong từng lượt forward có thể song song. KV cache tránh tính lại key/value của tiền tố, nhưng không loại bỏ phụ thuộc giữa các token mới. Dự đoán theo khối là một hướng giảm số lượt tuần tự \cite{stern2018blockwise}.
+
+\subsubsection{Draft--verify và tính đúng đắn}
+Speculative decoding dùng mô hình draft có phân phối $q$ để đề xuất tối đa $K$ token, sau đó mô hình target có phân phối $p$ kiểm tra chúng theo thứ tự. Trong speculative sampling, token draft $y$ tại ngữ cảnh $h$ được chấp nhận với xác suất:
+\begin{equation}
+    a(y\mid h)=\min\left(1,\frac{p(y\mid h)}{q(y\mid h)}\right).
+\end{equation}
+Nếu bị từ chối, token hiệu chỉnh được lấy từ phân phối phần dư:
+\begin{equation}
+    r(y\mid h)=\frac{\max(p(y\mid h)-q(y\mid h),0)}
+    {\sum_v\max(p(v\mid h)-q(v\mid h),0)}.
+\end{equation}
+Quy tắc hiệu chỉnh này bảo toàn phân phối target theo các giả định của thuật toán \cite{leviathan2023fast,chen2023accelerating}. Với greedy decoding, kiểm tra nhằm giữ lựa chọn argmax của target tại từng vị trí; sequence identity là tiêu chí mạnh hơn việc chỉ dùng cùng thuật toán trên danh nghĩa. Vì khác biệt floating-point/backend có thể đổi argmax khi logits gần nhau, tính đúng đắn cần được báo cáo theo cấu hình thực thi cụ thể.
+
+\subsubsection{Chi phí của một chu kỳ}
+Nếu chu kỳ phát trung bình $\mathbb{E}[N_{\mathrm{emit}}]$ token và mất thời gian $\mathbb{E}[T_{\mathrm{cycle}}]$, tốc độ suy đoán phụ thuộc vào tỷ số hai đại lượng này, không chỉ vào acceptance. Draft, verify và overhead cache/điều phối đều góp phần vào $T_{\mathrm{cycle}}$. Mô hình chi phí và điều kiện hòa vốn được xây dựng cụ thể ở Mục 3.5.
+
+\subsection{Self-speculative decoding và bỏ qua lớp}
+Self-speculative decoding tạo draft từ một nhánh rút gọn của chính target, nhờ đó không cần nạp một bộ trọng số draft riêng. Với tập lớp bỏ qua $S$, có thể mô tả phép biến đổi draft ở lớp $l$ bằng:
+\begin{equation}
+    h^{(l+1)}_{\mathrm{draft}}=
+    \begin{cases}
+      h^{(l)}_{\mathrm{draft}}, & l\in S,\\
+      F_l(h^{(l)}_{\mathrm{draft}}), & l\notin S,
+    \end{cases}
+\end{equation}
+trong đó $F_l$ là khối Transformer. Bỏ nhiều lớp có thể giảm chi phí draft nhưng cũng làm dự đoán lệch target và giảm số token được chấp nhận; bỏ ít lớp có thể giữ draft gần target hơn nhưng tiết kiệm ít tính toán.
+
+Cần phân biệt draft tạo bằng cách thực thi một phần target với early exit được hỗ trợ bằng huấn luyện bổ sung. Đồ án khảo sát layer-skip trong cấu hình hiện thực, không giả định chất lượng của draft hoặc lợi ích tốc độ chỉ từ cách chọn lớp. Các công trình và khác biệt về thiết kế được đối chiếu tại Mục 2.2.1.
+
+\subsection{Prompt Lookup Decoding}
+Prompt Lookup Decoding (PLD) tìm một n-gram trùng với hậu tố của lịch sử hiện tại trong vùng văn bản nguồn, rồi lấy các token đứng ngay sau lần khớp làm draft \cite{saxena2024promptlookup}. Gọi lịch sử là $H=(x_1,\ldots,x_t)$, nguồn tra cứu là $C=(c_1,\ldots,c_m)$ và n-gram truy vấn độ dài $n$ là $q=(x_{t-n+1},\ldots,x_t)$. Một vị trí $i$ là match nếu:
+\begin{equation}
+    (c_i,c_{i+1},\ldots,c_{i+n-1})=q.
+\end{equation}
+Các token sau vị trí khớp được đề xuất tối đa đến horizon $K$ và vẫn phải được target xác minh. N-gram ngắn dễ match nhưng có thể ít đặc trưng; n-gram dài đặc trưng hơn nhưng dễ miss. Khi không có continuation phù hợp, hệ thống fallback về vanilla. PLD có chi phí draft thấp nhưng hiệu quả phụ thuộc mức lặp của workload; các hướng retrieval-based khác cũng khai thác nội dung có sẵn để tạo ứng viên \cite{he2024rest}.
+
+\subsection{KV cache và numerical correctness}
+Ở mỗi lớp attention, KV cache lưu key/value của token history để tránh tính lại biểu diễn tiền tố. Cache state phải tương ứng với đúng token history: logical length, các vị trí hợp lệ, causal mask và vị trí RoPE cần nhất quán. Nếu token bị loại sau verify nhưng KV của token đó vẫn được xem là active, các forward sau sẽ xử lý một trạng thái không còn tương ứng với chuỗi đã xác nhận.
+
+Cần phân biệt tính đúng đắn thuật toán với numerical equivalence của một backend cụ thể. Quy tắc speculative sampling có thể bảo toàn phân phối trong giả định toán học; nhưng lượng tử hóa, kernel attention và cách xử lý batched/sequential có thể làm logits hoặc KV sai khác floating-point. Khi logits top-1/top-2 gần nhau, sai khác nhỏ có thể gây đổi token greedy. Vì vậy cần đo cả sequence match và trạng thái cache, đồng thời ghi rõ model, precision, backend và execution mode \cite{kwon2023pagedattention}. Cách ZASSD giữ cache chuẩn, cache draft tạm và rollback được trình bày tại Mục 3.4.
+
+\section{Các nghiên cứu liên quan}
+\subsection{Draft-based và self-speculative decoding}
+Speculative decoding với draft riêng đặt nền tảng cho quy trình đề xuất rồi xác minh token \cite{leviathan2023fast,chen2023accelerating}. Trong self-speculation, LayerSkip dùng huấn luyện để hỗ trợ early exit; Draft and Verify khảo sát bỏ lớp theo hướng training-free; Kangaroo kết hợp hai điểm thoát sớm; ShortGPT đánh giá mức dư thừa của lớp; còn CLaSp chọn lớp theo ngữ cảnh \cite{elhoushi2024layerskip,zhang2024draft,liu2024kangaroo,men2024shortgpt,clasp2025}. Các hướng này khác nhau ở cách tạo draft, yêu cầu huấn luyện và chính sách chọn lớp. Vì vậy, chúng là các thiết kế liên quan chứ không phải cấu hình tương đương trực tiếp với layer-skip được đánh giá trong đồ án.
+
+\subsection{Retrieval-based và alternative drafting}
+PLD và REST khai thác n-gram hoặc nội dung đã truy xuất để tạo ứng viên \cite{saxena2024promptlookup,he2024rest}. Medusa dùng nhiều đầu dự đoán, còn EAGLE xây dựng draft dựa trên đặc trưng của mô hình \cite{cai2024medusa,li2024eagle}. Các phương pháp này mở rộng không gian thiết kế draft nhưng khác nhau về thành phần bổ sung, dữ liệu và huấn luyện cần thiết. Với mục tiêu tránh nạp trọng số draft, PLD là baseline gần nhất; Medusa và EAGLE chủ yếu là đối chiếu về cách tạo ứng viên.
+
+\subsection{Systems efficiency và memory management}
+PagedAttention tập trung vào quản lý KV cache khi phục vụ LLM \cite{kwon2023pagedattention}. CKA được dùng để so sánh biểu diễn giữa các lớp/mạng, nhưng độ tương đồng biểu diễn không tự động đảm bảo acceptance hoặc tốc độ cao hơn \cite{kornblith2019similarity}. Roofline giúp phân tích giới hạn do năng lực tính toán và băng thông bộ nhớ \cite{williams2009roofline}. Các công cụ này cung cấp góc nhìn hệ thống cho việc chọn lớp và diễn giải chi phí, song quyết định cuối cần được xác nhận bằng phép đo toàn chu kỳ.
+
+LLM-42 \cite{gond2026llm42} giải quyết bài toán non-determinism trong LLM serving bằng cơ chế decode--verify--rollback: token được sinh trên fast path không xác định, sau đó verifier replay dưới lịch thực thi fixed-shape để commit hoặc loại bỏ token không nhất quán. Công trình này tập trung vào FP16 models (Llama-3.1-8B) trên hệ thống đa GPU (4x H100), với mục tiêu chính là determinism dưới dynamic batching trong môi trường serving. Bài toán của đồ án khác ở chỗ nghiên cứu tính chính xác số học khi xác minh token trong môi trường lượng tử hóa 4-bit (NF4) trên GPU đơn, nơi bản thân kernel dequantization và reduction order là nguồn sai lệch cần kiểm soát; LLM-42 không đề cập đến NF4 hay bitsandbytes.
+
+\subsection{So sánh các hướng nghiên cứu}
+Bảng~\ref{tab:related-work-comparison} tóm tắt nguồn draft, yêu cầu thành phần/huấn luyện và mối liên hệ với đồ án. Các mô tả phản ánh thiết kế của từng công trình, không phải so sánh hiệu năng trực tiếp.
+
+\begin{table}[H]
+\centering
+\caption{So sánh các hướng nghiên cứu liên quan}\label{tab:related-work-comparison}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{5.5cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Công trình} & \textbf{Nguồn draft và yêu cầu bổ sung} & \textbf{Liên hệ với đồ án} \\
+\midrule
+Leviathan et al.~\cite{leviathan2023fast} & Mô hình draft riêng; không bắt buộc joint training. & Nền tảng draft--verify và hiệu chỉnh phân phối. \\
+LayerSkip~\cite{elhoushi2024layerskip} & Early exit từ target; có huấn luyện hỗ trợ. & Self-speculation cần chuẩn bị mô hình. \\
+Draft and Verify~\cite{zhang2024draft} & Draft từ một phần lớp target; hướng training-free. & Gần với layer-skip không thêm trọng số. \\
+Prompt Lookup~\cite{saxena2024promptlookup} & N-gram trong prompt/ngữ cảnh; không thêm trọng số hay huấn luyện. & Baseline draft chi phí thấp. \\
+REST~\cite{he2024rest} & Draft từ datastore; yêu cầu phụ thuộc thiết kế. & Đại diện cho hướng truy xuất nội dung. \\
+Medusa / EAGLE~\cite{cai2024medusa,li2024eagle} & Prediction heads hoặc feature draft; có thành phần/huấn luyện bổ sung. & Đối chiếu các hướng tạo draft ngoài PLD và layer-skip. \\
+LLM-42~\cite{gond2026llm42} & Decode--verify--rollback với fixed-shape schedule; không thêm trọng số draft. & Công trình gần nhất về verify--rollback; khác đồ án ở mô hình FP16, hệ đa GPU, và không xử lý lượng tử hóa 4-bit. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Khoảng trống và định hướng nghiên cứu}
+Đồ án không khẳng định rằng các vấn đề dưới đây chưa từng được giải quyết trong toàn bộ literature. Đây là ba câu hỏi thực nghiệm được chọn trong phạm vi hệ thống và cấu hình nghiên cứu.
+
+\subsection{Feasibility phụ thuộc backend}
+Chi phí một hành động speculative không chỉ do thuật toán quyết định. Lượng tử hóa, kernel và execution mode có thể thay đổi latency draft/verify, dung lượng cache và sai khác số học. Vì thế, cùng một cấu hình layer-skip hoặc $K$ có thể khả thi ở backend này nhưng không có lợi ở backend khác. Đồ án cần phân biệt BNB NF4 và HQQ+GemLite ở những thí nghiệm đã chạy, ghi metadata và không gộp các phép đo khác giao thức.
+
+\subsection{Dự đoán chi phí trên workload chưa quan sát}
+Acceptance cao không đủ để chọn hành động tối ưu nếu draft hoặc verify đắt. Router cần ước lượng số token phát ra và thời gian chu kỳ cho vanilla, PLD và layer-skip, rồi chỉ chọn hành động có throughput dự kiến cao hơn baseline. Câu hỏi còn lại là mức độ hiệu chuẩn và khả năng tổng quát của ước lượng trên prompt chưa dùng để xây dựng profile; một comparator offline nhìn thấy kết quả toàn prompt chỉ có vai trò chẩn đoán, không phải router triển khai.
+
+\subsection{Numerical fidelity dưới lượng tử hóa và verification theo lô}
+Ngay cả khi logic commit/rollback được thiết kế đúng, cache state và phép tính batched có thể tạo khác biệt logits so với vanilla tuần tự. Cần tách lỗi trạng thái cache khỏi sai khác do precision/backend, kiểm tra vị trí divergence và đánh giá sequence match theo cấu hình đầy đủ. Đồ án xem đây là vấn đề cần đo và mô tả minh bạch, không suy ra lossless behavior chỉ từ chứng minh của speculative sampling trong số học lý tưởng.
+
+\subsection{Kernel bất biến theo batch và theo số hàng}
+Nguyên lý rằng kết quả của một token không được phụ thuộc vào số token khác được xử lý cùng lúc đã được nêu trong công trình về suy luận xác định: kernel RMSNorm, matmul và attention thường đổi thứ tự rút gọn theo kích thước batch, và các kernel bất biến theo batch cố định thứ tự đó \cite{he2025defeating}; Yuan và cộng sự đo độ lệch độ chính xác giữa các cấu hình GPU, kích thước batch và độ chính xác số học \cite{yuan2025nondeterminism}. LLM-42 \cite{gond2026llm42} xác minh trên cửa sổ kích thước cố định và không tích hợp với giải mã suy đoán dùng mô hình nháp. Với mô hình lượng tử hóa trọng số, quan sát rằng kiểm tra theo khối làm đổi logit và lật argmax đã được ghi nhận định tính trên backend Metal \cite{chordiya2026lossless}. Khoảng trống mà Chương 7 nhắm tới là: (i) đo theo toán tử trên CUDA với trọng số NF4, (ii) bộ kernel 4-bit bất biến theo số hàng \emph{trong một chuỗi} (không chỉ theo batch), và (iii) vòng giải mã suy đoán exact dùng bộ kernel đó. Phần này dựa trên việc đọc nội dung chọn lọc các công trình trên, không phải khảo sát đầy đủ.
+
+\subsection{Định hướng và đóng góp trong phạm vi đồ án}
+Từ các câu hỏi trên, đồ án tập trung vào tích hợp vanilla, layer-skip, PLD và router; quản lý KV cache chuẩn/tạm; xây dựng phép so sánh paired; và phân tích chi phí cùng numerical fidelity theo model/backend đã khảo sát. Đóng góp được xác định ở mức hiện thực và đánh giá hệ thống. Kết quả benchmark cụ thể được trình bày ở Chương 5, còn vòng giải mã exact trên NF4 và đánh giá của nó ở Chương 6, bộ kernel bất biến theo số hàng ở Chương 7, không dùng làm bằng chứng rằng router hoặc một phương pháp draft luôn tốt hơn trên workload khác.

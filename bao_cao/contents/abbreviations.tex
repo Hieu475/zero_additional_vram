@@ -1,0 +1,41 @@
+\chapter*{Danh mục ký hiệu và viết tắt}
+\addcontentsline{toc}{chapter}{Danh mục ký hiệu và viết tắt}
+
+\section*{Từ viết tắt}
+\small
+\begin{longtable}{@{}l p{0.34\textwidth} l p{0.34\textwidth}@{}}
+\toprule
+\textbf{Ký hiệu} & \textbf{Diễn giải} & \textbf{Ký hiệu} & \textbf{Diễn giải} \\
+\midrule
+LLM & Mô hình ngôn ngữ lớn. & PLD & Prompt Lookup Decoding. \\
+KV & Key--Value của attention. & VRAM & Bộ nhớ đồ họa GPU. \\
+TPS & Token sinh mỗi giây. & EOS & Token kết thúc chuỗi. \\
+BNB & Backend bitsandbytes. & HQQ & Phương pháp lượng tử hóa. \\
+NF4 & Định dạng lượng tử hóa 4 bit. & SDPA & Scaled Dot-Product Attention. \\
+CKA & Centered Kernel Alignment. & RQ & Câu hỏi nghiên cứu. \\
+B1 & Tham chiếu greedy với lịch hình dạng cố định (Chương 6). & B2 & Tham chiếu greedy bitsandbytes gốc và vòng giải mã exact bám theo nó (Chương 6). \\
+RE & Tính bằng nhau theo hàng (row-equivalence). & CI & Khoảng tin cậy (bootstrap). \\
+PTX & Mã trung gian của GPU NVIDIA. & GEMV & Nhân ma trận--vector. \\
+SHA256 & Hàm băm dùng để so KV và ghim tệp. & GSM8K & Tập bài toán số học. \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section*{Ký hiệu}
+\small
+\begin{longtable}{@{}l p{0.34\textwidth} l p{0.34\textwidth}@{}}
+\toprule
+\textbf{Ký hiệu} & \textbf{Diễn giải} & \textbf{Ký hiệu} & \textbf{Diễn giải} \\
+\midrule
+$x$ & Prompt đầu vào. & $y$ & Token đã append vào output. \\
+$p$ & Token target đang pending. & $P$ & Prefix đã xử lý trong KV. \\
+$d_i$ & Token draft thứ $i$. & $A$ & Prefix draft được chấp nhận. \\
+$p'$ ($c$) & Correction/bonus pending. & $C_{\mathrm{tgt}}$ & KV cache chuẩn target. \\
+$B$ & Ngân sách token đầu ra. & $r$ & Số vị trí ngân sách còn lại. \\
+$K$ & Horizon tối đa của draft. & $N_{\mathrm{emit}}$ & Token append trong một cycle. \\
+$T_{\mathrm{cycle}}$ & Thời gian wall-clock một cycle. & $T_v$ & Latency vanilla mỗi token. \\
+$S$ & Speedup throughput ước lượng. & $M$ & Số hàng của một khối kiểm tra ($M=K+1$). \\
+$L_t$ & Độ dài logic của KV cache tại bước $t$. & & \\
+\bottomrule
+\end{longtable}
+\normalsize
