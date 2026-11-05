@@ -57,7 +57,7 @@ def invariant_mode(model, ops=("lm_head", "rmsnorm", "sdpa", "nf4")):
 
             def inv_sdpa(q, k, v, *a, **kw):
                 M = q.shape[-2]
-                if M > MP or q.shape[0] != 1 or q.dtype not in (torch.float16, torch.bfloat16) or q.shape[-1] not in (64, 128):
+                if M > MP or q.shape[0] != 1 or q.dtype not in (torch.float16, torch.bfloat16) or q.shape[-1] not in (64, 96, 128):
                     return orig_sdpa(q, k, v, *a, **kw)
                 if n_rep > 1 and k.shape[1] == q.shape[1]:
                     k, v = k[:, ::n_rep], v[:, ::n_rep]

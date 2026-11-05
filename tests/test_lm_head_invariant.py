@@ -28,6 +28,18 @@ def test_attention_rows_bitwise_independent_of_block():
             assert torch.equal(out[:, :, i], ref[i][:, :, 0])
 
 
+def test_attention_head_dim_96_bitwise_independent_of_block():
+    from zassd.kernels.attention_invariant import attention_invariant
+    g = torch.Generator(device="cuda").manual_seed(4)
+    K = torch.randn(1, 4, 700, 96, device="cuda", generator=g).half(); V = torch.randn_like(K)
+    Q = torch.randn(1, 4, 8, 96, device="cuda", generator=g).half()
+    for ctx in (100, 256, 600):
+        ref = [attention_invariant(Q[:, :, i:i + 1], K, V, ctx + i) for i in range(8)]
+        out = attention_invariant(Q, K, V, ctx)
+        for i in range(8):
+            assert torch.equal(out[:, :, i], ref[i][:, :, 0])
+
+
 def test_attention_graph_mode_equals_int_mode():
     from zassd.kernels.attention_invariant import attention_invariant
     g = torch.Generator(device="cuda").manual_seed(2)

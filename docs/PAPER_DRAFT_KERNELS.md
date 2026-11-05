@@ -86,7 +86,7 @@ PLD K=4 is slower than K=2 (1.145x vs 1.206x, 10 prompts). Disabling weight roun
 
 ### 6.4 Reference versus stock decoding
 
-Qwen2.5-3B, greedy, invariant vs default mode: identical sequences in 30% (GSM8K, n=50) and 44% (n=150); median first divergence at token 42 and 74.5. GSM8K accuracy is 66% (default) vs 72% (invariant) on 50 prompts; 2 vs 5 discordant pairs. This is within noise. It shows no detected degradation and does not prove equivalence. The answer extractor was written after reading outputs and applied identically to both modes.
+Qwen2.5-3B, greedy, invariant vs default mode: identical sequences in 30% (GSM8K, n=50) and 44% (n=150); median first divergence at token 42 and 74.5. GSM8K accuracy is 66% (default) vs 72% (invariant) on 50 prompts; 2 vs 5 discordant pairs. This is within noise. It shows no detected degradation and does not prove equivalence. The answer extractor was written after reading outputs and applied identically to both modes. On HumanEval (100 prompts, raw prompt, 384 tokens) pass@1 is 61/100 for both modes with 3 and 3 discordant problems, and 72/100 token sequences are identical; the 61% is below published numbers because of the raw-prompt/truncation protocol, so it is only meaningful as a paired comparison.
 
 ## 7. Negative results and a caution
 
