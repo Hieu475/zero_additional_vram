@@ -6,7 +6,7 @@ memory-bandwidth saving that makes speculative decoding worthwhile?
 
 Background (measured, RTX 4050 6 GB, bitsandbytes NF4 / torchao INT4): verifying a block of
 K+1 tokens changes results bit-for-bit in some operators, so naive speculative decoding
-leaves the sequential greedy trajectory (22-82% of sequences with prompt-lookup; 34-66% with a
+leaves the sequential greedy trajectory (26-82% of sequences with prompt-lookup; 34-66% with a
 real draft model). Running the sensitive operators row by row removes the divergence (0 of 50-60
 sequences in every cell) but reads the weights once per row. The planned contribution is a set of
 **M-invariant kernels** (LM head, attention, RMSNorm, NF4 GEMM) that read weights once and keep

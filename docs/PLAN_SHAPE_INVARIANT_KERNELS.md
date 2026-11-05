@@ -6,7 +6,7 @@ Ngày: 05/11/2026. Đây là hướng duy nhất để theo đến khi nộp bà
 
 ## 1. Luận điểm và đóng góp dự kiến
 
-**Vấn đề.** Giải mã suy đoán (speculative decoding) về lý thuyết không đổi kết quả. Trên mô hình 4-bit thực tế, khối K+1 token chạy qua kernel khác với từng token một, kết quả đổi từng bit ở một số toán tử, và chuỗi sinh ra lệch khỏi greedy tuần tự (đã đo: 22–82% chuỗi lệch với PLD ngây thơ; 34–66% với mô hình nháp thật).
+**Vấn đề.** Giải mã suy đoán (speculative decoding) về lý thuyết không đổi kết quả. Trên mô hình 4-bit thực tế, khối K+1 token chạy qua kernel khác với từng token một, kết quả đổi từng bit ở một số toán tử, và chuỗi sinh ra lệch khỏi greedy tuần tự (đã đo: 26–82% chuỗi lệch với PLD ngây thơ; 34–66% với mô hình nháp thật).
 
 **Cách sửa hiện có và giới hạn.** Chạy từng hàng những toán tử nhạy (đã đo: đưa lệch về 0/50–0/60 ở mọi ô). Nhưng mỗi hàng đọc lại toàn bộ trọng số của toán tử đó. Giải mã suy đoán có lợi chính vì đọc trọng số một lần cho nhiều token, nên chạy từng hàng làm mất đúng lợi ích đó. Kết quả hướng A cho thấy suy đoán exact trên nền CUDA graph chỉ thêm 1.009x.
 
@@ -178,7 +178,7 @@ Mã: `scripts/wp6_reference_agreement.py`, `scripts/wp6_score_answers.py`, `scri
 | GSM8K eval (400 token tối đa, dừng ở câu trả lời) | 50 | 15 (30%) | 42 token |
 | GSM8K ext150 (320 token) | 150 | 66 (44%) | 74.5 token |
 
-Tức là tham chiếu bất biến khác tham chiếu mặc định ở 56–70% chuỗi. Đây cùng cỡ với mức lệch của PLD ngây thơ so với tuần tự trong mục kiểm toán (22–82%): bất kỳ hai cài đặt hợp lệ khác thứ tự cộng đều tách nhau, nên "exact" chỉ có nghĩa so với một tham chiếu xác định, và tham chiếu mới chính là cái được bảo đảm.
+Tức là tham chiếu bất biến khác tham chiếu mặc định ở 56–70% chuỗi. Đây cùng cỡ với mức lệch của PLD ngây thơ so với tuần tự trong mục kiểm toán (26–82%): bất kỳ hai cài đặt hợp lệ khác thứ tự cộng đều tách nhau, nên "exact" chỉ có nghĩa so với một tham chiếu xác định, và tham chiếu mới chính là cái được bảo đảm.
 
 Độ chính xác GSM8K trên 50 prompt có đáp án chuẩn (bộ trích xuất đáp án được viết sau khi xem văn bản, áp dụng giống nhau cho cả hai chế độ: `\boxed` > "answer is" > dòng "Answer:" > đoạn kết luận; 5/50 không trích được ở mỗi chế độ):
 

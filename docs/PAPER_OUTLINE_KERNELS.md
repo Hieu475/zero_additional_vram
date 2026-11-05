@@ -3,7 +3,7 @@
 Ngày: 05/11/2026. Đề cương làm việc, không phải bản thảo. Số liệu trỏ về `docs/PLAN_SHAPE_INVARIANT_KERNELS.md` (mục 13–17) và `results/kernels/`.
 
 ## Luận điểm
-Giải mã suy đoán trên mô hình 4-bit mất tính "không đổi kết quả" vì kernel đổi chiến lược theo số hàng (đã đo: PLD ngây thơ lệch 22–82% chuỗi, mô hình nháp thật 34–66%). Chạy từng hàng khắc phục nhưng mất lợi ích băng thông. Bộ kernel 4-bit bất biến theo M (LM head, attention, RMSNorm, GEMM NF4) giữ exact từng bit và thực sự đọc trọng số một lần cho cả khối.
+Giải mã suy đoán trên mô hình 4-bit mất tính "không đổi kết quả" vì kernel đổi chiến lược theo số hàng (đã đo: PLD ngây thơ lệch 26–82% chuỗi, mô hình nháp thật 34–66%). Chạy từng hàng khắc phục nhưng mất lợi ích băng thông. Bộ kernel 4-bit bất biến theo M (LM head, attention, RMSNorm, GEMM NF4) giữ exact từng bit và thực sự đọc trọng số một lần cho cả khối.
 
 ## Đóng góp (theo độ tin cậy giảm dần)
 1. Bộ kernel bất biến theo M, có thiết kế "bất biến theo cấu trúc" (padding hàng cố định, thứ tự rút gọn cố định, không split-K/atomics) và kiểm chứng từng bit (≥ 27 000 hàng cho mỗi kernel, nhiều hình dạng/dtype); GEMM NF4 CUDA nhanh hơn kernel bnb ở M≥3 (17.7 so với 21.2 ms/bước ở M=3–4; 23.6 so với 31 ms ở M=5–6) và ngang ở M=1.
