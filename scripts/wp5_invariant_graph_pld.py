@@ -55,6 +55,9 @@ def main() -> None:
             orig_max = m.config.rope_parameters["original_max_position_embeddings"]
             assert a.max_cache_len <= orig_max, "longrope long-factor regime not supported in graph mode"
             import inspect; m.forward = types.MethodType(inspect.unwrap(type(m).forward), m)
+    ge = getattr(model.generation_config, "eos_token_id", None)
+    eos_ids = {tok.eos_token_id} | (set(ge) if isinstance(ge, list) else ({ge} if ge is not None else set()))
+    eos_ids.discard(None)
     dev, M = "cuda:0", a.k + 1
     import copy
     cache_cfg = copy.deepcopy(model.config)
@@ -172,7 +175,8 @@ def main() -> None:
                         for l, (rk, rv) in zip(cache.layers, ref_kv))
         rec = {"prompt": pid, "prompt_tokens": plen, "tokens_equal": gen == ref, "baseline_graph_tokens_equal": base == ref,
                "committed_kv_bitwise": kv_ok, "blocks_m3": blocks3, "blocks_m1": blocks1, "accepted_drafts": acc_total,
-               "s_eager": t_eager, "s_graph_m1": t_g1, "s_a3": t_a3}
+               "s_eager": t_eager, "s_graph_m1": t_g1, "s_a3": t_a3,
+               "eos_pos": next((i for i, t_ in enumerate(ref) if t_ in eos_ids), None)}
         results.append(rec)
         tot["eager"] += t_eager; tot["g1"] += t_g1; tot["a3"] += t_a3; tot["tokens"] += n
         print(json.dumps(rec), flush=True)
@@ -181,7 +185,11 @@ def main() -> None:
                "tok_per_s_eager_m1": tot["tokens"] / tot["eager"], "tok_per_s_graph_m1": tot["tokens"] / tot["g1"],
                "tok_per_s_a3": tot["tokens"] / tot["a3"],
                "speedup_a3_over_graph_m1": tot["g1"] / tot["a3"], "speedup_a3_over_eager": tot["eager"] / tot["a3"],
-               "speedup_graph_m1_over_eager": tot["eager"] / tot["g1"], "results": results}
+               "speedup_graph_m1_over_eager": tot["eager"] / tot["g1"], "eos_ids": sorted(eos_ids), "results": results}
+    clean = [r for r in results if r["eos_pos"] is None]   # prompts whose 128 tokens contain no EOS (no degenerate post-EOS text)
+    summary["n_no_eos"] = len(clean)
+    if clean:
+        summary["speedup_a3_over_graph_m1_no_eos"] = sum(r["s_graph_m1"] for r in clean) / sum(r["s_a3"] for r in clean)
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps({k: v for k, v in summary.items() if k != "results"}))

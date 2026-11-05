@@ -46,6 +46,6 @@ PYTHONPATH=src:scripts python scripts/shape_audit.py summarize   # regenerate th
 - Draft-model speculative decoding (Qwen2.5-3B NF4 + 0.5B draft): naive 17-33/50 diverged, row-wise 0/50.
 - Divergence prediction model: negative (R2 -3.4 against the pre-set R2 >= 0.8; correlation 0.87).
 - Exact speculative decoding on a CUDA-graph baseline: 1.009x (negative; motivates the kernel work).
-- Kernel work (M-invariant LM head, attention, RMSNorm, NF4 GEMM): done on Qwen2.5-3B/1.5B/0.5B, OLMo-2-1B and Phi-3.5-mini; exact PLD loop on CUDA graphs is 1.14-1.32x faster than the exact M=1 baseline (800 runs, 0 mismatches) and 1.26-1.39x faster than the earlier row-wise exact loop; neural draft model is a negative result. See docs/PLAN_SHAPE_INVARIANT_KERNELS.md sections 13-17 and docs/PAPER_OUTLINE_KERNELS.md.
+- Kernel work (M-invariant LM head, attention, RMSNorm, NF4 GEMM): done on Qwen2.5-3B/1.5B/0.5B, OLMo-2-1B, Phi-3.5-mini and Llama-3.2-1B/3B; exact PLD loop on CUDA graphs is 1.14-1.32x faster than the exact M=1 baseline (1000 prompt-model pairs, 0 mismatches) and 1.26-1.39x faster than the earlier row-wise exact loop; neural draft model is a negative result. See docs/PLAN_SHAPE_INVARIANT_KERNELS.md sections 13-17 and docs/PAPER_OUTLINE_KERNELS.md.
 
 Earlier history is recoverable from git tag `pre-restructure-20261105`.

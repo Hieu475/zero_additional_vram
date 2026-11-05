@@ -11,11 +11,12 @@ BLUE, ORANGE, GRAY = "#2a6fb0", "#d9822b", "#8a8a8a"
 plt.rcParams.update({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False, "axes.grid": True, "grid.alpha": .25})
 
 cells = [("Qwen2.5-3B GSM8K", "qwen3b_gsm8k200"), ("Qwen2.5-3B HumanEval", "qwen3b_humaneval100"), ("Qwen2.5-3B CNN/DM", "qwen3b_cnndm100"),
-         ("Qwen2.5-1.5B GSM8K", "qwen15b_gsm8k100"), ("Qwen2.5-0.5B GSM8K", "qwen05b_gsm8k100"), ("OLMo-2-1B GSM8K", "olmo2_1b_gsm8k100"), ("Phi-3.5-mini GSM8K", "phi35_gsm8k100")]
+         ("Qwen2.5-1.5B GSM8K", "qwen15b_gsm8k100"), ("Qwen2.5-0.5B GSM8K", "qwen05b_gsm8k100"), ("OLMo-2-1B GSM8K", "olmo2_1b_gsm8k100"), ("Phi-3.5-mini GSM8K", "phi35_gsm8k100"),
+         ("Llama-3.2-1B GSM8K", "wp8:llama1b_gsm8k"), ("Llama-3.2-3B GSM8K", "wp8:llama3b_gsm8k")]
 per = {}
 tot = {}
 for name, key in cells:
-    d = json.load(open(R / f"wp5_scale_{key}.json"))
+    d = json.load(open(R / (f"wp8_eos_{key[4:]}.json" if key.startswith("wp8:") else f"wp5_scale_{key}.json")))
     sp = np.array([r["s_graph_m1"] / r["s_a3"] for r in d["results"]])
     per[name] = sp; tot[name] = d["speedup_a3_over_graph_m1"]
 
@@ -47,6 +48,6 @@ naive = [float(r["pct"]) for r in rows if r["method"] == "naive PLD" and "indepe
 fig, ax = plt.subplots(figsize=(5.2, 3.2))
 ax.hist(naive, bins=np.arange(20, 90, 8), color=ORANGE, edgecolor="w")
 ax.set_xlabel("Sequences leaving the sequential greedy trajectory (%)"); ax.set_ylabel("Cells (model x dataset)")
-ax.set_title(f"Naive PLD, 15 cells: {min(naive):.0f}-{max(naive):.0f}%; M-invariant loop: 0 in 800 runs", fontsize=9)
+ax.set_title(f"Naive PLD, 15 cells: {min(naive):.0f}-{max(naive):.0f}%; M-invariant loop: 0 in 1000 runs", fontsize=9)
 fig.tight_layout(); fig.savefig(OUT / "kernel_naive_divergence.pdf"); plt.close(fig)
 print("figures ->", OUT)
