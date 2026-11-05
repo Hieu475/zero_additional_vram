@@ -133,3 +133,36 @@ Kết quả (RTX 4050 Laptop, Triton 3.6.0, dữ liệu ngẫu nhiên cùng kíc
 - **Giới hạn:** dữ liệu ngẫu nhiên, một GPU, một phiên bản Triton; bất biến dựa trên tính chất của MMA và được kiểm chứng bằng thực nghiệm, chưa phải chứng minh. Tích hợp vào mô hình thật là WP4.
 
 Bước tiếp theo theo kế hoạch: WP2 (attention bất biến).
+
+---
+
+## 14. Kết quả WP2–WP5 (05/11/2026)
+
+Mã: `src/zassd/kernels/` (`attention_invariant.py`, `rmsnorm_invariant.py`, `nf4_gemm_cuda.py` + `csrc/nf4_gemm.cu`, `invariant_mode.py`); thử nghiệm: `scripts/wp2_*`, `wp3_*`, `wp4_*`, `wp5_*`, `run_wp5_eval.sh`; số liệu: `results/kernels/`. Cần nvcc (CUDA 12.8) để biên dịch kernel NF4 lần đầu. Phần cứng: RTX 4050 Laptop 6 GB; mô hình Qwen2.5-3B-Instruct bnb NF4, Triton 3.6.0, bnb 0.50.0.
+
+**WP2 attention (Triton, split-KV, chia khối tuyệt đối 256 khóa, gộp theo thứ tự cố định): QUA.** 0 hàng lệch trên 6300 (Qwen 3B GQA 16/2, D=128), 6300 (Qwen 1.5B 12/2), 6300 (0.5B 14/2, D=64), 2100 (MHA 32/32), ngữ cảnh 128–3000; bf16 cũng 0 lệch. Sai số so với fp32 ≈ 1e-4. Trong CUDA graph: ≤ 2.1x SDPA ở M=1, nhưng nhanh hơn SDPA có mặt nạ 5–25 lần ở M=3.
+
+**WP3 GEMM NF4 (CUDA C++): QUA, sau hai lần làm lại.** Bản Triton dùng tensor core đúng nhưng chậm hơn bnb 15–20 lần; bản Triton CUDA-core chậm hơn 4–5 lần; bản CUDA (một warp/4 hàng đầu ra, giải lượng tử một lần cho mọi hàng, tích lũy fp32 theo thứ tự cố định, xor-butterfly) bất biến theo M, theo biến thể MP∈{1,2,4,8} và số hàng/warp: 0 lệch trên 7000 hàng. Sai số so với ma trận giải lượng tử fp32 bằng sai số của bnb. Thời gian bước giải mã đầy đủ trong CUDA graph: M=1 15.0 ms (bnb 16.3), M=3–4 17.7 ms (bnb 21.2 và 31.5), M=5–6 23.6 ms (bnb 31). Kernel GEMM chiếm 9.2 ms ở M=1, chậm hơn `gemm_4bit_simt` của bnb (8.9 ms) khoảng 3%, nhanh hơn rõ ở M≥3.
+
+**Lỗi đã bắt được (ghi lại để không lặp):** bản đầu của kernel NF4 đọc bias fp16 như bf16 và cho đầu ra vô nghĩa trong mô hình thật, trong khi vẫn "exact" 100% vì mọi cách chạy đều sinh cùng một chuỗi lặp vô nghĩa. Chỉ lộ ra khi đọc văn bản sinh ra. Bài học: kiểm tra "exact" phải đi kèm kiểm tra văn bản/độ chính xác. Đã sửa (bias chuyển sang fp32) và so từng lớp với ma trận giải lượng tử fp32 trên kích hoạt thật: sai số bằng bnb. Các số liệu WP5 ở dưới đều sinh sau bản sửa; số liệu "nf4" trước đó đã bị loại.
+
+**WP4 đúng từng bit đầu-cuối:** vòng PLD trên CUDA graph, token và KV đã commit bằng từng bit so với giải mã tuần tự M=1 dưới cùng chế độ bất biến: GSM8K 50/50, CNN/DM 20/20, HumanEval 20/20 (Qwen 3B, K=2).
+
+**WP5 tốc độ (tok/s, PLD K=2, ngram 3, 128 token mới, bước lặp trên cùng phiên):**
+
+| Tập | Prompt | Baseline exact (kernel bất biến, M=1 graph) | Vòng PLD exact bất biến | Tăng so với baseline | Vòng exact cũ (chạy từng hàng) | Tăng so với vòng cũ |
+|---|---|---|---|---|---|---|
+| GSM8K | 50 | 62.4 | 74.4 | 1.19x | 58.5 | 1.27x |
+| CNN/DM | 20 | 58.5 | 69.4 | 1.19x | 52.3 | 1.33x |
+| HumanEval | 20 | (xem file) | (xem file) | 1.30x | chưa có (lần chạy cũ lỗi) | — |
+
+(Baseline exact bất biến nhanh hơn baseline graph cũ dùng kernel gốc: 62.4 so với 57.8 tok/s trên GSM8K.)
+
+**Kết quả âm / chưa đạt tiêu chí:**
+- Giải mã suy đoán với mô hình nháp thật (Qwen 0.5B bf16, K=2, GSM8K, 5 prompt): exact nhưng **0.66x** so với baseline vì bước nháp tốn ~10 ms, gần bằng bước mục tiêu 4-bit 3B (15 ms). Tiêu chí tối thiểu của kế hoạch ("≥ 1.15x trên cấu hình có mô hình nháp thật") **chưa đạt**; mức tăng đạt được là với PLD (không cần mô hình nháp).
+- PLD K=4 thấp hơn K=2 (1.145x so với 1.206x trên 10 prompt).
+- Tiêu chí "≥ 1.3x so với chạy từng hàng": đạt ở CNN/DM (1.33x), chưa đạt ở GSM8K (1.27x).
+
+**Giới hạn cần nói thẳng:** (1) tham chiếu bất biến **không** bằng từng bit với đường HF+bnb mặc định (các kernel khác thứ tự cộng); trên GSM8K 3B, chuỗi tham chiếu mới khác chuỗi mặc định ở khoảng 4/6 prompt trong thử nhanh, thường ở token muộn; chưa đo ở quy mô và chưa kiểm tra độ chính xác tác vụ; (2) một GPU, một mô hình mục tiêu (Qwen 3B) cho phần tốc độ, chưa chạy 7B hay GPU khác; (3) bất biến được kiểm chứng bằng thực nghiệm và cấu trúc, chưa phải chứng minh hình thức; (4) lần chạy HumanEval của vòng cũ lỗi chưa tra nguyên nhân.
+
+**Việc tiếp theo, theo thứ tự:** (a) đo độ khác biệt token và độ chính xác tác vụ giữa tham chiếu bất biến và đường mặc định trên ≥ 100 prompt; (b) chạy lại PLD với ≥ 100 prompt mỗi tập, nhiều mô hình (Qwen 1.5B/0.5B, OLMo-2, Phi-3.5 cần head_dim 96 cho attention); (c) tối ưu thêm kernel GEMM M=1 (hiện ~1.3x thời gian lý thuyết); (d) tìm nguồn nháp rẻ hơn (mô hình nháp nhỏ hơn/nén, n-gram tốt hơn); (e) GPU/mô hình lớn hơn.

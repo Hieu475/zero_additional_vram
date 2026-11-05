@@ -1,0 +1,78 @@
+{
+  "schema": "zassd-wp5b-invariant-graph-draft-sd-v1",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "draft": "Qwen/Qwen2.5-0.5B-Instruct",
+  "draft_backend": "bf16",
+  "k": 2,
+  "max_new": 128,
+  "max_cache_len": 448,
+  "all_exact": true,
+  "tok_per_s_eager_m1": 37.62825259252515,
+  "tok_per_s_graph_m1": 67.354058522823,
+  "tok_per_s_sd": 44.29325100087317,
+  "speedup_sd_over_graph_m1": 0.6576181446566336,
+  "speedup_sd_over_eager": 1.1771275025849068,
+  "accepted_per_block": 0.6198979591836735,
+  "results": [
+    {
+      "prompt": "gsm8k_000",
+      "prompt_tokens": 75,
+      "tokens_equal": true,
+      "baseline_graph_tokens_equal": true,
+      "committed_kv_bitwise": true,
+      "blocks": 77,
+      "accepted_drafts": 50,
+      "s_eager": 3.344032010000319,
+      "s_graph_m1": 1.899343840000256,
+      "s_sd": 2.8297652389996983
+    },
+    {
+      "prompt": "gsm8k_001",
+      "prompt_tokens": 37,
+      "tokens_equal": true,
+      "baseline_graph_tokens_equal": true,
+      "committed_kv_bitwise": true,
+      "blocks": 79,
+      "accepted_drafts": 48,
+      "s_eager": 3.4645413540001755,
+      "s_graph_m1": 1.8977979169999344,
+      "s_sd": 2.91338009600031
+    },
+    {
+      "prompt": "gsm8k_002",
+      "prompt_tokens": 68,
+      "tokens_equal": true,
+      "baseline_graph_tokens_equal": true,
+      "committed_kv_bitwise": true,
+      "blocks": 81,
+      "accepted_drafts": 46,
+      "s_eager": 3.275857520000045,
+      "s_graph_m1": 1.9006634539996412,
+      "s_sd": 2.9618870790000074
+    },
+    {
+      "prompt": "gsm8k_003",
+      "prompt_tokens": 46,
+      "tokens_equal": true,
+      "baseline_graph_tokens_equal": true,
+      "committed_kv_bitwise": true,
+      "blocks": 77,
+      "accepted_drafts": 50,
+      "s_eager": 3.4598321859998578,
+      "s_graph_m1": 1.8977726130001429,
+      "s_sd": 2.8485913109998364
+    },
+    {
+      "prompt": "gsm8k_004",
+      "prompt_tokens": 122,
+      "tokens_equal": true,
+      "baseline_graph_tokens_equal": true,
+      "committed_kv_bitwise": true,
+      "blocks": 78,
+      "accepted_drafts": 49,
+      "s_eager": 3.4642333629999484,
+      "s_graph_m1": 1.906447948999812,
+      "s_sd": 2.8955301649998546
+    }
+  ]
+}

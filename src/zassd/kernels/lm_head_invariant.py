@@ -15,7 +15,7 @@ MP = 16  # padded rows (min MMA tile); M in [1, MP]
 
 
 @triton.jit
-def _lm_head_kernel(x_ptr, w_ptr, y_ptr, V, K: tl.constexpr, MP: tl.constexpr, BV: tl.constexpr, BK: tl.constexpr):
+def _lm_head_kernel(x_ptr, w_ptr, y_ptr, V, K: tl.constexpr, MP: tl.constexpr, BV: tl.constexpr, BK: tl.constexpr, OUT_DTYPE: tl.constexpr):
     pid = tl.program_id(0)
     vs = pid * BV + tl.arange(0, BV)
     ms = tl.arange(0, MP)
@@ -25,16 +25,16 @@ def _lm_head_kernel(x_ptr, w_ptr, y_ptr, V, K: tl.constexpr, MP: tl.constexpr, B
         x = tl.load(x_ptr + ms[:, None] * K + ks[None, :])                                  # [MP, BK] fp16
         w = tl.load(w_ptr + vs[None, :] * K + ks[:, None], mask=(vs < V)[None, :], other=0.0)  # [BK, BV] fp16
         acc = tl.dot(x, w, acc)
-    tl.store(y_ptr + ms[:, None] * V + vs[None, :], acc.to(tl.float16), mask=(vs < V)[None, :])
+    tl.store(y_ptr + ms[:, None] * V + vs[None, :], acc.to(OUT_DTYPE), mask=(vs < V)[None, :])
 
 
 def lm_head_invariant(x: torch.Tensor, w: torch.Tensor, bv: int = 64, bk: int = 128, num_warps: int = 4) -> torch.Tensor:
-    """x: [M, K] fp16 (M <= MP), w: [V, K] fp16 contiguous -> logits [M, V] fp16."""
+    """x: [M, K] fp16/bf16 (M <= MP), w: [V, K] fp16/bf16 contiguous -> logits [M, V] fp16."""
     M, K = x.shape
     V = w.shape[0]
-    assert 1 <= M <= MP and K % bk == 0 and x.dtype == w.dtype == torch.float16 and w.is_contiguous()
+    assert 1 <= M <= MP and K % bk == 0 and x.dtype == w.dtype in (torch.float16, torch.bfloat16) and w.is_contiguous()
     xp = torch.zeros((MP, K), dtype=x.dtype, device=x.device)
     xp[:M] = x
-    y = torch.empty((MP, V), dtype=torch.float16, device=x.device)
-    _lm_head_kernel[(triton.cdiv(V, bv),)](xp, w, y, V, K=K, MP=MP, BV=bv, BK=bk, num_warps=num_warps)
+    y = torch.empty((MP, V), dtype=x.dtype, device=x.device)
+    _lm_head_kernel[(triton.cdiv(V, bv),)](xp, w, y, V, K=K, MP=MP, BV=bv, BK=bk, OUT_DTYPE=tl.bfloat16 if x.dtype == torch.bfloat16 else tl.float16, num_warps=num_warps)
     return y[:M]
