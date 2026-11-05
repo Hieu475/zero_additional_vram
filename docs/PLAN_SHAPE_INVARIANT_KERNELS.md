@@ -166,3 +166,28 @@ Mã: `src/zassd/kernels/` (`attention_invariant.py`, `rmsnorm_invariant.py`, `nf
 **Giới hạn cần nói thẳng:** (1) tham chiếu bất biến **không** bằng từng bit với đường HF+bnb mặc định (các kernel khác thứ tự cộng); trên GSM8K 3B, chuỗi tham chiếu mới khác chuỗi mặc định ở khoảng 4/6 prompt trong thử nhanh, thường ở token muộn; chưa đo ở quy mô và chưa kiểm tra độ chính xác tác vụ; (2) một GPU, một mô hình mục tiêu (Qwen 3B) cho phần tốc độ, chưa chạy 7B hay GPU khác; (3) bất biến được kiểm chứng bằng thực nghiệm và cấu trúc, chưa phải chứng minh hình thức; (4) lần chạy HumanEval của vòng cũ lỗi chưa tra nguyên nhân.
 
 **Việc tiếp theo, theo thứ tự:** (a) đo độ khác biệt token và độ chính xác tác vụ giữa tham chiếu bất biến và đường mặc định trên ≥ 100 prompt; (b) chạy lại PLD với ≥ 100 prompt mỗi tập, nhiều mô hình (Qwen 1.5B/0.5B, OLMo-2, Phi-3.5 cần head_dim 96 cho attention); (c) tối ưu thêm kernel GEMM M=1 (hiện ~1.3x thời gian lý thuyết); (d) tìm nguồn nháp rẻ hơn (mô hình nháp nhỏ hơn/nén, n-gram tốt hơn); (e) GPU/mô hình lớn hơn.
+
+---
+
+## 15. Kết quả WP6a (05/11/2026): tham chiếu bất biến so với đường HF+bnb mặc định
+
+Mã: `scripts/wp6_reference_agreement.py`, `scripts/wp6_score_answers.py`, `scripts/run_wp6.sh`; số liệu: `results/kernels/wp6_agreement_*`. Qwen2.5-3B NF4, giải mã greedy eager, hai chế độ (mặc định và `invariant_mode` đủ 4 toán tử).
+
+| Tập | Prompt | Chuỗi giống hệt | Vị trí lệch đầu tiên (trung vị) |
+|---|---|---|---|
+| GSM8K eval (400 token tối đa, dừng ở câu trả lời) | 50 | 15 (30%) | 42 token |
+| GSM8K ext150 (320 token) | 150 | 66 (44%) | 74.5 token |
+
+Tức là tham chiếu bất biến khác tham chiếu mặc định ở 56–70% chuỗi. Đây cùng cỡ với mức lệch của PLD ngây thơ so với tuần tự trong mục kiểm toán (22–82%): bất kỳ hai cài đặt hợp lệ khác thứ tự cộng đều tách nhau, nên "exact" chỉ có nghĩa so với một tham chiếu xác định, và tham chiếu mới chính là cái được bảo đảm.
+
+Độ chính xác GSM8K trên 50 prompt có đáp án chuẩn (bộ trích xuất đáp án được viết sau khi xem văn bản, áp dụng giống nhau cho cả hai chế độ: `\boxed` > "answer is" > dòng "Answer:" > đoạn kết luận; 5/50 không trích được ở mỗi chế độ):
+
+| | Mặc định | Bất biến |
+|---|---|---|
+| Đúng | 33/50 (66%) | 36/50 (72%) |
+| Cặp khác nhau (mặc định đúng/bất biến sai, và ngược lại) | 2 | 5 |
+| Cùng đáp án khi cả hai đều có | 37/44 | |
+
+Chênh lệch +6 điểm nằm trong nhiễu của 50 prompt (7 cặp bất đồng, 2 so với 5): **không phát hiện giảm độ chính xác, nhưng cũng không chứng minh tương đương**. ext150 không có đáp án chuẩn nên chỉ dùng cho so sánh chuỗi (bộ trích xuất đáp án không trích được ở các prompt đó, bị bỏ).
+
+Giới hạn: một mô hình, một tác vụ, n=50 cho độ chính xác; chưa kiểm tra HumanEval/CNN-DM, chưa thử mô hình khác.
