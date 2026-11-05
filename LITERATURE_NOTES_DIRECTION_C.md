@@ -101,3 +101,27 @@ Nguồn: PDF arXiv 2601.17768v2 (15 trang) tải về, trích bằng `pdftotext`
 **Related Works (đọc nguyên văn).** Nhắc: Orca, vLLM, Sarathi-Serve, DistServe, Splitwise, FlexGen, giải mã suy đoán [9, 22, 25]; về xác định: Song et al. [36] (bất định làm méo đánh giá), Yuan et al. [44] ("linked reproducibility failures to mixed-precision arithmetic and fused kernel inconsistencies"), Rainbird AI [5], Zhang et al. [46] (kernel bất biến theo kích thước tensor-parallel), và hướng batch-invariant (He et al.). **Không có công trình nào về lượng tử hóa trọng số 4-bit hay về tính exact của giải mã suy đoán được trích dẫn.**
 
 **Hệ quả cho tính mới (cập nhật):** sau khi đọc nguyên văn các phần trên, khoảng trống của hướng C được củng cố thêm bằng ba điểm: (i) LLM-42 không xét lượng tử hóa trọng số, (ii) không tích hợp với giải mã suy đoán (tự nhận là hạn chế), (iii) Related Works của họ không trích công trình nào về hai chủ đề đó. Điều này không loại trừ công trình khác ngoài tập đã đọc (đặc biệt các tiền ấn phẩm 2026 chưa tìm tới). Tài liệu cần đọc tiếp nếu muốn chắc hơn: Yuan et al. 2025 (arXiv:2506.09501), "Lossless but Not Free" (alphaxiv 2607.17283).
+
+## 9. Yuan et al. 2025 và "Lossless but Not Free" (05/11/2026)
+
+Nhãn: [V] nguyên văn do công cụ tải trang trả về; [S] tóm tắt do mô hình sinh ra, chưa kiểm chứng. Cả hai trang HTML chỉ trả về nguyên văn khoảng 39 nghìn ký tự đầu; phần sau là [S]. Các bản đọc hiện tại là HTML, không phải PDF.
+
+**Yuan et al., "Understanding and Mitigating Numerical Sources of Nondeterminism in LLM Inference" (arXiv 2506.09501, v2 24/10/2025; tiền ấn phẩm, chưa thấy nơi công bố)**
+- [V] Thay đổi: loại GPU (L40S, A100), số GPU (2, 4), batch size (8, 16, 32), độ chính xác (BF16, FP16, FP32); 12 cấu hình chạy mỗi cặp mô hình-tác vụ, chủ yếu vLLM (Transformers để kiểm tra chéo).
+- [V] Con số chính: độ lệch chuẩn độ chính xác tới 9% trên AIME'24 với DeepSeek-R1-Distill-Qwen-7B (BF16); độ dài phản hồi chênh tới 9000 token; nguyên nhân gốc nêu là tính không kết hợp của dấu phẩy động ở độ chính xác thấp. Khuyến nghị: dùng FP32 cho greedy một lần chạy.
+- [V] Không có từ INT4/INT8/bitsandbytes/GPTQ/AWQ trong phần đọc được; không có giải mã suy đoán; **không đo từng toán tử** (chỉ nhắc kernel khác như bối cảnh). [S] phần còn lại cũng không có.
+- Đề xuất: LayerCast (lưu trọng số 16-bit, tính bằng FP32).
+
+**Chordiya, "Lossless but Not Free: An Empirical Anatomy of Speculative Decoding on Consumer Hardware" (arXiv 2607.17283v1, 19/07/2026; một tác giả, UC San Diego; chưa bình duyệt theo trang đọc được)**
+- [V] Phần cứng: laptop Apple silicon M3 (MPS, llama.cpp Metal), **không có CUDA**. Mô hình Qwen2.5 (draft 0.5B; target 1.5B q4_k_m, 3B fp16, 7B q4_k_m). Có script Colab CUDA (Llama-3.1-8B NF4) nhưng "numbers are deliberately absent ... because they were not measured here".
+- [V] **Quan sát gần nhất với hướng C:** "on the quantized Metal backend, evaluating the same context with the final tokens in a batch of five versus one at a time shifts logits by up to roughly 0.1 — enough to flip the argmax at near-ties ... with no speculative machinery involved." Và: "Batch-invariance of logits is a backend property that bit-exact greedy comparison presupposes; fp32 CPU exhibits it, the quantized Metal path does not." Phép thử greedy trên mô hình thật chạy trên fp32 CPU (5/5 prompt giống hệt), cố ý **không** chạy trên backend lượng tử hóa. Không có tỷ lệ lệch cho backend lượng tử hóa, không nêu toán tử nào.
+- [S] Kết luận rằng tính exact bitwise của greedy trên backend lượng tử hóa là "không thể đạt được cho mọi cài đặt có baseline và verifier dùng hình dạng batch khác nhau".
+- [V] Tốc độ (K=4, T=0.8, 28 prompt): 1.57x (mixed_3b), 1.40x (mixed), 0.50x (all_gguf), 0.52x (stretch_7b), 0.33x (primary); giải thích: backend Metal lượng tử hóa "executes 'parallel' verification serially". Không có CUDA graph hay baseline exact.
+- [V] Hạn chế của phát biểu "tính exact là không thể": nó là *mô tả* một backend (Metal/llama.cpp) chứ không phải kết quả tổng quát; [S] chỉ.
+
+### Ảnh hưởng tới đánh giá tính mới (cập nhật)
+
+- **Quan sát định tính "block 5 hàng so với từng hàng làm đổi logit và lật argmax ở backend lượng tử hóa, không cần giải mã suy đoán" đã có** (Chordiya, Metal, trên một laptop, không đo từng toán tử, không đếm tỷ lệ). Bài báo của ta không được tuyên bố đây là phát hiện mới.
+- **Phần của ta vẫn khác ở:** (i) CUDA và trọng số 4-bit NF4/INT4 với kernel tên rõ, (ii) đo từng bit *theo toán tử* và theo M, ngữ cảnh, mô hình, phiên bản, (iii) tỷ lệ chuỗi lệch quỹ đạo đầu-cuối có khoảng tin cậy, (iv) **bản sửa khôi phục tính exact** (0 ca lệch trong 3 tập dữ liệu, 6 cấu hình), trái với khẳng định [S] rằng exact trên backend lượng tử hóa là không thể: ta cho thấy nó đạt được bằng cách chạy riêng từng hàng đúng tập toán tử nhạy, với chi phí tốc độ (hướng A: suy đoán chỉ thêm 1.009x trên nền CUDA graph exact).
+- **Cần thận trọng với điểm (iv):** khẳng định [S] đó chưa được kiểm chứng ở văn bản gốc; khi trích dẫn phải đọc lại phần kết luận của bài.
+- Hai bài này củng cố cách định vị đã đề xuất: "kiểm toán thực nghiệm có định lượng và có bản sửa", không phải "phát hiện hiện tượng".
