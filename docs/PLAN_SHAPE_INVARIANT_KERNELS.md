@@ -210,3 +210,13 @@ Giới hạn: một mô hình, một tác vụ, n=50 cho độ chính xác; chư
 700 lượt chạy, 4 mô hình, 3 họ (Qwen2.5, OLMo-2; kiến trúc GQA và MHA, head_dim 64 và 128), 0 lệch. Cận trên Wilson 95% của tỷ lệ lệch: 1.9% (n=200), 3.7% (n=100). Tăng tốc nằm trong khoảng 1.14–1.32x; chỉ 1 prompt (CNN/DM) chậm hơn baseline (0.98x). Không đo được tăng tốc cho Phi-3.5 (head_dim 96 chưa được kernel attention hỗ trợ).
 
 Giới hạn: một GPU (RTX 4050), K=2 cố định, greedy, batch 1; tốc độ phụ thuộc mức PLD tìm được bản nháp (HumanEval cao nhất, 1.32x); đây là PLD, không phải mô hình nháp (xem mục 14: mô hình nháp thật hiện chậm hơn).
+
+---
+
+## 17. Mục 3–4 của "việc tiếp theo": tối ưu kernel và nguồn nháp rẻ hơn (05/11/2026) — kết luận: bão hòa trên phần cứng này
+
+**Tối ưu GEMM NF4 (mục 3).** Chẩn đoán trên gate_proj (Qwen 3B), M=1/4/8: 0.077/0.104/0.150 ms. Tắt làm tròn trọng số về bf16: 0.076/0.094/0.143 ms; thay tra bảng bằng phép tính: 0.077/0.091/0.150 ms. Tức là làm tròn và tra bảng gần như không đáng kể. Ở M=4 kernel gần giới hạn số phép FMA (~17 µs cho 90 M FMA ở đỉnh lý thuyết), ở M=1 còn cách giới hạn băng thông (~0.06 ms) khoảng 20%. Ước tính trần lợi ích: ≤ 10% thời gian bước giải mã (1.5–2.5 ms trên 15–18 ms), và nó tăng đồng đều cho cả baseline và vòng PLD nên gần như không đổi tỷ số tăng tốc. **Không đầu tư thêm** trừ khi cần tốc độ tuyệt đối.
+
+**Nguồn nháp rẻ hơn (mục 4).** Tính từ số đo thay vì thử thêm: chi phí bước nháp 0.5B bf16 ≈ 10 ms (0.67 bước mục tiêu); ngay cả nháp 0.5B nén NF4 (sàn băng thông ~2.7 ms, thực tế khó dưới ~5 ms) cho K=2 chi phí ≈ 1.19 + 2×0.33 ≈ 1.86 bước mục tiêu cho 1.62 token/khối (0.62 bản nháp được nhận mỗi khối, GSM8K): ~0.87x, vẫn dưới baseline. Ngay cả nháp miễn phí chỉ đạt trần 1.62/1.19 ≈ 1.36x. Kết hợp PLD khi có bản nháp rồi mới gọi mô hình nháp khi không có không giúp được vì khối có nháp tốn thêm chi phí nháp ở mọi bước không có n-gram. **Kết luận:** với mục tiêu NF4 3B (đã rất rẻ) trên GPU này, mô hình nháp thần kinh không có lợi; PLD là nguồn nháp phù hợp.
+
+**Mục còn lại cần tài nguyên bạn đang hoãn:** GPU khác và mô hình ≥ 7B. Với mô hình lớn hơn bước mục tiêu đắt hơn nhiều so với bước nháp 0.5B, nên đây là nơi mô hình nháp có thể có lợi; chưa đo được ở đây.

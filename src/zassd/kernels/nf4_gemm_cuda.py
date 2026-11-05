@@ -8,15 +8,16 @@ from torch.utils.cpp_extension import load_inline
 
 _SRC = (Path(__file__).parent / "csrc" / "nf4_gemm.cu").read_text()
 _EXT = None
+_DIAG = []
 
 
 def _ext():
     global _EXT
     if _EXT is None:
         _EXT = load_inline(
-            name="zassd_nf4_gemm", cpp_sources="torch::Tensor nf4_gemm(torch::Tensor x, torch::Tensor w, torch::Tensor am8, torch::Tensor code, torch::Tensor am2, torch::Tensor code2, double offset, torch::Tensor bias, int64_t mp, int64_t rows, int64_t warps);",
+            name="zassd_nf4_gemm" + "".join(_DIAG), cpp_sources="torch::Tensor nf4_gemm(torch::Tensor x, torch::Tensor w, torch::Tensor am8, torch::Tensor code, torch::Tensor am2, torch::Tensor code2, double offset, torch::Tensor bias, int64_t mp, int64_t rows, int64_t warps);",
             cuda_sources='#include <ATen/cuda/CUDAContext.h>\n' + _SRC, functions=["nf4_gemm"],
-            extra_cuda_cflags=["-O3", "-arch=sm_89", "-lineinfo"], verbose=False)
+            extra_cuda_cflags=["-O3", "-arch=sm_89", "-lineinfo"] + ["-D" + d.strip("_").upper() if False else "-D" + d for d in _DIAG], verbose=False)
     return _EXT
 
 

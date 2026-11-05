@@ -79,8 +79,16 @@ __global__ void nf4_gemm_kernel(const T* __restrict__ x, const uint8_t* __restri
 #pragma unroll
         for (int j = 0; j < 4; ++j) {
           const uint32_t byte = (wv >> (8 * j)) & 0xFF;
+#ifdef DIAG_NO_ROUND
+          const float w0 = s_code[byte >> 4][lane] * scale[r];
+          const float w1 = s_code[byte & 15][lane] * scale[r];
+#elif defined(DIAG_NO_LUT)
+          const float w0 = to_f<T>(from_f<T>((float)(byte >> 4) * scale[r]));
+          const float w1 = to_f<T>(from_f<T>((float)(byte & 15) * scale[r]));
+#else
           const float w0 = to_f<T>(from_f<T>(s_code[byte >> 4][lane] * scale[r]));
           const float w1 = to_f<T>(from_f<T>(s_code[byte & 15][lane] * scale[r]));
+#endif
 #pragma unroll
           for (int m = 0; m < MP; ++m) {
             acc[r][m] = fmaf(xf[m][2 * j], w0, acc[r][m]);
