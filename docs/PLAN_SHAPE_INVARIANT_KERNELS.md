@@ -154,16 +154,16 @@ Mã: `src/zassd/kernels/` (`attention_invariant.py`, `rmsnorm_invariant.py`, `nf
 |---|---|---|---|---|---|---|
 | GSM8K | 50 | 62.4 | 74.4 | 1.19x | 58.5 | 1.27x |
 | CNN/DM | 20 | 58.5 | 69.4 | 1.19x | 52.3 | 1.33x |
-| HumanEval | 20 | (xem file) | (xem file) | 1.30x | chưa có (lần chạy cũ lỗi) | — |
+| HumanEval | 20 | 58.8 | 76.2 | 1.30x | 56.6 (phiên khác; chạy lại thành công, exact) | 1.34x |
 
 (Baseline exact bất biến nhanh hơn baseline graph cũ dùng kernel gốc: 62.4 so với 57.8 tok/s trên GSM8K.)
 
 **Kết quả âm / chưa đạt tiêu chí:**
 - Giải mã suy đoán với mô hình nháp thật (Qwen 0.5B bf16, K=2, GSM8K, 5 prompt): exact nhưng **0.66x** so với baseline vì bước nháp tốn ~10 ms, gần bằng bước mục tiêu 4-bit 3B (15 ms). Tiêu chí tối thiểu của kế hoạch ("≥ 1.15x trên cấu hình có mô hình nháp thật") **chưa đạt**; mức tăng đạt được là với PLD (không cần mô hình nháp).
 - PLD K=4 thấp hơn K=2 (1.145x so với 1.206x trên 10 prompt).
-- Tiêu chí "≥ 1.3x so với chạy từng hàng": đạt ở CNN/DM (1.33x), chưa đạt ở GSM8K (1.27x).
+- Tiêu chí "≥ 1.3x so với chạy từng hàng": đạt ở CNN/DM (1.33x) và HumanEval (1.34x), chưa đạt ở GSM8K (1.27x).
 
-**Giới hạn cần nói thẳng:** (1) tham chiếu bất biến **không** bằng từng bit với đường HF+bnb mặc định (các kernel khác thứ tự cộng); trên GSM8K 3B, chuỗi tham chiếu mới khác chuỗi mặc định ở khoảng 4/6 prompt trong thử nhanh, thường ở token muộn; chưa đo ở quy mô và chưa kiểm tra độ chính xác tác vụ; (2) một GPU, một mô hình mục tiêu (Qwen 3B) cho phần tốc độ, chưa chạy 7B hay GPU khác; (3) bất biến được kiểm chứng bằng thực nghiệm và cấu trúc, chưa phải chứng minh hình thức; (4) lần chạy HumanEval của vòng cũ lỗi chưa tra nguyên nhân.
+**Giới hạn cần nói thẳng:** (1) tham chiếu bất biến **không** bằng từng bit với đường HF+bnb mặc định (các kernel khác thứ tự cộng); trên GSM8K 3B, chuỗi tham chiếu mới khác chuỗi mặc định ở khoảng 4/6 prompt trong thử nhanh, thường ở token muộn; chưa đo ở quy mô và chưa kiểm tra độ chính xác tác vụ; (2) một GPU, một mô hình mục tiêu (Qwen 3B) cho phần tốc độ, chưa chạy 7B hay GPU khác; (3) bất biến được kiểm chứng bằng thực nghiệm và cấu trúc, chưa phải chứng minh hình thức; (4) lần chạy HumanEval đầu của vòng cũ lỗi; lần chạy lại sau đó thành công (nguyên nhân lỗi đầu chưa tra, có thể do ngữ cảnh/cache).
 
 **Việc tiếp theo, theo thứ tự:** (a) đo độ khác biệt token và độ chính xác tác vụ giữa tham chiếu bất biến và đường mặc định trên ≥ 100 prompt; (b) chạy lại PLD với ≥ 100 prompt mỗi tập, nhiều mô hình (Qwen 1.5B/0.5B, OLMo-2, Phi-3.5 cần head_dim 96 cho attention); (c) tối ưu thêm kernel GEMM M=1 (hiện ~1.3x thời gian lý thuyết); (d) tìm nguồn nháp rẻ hơn (mô hình nháp nhỏ hơn/nén, n-gram tốt hơn); (e) GPU/mô hình lớn hơn.
 
