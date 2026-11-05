@@ -78,7 +78,7 @@ Baseline is exact M=1 decoding with the same invariant kernels, in a CUDA graph.
 | Qwen2.5-0.5B GSM8K | 100 | 100/100 | 196.0 | 241.9 | 1.23x | 1.22 [1.05, 1.67] |
 | OLMo-2-1B GSM8K | 100 | 100/100 | 136.2 | 155.1 | 1.14x | 1.13 [1.02, 1.37] |
 
-The one-sided 95% Wilson upper bound on the mismatch rate is 1.9% for n=200 and 3.7% for n=100. Only one prompt (CNN/DM) is slower than baseline. Against the earlier row-wise exact loop the gain is 1.27x (GSM8K), 1.33x (CNN/DM); HumanEval (20 prompts, 1024-token cache) gives 76.2 vs 56.6 tok/s = 1.34x, both exact. The old-loop figure comes from a separate session, so the comparison across sessions carries some timing noise. The invariant M=1 baseline is also faster than the stock-kernel graph baseline (62.4 vs 57.8 tok/s, GSM8K).
+The one-sided 95% Wilson upper bound on the mismatch rate is 1.9% for n=200 and 3.7% for n=100. Only one prompt (CNN/DM) is slower than baseline. Against the earlier row-wise exact loop the gain is 1.27x (GSM8K), 1.33x (CNN/DM); HumanEval (100 prompts, 1024-token cache, run back to back: old loop, invariant loop, old loop again) gives 81.9 vs 58.9 and 59.4 tok/s = 1.39x and 1.38x, all three runs exact; the two old-loop runs differ by 0.9%, which bounds the session drift. (An earlier 20-prompt run gave 1.34x.) The invariant M=1 baseline is also faster than the stock-kernel graph baseline (62.4 vs 57.8 tok/s, GSM8K).
 
 ### 6.3 Ablations
 
