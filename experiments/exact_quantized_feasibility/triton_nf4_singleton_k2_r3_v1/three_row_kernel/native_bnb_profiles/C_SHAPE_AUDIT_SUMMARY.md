@@ -57,6 +57,8 @@ Row-wise = operator classes run one row at a time during block verification ('no
 
 | Config | K | row-wise ops | prompts | diverged | rate | 95% CI |
 |---|---:|---|---:|---:|---:|---|
+| OLMo-2-0425-1B-Instruct / hf_bnb_nf4 [CNN/DM ext150 (independent)] | 2 | lm_head+rmsnorm+sdpa | 60 | 0 | 0% | [0%, 6%] |
+| OLMo-2-0425-1B-Instruct / hf_bnb_nf4 [CNN/DM ext150 (independent)] | 2 | none | 60 | 29 | 48% | [36%, 61%] |
 | OLMo-2-0425-1B-Instruct / hf_bnb_nf4 [CNN/DM] | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
 | OLMo-2-0425-1B-Instruct / hf_bnb_nf4 [CNN/DM] | 2 | none | 50 | 27 | 54% | [40%, 67%] |
 | OLMo-2-0425-1B-Instruct / hf_bnb_nf4 [GSM8K] | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
@@ -64,6 +66,8 @@ Row-wise = operator classes run one row at a time during block verification ('no
 | OLMo-2-0425-1B-Instruct / hf_bnb_nf4 [GSM8K] | 3 | none | 20 | 6 | 30% | [15%, 52%] |
 | OLMo-2-0425-1B-Instruct / hf_bnb_nf4 [HumanEval] | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
 | OLMo-2-0425-1B-Instruct / hf_bnb_nf4 [HumanEval] | 2 | none | 50 | 17 | 34% | [22%, 48%] |
+| Phi-3.5-mini-instruct / hf_bnb_nf4 [CNN/DM ext150 (independent)] | 2 | lm_head+rmsnorm+sdpa | 60 | 0 | 0% | [0%, 6%] |
+| Phi-3.5-mini-instruct / hf_bnb_nf4 [CNN/DM ext150 (independent)] | 2 | none | 60 | 55 | 92% | [82%, 96%] |
 | Phi-3.5-mini-instruct / hf_bnb_nf4 [CNN/DM] | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |
 | Phi-3.5-mini-instruct / hf_bnb_nf4 [CNN/DM] | 2 | none | 50 | 41 | 82% | [69%, 90%] |
 | Phi-3.5-mini-instruct / hf_bnb_nf4 [GSM8K] | 2 | lm_head+rmsnorm+sdpa | 50 | 0 | 0% | [0%, 7%] |

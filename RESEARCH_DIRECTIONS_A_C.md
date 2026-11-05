@@ -191,8 +191,12 @@ Khoảng Wilson 95% của mỗi ô 0/50 là [0, 7]%. Các kết quả cũ trư�
 | Qwen2.5-1.5B, bnb | lm_head + sdpa | **0/60** |
 | Qwen2.5-0.5B, bnb | sdpa | **0/60** |
 | Qwen2.5-3B, torchao INT4 | lm_head + rmsnorm + sdpa | **0/60** |
+| OLMo-2-1B, bnb | không (PLD ngây thơ) | 29/60 (48%) |
+| OLMo-2-1B, bnb | lm_head + rmsnorm + sdpa | **0/60** |
+| Phi-3.5-mini, bnb | không (PLD ngây thơ) | 55/60 (92%) |
+| Phi-3.5-mini, bnb | lm_head + rmsnorm + sdpa | **0/60** |
 
-Khoảng Wilson 95% của mỗi ô 0/60 là [0, 6]%. Tổng hợp qua ba tập dữ liệu (GSM8K, HumanEval, CNN/DM) và hai backend xác định, danh sách do `shape_audit.py plan` sinh ra không có ca lệch nào trong mọi lượt chạy ở bản sửa đúng. Giới hạn: PLD ngây thơ làm mốc chỉ chạy cho Qwen 3B; OLMo-2 và Phi-3.5 chưa chạy trên ext150 (không GQA, đã 0/50 trên CNN/DM); mô hình tối đa 3B, một GPU, bitsandbytes 0.50.0, K=2, mỗi ô một lần; "0 ca lệch" là quan sát trên mẫu, không phải chứng minh.
+Khoảng Wilson 95% của mỗi ô 0/60 là [0, 6]%. Tổng hợp qua ba tập dữ liệu (GSM8K, HumanEval, CNN/DM) và hai backend xác định, danh sách do `shape_audit.py plan` sinh ra không có ca lệch nào trong mọi lượt chạy ở bản sửa đúng. Giới hạn: PLD ngây thơ làm mốc chỉ chạy cho Qwen 3B và hai mô hình không GQA (OLMo-2, Phi-3.5), chưa chạy cho Qwen 1.5B/0.5B và torchao trên ext150; mô hình tối đa 3B, một GPU, bitsandbytes 0.50.0, K=2, mỗi ô một lần; "0 ca lệch" là quan sát trên mẫu, không phải chứng minh.
 
 ### 1.14 bitsandbytes 0.49.2 (trước PR #1949) so với 0.50.0 (05/11/2026)
 
