@@ -1,6 +1,6 @@
 # M-Invariant 4-bit Kernels for Bitwise-Exact Speculative Decoding
 
-DRAFT v0 (2026-11-05). Written for: ML-systems reviewers (target TMLR or a workshop; see "Venue" at the end). Every number comes from `results/kernels/` and `docs/PLAN_SHAPE_INVARIANT_KERNELS.md` sections 13-17. `[VERIFY]` marks claims that need a citation check before submission. `[TODO]` marks missing experiments.
+DRAFT v0 (2026-11-05). Written for: ML-systems reviewers (target TMLR or a workshop; see "Venue" at the end). Every number comes from `results/kernels/` and `docs/PLAN_SHAPE_INVARIANT_KERNELS.md` sections 13-17. Bibliographic details of the references in Section 11 were checked against search results on 2026-11-05 (author lists, venue, arXiv ids); the content claims about LLM-42, Integer Alibi, Yuan et al. and Chordiya rest on partial readings (see Section 9). `[TODO]` marks missing experiments.
 
 ## Abstract
 
@@ -10,9 +10,9 @@ We build 4-bit kernels (LM head, attention, RMSNorm, NF4 GEMM) whose result for 
 
 ## 1. Introduction
 
-Speculative decoding (Leviathan et al. 2023; Chen et al. 2023) [VERIFY] verifies a block of drafted tokens in one forward pass. The usual argument says greedy verification reproduces the greedy sequence. That argument assumes the block forward pass produces the same logits as M sequential single-token passes. In floating point on a GPU this fails: libraries pick different tile shapes, split-K factors, or entirely different kernels depending on M. bitsandbytes 0.50.0, for example, switches its 4-bit GEMM kernel at M=4. The sequence the user would have obtained without speculation is therefore not what speculation returns.
+Speculative decoding (Leviathan et al. 2023; Chen et al. 2023) verifies a block of drafted tokens in one forward pass. The usual argument says greedy verification reproduces the greedy sequence. That argument assumes the block forward pass produces the same logits as M sequential single-token passes. In floating point on a GPU this fails: libraries pick different tile shapes, split-K factors, or entirely different kernels depending on M. bitsandbytes 0.50.0, for example, switches its 4-bit GEMM kernel at M=4. The sequence the user would have obtained without speculation is therefore not what speculation returns.
 
-Prior work on batch-invariant operations addresses the same shape-dependence for batch size and serving determinism (Thinking Machines 2025; LLM-42) [VERIFY]. Our setting is different in two ways: the changing dimension is the number of *verification rows within one sequence*, and the weights are 4-bit NF4 quantized, where the kernels are custom dequantize-and-multiply and not vendor GEMMs.
+Prior work on batch-invariant operations addresses the same shape-dependence for batch size and serving determinism (He et al. 2025; LLM-42). Our setting is different in two ways: the changing dimension is the number of *verification rows within one sequence*, and the weights are 4-bit NF4 quantized, where the kernels are custom dequantize-and-multiply and not vendor GEMMs.
 
 Contributions:
 1. A set of M-invariant kernels for 4-bit decoding: LM head (Triton), attention (Triton, split-KV with absolute chunks), RMSNorm (Triton), NF4 GEMM (CUDA C++). Each is checked bitwise for independence from M and row position.
@@ -106,9 +106,9 @@ Qwen2.5-3B, greedy, invariant vs default mode: identical sequences in 30% (GSM8K
 
 ## 9. Related work
 
-Citations are from our reading notes (`docs/direction_c/LITERATURE_NOTES_DIRECTION_C.md`, sections 4-9). Statements about papers we only saw through summaries are marked (summary). Please re-check against the final versions before submission.
+Citations (full list in Section 11) are from our reading notes (`docs/direction_c/LITERATURE_NOTES_DIRECTION_C.md`, sections 4-9). Statements about papers we only saw through summaries are marked (summary). Re-check the partially read ones against the final versions before submission.
 
-**Batch-invariant inference.** Thinking Machines ("Defeating Nondeterminism in LLM Inference", 2025) trace nondeterminism to kernels whose reduction order depends on batch size (RMSNorm, matmul, attention) and give batch-invariant kernels; their library covers `mm`, `addmm`, `log_softmax` and `mean`, with bf16 examples and no quantization. SGLang and vLLM provide deterministic modes built on the same idea. Our invariance target differs: the varying dimension is the number of verification rows of one sequence, and the matmul is a 4-bit dequantize-and-multiply kernel.
+**Batch-invariant inference.** He et al. (Thinking Machines Lab, "Defeating Nondeterminism in LLM Inference", 2025) trace nondeterminism to kernels whose reduction order depends on batch size (RMSNorm, matmul, attention) and give batch-invariant kernels; their library covers `mm`, `addmm`, `log_softmax` and `mean`, with bf16 examples and no quantization. SGLang and vLLM provide deterministic modes built on the same idea. Our invariance target differs: the varying dimension is the number of verification rows of one sequence, and the matmul is a 4-bit dequantize-and-multiply kernel.
 
 **LLM-42** (arXiv 2601.17768) uses a decode-verify-rollback scheme, inspired by speculative decoding, to make serving deterministic. It verifies over fixed-size windows so kernels always see the same shape, and it reports results for Llama-3.1-8B on H100s. By its own statement it does not integrate with speculative-decoding-based inference, and it does not study weight-quantized models. We use the invariance in the opposite direction: to keep a real speculative decoder exact against the sequential reference.
 
@@ -116,9 +116,9 @@ Citations are from our reading notes (`docs/direction_c/LITERATURE_NOTES_DIRECTI
 
 **Speculative decoding on consumer hardware.** Chordiya (arXiv 2607.17283, single-author preprint) observes on llama.cpp Metal that scoring the same context in a batch of five versus one at a time shifts logits by up to about 0.1 and can flip the argmax, and concludes that bit-exact greedy equivalence on that backend is unattainable when baseline and verifier use different batch shapes. Our work agrees with the observation (Section 3) and shows that on CUDA, with kernels made M-invariant, the equivalence can be obtained against a fixed reference. The qualitative observation is not new; our measurement per operator, the kernels, and the exact loop are.
 
-**4-bit kernels.** bitsandbytes NF4 / QLoRA (Dettmers et al.); its PR #1949 (in 0.50.0) added the runtime-dispatched 4-bit GEMM kernels we measure against. vLLM disables Marlin in its batch-invariant mode, citing that Marlin is not batch-invariant (search result, not verified).
+**4-bit kernels.** bitsandbytes NF4 / QLoRA (Dettmers et al. 2023); its PR #1949 (in 0.50.0) added the runtime-dispatched 4-bit GEMM kernels we measure against. vLLM is reported to disable Marlin in its batch-invariant mode because Marlin is not batch-invariant (search-result snippet, not verified in the vLLM docs).
 
-**Speculative decoding.** Leviathan et al. 2023; Chen et al. 2023; prompt lookup decoding. The standard losslessness argument is about the output distribution under exact arithmetic; it does not cover floating-point shape dependence.
+**Speculative decoding.** Leviathan et al. 2023; Chen et al. 2023; prompt lookup decoding (Saxena 2023, now in HF transformers as `prompt_lookup_num_tokens`). The standard losslessness argument is about the output distribution under exact arithmetic; it does not cover floating-point shape dependence.
 
 ## 10. Reproducibility
 
@@ -127,3 +127,16 @@ Citations are from our reading notes (`docs/direction_c/LITERATURE_NOTES_DIRECTI
 ## Venue
 
 With one small GPU and models <=3B this fits TMLR or a systems/efficient-inference workshop. For ICML/MLSys it needs at least one more GPU and a >=7B target (also where draft models may pay off). Deadlines and formats must be confirmed on the official sites.
+
+## 11. References (bibliographic details verified by search 2026-11-05)
+
+- Leviathan, Kalman, Matias. Fast Inference from Transformers via Speculative Decoding. ICML 2023 (oral), PMLR 202. arXiv:2211.17192.
+- Chen, Borgeaud, Irving, Lespiau, Sifre, Jumper. Accelerating Large Language Model Decoding with Speculative Sampling. arXiv:2302.01318 (DeepMind, 2023).
+- Dettmers, Pagnoni, Holtzman, Zettlemoyer. QLoRA: Efficient Finetuning of Quantized LLMs. NeurIPS 2023. arXiv:2305.14314.
+- He (Horace) et al. Defeating Nondeterminism in LLM Inference. Thinking Machines Lab blog, 2025-09-10. thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference (we read the post and secondary coverage; the first author's full name should be taken from the post itself).
+- Saxena. Prompt Lookup Decoding. GitHub apoorvumang/prompt-lookup-decoding, 2023.
+- LLM-42: Enabling Determinism in LLM Inference with Verified Speculation. arXiv:2601.17768 (read from PDF extraction, evaluation section only partly).
+- Yuan et al. Understanding and Mitigating Numerical Sources of Nondeterminism in LLM Inference. arXiv:2506.09501.
+- The Integer Alibi. arXiv:2608.13756; follow-up arXiv:2609.00363 (single-author preprints).
+- Chordiya. Lossless but Not Free: An Empirical Anatomy of Speculative Decoding on Consumer Hardware. arXiv:2607.17283.
+- bitsandbytes PR #1949 (4-bit GEMM kernels, merged 2026-05-21).
