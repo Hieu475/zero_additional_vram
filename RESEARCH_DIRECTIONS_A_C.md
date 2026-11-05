@@ -191,6 +191,9 @@ Khoảng Wilson 95% của mỗi ô 0/50 là [0, 7]%. Các kết quả cũ trư�
 | Qwen2.5-1.5B, bnb | lm_head + sdpa | **0/60** |
 | Qwen2.5-0.5B, bnb | sdpa | **0/60** |
 | Qwen2.5-3B, torchao INT4 | lm_head + rmsnorm + sdpa | **0/60** |
+| Qwen2.5-3B, torchao INT4 | không (PLD ngây thơ) | 41/60 (68%) |
+| Qwen2.5-1.5B, bnb | không (PLD ngây thơ) | 39/60 (65%) |
+| Qwen2.5-0.5B, bnb | không (PLD ngây thơ) | 41/60 (68%) |
 | OLMo-2-1B, bnb | không (PLD ngây thơ) | 29/60 (48%) |
 | OLMo-2-1B, bnb | lm_head + rmsnorm + sdpa | **0/60** |
 | Phi-3.5-mini, bnb | không (PLD ngây thơ) | 55/60 (92%) |

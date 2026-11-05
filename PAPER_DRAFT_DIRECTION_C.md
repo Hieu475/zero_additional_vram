@@ -87,11 +87,11 @@ Source: `C_SHAPE_AUDIT_SUMMARY.md`, `op_shape_sensitivity_gsm8k20_v1.json`, `c2_
 | Config | GSM8K | HumanEval | CNN/DM (eval) | CNN/DM (ext150, 60) |
 |---|---:|---:|---:|---:|
 | Qwen2.5-3B bnb | 18/50 | 19/50 | 33/50 | 47/60, 49/60 |
-| Qwen2.5-1.5B bnb | 25/50 | 13/50 | 36/50 | [TODO] |
-| Qwen2.5-0.5B bnb | 33/50 | 26/50 | 38/50 | [TODO] |
+| Qwen2.5-1.5B bnb | 25/50 | 13/50 | 36/50 | 39/60 |
+| Qwen2.5-0.5B bnb | 33/50 | 26/50 | 38/50 | 41/60 |
 | OLMo-2-1B bnb | 17/50 | 17/50 | 27/50 | 29/60 |
 | Phi-3.5-mini bnb | 23/50 | 31/50 | 41/50 | 55/60 |
-| Qwen2.5-3B torchao INT4 | 19/50 | n/a | 38/50 | [TODO] |
+| Qwen2.5-3B torchao INT4 | 19/50 | n/a | 38/50 | 41/60 |
 
 The long-context set (511–3072 tokens) gives 11/12 (Qwen2.5-3B) and 4/12 (OLMo-2-1B).
 
