@@ -59,8 +59,8 @@ Không nên tuyên bố: "phát hiện hiện tượng mới" (nguyên lý đã 
 ## 6. Việc còn thiếu trước khi nộp (không tính GPU/phiên bản khác)
 
 1. Đọc Yuan et al. 2025, "Lossless but Not Free" và phần Evaluation của LLM-42, rồi cập nhật phần Related Work.
-2. Lặp lại độc lập vài ô chính (đo độ lặp lại của chính kết quả 0/N và của tỷ lệ lệch ngây thơ).
+2. Nhân bản độc lập: đã có một lần (ext150 prompt 60–119: Qwen 3B 49/60 ngây thơ, 0/60 với danh sách; torchao 0/60). Chưa lặp lại cho các cấu hình khác.
 3. Mô hình lớn hơn 3B nếu có cách chạy; Llama 3.2 (cần token HF).
-4. Văn bản dài hơn 1000 token trong PLD (hiện kiểm toán 3072 token chỉ ở mức toán tử).
+4. Văn bản dài hơn 1000 token trong PLD: đã có 12 prompt (511–3072 token, Qwen 3B và OLMo-2: 0/12 với danh sách), nhưng mẫu nhỏ và là bài báo ghép; cần mẫu lớn hơn.
 5. Viết lại phần hướng A sao cho nó là kết quả phụ, không phải đóng góp chính.
 6. Chốt nơi nộp và hạn chót từ trang chính thức của hội nghị (tôi chưa tra; không nên dựa vào trí nhớ).

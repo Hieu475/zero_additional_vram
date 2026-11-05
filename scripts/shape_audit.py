@@ -47,11 +47,15 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
 def merged_trajectory(directory: Path) -> str:
     groups: dict[tuple, dict] = {}
     for f in sorted(set(list(directory.glob("c6*_*.json")) + list(directory.glob("fix_*.json"))
-                    + list(directory.glob("heldout_*.json")) + list(directory.glob("ext150_*.json")) + list(directory.glob("c8_*_k[0-9]_*.json")) + list(directory.glob("c10_*_k[0-9]_*.json")))):
+                    + list(directory.glob("heldout_*.json")) + list(directory.glob("ext150_*.json")) + list(directory.glob("ext150b_*.json")) + list(directory.glob("longctx_*.json")) + list(directory.glob("c8_*_k[0-9]_*.json")) + list(directory.glob("c10_*_k[0-9]_*.json")))):
         d = json.loads(f.read_text())
         if d.get("schema") != "zassd-pld-trajectory-divergence-v1":
             continue
-        if f.name.startswith("ext150_"):
+        if f.name.startswith("longctx_"):
+            bench = "long context 511-3072 tok (12 prompts)"
+        elif f.name.startswith("ext150b_"):
+            bench = "CNN/DM ext150 prompts 60-119 (independent replicate)"
+        elif f.name.startswith("ext150_"):
             bench = "CNN/DM ext150 (independent)"
         elif "cnndm" in f.name:
             bench = "CNN/DM" + ("" if "gqafix" in f.name or d.get("rowwise") in ([], None) or "Qwen" not in d.get("model", "") else ", PRE-GQA-FIX row-wise SDPA (invalid for GQA models)")

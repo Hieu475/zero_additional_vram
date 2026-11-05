@@ -218,6 +218,19 @@ Theo từng phép chiếu, ở 0.50.0 M≥4: `k_proj` và `v_proj` vẫn bằng 
 
 **Giới hạn:** một mô hình, một GPU, mỗi ô một lần; 0.49.2 chạy cùng PyTorch 2.11/CUDA 12.8 với bản 0.50.0 (venv kế thừa gói hệ thống); chưa thử các bản 0.50.1/0.50.2 (đổi heuristic cho GB10) và các GPU khác; cờ "PLD ngây thơ 11/50" ở 0.49.2 thấp hơn 18/50 của 0.50.0 nhưng khác biệt này nằm trong khoảng nhiễu của 50 prompt (hai khoảng Wilson chồng lên nhau), không nên diễn giải.
 
+### 1.15 Ngữ cảnh dài (511–3072 token) và nhân bản độc lập (05/11/2026)
+
+Script `run_long_and_replicate.sh`; bằng chứng `longctx_*.json`, `ext150b_*.json`. K=2, 128 token, danh sách `plan` giữ nguyên từ GSM8K.
+
+| Thử nghiệm | Cấu hình | PLD ngây thơ lệch | Với danh sách `plan` |
+|---|---|---:|---:|
+| `long_context_dev` (12 prompt, 511–3072 token) | Qwen 3B (bnb) | 11/12 | **0/12** |
+| `long_context_dev` | OLMo-2-1B (bnb) | 4/12 | **0/12** |
+| `cnndm_ext150` prompt 60–119 (60 prompt mới) | Qwen 3B (bnb) | 49/60 | **0/60** |
+| `cnndm_ext150` prompt 60–119 | Qwen 3B (torchao INT4) | chưa chạy | **0/60** |
+
+Lần nhân bản thứ hai trên 60 prompt khác cho kết quả khớp lần đầu (ngây thơ 47/60 và 49/60; danh sách 0/60 cả hai), nên kết quả không phụ thuộc vào 60 prompt cụ thể. Giới hạn: ngữ cảnh dài chỉ 12 prompt (khoảng Wilson 95% của 0/12 là [0, 24]%), các prompt dài là bài báo CNN/DM ghép nên chưa phải văn bản dài tự nhiên; Qwen 1.5B/0.5B chưa chạy ở ngữ cảnh dài; mô hình tối đa 3B, một GPU, bitsandbytes 0.50.0.
+
 ## 2. Hướng A: vòng giải mã exact chạy trong CUDA graph
 
 ### 2.1 Động cơ
