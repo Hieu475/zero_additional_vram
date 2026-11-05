@@ -26,7 +26,20 @@ Let `R` be sequential greedy decoding with a fixed kernel set `K` (M=1 for every
 
 ## 3. Motivation: operator audit
 
-We run each operator of a 4-bit transformer on the same row inside blocks of different M and compare bits. [TODO: insert the table from `scripts/audit_op_shape_sensitivity.py` / `shape_audit.py summarize`; cite the PLD and draft-model divergence numbers: 22-82% and 34-66% of sequences.] The end-to-end consequence is the divergence rate above.
+We run each operator of a stock 4-bit transformer (HF + bitsandbytes 0.50.0 NF4, RTX 4050, sm_89) on the same rows inside blocks of M rows and compare to row-by-row execution bitwise (GSM8K prompts, 960 rows per cell, natural contexts). "Proj" is the fraction of mismatching output elements of the NF4 projections; RMSNorm is the count of mismatching elements; LM head and SDPA are fractions of mismatching elements; "flips" is the number of rows whose argmax changes.
+
+| Model | M | Proj | RMSNorm (count) | LM head | SDPA | Argmax flips |
+|---|---:|---:|---:|---:|---:|---:|
+| Qwen2.5-3B | 2 | 0.000% | 60 | 0.193% | 18.6% | 4/960 |
+| Qwen2.5-3B | 3 | 0.000% | 87 | 0.193% | 18.6% | 4/960 |
+| Qwen2.5-3B | 4 | 12.96% | 244 | 0.193% | 18.6% | 4/960 |
+| Qwen2.5-3B | 8 | 12.96% | 199 | 0.193% | 18.6% | 5/960 |
+| Qwen2.5-1.5B | 3 / 4 | 0.000% / 13.85% | 0 / 92 | 0.109% | 18.3% | 7 / 9 of 960 |
+| Qwen2.5-0.5B | 3 / 4 | 0.000% / 14.27% | 0 | 0.000% | 3.6% | 6 / 9 of 960 |
+| OLMo-2-1B | 3 / 4 | 0.000% / 15.42% | 111 / 189 | 0.048% | 17.4% | 2 / 1 of 960 |
+| Phi-3.5-mini | 3 / 4 | 0.000% / 14.79% | 358 / 459 | 0.083% | 19.2% | 3 / 4 of 960 |
+
+Reading: the NF4 projections are shape-stable up to M=3 and jump to about 13-15% mismatching elements at M>=4, which matches the bitsandbytes kernel switch at M=4 (0.50.0 only, sm_89; the dispatch heuristic changed in 0.50.1/0.50.2, so the threshold is a property of this version and GPU and we make no claim for others). SDPA and the LM head are sensitive at every M, and RMSNorm is sensitive in some models. The end-to-end consequence is trajectory divergence: naive PLD leaves the sequential greedy trajectory in 22-82% of sequences and draft-model SD in 34-66% (`results/raw/`, `scripts/audit_pld_trajectory_divergence.py`, `scripts/audit_draftmodel_sd_divergence.py`). [TODO: confirm these ranges against the final audit tables before submission.]
 
 ## 4. Kernel design
 
@@ -89,11 +102,23 @@ Qwen2.5-3B, greedy, invariant vs default mode: identical sequences in 30% (GSM8K
 - Phi-3.5 is unsupported (head_dim 96 in the attention kernel).
 - Speedup depends on how often PLD finds a draft: HumanEval is highest; the range 1.14-1.32x is modest.
 - Accuracy comparison is small (n=50) and one task.
-- Related-work comparison to LLM-42 and concurrent batch-invariance work is not done. [TODO]
+- Related work was read from page text and PDF extractions; the evaluation sections of LLM-42 and several preprints were only partly read. Our search was narrow and may have missed work.
 
-## 9. Related work [VERIFY all]
+## 9. Related work
 
-Speculative decoding (Leviathan et al.; Chen et al.); prompt lookup decoding; batch-invariant operations for deterministic inference (Thinking Machines "Defeating Nondeterminism in LLM Inference"); LLM-42; Integer Alibi; bitsandbytes NF4 / QLoRA (Dettmers et al.). See `docs/direction_c/LITERATURE_NOTES_DIRECTION_C.md`.
+Citations are from our reading notes (`docs/direction_c/LITERATURE_NOTES_DIRECTION_C.md`, sections 4-9). Statements about papers we only saw through summaries are marked (summary). Please re-check against the final versions before submission.
+
+**Batch-invariant inference.** Thinking Machines ("Defeating Nondeterminism in LLM Inference", 2025) trace nondeterminism to kernels whose reduction order depends on batch size (RMSNorm, matmul, attention) and give batch-invariant kernels; their library covers `mm`, `addmm`, `log_softmax` and `mean`, with bf16 examples and no quantization. SGLang and vLLM provide deterministic modes built on the same idea. Our invariance target differs: the varying dimension is the number of verification rows of one sequence, and the matmul is a 4-bit dequantize-and-multiply kernel.
+
+**LLM-42** (arXiv 2601.17768) uses a decode-verify-rollback scheme, inspired by speculative decoding, to make serving deterministic. It verifies over fixed-size windows so kernels always see the same shape, and it reports results for Llama-3.1-8B on H100s. By its own statement it does not integrate with speculative-decoding-based inference, and it does not study weight-quantized models. We use the invariance in the opposite direction: to keep a real speculative decoder exact against the sequential reference.
+
+**Numerical nondeterminism.** Yuan et al. (arXiv 2506.09501) vary GPU type, GPU count, batch size and precision and report up to 9% standard deviation in AIME'24 accuracy; they propose LayerCast and do not examine 4-bit weights or speculative decoding (summary for later sections). "The Integer Alibi" (arXiv 2608.13756, single-author preprint) studies W8A8 INT8 kernels, where an exact INT32 accumulator moves the difference to scaling and rounding. That mechanism does not apply to NF4, whose accumulation is floating point.
+
+**Speculative decoding on consumer hardware.** Chordiya (arXiv 2607.17283, single-author preprint) observes on llama.cpp Metal that scoring the same context in a batch of five versus one at a time shifts logits by up to about 0.1 and can flip the argmax, and concludes that bit-exact greedy equivalence on that backend is unattainable when baseline and verifier use different batch shapes. Our work agrees with the observation (Section 3) and shows that on CUDA, with kernels made M-invariant, the equivalence can be obtained against a fixed reference. The qualitative observation is not new; our measurement per operator, the kernels, and the exact loop are.
+
+**4-bit kernels.** bitsandbytes NF4 / QLoRA (Dettmers et al.); its PR #1949 (in 0.50.0) added the runtime-dispatched 4-bit GEMM kernels we measure against. vLLM disables Marlin in its batch-invariant mode, citing that Marlin is not batch-invariant (search result, not verified).
+
+**Speculative decoding.** Leviathan et al. 2023; Chen et al. 2023; prompt lookup decoding. The standard losslessness argument is about the output distribution under exact arithmetic; it does not cover floating-point shape dependence.
 
 ## 10. Reproducibility
 
