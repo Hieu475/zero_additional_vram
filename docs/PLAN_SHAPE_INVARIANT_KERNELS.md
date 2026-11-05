@@ -117,3 +117,19 @@ Xác minh có chứng nhận theo margin; kernel NF4 nhanh hơn bnb nói chung; 
 1. Đọc `three_row_kernel/` và các kernel Triton NF4 có sẵn để biết phần nào dùng lại được.
 2. Viết kernel LM head bất biến + bộ thử bằng nhau từng bit (WP1).
 3. Báo kết quả qua/không qua cổng WP1 trước khi sang WP2.
+
+---
+
+## 13. Kết quả WP1 (05/11/2026): kernel LM head bất biến theo M — QUA CỔNG
+
+Mã: `src/zassd/kernels/lm_head_invariant.py`; thử nghiệm: `scripts/wp1_lm_head_invariant.py`; số liệu: `results/kernels/wp1_lm_head_*.json`.
+
+Thiết kế cuối: mọi lời gọi (M = 1..16) đều chạy cùng một kernel Triton trên khối kích thước cố định 16 hàng (đệm số 0), `tl.dot` fp16→fp32, K chia khối 128 theo thứ tự cố định, không split-K, không atomics, không auto-tune. Bản đầu dùng `tl.sum` thay cho `tl.dot` chậm hơn cuBLAS 7.3x (24.5 ms so với 3.34 ms) và đã bị bỏ.
+
+Kết quả (RTX 4050 Laptop, Triton 3.6.0, dữ liệu ngẫu nhiên cùng kích thước thật, 200 khối × 7 kích thước M × vị trí ngẫu nhiên):
+- **Bất biến:** 0 hàng lệch trên 27 000 hàng, ở cả 5 hình dạng (V,K) = (151936,2048), (151936,1536), (151936,896), (32064,3072), (100352,2048).
+- **Chi phí:** M=1: 3.42 ms so với cuBLAS 3.34 ms (1.02x), hằng số theo M=1..8 (cổng yêu cầu ≤ 1.5x và thời gian M=4 < 4 lần M=1: đạt). Chạy từng hàng 3 lần tốn 10.8 ms, kernel mới xử lý 3 hàng trong 3.42 ms (3.2x ít hơn).
+- **Phát hiện phụ:** kernel này bằng từng bit với GEMM của cuBLAS ở M≥2 (0 phần tử khác), nhưng cuBLAS ở M=1 (đường gemv) khác 1.2% phần tử. Nghĩa là tham chiếu bất biến trùng với đường GEMM của cuBLAS, không trùng với M=1 mặc định của HF; độ khác biệt token đầu-cuối vẫn phải đo (mục 2).
+- **Giới hạn:** dữ liệu ngẫu nhiên, một GPU, một phiên bản Triton; bất biến dựa trên tính chất của MMA và được kiểm chứng bằng thực nghiệm, chưa phải chứng minh. Tích hợp vào mô hình thật là WP4.
+
+Bước tiếp theo theo kế hoạch: WP2 (attention bất biến).
