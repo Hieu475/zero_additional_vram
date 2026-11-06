@@ -65,7 +65,7 @@ Draft cache được tạo từ canonical target cache qua \texttt{fork\_ephemer
 
 Trong static cache, draft chia sẻ các buffer key/value đã cấp phát, nhưng chỉ được ghi từ vị trí \texttt{seq\_len} trở đi; prefix có chỉ số nhỏ hơn độ dài canonical được dùng chung như vùng chỉ đọc. Target verification sau đó ghi KV target vào các vị trí ứng viên tương ứng. Suffix bị ghi thử có thể vẫn còn dữ liệu vật lý sau rollback, nhưng \texttt{crop} chỉ hạ logical length để các vị trí đó không còn thuộc active prefix; thao tác này không giải phóng buffer GPU đã cấp phát. Hai kiểm tra tương ứng trong \path{tests/test_kv_cache_invariants.py} là \path{test_static_invariant_2_draft_writes_do_not_mutate_prefix} (so sánh K/V prefix trước và sau draft write) và \path{test_static_invariant_3_target_verification_and_rollback} (kiểm tra logical length sau rollback).
 
-Không nạp draft weights, chia sẻ buffer KV và giảm tổng VRAM sử dụng là ba thuộc tính khác nhau. Layer-skip loại bỏ nhu cầu về một bộ trọng số draft riêng; static draft state có thể dùng lại buffer key/value; nhưng target weights, cache chuẩn, activation, workspace kernel và bộ đệm preallocated vẫn tiêu thụ VRAM. Do đó, dung lượng cấp phát của cache và peak VRAM toàn tiến trình được đo riêng, không suy ra từ tên phương pháp.
+Không nạp draft weights, chia sẻ buffer KV và giảm tổng VRAM là ba thuộc tính khác nhau: target weights, cache chuẩn, activation và workspace kernel vẫn tiêu thụ VRAM, nên peak VRAM được đo riêng.
 
 
 \section{Router, backend và giao diện chạy}
@@ -74,7 +74,7 @@ Không nạp draft weights, chia sẻ buffer KV và giảm tổng VRAM sử dụ
 
 Đường CLI chính nạp causal LM qua Transformers với lượng tử hóa 4-bit NF4 bằng bitsandbytes (tính toán FP16); \texttt{--no-quantize} nạp FP16. Module \path{src/zassd/backends/base.py} có thêm loader cho HQQ~W4A16 + GemLite, hiện chỉ được gọi trong script kiểm chứng backend riêng. Đổi backend có thể đổi kernel, phép tính KV/logits và kết quả token, nên hai cấu hình này được xem là riêng biệt và không giả định sequence identity giữa chúng.
 
-Entry point \texttt{zassd} được khai báo trong \path{pyproject.toml}; hai lệnh dưới đây chạy vanilla và PLD trên cùng prompt, ghi kết quả vào hai tệp JSON riêng (throughput, acceptance, speedup theo prompt):
+Entry point \texttt{zassd} được khai báo trong \path{pyproject.toml}; hai lệnh dưới đây chạy vanilla và PLD trên cùng prompt, mỗi lệnh ghi một tệp JSON:
 
 \begin{verbatim}
 zassd benchmark --model Qwen/Qwen2.5-3B-Instruct \
@@ -86,4 +86,3 @@ zassd benchmark --model Qwen/Qwen2.5-3B-Instruct \
   --max-new-tokens 32 --output results/pld.json
 \end{verbatim}
 
-Chương~5 phân tích hiệu năng và fidelity theo từng backend và workload.

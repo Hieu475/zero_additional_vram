@@ -312,13 +312,13 @@ Với layer-skip, $T_{\mathrm{draft}}$ là forward qua các lớp không bị b�
 
 \section{Thiết kế bộ định tuyến}
 Tại chu kỳ $t$, router triển khai chọn giữa vanilla, PLD và layer-skip, kèm horizon ứng viên. Router dùng ước lượng throughput tại Công thức~\eqref{eq:router-tps} để so sánh các phương án.
-Trong code hiện tại, quyết định không phải argmax thuần trên mọi hành động: router dùng cost estimates, baseline vanilla, confidence/acceptance EMA hoặc predictor nếu được cấp, n-gram match và một margin ưu tiên PLD; các gate có thể chọn vanilla khi dự đoán layer-skip không vượt baseline. Cấu hình mặc định bật giới hạn horizon cho hit yếu và hiệu chỉnh horizon PLD dài. Quy tắc tổng quát có thể mô tả:
+Trong code hiện tại, quyết định không phải argmax thuần trên mọi hành động: router dùng cost estimates, baseline vanilla, confidence/acceptance EMA hoặc predictor nếu được cấp, n-gram match và một margin ưu tiên PLD; các gate có thể chọn vanilla khi dự đoán layer-skip không vượt baseline. Quy tắc tổng quát có thể mô tả:
 \begin{equation}
     a_t\in\{\mathrm{vanilla},\mathrm{PLD},\mathrm{layer\mbox{-}skip}\},\qquad
     a_t=\operatorname{Policy}_{\mathrm{implemented}}(z_t)
 \end{equation}
 trong đó $z_t$ gồm thông tin mà nhánh triển khai nhận được ở thời điểm gọi: entropy target, logit margin nếu bật, lịch sử/đầu ra dò PLD, thống kê acceptance gần đây, cost profile và latency tracker tùy cấu hình.
 
-Với đường hybrid router dùng trong CLI, entropy, match length, số candidates, acceptance EMA/predictor và latency draft/verify từ cost profile hoặc latency tracker tham gia ước lượng. Telemetry GPU như VRAM/nhiệt độ không phải đặc trưng trực tiếp của quyết định tại đường gọi này; không mô tả chúng như tín hiệu router đang dùng. Các giá trị acceptance và thời gian là dự báo từ profile/thống kê, không bảo đảm acceptance của cycle kế tiếp.
+Với đường hybrid router dùng trong CLI, entropy, match length, số candidates, acceptance EMA/predictor và latency draft/verify từ cost profile hoặc latency tracker tham gia ước lượng. Telemetry GPU không phải tín hiệu của router; acceptance và thời gian là dự báo, không bảo đảm cho cycle kế tiếp.
 
-Router chọn vanilla khi PLD miss và layer-skip bị gate vì thấp hơn baseline dự đoán, hoặc khi speculative action không khả dụng. Khi có PLD hit, chính sách so throughput PLD với layer-skip có margin ưu tiên PLD; ở PLD-only mode, PLD phải đạt vanilla gate. Hiệu quả phải được đánh giá bằng benchmark paired với baseline cố định mạnh nhất.
+Router chọn vanilla khi PLD miss và layer-skip bị gate. Khi có PLD hit, chính sách so throughput PLD với layer-skip có margin ưu tiên PLD; ở PLD-only mode, PLD phải đạt vanilla gate.
