@@ -166,46 +166,9 @@ T_{\mathrm{cycle}} = T_{\mathrm{draft}} + T_{\mathrm{verify}} + T_{\mathrm{cache
 
 Trong đó các thành phần chỉ được cộng trực tiếp khi được đo trên các khoảng không chồng lấn; các tổng thời gian API host và kernel GPU của profiler không thể cộng cơ học với nhau. Tại benchmark chính, PLD có speedup nhưng router và PLD gate thấp hơn PLD; điều này phù hợp với việc quyết định/fallback bổ sung có chi phí, song benchmark tổng thể không đủ để quy toàn bộ chênh lệch cho riêng một thành phần.
 
-Artifact benchmark lưu số token decode, tổng số verification cycle, số cycle PLD/layer-skip, accepted tokens và tổng decode wall time. Từ các bộ đếm này có thể suy ra một số thống kê gộp như Bảng~\ref{tab:ch5-cycle-stats}. Các giá trị là tỷ số tổng trên 450 lượt prompt/order của mỗi phương pháp, không phải trung bình không trọng số của từng cycle.
+Từ các bộ đếm tổng của 450 lượt prompt/order, PLD $K=4$ phát 1.217 token mỗi verification cycle với 31.82~ms mỗi cycle (78.5\% cycle là vanilla fallback), router 1.227 token và 32.51~ms (77.5\%); vanilla là khoảng 27.19~ms/token. Thay vào \(\mathbb{E}[N_{\mathrm{emit}}]T_v/\mathbb{E}[T_{\mathrm{cycle}}]\) cho decode-only ratio khoảng 1.041 (PLD) và 1.026 (router), khớp với pooled decode TPS nên chỉ là kiểm tra nhất quán, không thay thế speedup đầu-cuối ở mục~5.4 (công thức không tính prefill). Artifact không lưu số candidate mỗi cycle hay thời gian từng cycle nên không tách được chi phí thành phần.
 
-Đây là thống kê mô tả gộp được suy ra từ bộ đếm tổng; artifact không lưu thời gian độc lập cho từng cycle. Vì vậy, các giá trị này giúp kiểm tra quan hệ tổng thể giữa số token, số cycle và thời gian, nhưng không xác định chi phí thành phần hay nguyên nhân thời gian của từng cycle.
-
-\begin{table}[htbp]
-\centering
-\small
-\caption{Thống kê cycle gộp suy ra từ raw benchmark paired}
-\label{tab:ch5-cycle-stats}
-\begin{tabularx}{\textwidth}{@{}>{\centering\arraybackslash}p{2.4cm}>{\centering\arraybackslash}p{2.8cm}>{\centering\arraybackslash}p{3.0cm}>{\centering\arraybackslash}p{2.8cm}>{\centering\arraybackslash}p{2.6cm}@{}}
-\toprule
-\textbf{Phương pháp} & \textbf{\shortstack{Accepted tokens\\per spec cycle}} & \textbf{\shortstack{Decode tokens\\per verify cycle}} & \textbf{\shortstack{Decode time\\per cycle (ms)}} & \textbf{\shortstack{Vanilla fallback\\cycles}} \\
-\midrule
-PLD \(K=4\) & 1.134 & 1.217 & 31.82 & 78.5\% \\
-Router & 1.125 & 1.227 & 32.51 & 77.5\% \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Số candidate draft được đề xuất mỗi cycle không được lưu trong raw file, nên không thể tính trực tiếp đại lượng này hoặc acceptance fraction trên tổng candidates từ artifact hiện tại. Số cycle không draft là phần dư giữa tổng verification cycles và số PLD/layer-skip cycles, dựa trên các trường đếm của harness; vì vậy được xem là thống kê suy ra. Thời gian mỗi cycle được tính bằng tổng decode wall time chia tổng verification cycles. Với vanilla baseline, decode wall time gộp tương ứng khoảng 27.19~ms/token. Thay các thống kê gộp vào \(\mathbb{E}[N_{\mathrm{emit}}]T_v/\mathbb{E}[T_{\mathrm{cycle}}]\) cho decode-only ratio khoảng 1.041 cho PLD và 1.026 cho router; các tỷ số này khớp với pooled decode TPS tính từ cùng token/time totals theo định nghĩa, nên là kiểm tra nhất quán số học chứ không phải dự đoán độc lập. Chúng cũng không thay thế end-to-end paired speedup ở mục~5.4 vì công thức này không tính prefill.
-
-Để khảo sát chi phí ở mức kernel, một phép Nsight riêng chạy trên cùng một prompt 384 token, NF4/FP16, SDPA và giới hạn 32 token. Bảng~\ref{tab:ch5-nsys} tổng hợp thời gian kernel GPU (tổng các kernel có thể chồng lấn) và tổng thời gian API host cho đồng bộ/phát lệnh. Đây là số liệu có instrumentation, không phải end-to-end latency production.
-
-\begin{table}[htbp]
-\centering
-\small
-\caption{Một số số đo Nsight chẩn đoán trên một prompt cố định}
-\label{tab:ch5-nsys}
-\begin{tabularx}{\textwidth}{@{}Xrrrr@{}}
-\toprule
-\textbf{Phương pháp} & \textbf{Tổng GPU kernel (ms)} & \textbf{NF4 GEMM (ms)} & \textbf{Dequant (ms)} & \textbf{Sync API (ms)} \\
-\midrule
-Vanilla & 828.2 & 312.8 & 66.5 & 378.1 \\
-PLD \(K=4\) & 811.1 & 400.0 & 54.3 & 270.6 \\
-CKA90 \(K=2\) & 951.7 & 451.7 & 40.0 & 376.8 \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Số liệu cho thấy thành phần NF4 GEMM, dequant và các lời gọi đồng bộ đều hiện diện đáng kể trong trace. Tuy nhiên, tổng GPU kernel có thể bao gồm overlap, còn synchronize API là thời gian host-side; chúng không phải các thành phần độc lập của critical path. Do đó, từ trace này chỉ có thể mô tả hoạt động quan sát được, chưa thể kết luận dequant hoặc synchronization là nguyên nhân duy nhất gây chậm. Manifest và các tệp xuất Nsight được lưu tại \path{experiments/backend_validation/kernel_profile/}.
+Một phép Nsight riêng (một prompt 384 token, NF4/FP16, 32 token) cho tổng thời gian GPU kernel 828.2~ms (vanilla), 811.1~ms (PLD $K=4$) và 951.7~ms (CKA90 $K=2$), trong đó NF4 GEMM chiếm 312.8, 400.0 và 451.7~ms. Do kernel có thể chồng lấn và sync API là thời gian phía host, trace này chỉ mô tả hoạt động quan sát được, không kết luận dequant hay đồng bộ là nguyên nhân duy nhất gây chậm; xuất Nsight nằm ở \path{experiments/backend_validation/kernel_profile/}.
 
 \section{Đánh giá bộ nhớ và tính đúng đắn}
 

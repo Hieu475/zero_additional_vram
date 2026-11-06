@@ -25,44 +25,11 @@ FR8 & Metrics & Ghi latency, TPS, VRAM và độ khớp đầu ra. \\
 \end{tabularx}
 \end{table}
 
-\subsection{Yêu cầu phi chức năng}
-\begin{table}[H]
-\centering
-\caption{Yêu cầu phi chức năng}\label{tab:design-nonfunctional}
-\begin{tabularx}{\textwidth}{@{}p{3.0cm}X@{}}
-\toprule
-\textbf{Yêu cầu} & \textbf{Tiêu chí thiết kế} \\
-\midrule
-\textbf{Tính đúng đắn} & Đối chiếu token IDs và kiểm tra cache length/position sau verify, rollback. \\
-\textbf{Bộ nhớ} & Không nạp draft weights; báo cáo peak VRAM và các thành phần bộ nhớ chính. \\
-\textbf{Hiệu năng} & Đo wall-clock toàn cycle; dùng acceptance để giải thích kết quả. \\
-\textbf{Tái lập} & Lưu commit, model/backend, cấu hình sinh, prompt IDs/hash và warmup. \\
-\textbf{Chẩn đoán} & Ghi vị trí divergence cùng logits/KV trace khi cần. \\
-\textbf{Mô-đun} & Tách model, draft, verifier, cache, router và profiler. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\subsection{Ràng buộc thiết kế}
-\begin{table}[H]
-\centering
-\caption{Ràng buộc thiết kế và hệ quả}\label{tab:design-constraints}
-\begin{tabularx}{\textwidth}{@{}p{0.9cm}p{3.0cm}X@{}}
-\toprule
-\textbf{Mã} & \textbf{Ràng buộc} & \textbf{Hệ quả đối với thiết kế} \\
-\midrule
-C1 & VRAM hữu hạn & Không nạp draft riêng; giới hạn cache theo độ dài chuỗi. \\
-C2 & Chi phí verify & Draft vẫn cần target kiểm chứng; layer-skip cần forward, PLD cần lookup. \\
-C3 & Vị trí cache & Đồng bộ logical length, causal mask và RoPE position. \\
-C4 & Cách ly trạng thái & Cache speculative chưa xác minh không được thành cache chuẩn. \\
-C5 & Sai khác số học & Đo fidelity riêng theo precision, kernel và chế độ thực thi. \\
-\bottomrule
-\end{tabularx}
-\end{table}
+\subsection{Yêu cầu phi chức năng và ràng buộc}
+Về phi chức năng, hệ thống cần đúng đắn (đối chiếu token ID, kiểm tra độ dài và vị trí cache sau verify và rollback), tiết kiệm bộ nhớ (không nạp draft weights; báo cáo peak VRAM), đo hiệu năng bằng wall-clock toàn cycle, tái lập được (lưu commit, backend, cấu hình sinh, hash prompt, warmup), chẩn đoán được (vị trí divergence cùng vết logits/KV) và mô-đun hóa (tách model, draft, verifier, cache, router, profiler). Năm ràng buộc định hình thiết kế: (C1) VRAM hữu hạn nên không nạp draft riêng và giới hạn cache theo độ dài chuỗi; (C2) draft vẫn cần target kiểm chứng, layer-skip cần forward còn PLD cần lookup; (C3) logical length, causal mask và vị trí RoPE phải đồng bộ; (C4) cache speculative chưa xác minh không được thành cache chuẩn; (C5) sai khác số học phải được đo riêng theo precision, kernel và chế độ thực thi.
 
 Phạm vi kết luận được quy định trong Chương 1 và Chương 5, không xem là ràng buộc kiến trúc. Thiết kế ưu tiên ba nguyên tắc: không nạp thêm trọng số draft, cách ly cache target chuẩn khỏi token chưa xác minh, và đo hiệu năng bằng thời gian toàn chu kỳ. Kiến trúc tổng thể đáp ứng các nguyên tắc này được trình bày ở mục tiếp theo.
 
-\clearpage
 \section{Kiến trúc tổng thể}
 \noindent Hình~\ref{fig:system-architecture} minh họa các nhánh xử lý: mũi tên xanh là luồng điều khiển, mũi tên liền đen là dữ liệu, nét đứt là tài nguyên dùng chung và nét chấm là đo lường.
 
@@ -354,4 +321,4 @@ trong đó $z_t$ gồm thông tin mà nhánh triển khai nhận được ở th
 
 Với đường hybrid router dùng trong CLI, entropy, match length, số candidates, acceptance EMA/predictor và latency draft/verify từ cost profile hoặc latency tracker tham gia ước lượng. Telemetry GPU như VRAM/nhiệt độ không phải đặc trưng trực tiếp của quyết định tại đường gọi này; không mô tả chúng như tín hiệu router đang dùng. Các giá trị acceptance và thời gian là dự báo từ profile/thống kê, không bảo đảm acceptance của cycle kế tiếp.
 
-Router chọn vanilla khi PLD miss và layer-skip bị gate vì thấp hơn baseline dự đoán, hoặc khi speculative action không khả dụng. Khi có PLD hit, chính sách so throughput PLD với layer-skip có margin ưu tiên PLD; ở PLD-only mode, PLD phải đạt vanilla gate. Do đó argmax là diễn giải mục tiêu ước lượng chứ không phải mô tả đầy đủ từng nhánh quyết định. Hiệu quả phải được đánh giá bằng benchmark paired với baseline cố định mạnh nhất; chính sách không chứng minh rằng chọn động luôn tốt hơn.
+Router chọn vanilla khi PLD miss và layer-skip bị gate vì thấp hơn baseline dự đoán, hoặc khi speculative action không khả dụng. Khi có PLD hit, chính sách so throughput PLD với layer-skip có margin ưu tiên PLD; ở PLD-only mode, PLD phải đạt vanilla gate. Hiệu quả phải được đánh giá bằng benchmark paired với baseline cố định mạnh nhất.

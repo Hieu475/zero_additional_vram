@@ -2,7 +2,7 @@
 
 Chương này mô tả cách các thành phần thiết kế ở Chương~3 được tổ chức và gọi trong mã nguồn ZASSD. Trọng tâm là ranh giới giữa decoder, target verifier, cache và backend; chương không lặp lại mô hình draft--verify hay trình bày kết quả tốc độ. Các cấu hình và số liệu benchmark được báo cáo ở Chương~5.
 
-\paragraph{Lưu ý về phiên bản mã nguồn.} Các Chương~3--5 mô tả hệ thống ZASSD ở giai đoạn đầu của đồ án (vanilla, layer-skip, PLD, router và lớp ứng dụng). Sau đó kho mã được tập trung lại vào giải mã exact trên NF4 (Chương~6): các thành phần layer-skip, router, ứng dụng và dữ liệu thực nghiệm của giai đoạn đầu đã được gỡ khỏi nhánh làm việc hiện tại. Bản nguyên vẹn của hệ thống mô tả ở đây nằm tại git tag \texttt{evidence-pre-cleanup} (commit \texttt{06cf0d7}); cấu trúc thư mục ở Hình~\ref{fig:source-tree} là của bản đó.
+\paragraph{Lưu ý về phiên bản mã nguồn.} Các Chương~3--5 mô tả hệ thống ZASSD ở giai đoạn đầu của đồ án (vanilla, layer-skip, PLD, router và lớp ứng dụng). Sau đó kho mã được tập trung lại vào giải mã exact trên NF4 (Chương~6): các thành phần layer-skip, router, ứng dụng và dữ liệu thực nghiệm của giai đoạn đầu đã được gỡ khỏi nhánh làm việc hiện tại. Bản nguyên vẹn của hệ thống mô tả ở đây nằm tại git tag \texttt{evidence-pre-cleanup} (commit \texttt{06cf0d7}); cấu trúc thư mục bên dưới là của bản đó.
 
 \section{Môi trường và tổ chức mã nguồn}
 
@@ -29,30 +29,7 @@ Profiling & NVIDIA Nsight Systems để xem timeline CUDA/NVTX; Nsight Compute �
 
 Ví dụ provenance của một phép đo trong manifest \path{tradeoff_n25_r1/environment.json}: model revision bắt đầu bằng \texttt{aa8e7253}, commit mã bắt đầu bằng \texttt{6c3ddf7f}, NVIDIA driver \texttt{595.99.02}. Mã SHA đầy đủ được lưu trong manifest; các giá trị trên chỉ mô tả artifact này.
 
-Các package được chia theo nhiệm vụ thay vì đặt toàn bộ logic trong CLI. Hình~\ref{fig:source-tree} cho thấy cấu trúc thư mục đang có trong repository; các script benchmark và dữ liệu thực nghiệm nằm ngoài package chính.
-
-\begin{figure}[H]
-\centering
-\begin{minipage}{0.48\textwidth}
-\begin{verbatim}
-src/zassd/
-|-- cli.py
-|-- decoding/
-|-- baselines/
-|-- cache/
-|-- models/
-|-- layer_selection/
-|-- routing/
-|-- profiling/
-|-- backends/
-|-- controllers/
-|-- app/
-`-- utils/
-\end{verbatim}
-\end{minipage}
-\caption{Cấu trúc package thực tế dưới \texttt{src/zassd}.}
-\label{fig:source-tree}
-\end{figure}
+Các package được chia theo nhiệm vụ thay vì đặt toàn bộ logic trong CLI: \texttt{decoding/} (vanilla, speculative, xác minh, n-gram), \texttt{baselines/} (PLD), \texttt{cache/}, \texttt{models/}, \texttt{layer\_selection/}, \texttt{routing/}, \texttt{profiling/}, \texttt{backends/}, \texttt{controllers/}, \texttt{app/} và \texttt{utils/}; script benchmark và dữ liệu thực nghiệm nằm ngoài package chính.
 
 \section{Hiện thực các phương pháp giải mã}
 
@@ -90,174 +67,23 @@ Trong static cache, draft chia sẻ các buffer key/value đã cấp phát, như
 
 Không nạp draft weights, chia sẻ buffer KV và giảm tổng VRAM sử dụng là ba thuộc tính khác nhau. Layer-skip loại bỏ nhu cầu về một bộ trọng số draft riêng; static draft state có thể dùng lại buffer key/value; nhưng target weights, cache chuẩn, activation, workspace kernel và bộ đệm preallocated vẫn tiêu thụ VRAM. Do đó, dung lượng cấp phát của cache và peak VRAM toàn tiến trình được đo riêng, không suy ra từ tên phương pháp.
 
-Bảng~\ref{tab:implementation-modules} liên kết một số module với trách nhiệm cụ thể và vị trí kiểm tra liên quan.
-\begin{table}[H]
-\centering
-\small
-\caption{Mapping giữa package mã nguồn và chức năng triển khai}
-\label{tab:implementation-modules}
-\begin{tabularx}{\textwidth}{@{}p{4.0cm}p{4.0cm}X@{}}
-\toprule
-\textbf{Module} & \textbf{Trách nhiệm} & \textbf{Trạng thái/kiểm tra liên quan} \\
-\midrule
-decoding/speculative & Điều khiển cycle, budget, draft và verify. & Ghi token phát, acceptance, cycle stats và logical KV length. \\
-decoding/verification & Chấp nhận prefix greedy và tạo correction/bonus. & Có test verification và speculative exactness. \\
-prompt lookup / n-gram & Tra cứu candidate và fallback khi miss. & Có test match, fallback và sequential verify. \\
-cache KV / draft state & Cache chuẩn, fork draft, crop/rollback và metadata draft. & Có test invariants, độ dài và tương đương sau rollback. \\
-model adapter / layer manager & Truy cập layer và áp dụng logical layer skip. & Kiểm tra chỉ số layer và phục hồi forward gốc. \\
-layer selection & Chọn danh sách lớp static, empirical hoặc CKA. & Lưu danh sách skip cụ thể cùng cấu hình chạy. \\
-\bottomrule
-\end{tabularx}
-\end{table}
 
-\section{Router và thu thập dữ liệu}
+\section{Router, backend và giao diện chạy}
 
-\path{src/zassd/routing/hybrid_router.py} nhận history, token pending, horizon và entropy; logit margin chỉ được truyền khi cấu hình cần nó. Router dò PLD để xác định candidates và độ dài match. Acceptance EMA/predictor cùng cost profile hoặc latency tracker ước lượng chi phí và số token có thể được giữ. Đây là dự báo từ profile hay quan sát trước đó, không phải acceptance đã biết của cycle hiện tại.
+\path{src/zassd/routing/hybrid_router.py} nhận history, token pending, horizon và entropy rồi chọn giữa vanilla, PLD và layer-skip theo chính sách ở Mục~3.6: dò PLD để lấy candidates, ước lượng throughput từ acceptance EMA và cost profile (đây là dự báo, không phải acceptance đã biết), rồi áp dụng các gate fallback về vanilla và margin ưu tiên PLD. Nhánh PLD được xét trước gate so sánh với vanilla nên PLD vẫn có thể được chọn dù throughput dự đoán thấp hơn baseline; \path{tests/test_hybrid_router.py} ghi nhận đúng trường hợp này. Đối tượng \texttt{SpeculativeMetrics} ghi tổng token, thời gian prefill/draft/verify/cache, acceptance, số cycle và peak VRAM; tùy chọn NVTX đánh dấu các vùng thời gian cho Nsight Systems.
 
-Các gate có thể chọn vanilla nếu layer-skip được dự báo chậm hơn baseline, hoặc khi entropy cao mà PLD không có candidates. Khi PLD có match, router so sánh throughput dự báo với layer-skip và áp dụng margin ưu tiên PLD; sau PLD miss, layer-skip có thể được chọn nếu qua gate. Telemetry GPU không phải tín hiệu trực tiếp của router trong đường gọi CLI hiện tại. Chính sách và công thức ước lượng được trình bày ở Mục~3.6; bảng sau tóm tắt tín hiệu được nối vào code.
+Đường CLI chính nạp causal LM qua Transformers với lượng tử hóa 4-bit NF4 bằng bitsandbytes (tính toán FP16); \texttt{--no-quantize} nạp FP16. Module \path{src/zassd/backends/base.py} có thêm loader cho HQQ~W4A16 + GemLite, hiện chỉ được gọi trong script kiểm chứng backend riêng. Đổi backend có thể đổi kernel, phép tính KV/logits và kết quả token, nên hai cấu hình này được xem là riêng biệt và không giả định sequence identity giữa chúng.
 
-\begin{table}[H]
-\centering
-\small
-\caption{Tín hiệu và vai trò trong router hiện thực}
-\label{tab:router-signals}
-\begin{tabularx}{0.96\textwidth}{@{}p{4.0cm}X@{}}
-\toprule
-\textbf{Tín hiệu} & \textbf{Cách sử dụng trong code} \\
-\midrule
-N-gram match & Xác định PLD candidates, nguồn và độ dài match. \\
-Acceptance EMA/predictor & Ước lượng số draft token được chấp nhận; predictor là tùy chọn. \\
-Cost profile / latency tracker & Ước lượng thời gian draft, verify và vanilla theo action/horizon. \\
-Entropy & Điều chỉnh acceptance dự báo và hỗ trợ gate fallback. \\
-Logit margin & Đặc trưng bổ sung khi predictor được bật; không bắt buộc ở mọi cấu hình. \\
-PLD preference margin & Điều chỉnh quyết định PLD so với layer-skip khi cả hai khả dụng. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Hình~\ref{fig:router-decision-flow} tóm tắt nhánh quyết định của router khi layer-skip và \texttt{enable\_vanilla\_skip} được bật. Trong code hiện tại, \texttt{ENTROPY\_PANIC\_THRESHOLD=4.5}; gate này có thể bị tắt bằng cấu hình. TPS trong sơ đồ là giá trị dự đoán từ profile/EMA, không phải acceptance đã biết trước.
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[
-  proc/.style={draw=black!55, fill=gray!8, rounded corners=3pt, align=center, text width=5.7cm, minimum height=9mm, inner sep=4pt, font=\small},
-  decision/.style={draw=black!55, fill=gray!8, rounded corners=3pt, align=center, text width=5.7cm, minimum height=10mm, inner sep=4pt, font=\small},
-  result/.style={draw=black!55, rounded corners=3pt, align=center, text width=3.1cm, minimum height=10mm, inner sep=4pt, font=\small},
-  vanilla/.style={result, fill=blue!8},
-  pldout/.style={result, fill=green!12},
-  layerout/.style={result, fill=orange!15},
-  arrow/.style={->, draw=black!65, line width=0.7pt},
-  branch/.style={font=\scriptsize, fill=white, inner sep=1pt}
-]
-\node[proc] (estimate) at (0,0) {History + pending: dò PLD và ước lượng TPS};
-\node[decision] (panic) at (0,-1.65) {Entropy cao ($H\geq4.5$) và không có PLD candidate?};
-\node[decision] (pld) at (0,-3.35) {Có PLD candidate và $TPS_{\rm PLD}\,m_{\rm PLD}\geq TPS_{\rm LS}$?};
-\node[decision] (ls) at (0,-5.05) {Layer-skip có TPS dự đoán không thấp hơn vanilla?};
-\node[vanilla] (v1) at (4.8,-1.65) {Vanilla};
-\node[pldout] (p) at (4.8,-3.35) {PLD\; (margin so với layer-skip)};
-\node[layerout] (l) at (4.8,-5.05) {Layer-skip};
-\node[vanilla] (v2) at (0,-6.4) {Vanilla};
-\draw[arrow] (estimate) -- (panic);
-\draw[arrow] (panic) -- node[branch, left]{Không} (pld);
-\draw[arrow] (panic.east) -- node[branch, above]{Có} (v1.west);
-\draw[arrow] (pld.east) -- node[branch, above]{Có} (p.west);
-\draw[arrow] (pld) -- node[branch, left]{Không} (ls);
-\draw[arrow] (ls.east) -- node[branch, above]{Có} (l.west);
-\draw[arrow] (ls) -- node[branch, left]{Không} (v2);
-\end{tikzpicture}
-\caption{Các gate router theo thứ tự thực thi. Nhánh PLD có thể chọn draft trước gate so sánh với vanilla.}
-\label{fig:router-decision-flow}
-\end{figure}
-
-Đối tượng \texttt{SpeculativeMetrics} ghi tổng token, thời gian prefill/draft/verify/cache, thời gian điều khiển và phần thời gian còn lại; đồng thời lưu acceptance, số verification cycle, số cycle PLD/layer-skip và peak VRAM. Với diagnostic tracing, mỗi cycle có thể ghi candidate IDs, token accepted/emitted, token pending kế tiếp, cache length trước/sau và margin logits. Tùy chọn NVTX đánh dấu các vùng prefill, draft, verify và fallback để Nsight Systems định vị thời gian trên timeline. Nsight Compute được dùng ở các phép đo kernel riêng; số đo kernel có overhead profiler và không thay thế latency đầu-cuối.
-
-Có một khác biệt cần lưu ý khi đọc gate: nhánh PLD được xét trước gate so sánh layer-skip với vanilla. Nếu PLD có candidate và \(TPS_{\mathrm{PLD}}\times\texttt{prefer\_pld\_margin}\geq TPS_{\mathrm{LS}}\) theo dự đoán, router chọn PLD mà không so tiếp với vanilla; do đó PLD vẫn có thể được chọn dù TPS dự đoán thấp hơn baseline. Test trong \path{tests/test_hybrid_router.py} ghi nhận chính trường hợp này. Sơ đồ thể hiện thứ tự điều kiện của implementation hiện tại, không phải chính sách tối ưu hóa vanilla toàn cục.
-
-CLI benchmark lưu tóm tắt gồm tên model/phương pháp, \(K\), strategy, vanilla throughput, throughput phương pháp, speedup và acceptance trung bình; mỗi prompt có throughput, số token, acceptance và speedup. JSON của CLI này không ghi peak VRAM hoặc toàn bộ phase timings. Các giá trị đó có trong metrics ở cấp Python hoặc artifacts của benchmark/profiler chuyên dụng. Phần kết quả tương ứng được trình bày ở Chương~5.
-
-\section{Tích hợp inference backend}
-
-Đường CLI chính nạp causal LM qua Transformers. Mặc định, model được lượng tử hóa 4-bit NF4 bằng bitsandbytes với phép tính FP16; tùy chọn \texttt{--no-quantize} nạp model FP16. Module \path{src/zassd/backends/base.py} bổ sung loader có tên backend để các benchmark kiểm soát so sánh nhận cùng giao diện model/tokenizer. Loader này hiện được gọi trong script backend validation riêng, chưa được nối thành tùy chọn backend trong lệnh \texttt{zassd benchmark}.
-
-\begin{table}[H]
-\centering
-\small
-\caption{Khác biệt triển khai giữa hai đường backend được khảo sát}
-\label{tab:backend-implementation}
-\begin{tabularx}{\textwidth}{@{}p{3.2cm}X X@{}}
-\toprule
-\textbf{Thuộc tính} & \textbf{Transformers + BNB NF4} & \textbf{HQQ + GemLite W4A16} \\
-\midrule
-Định dạng & NF4 4-bit; compute FP16. & W4A16; group size 64, axis 1 theo loader hiện có. \\
-Nạp model & Transformers quantization config và device map. & Nạp model FP16, sau đó GemLite patch các linear layer theo processor HQQ. \\
-Giao diện decoder & Là đường mặc định của benchmark CLI và các decoder Hugging Face. & Trả model tương thích API Transformers qua loader backend riêng. \\
-Phụ thuộc & bitsandbytes trong môi trường chính. & hqq và gemlite là phụ thuộc tùy chọn; cần phiên bản tương thích. \\
-Đường chạy & CLI \texttt{benchmark}; có thể tắt lượng tử hóa để chạy FP16. & Script backend validation gọi \texttt{load\_backend}; chưa có cờ chọn trực tiếp trong CLI benchmark. \\
-Đánh giá fidelity & So token/cache với vanilla trong cùng backend và cấu hình. & Cũng cần baseline vanilla riêng của backend; không suy ra sequence identity giữa hai định dạng. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Việc đổi backend có thể thay đổi kernel, bộ nhớ trung gian, phép tính KV/logits và kết quả token. Vì vậy, BNB NF4 và HQQ+GemLite được xem là hai cấu hình triển khai riêng; báo cáo không giả định backend nào luôn nhanh hơn, dùng ít VRAM hơn hoặc tạo cùng chuỗi token. Các kết luận định lượng được giới hạn theo protocol ở Chương~5.
-
-\section{Giao diện chạy và kiểm tra}
-
-Entry point \texttt{zassd} được khai báo trong \path{pyproject.toml}. Sau khi cài package ở chế độ editable, các lệnh dưới đây sử dụng tên subcommand và tham số được khai báo trong parser của \path{src/zassd/cli.py}. Benchmark mặc định dùng NF4; hai lần chạy ghi kết quả vào hai tệp riêng để đối chiếu:
+Entry point \texttt{zassd} được khai báo trong \path{pyproject.toml}; hai lệnh dưới đây chạy vanilla và PLD trên cùng prompt, ghi kết quả vào hai tệp JSON riêng (throughput, acceptance, speedup theo prompt):
 
 \begin{verbatim}
-python -m pip install -e .
-mkdir -p results
-
 zassd benchmark --model Qwen/Qwen2.5-3B-Instruct \
   --method vanilla --prompt "Explain how a cache works." \
   --max-new-tokens 32 --output results/vanilla.json
-
 zassd benchmark --model Qwen/Qwen2.5-3B-Instruct \
   --method prompt_lookup --k 4 \
   --prompt "Explain how a cache works." \
   --max-new-tokens 32 --output results/pld.json
 \end{verbatim}
 
-Hai lệnh trên minh họa cách gọi CLI. Trong workspace biên soạn báo cáo này, lệnh CLI và test cache chưa chạy được vì môi trường Python không có PyTorch; log lần thử được lưu tại \path{experiments/chapter4_validation/current_workspace_attempt.log}. Để cung cấp kết quả chạy thực tế có thể đối chiếu, Bảng~\ref{tab:paired-run-evidence} trích hai dòng từ phép đo paired benchmark đã lưu trong repository. Đây là kết quả của harness backend validation, không phải JSON do lệnh \texttt{zassd benchmark} tạo ra.
-
-\begin{table}[H]
-\centering
-\small
-\caption{Trích kết quả paired benchmark thực tế: vanilla và PLD trên cùng prompt}
-\label{tab:paired-run-evidence}
-\begin{tabularx}{\textwidth}{@{}l r r X@{}}
-\toprule
-\textbf{Phương pháp} & \textbf{Decode (token/s)} & \textbf{Acceptance} & \textbf{Đối chiếu vanilla} \\
-\midrule
-Vanilla, BNB NF4 & 37.16 & -- & Mốc tham chiếu. \\
-PLD $K=4$, BNB NF4 & 33.45 & 21.1\% & Không khớp toàn bộ; divergence đầu tiên ở token 23. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Phép đo dùng prompt \texttt{qasper\_119\_ctx384} (384 token), Qwen2.5-3B-Instruct revision bắt đầu \texttt{aa8e7253}, đầu ra tối đa 32 token, NF4, SDPA và một lượt đo sau warmup 32 token. Execution commit là \texttt{4d5e54f9}; đây là pilot một prompt, không phải kết luận hiệu năng tổng quát.
-
-Hai artifact được lưu dưới \texttt{experiments/backend\_validation/paired\_benchmark/}:
-\begin{verbatim}
-bnb_ctx384_32_fullwarm.jsonl
-fullwarm_32_summary.json
-\end{verbatim}
-
-\begin{table}[H]
-\centering
-\small
-\caption{Trạng thái kiểm thử được xác minh trong workspace hiện tại}
-\label{tab:implementation-test-status}
-\begin{tabularx}{\textwidth}{@{}p{4.4cm}X@{}}
-\toprule
-\textbf{Kiểm tra} & \textbf{Kết quả} \\
-\midrule
-Router (9 test) & 9 passed; chạy standalone vì \texttt{tests/conftest.py} yêu cầu PyTorch. \\
-KV cache invariants & Chưa chạy được: pytest dừng ở bước import \texttt{torch} trong \texttt{tests/conftest.py}. \\
-CLI benchmark & Chưa chạy được: \texttt{zassd.cli} dừng ở bước import \texttt{torch}; không tạo output mới. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Các lệnh và cấu trúc JSON mô tả giao diện sử dụng. Kết quả benchmark được lưu cùng cấu hình và metadata; trạng thái test trong bảng trên phản ánh đúng các lệnh đã chạy ở workspace hiện tại.
-
-Như vậy, phần hiện thực dùng chung target model cho baseline và các nhánh speculative, đồng thời tách rõ backend loading, candidate generation, target verification và quản lý cache. Mã nguồn lưu các cấu hình chạy cùng số liệu cần thiết để Chương~5 phân tích hiệu năng và fidelity theo đúng backend, horizon, workload và chế độ thực thi.
+Chương~5 phân tích hiệu năng và fidelity theo từng backend và workload.
