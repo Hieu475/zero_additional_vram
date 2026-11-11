@@ -3,7 +3,7 @@
 Invariance by construction: every call, for any number of rows M <= MP, runs the same compiled kernel on an MP-row
 zero-padded activation tile. Element (m, v) is a fixed-order fp32 accumulation over K (chunks of BK via tensor-core tl.dot, in order);
 the MMA computes each output element independently of the other rows, so it depends only on x[m] and W[v].
-No split-K, no atomics, no autotuning. Invariance is also verified bitwise by scripts/wp1_lm_head_invariant.py.
+No split-K, no atomics, no autotuning. Invariance is also verified bitwise by scripts/kernels/wp1_lm_head_invariant.py.
 """
 from __future__ import annotations
 

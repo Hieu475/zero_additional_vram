@@ -122,7 +122,7 @@ Xác minh có chứng nhận theo margin; kernel NF4 nhanh hơn bnb nói chung; 
 
 ## 13. Kết quả WP1 (05/11/2026): kernel LM head bất biến theo M — QUA CỔNG
 
-Mã: `src/zassd/kernels/lm_head_invariant.py`; thử nghiệm: `scripts/wp1_lm_head_invariant.py`; số liệu: `results/kernels/wp1_lm_head_*.json`.
+Mã: `src/zassd/kernels/lm_head_invariant.py`; thử nghiệm: `scripts/kernels/wp1_lm_head_invariant.py`; số liệu: `results/kernels/wp1_lm_head_*.json`.
 
 Thiết kế cuối: mọi lời gọi (M = 1..16) đều chạy cùng một kernel Triton trên khối kích thước cố định 16 hàng (đệm số 0), `tl.dot` fp16→fp32, K chia khối 128 theo thứ tự cố định, không split-K, không atomics, không auto-tune. Bản đầu dùng `tl.sum` thay cho `tl.dot` chậm hơn cuBLAS 7.3x (24.5 ms so với 3.34 ms) và đã bị bỏ.
 
@@ -171,7 +171,7 @@ Mã: `src/zassd/kernels/` (`attention_invariant.py`, `rmsnorm_invariant.py`, `nf
 
 ## 15. Kết quả WP6a (05/11/2026): tham chiếu bất biến so với đường HF+bnb mặc định
 
-Mã: `scripts/wp6_reference_agreement.py`, `scripts/wp6_score_answers.py`, `scripts/run_wp6.sh`; số liệu: `results/kernels/wp6_agreement_*`. Qwen2.5-3B NF4, giải mã greedy eager, hai chế độ (mặc định và `invariant_mode` đủ 4 toán tử).
+Mã: `scripts/kernels/wp6_reference_agreement.py`, `scripts/kernels/wp6_score_answers.py`, `scripts/kernels/run_wp6.sh`; số liệu: `results/kernels/wp6_agreement_*`. Qwen2.5-3B NF4, giải mã greedy eager, hai chế độ (mặc định và `invariant_mode` đủ 4 toán tử).
 
 | Tập | Prompt | Chuỗi giống hệt | Vị trí lệch đầu tiên (trung vị) |
 |---|---|---|---|
@@ -196,7 +196,7 @@ Giới hạn: một mô hình, một tác vụ, n=50 cho độ chính xác; chư
 
 ## 16. Kết quả WP5 ở quy mô lớn (05/11/2026)
 
-`scripts/run_wp5_scale.sh`, số liệu `results/kernels/wp5_scale_*.json`. PLD K=2, ngram 3, 128 token mới, CUDA graph, bốn toán tử bất biến (LM head, RMSNorm, attention, GEMM NF4). Baseline = giải mã M=1 exact cũng bằng kernel bất biến (cùng phiên, cùng prompt). "Exact" = token sinh ra VÀ KV đã commit bằng từng bit với tham chiếu tuần tự M=1 bất biến, và baseline graph cũng bằng tham chiếu.
+`scripts/kernels/run_wp5_scale.sh`, số liệu `results/kernels/wp5_scale_*.json`. PLD K=2, ngram 3, 128 token mới, CUDA graph, bốn toán tử bất biến (LM head, RMSNorm, attention, GEMM NF4). Baseline = giải mã M=1 exact cũng bằng kernel bất biến (cùng phiên, cùng prompt). "Exact" = token sinh ra VÀ KV đã commit bằng từng bit với tham chiếu tuần tự M=1 bất biến, và baseline graph cũng bằng tham chiếu.
 
 | Ô | Prompt | Exact | Baseline tok/s | Vòng PLD tok/s | Tăng (tổng) | Tăng theo prompt: trung vị [min, max] |
 |---|---|---|---|---|---|---|
@@ -221,27 +221,27 @@ Giới hạn: một GPU (RTX 4050), K=2 cố định, greedy, batch 1; tốc đ�
 
 **Mục còn lại cần tài nguyên bạn đang hoãn:** GPU khác và mô hình ≥ 7B. Với mô hình lớn hơn bước mục tiêu đắt hơn nhiều so với bước nháp 0.5B, nên đây là nơi mô hình nháp có thể có lợi; chưa đo được ở đây.
 
-**Cập nhật HumanEval (100 prompt, chạy liền nhau, `scripts/run_wp5_he_rowwise.sh`, `results/kernels/wp5_he100_*.json`):** vòng cũ chạy từng hàng 58.9 và 59.4 tok/s (hai lần, lệch 0.9%), vòng bất biến 81.9 tok/s: tăng 1.39x/1.38x, cả ba lần đều exact; so với baseline M=1 bất biến cùng phiên 62.4 tok/s: 1.31x. Tiêu chí ≥1.3x so với chạy từng hàng đạt trên HumanEval với n=100.
+**Cập nhật HumanEval (100 prompt, chạy liền nhau, `scripts/kernels/run_wp5_he_rowwise.sh`, `results/kernels/wp5_he100_*.json`):** vòng cũ chạy từng hàng 58.9 và 59.4 tok/s (hai lần, lệch 0.9%), vòng bất biến 81.9 tok/s: tăng 1.39x/1.38x, cả ba lần đều exact; so với baseline M=1 bất biến cùng phiên 62.4 tok/s: 1.31x. Tiêu chí ≥1.3x so với chạy từng hàng đạt trên HumanEval với n=100.
 
-**Cập nhật 06/11/2026 (100 prompt mỗi tập, chạy liền nhau: vòng cũ, vòng bất biến, vòng cũ; `scripts/run_wp5_rowwise_100.sh`, `results/kernels/wp5_{gsm8k,cnndm}100_*.json`):** GSM8K 79.0 so với 62.7/61.2 tok/s (1.26x/1.29x); CNN/DM 76.5 so với 56.4/57.0 (1.36x/1.34x); HumanEval 81.9 so với 58.9/59.4 (1.39x/1.38x); tất cả exact; trôi giữa hai lần chạy vòng cũ ≤ 2.4%. Tiêu chí ≥1.3x so với chạy từng hàng: đạt ở CNN/DM và HumanEval, GSM8K 1.26–1.29x (chưa đạt). So với baseline M=1 bất biến cùng phiên: 1.18x, 1.20x, 1.31x.
+**Cập nhật 06/11/2026 (100 prompt mỗi tập, chạy liền nhau: vòng cũ, vòng bất biến, vòng cũ; `scripts/kernels/run_wp5_rowwise_100.sh`, `results/kernels/wp5_{gsm8k,cnndm}100_*.json`):** GSM8K 79.0 so với 62.7/61.2 tok/s (1.26x/1.29x); CNN/DM 76.5 so với 56.4/57.0 (1.36x/1.34x); HumanEval 81.9 so với 58.9/59.4 (1.39x/1.38x); tất cả exact; trôi giữa hai lần chạy vòng cũ ≤ 2.4%. Tiêu chí ≥1.3x so với chạy từng hàng: đạt ở CNN/DM và HumanEval, GSM8K 1.26–1.29x (chưa đạt). So với baseline M=1 bất biến cùng phiên: 1.18x, 1.20x, 1.31x.
 
-**WP6b (06/11/2026): HumanEval pass@1, tham chiếu bất biến so với mặc định** (`scripts/wp6_humaneval_passk.py`, `results/kernels/wp6_humaneval_pass1.json`, Qwen2.5-3B NF4, 100 prompt, prompt thô, 384 token tối đa): pass@1 61/61, bất đồng 3 và 3 bài; chuỗi token giống hệt 72/100 (hoàn thành sau khi cắt: 74/100). Không phát hiện khác biệt độ chính xác; nhưng 61% thấp hơn con số công bố (prompt thô và cách cắt đơn giản), chỉ dùng để so hai chế độ.
+**WP6b (06/11/2026): HumanEval pass@1, tham chiếu bất biến so với mặc định** (`scripts/kernels/wp6_humaneval_passk.py`, `results/kernels/wp6_humaneval_pass1.json`, Qwen2.5-3B NF4, 100 prompt, prompt thô, 384 token tối đa): pass@1 61/61, bất đồng 3 và 3 bài; chuỗi token giống hệt 72/100 (hoàn thành sau khi cắt: 74/100). Không phát hiện khác biệt độ chính xác; nhưng 61% thấp hơn con số công bố (prompt thô và cách cắt đơn giản), chỉ dùng để so hai chế độ.
 
 **Attention head_dim 96 (06/11/2026):** kernel pad head_dim lên lũy thừa 2 trong kernel (mặt nạ), 0 lệch trên 700 hàng (MHA 32/32, ngữ cảnh 128–2000); kernel D=64/128 vẫn 0/315 lệch; thêm test `test_attention_head_dim_96_...`.
 
-**Phi-3.5-mini (06/11/2026):** `scripts/run_wp5_phi.sh`, `results/kernels/wp5_scale_phi35_gsm8k100.json`: 100/100 exact, 72.7 -> 85.9 tok/s = 1.18x (median 1.18 [1.05, 1.41]). Cần 3 sửa hạ tầng: head_dim 96 trong kernel attention; LongRoPE cố định chế độ hệ số ngắn (ngữ cảnh ≤ 4096; bản gốc đồng bộ dữ liệu làm hỏng graph); StaticCache dùng lớp tĩnh thường (sliding-window layer giữ độ dài bằng int Python, không rollback được). Lần chạy đầu trước khi sửa cache không exact và cho 1.74x bất thường. Tổng: 800 lượt exact, 5 mô hình, 3 họ.
+**Phi-3.5-mini (06/11/2026):** `scripts/kernels/run_wp5_phi.sh`, `results/kernels/wp5_scale_phi35_gsm8k100.json`: 100/100 exact, 72.7 -> 85.9 tok/s = 1.18x (median 1.18 [1.05, 1.41]). Cần 3 sửa hạ tầng: head_dim 96 trong kernel attention; LongRoPE cố định chế độ hệ số ngắn (ngữ cảnh ≤ 4096; bản gốc đồng bộ dữ liệu làm hỏng graph); StaticCache dùng lớp tĩnh thường (sliding-window layer giữ độ dài bằng int Python, không rollback được). Lần chạy đầu trước khi sửa cache không exact và cho 1.74x bất thường. Tổng: 800 lượt exact, 5 mô hình, 3 họ.
 
-**bitsandbytes phiên bản (`scripts/wp7_bnb_versions.py`, `results/kernels/wp7_*`):** stock NF4 lệch ~60% phần tử (dữ liệu ngẫu nhiên) ở mọi M≥2 trên 0.49.2, chỉ từ M≥4 trên 0.50.0/0.50.1 (giống hệt nhau). Test kernel (5/5) và vòng exact 20 prompt (20/20, 1.19x và 1.20x) đạt trên 0.49.2 và 0.50.1. 0.50.2 chưa thử.
+**bitsandbytes phiên bản (`scripts/kernels/wp7_bnb_versions.py`, `results/kernels/wp7_*`):** stock NF4 lệch ~60% phần tử (dữ liệu ngẫu nhiên) ở mọi M≥2 trên 0.49.2, chỉ từ M≥4 trên 0.50.0/0.50.1 (giống hệt nhau). Test kernel (5/5) và vòng exact 20 prompt (20/20, 1.19x và 1.20x) đạt trên 0.49.2 và 0.50.1. 0.50.2 chưa thử.
 
-**Llama-3.2 + kiểm tra EOS (06/11/2026):** Llama-3.2-1B/3B (bản sao unsloth, không cần token) chạy không sửa kernel: 100/100 exact mỗi mô hình, 1.27x và 1.24x. `scripts/run_wp8_eos.sh` chạy lại 6 ô (600 lượt, đều exact) ghi vị trí EOS: tỷ lệ prompt có EOS trong 128 token 0–26%; tăng tốc chỉ trên prompt không có EOS 1.18/1.32/1.21/1.23/1.29/1.19x so với 1.18/1.32/1.20/1.24/1.27/1.18x khi tính hết (lệch <2%): văn bản sau EOS không làm phồng số đo. Tổng cộng 1000 cặp prompt-mô hình, 7 mô hình, 4 họ, 0 lệch. Mẫu 5 prompt đầu của Llama-3B cho 1.37x, ở n=100 là 1.24x: không rút kết luận từ mẫu nhỏ.
+**Llama-3.2 + kiểm tra EOS (06/11/2026):** Llama-3.2-1B/3B (bản sao unsloth, không cần token) chạy không sửa kernel: 100/100 exact mỗi mô hình, 1.27x và 1.24x. `scripts/kernels/run_wp8_eos.sh` chạy lại 6 ô (600 lượt, đều exact) ghi vị trí EOS: tỷ lệ prompt có EOS trong 128 token 0–26%; tăng tốc chỉ trên prompt không có EOS 1.18/1.32/1.21/1.23/1.29/1.19x so với 1.18/1.32/1.20/1.24/1.27/1.18x khi tính hết (lệch <2%): văn bản sau EOS không làm phồng số đo. Tổng cộng 1000 cặp prompt-mô hình, 7 mô hình, 4 họ, 0 lệch. Mẫu 5 prompt đầu của Llama-3B cho 1.37x, ở n=100 là 1.24x: không rút kết luận từ mẫu nhỏ.
 
-**Mistral-7B-Instruct-v0.3 (06/11/2026, `scripts/run_wp5_mistral7b.sh`, `results/kernels/wp8_mistral7b_*.json`):** mô hình 7B (bản NF4 dựng sẵn của unsloth) vừa GPU 6 GB với cache ngắn; chạy không sửa kernel. GSM8K 100/100 exact, 38.1 -> 45.8 tok/s = 1.20x; HumanEval 100/100 exact, 35.5 -> 44.1 = 1.24x (1.28x trên 55 prompt không EOS). Bước đích ~27 ms (gấp ~1.8 lần 3B); tăng PLD tương đương mô hình nhỏ. Tổng: 1200 cặp prompt-mô hình, 8 mô hình, 5 họ, 0 lệch. Mô hình nháp thần kinh trên 7B chưa thử (không có bản nháp cùng tokenizer sẵn).
+**Mistral-7B-Instruct-v0.3 (06/11/2026, `scripts/kernels/run_wp5_mistral7b.sh`, `results/kernels/wp8_mistral7b_*.json`):** mô hình 7B (bản NF4 dựng sẵn của unsloth) vừa GPU 6 GB với cache ngắn; chạy không sửa kernel. GSM8K 100/100 exact, 38.1 -> 45.8 tok/s = 1.20x; HumanEval 100/100 exact, 35.5 -> 44.1 = 1.24x (1.28x trên 55 prompt không EOS). Bước đích ~27 ms (gấp ~1.8 lần 3B); tăng PLD tương đương mô hình nhỏ. Tổng: 1200 cặp prompt-mô hình, 8 mô hình, 5 họ, 0 lệch. Mô hình nháp thần kinh trên 7B chưa thử (không có bản nháp cùng tokenizer sẵn).
 
 ## 18. Bộ nháp học được và bản lai (10–11/11/2026)
 
 Chi tiết, phương pháp và rủi ro: `docs/DRAFTER_2X_PLAN.md` (mục 9–12). Tóm tắt: nguồn nháp là điểm nghẽn (mục 17 kết luận bão hòa với n-gram), nên thêm bộ nháp học được kiểu EAGLE (đầu vào trạng thái ẩn cuối và embedding của pend; LM head thu gọn 16384 token vì LM head đầy đủ tốn ~3 ms/lần đọc), chạy trong cùng CUDA graph, xác minh bằng kernel bất biến. Chi phí bộ nháp K=3 đo thật 2.0 ms/bước (không phải 1 ms như giả định ban đầu). Mô phỏng sau khi dùng đúng chi phí thấp hơn số đo ~6%, khớp mức hiệu chuẩn.
 
-Đo thật, tăng tốc so với baseline M=1 exact, trung bình 2–3 lượt xen kẽ, 100 prompt mỗi lượt, K=3 (`scripts/summarize_drafter_runs.py`; 18 ô đều exact):
+Đo thật, tăng tốc so với baseline M=1 exact, trung bình 2–3 lượt xen kẽ, 100 prompt mỗi lượt, K=3 (`scripts/drafter/summarize_drafter_runs.py`; 18 ô đều exact):
 
 | Mô hình | Tập | PLD | Bộ nháp | Bản lai |
 |---|---|---|---|---|

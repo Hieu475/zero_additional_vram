@@ -22,12 +22,12 @@ docs/direction_c/                      shape-audit results write-up, literature 
 docs/archive/                          earlier plans/status (B1/B2 fixed-row work, peer review)
 src/zassd/                             backends (hf_bnb_nf4, torchao_int4_wo, ...), KV cache, certification
                                        (fixed-row adapters, NF4 kernels), n-gram drafting, utils
-scripts/shape_audit.py                 audit tool: ops / plan / trajectory / summarize
-scripts/audit_*.py, a1-a3_*.py         per-operator audit, PLD and draft-model divergence, CUDA-graph decode
-scripts/run_*.sh                       batch runners for the audits (results below)
 src/zassd/kernels/drafter.py           learned drafter (feature-conditioned, trimmed-vocab head)
-scripts/drafter_*.py, wp9_*.py, wp10_*.py   drafter data/training/eval; exact CUDA-graph loop with drafter (wp9) and hybrid PLD+drafter (wp10)
-scripts/summarize_drafter_runs.py      aggregates results/drafter_runs/*.json (mean/sd over interleaved reps)
+scripts/audit/                         operator shape audits (direction C): shape_audit.py entry point, divergence studies, row-wise loop prototypes, run_*.sh
+scripts/kernels/                       M-invariant kernel work packages wp1-wp8, exact PLD graph loop (wp5), run_wp*.sh
+scripts/drafter/                       learned drafter: data, training, simulators, exact graph loops (wp9 drafter, wp10 hybrid), run scripts
+scripts/tools/                         environment check, model download, figure builders, run_with_model.py
+scripts/lib/                           modules imported by name by other scripts (put on PYTHONPATH); see scripts/README.md
 kernels_reference/                     old Triton/CUDA kernel prototypes, kept as a starting point
 experiments/exact_quantized_feasibility/.../native_bnb_profiles/   all audit results + C_SHAPE_AUDIT_SUMMARY.md
 data/                                  benchmark prompt files
@@ -40,7 +40,7 @@ tests/                                 unit tests (12)
 ```bash
 pip install -e .
 bash reproduce.sh            # unit tests
-PYTHONPATH=src:scripts python scripts/shape_audit.py summarize   # regenerate the summary table
+PYTHONPATH=src:scripts/lib python scripts/audit/shape_audit.py summarize   # regenerate the summary table
 ```
 
 ## Status of results (see docs/direction_c/RESEARCH_DIRECTIONS_A_C.md)

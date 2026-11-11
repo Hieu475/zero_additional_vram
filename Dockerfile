@@ -7,7 +7,7 @@ FROM pytorch/pytorch:2.11.0-cuda12.8-cudnn9-runtime
 
 WORKDIR /w
 ENV DEBIAN_FRONTEND=noninteractive PIP_NO_CACHE_DIR=1 \
-    HF_HUB_OFFLINE=0 PYTHONPATH=/w/src:/w/scripts
+    HF_HUB_OFFLINE=0 PYTHONPATH=/w/src:/w/scripts/lib
 
 RUN apt-get update && apt-get install -y --no-install-recommends git \
     && rm -rf /var/lib/apt/lists/

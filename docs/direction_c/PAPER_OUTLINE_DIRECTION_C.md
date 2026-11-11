@@ -7,7 +7,7 @@ Ngày: 05/11/2026. Tài liệu này là đề cương làm việc cho tác giả
 > Khi một mô hình 4-bit chạy khối K+1 token thay vì từng token, kết quả đổi từng bit ở một tập toán tử xác định được bằng đo đạc (attention, LM head, đôi khi RMSNorm và phép chiếu, tùy backend và phiên bản). Tập này quyết định giải mã suy đoán có còn bằng greedy tuần tự hay không. Đo từng toán tử rồi chạy riêng đúng tập đó từng hàng khi xác minh khôi phục tính exact.
 
 Đóng góp cần nói thẳng, theo thứ tự đáng tin giảm dần:
-1. **Một phương pháp và công cụ kiểm toán** (`scripts/shape_audit.py`: `ops`, `plan`, `trajectory`, `summarize`) và bằng chứng rằng danh sách do `plan` sinh ra đưa lệch quỹ đạo về 0 trong mọi lượt chạy của mã đã sửa (3 tập dữ liệu, 6 cấu hình mô hình/backend; trên `cnndm_ext150` độc lập: 6 cấu hình, mỗi ô 0/60).
+1. **Một phương pháp và công cụ kiểm toán** (`scripts/audit/shape_audit.py`: `ops`, `plan`, `trajectory`, `summarize`) và bằng chứng rằng danh sách do `plan` sinh ra đưa lệch quỹ đạo về 0 trong mọi lượt chạy của mã đã sửa (3 tập dữ liệu, 6 cấu hình mô hình/backend; trên `cnndm_ext150` độc lập: 6 cấu hình, mỗi ô 0/60).
 2. **Một bảng thực nghiệm** về toán tử nào nhạy theo hình dạng, trên trọng số 4-bit, theo M, ngữ cảnh, mô hình, backend và phiên bản bitsandbytes.
 3. **Số đo hệ quả đầu-cuối:** PLD ngây thơ lệch 22–82% số chuỗi (tùy cấu hình), dù chỉ khoảng 0.4–1% hàng đổi argmax.
 4. **Kết quả âm có giá trị:** giải mã suy đoán exact chỉ thêm 1.009x trên nền CUDA graph exact (hướng A).
@@ -27,7 +27,7 @@ Không nên tuyên bố: "phát hiện hiện tượng mới" (nguyên lý đã 
 |---|---|---|
 | 1. Introduction | Giải mã suy đoán "lossless" lý thuyết, nhưng kernel 4-bit đổi chiến lược theo hình dạng; một câu hỏi cụ thể | — |
 | 2. Setting & định nghĩa "exact" | Tham chiếu = greedy tuần tự M=1 (cùng cache, cùng mô hình); exact = token (và KV) bằng từng bit | README mục "What exact means"; lưu ý hướng A dùng tham chiếu `StaticCache` khác |
-| 3. Phương pháp | (a) `ops`: gọi lại từng toán tử từng hàng trên cùng đầu vào thật, so từng bit; (b) `plan`: lớp nào có bất kỳ phần tử lệch; (c) `trajectory --rowwise`: kiểm tra đầu-cuối | `scripts/audit_op_shape_sensitivity.py`, `shape_audit.py`, `audit_pld_trajectory_divergence.py` |
+| 3. Phương pháp | (a) `ops`: gọi lại từng toán tử từng hàng trên cùng đầu vào thật, so từng bit; (b) `plan`: lớp nào có bất kỳ phần tử lệch; (c) `trajectory --rowwise`: kiểm tra đầu-cuối | `scripts/audit/audit_op_shape_sensitivity.py`, `shape_audit.py`, `audit_pld_trajectory_divergence.py` |
 | 4. Kết quả A: toán tử nào lệch | Bảng theo mô hình × M × ngữ cảnh | `C_SHAPE_AUDIT_SUMMARY.md` (bảng 1) |
 | 5. Kết quả B: hệ quả đầu-cuối | PLD ngây thơ lệch quỹ đạo, khoảng Wilson | `C_SHAPE_AUDIT_SUMMARY.md` (bảng 2) |
 | 6. Kết quả C: bản sửa theo kiểm toán | 0 ca lệch, đối chứng âm (bỏ một toán tử), kiểm chứng độc lập | `fix_*`, `heldout_*`, `ext150_*` |

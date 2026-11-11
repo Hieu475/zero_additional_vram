@@ -32,7 +32,7 @@ Do đó điểm nghẽn là **chất lượng nguồn nháp**, không phải ker
 
 ### 3.1. K=3 với đủ kích thước block (đo thật)
 
-Thêm cờ `--all-m` vào [scripts/wp5_invariant_graph_pld.py](../scripts/wp5_invariant_graph_pld.py) để bắt graph cho mọi kích thước block 2..K+1. Chạy [scripts/run_kscan.sh](../scripts/run_kscan.sh): 100 prompt HumanEval, K=2 và K=3 xen kẽ 3 lượt, tất cả exact.
+Thêm cờ `--all-m` vào [scripts/kernels/wp5_invariant_graph_pld.py](../scripts/wp5_invariant_graph_pld.py) để bắt graph cho mọi kích thước block 2..K+1. Chạy [scripts/kernels/run_kscan.sh](../scripts/run_kscan.sh): 100 prompt HumanEval, K=2 và K=3 xen kẽ 3 lượt, tất cả exact.
 
 | Lượt | K=2 | K=3 |
 |---|---|---|
@@ -46,8 +46,8 @@ K=3 hơn K=2 ở cả 3 lượt (+0.052, +0.065, +0.099); nhiễu giữa các l�
 ### 3.2. Mô phỏng ngoại tuyến (công cụ dừng sớm)
 
 Vì số token nhận được mỗi khối chỉ phụ thuộc chuỗi tham chiếu và chiến lược nháp, có thể mô phỏng mà không chạy kernel:
-- [scripts/dump_ref_tokens.py](../scripts/dump_ref_tokens.py): ghi chuỗi tham chiếu M=1 bất biến (`results/kernels/ref/`).
-- [scripts/sim_draft.py](../scripts/sim_draft.py): mô phỏng vòng giải mã, dùng bảng chi phí ở mục 2 (M≥7 là **ngoại suy, giả định**), có tham số chi phí bộ nháp mỗi bước.
+- [scripts/drafter/dump_ref_tokens.py](../scripts/dump_ref_tokens.py): ghi chuỗi tham chiếu M=1 bất biến (`results/kernels/ref/`).
+- [scripts/lib/sim_draft.py](../scripts/sim_draft.py): mô phỏng vòng giải mã, dùng bảng chi phí ở mục 2 (M≥7 là **ngoại suy, giả định**), có tham số chi phí bộ nháp mỗi bước.
 
 Hiệu chuẩn (HumanEval): mô phỏng K=2 là 1.350x, K=3 là 1.422x; đo thật là 1.286x và 1.358x. Mô phỏng cao hơn ~5% (không tính chi phí host) nhưng chênh lệch K=3 so với K=2 khớp. Kết luận: tin được khi so sánh tương đối, phải trừ ~5% cho số tuyệt đối.
 
@@ -72,7 +72,7 @@ Thiết kế ([src/zassd/kernels/drafter.py](../src/zassd/kernels/drafter.py)), 
 - **LM head thu gọn từ vựng** (16384 token thường gặp, khởi tạo từ embedding gốc): lý do là LM head đầy đủ của Qwen-3B (151936×2048 fp16, 622 MB) tốn ~3 ms mỗi lần đọc; EAGLE nguyên bản gọi nó một lần mỗi token nháp, quá đắt trên mô hình 4-bit này.
 - Tính exact không phụ thuộc bộ nháp: bản nháp chỉ là đề xuất, kernel bất biến theo M xác minh, nên đầu ra vẫn bằng từng bit với giải mã tuần tự M=1.
 
-Dữ liệu: tự chưng cất. Dùng chính mô hình đích sinh greedy trên prompt huấn luyện, ghi trạng thái ẩn ([scripts/drafter_gen_data.py](../scripts/drafter_gen_data.py)). Sinh theo lô bằng kernel gốc của bnb (số học không cần bit-exact khi chỉ để huấn luyện). Prompt huấn luyện lấy từ split train, tách biệt khỏi tập đánh giá.
+Dữ liệu: tự chưng cất. Dùng chính mô hình đích sinh greedy trên prompt huấn luyện, ghi trạng thái ẩn ([scripts/drafter/drafter_gen_data.py](../scripts/drafter_gen_data.py)). Sinh theo lô bằng kernel gốc của bnb (số học không cần bit-exact khi chỉ để huấn luyện). Prompt huấn luyện lấy từ split train, tách biệt khỏi tập đánh giá.
 
 Kết quả với bộ nháp d1 (K=3, chỉ 3000 chuỗi GSM8K, huấn luyện ~3 phút):
 
@@ -98,7 +98,7 @@ Giới hạn dữ liệu code: không phải bài toán HumanEval; định dạn
 
 ### 3.6. Vòng giải mã tích hợp (đã viết, chưa chạy thử)
 
-[scripts/wp9_drafter_graph.py](../scripts/wp9_drafter_graph.py): một bước nằm trọn trong một CUDA graph:
+[scripts/drafter/wp9_drafter_graph.py](../scripts/wp9_drafter_graph.py): một bước nằm trọn trong một CUDA graph:
 1. Xác minh khối `[pend, d1..dK]` bằng kernel bất biến.
 2. Tính số bản nháp nhận được (khớp liên tiếp), chọn pend mới.
 3. Ghi token ra bộ đệm đầu ra, cập nhật vị trí và độ dài KV (bằng tensor, không cần host).
@@ -110,7 +110,7 @@ Host chỉ phát lệnh replay và kiểm tra số token đã sinh mỗi 4 bư�
 
 ## 4. Trạng thái hiện tại và điểm nghẽn
 
-Huấn luyện trên cả 4 tệp ([scripts/drafter_train.py](../scripts/drafter_train.py)) bị kill ba lần (exit 137). Nghi ngờ hết RAM host (khoảng 6–7 GB khả dụng, swap gần đầy, Brave chiếm nhiều). Sửa bằng memmap vẫn bị kill; **nguyên nhân thật CHƯA XÁC NHẬN**. Giả thuyết: `np.load(file.npz)["h"]` nạp trọn mảng 1–2 GB (npz không mmap được), và bước hợp nhất cùng giữ nhiều bản; cần đo RAM từng bước thay vì đoán.
+Huấn luyện trên cả 4 tệp ([scripts/drafter/drafter_train.py](../scripts/drafter_train.py)) bị kill ba lần (exit 137). Nghi ngờ hết RAM host (khoảng 6–7 GB khả dụng, swap gần đầy, Brave chiếm nhiều). Sửa bằng memmap vẫn bị kill; **nguyên nhân thật CHƯA XÁC NHẬN**. Giả thuyết: `np.load(file.npz)["h"]` nạp trọn mảng 1–2 GB (npz không mmap được), và bước hợp nhất cùng giữ nhiều bản; cần đo RAM từng bước thay vì đoán.
 
 ## 5. Kế hoạch tiếp theo, theo thứ tự và có cổng dừng
 
@@ -122,7 +122,7 @@ Huấn luyện trên cả 4 tệp ([scripts/drafter_train.py](../scripts/drafter
 
 ### Bước B. Huấn luyện đa miền (K=5) và mô phỏng
 - Chạy `drafter_train.py` với 4 tệp, K=5, 8 epoch. Mô hình K=5 dùng được cho K=3 hoặc 4 vì bước k chỉ phụ thuộc các bước trước.
-- Chạy [scripts/drafter_eval_sim.py](../scripts/drafter_eval_sim.py) trên chuỗi tham chiếu GSM8K và HumanEval. CNN/DM cần tạo thêm tệp ref bằng `dump_ref_tokens.py`.
+- Chạy [scripts/drafter/drafter_eval_sim.py](../scripts/drafter_eval_sim.py) trên chuỗi tham chiếu GSM8K và HumanEval. CNN/DM cần tạo thêm tệp ref bằng `dump_ref_tokens.py`.
 - **Cổng 1:** nếu mô phỏng (chi phí bộ nháp 1 ms) dưới 1.6x trên cả ba miền, bộ nháp này không đủ; chuyển sang phương án ở mục 6. Nếu GSM8K ≥ 1.8x và HumanEval ≥ PLD, đi tiếp.
 - So sánh các cấu hình K (3, 4, 5) vì M=5 nhảy chi phí lên 23.6 ms; K=3 có thể vẫn tối ưu.
 - Kết hợp với PLD (PLD-first, bộ nháp khi PLD không khớp) vì PLD rẻ và mạnh trên code; mô phỏng đã có sẵn dòng này.
@@ -171,15 +171,15 @@ Mô hình đích 3B ở 4-bit đã rất rẻ, nên trần lý thuyết bị gi�
 
 | Tệp | Vai trò | Trạng thái |
 |---|---|---|
-| scripts/wp5_invariant_graph_pld.py | Vòng PLD exact (đã thêm `--all-m`) | Đã chạy |
-| scripts/run_kscan.sh | Quét K=2/3 xen kẽ | Đã chạy |
-| scripts/dump_ref_tokens.py | Ghi chuỗi tham chiếu | Đã chạy (GSM8K, HumanEval) |
-| scripts/sim_draft.py | Mô phỏng chiến lược nháp | Đã chạy |
-| scripts/drafter_gen_data.py | Sinh dữ liệu tự chưng cất | Đã chạy (4 tệp) |
+| scripts/kernels/wp5_invariant_graph_pld.py | Vòng PLD exact (đã thêm `--all-m`) | Đã chạy |
+| scripts/kernels/run_kscan.sh | Quét K=2/3 xen kẽ | Đã chạy |
+| scripts/drafter/dump_ref_tokens.py | Ghi chuỗi tham chiếu | Đã chạy (GSM8K, HumanEval) |
+| scripts/lib/sim_draft.py | Mô phỏng chiến lược nháp | Đã chạy |
+| scripts/drafter/drafter_gen_data.py | Sinh dữ liệu tự chưng cất | Đã chạy (4 tệp) |
 | src/zassd/kernels/drafter.py | Kiến trúc bộ nháp | Dùng được |
-| scripts/drafter_train.py | Huấn luyện (đã đổi sang nạp theo khối) | Đã chạy, d2_k5.pt |
-| scripts/drafter_eval_sim.py | Dự đoán tăng tốc của bộ nháp (thêm quét chi phí 0/1/1.5/2 ms) | Đã chạy với d2_k5 |
-| scripts/wp9_drafter_graph.py | Vòng tích hợp trong CUDA graph (thêm `--k`) | Đã chạy, 100 prompt × 2 tập |
+| scripts/drafter/drafter_train.py | Huấn luyện (đã đổi sang nạp theo khối) | Đã chạy, d2_k5.pt |
+| scripts/drafter/drafter_eval_sim.py | Dự đoán tăng tốc của bộ nháp (thêm quét chi phí 0/1/1.5/2 ms) | Đã chạy với d2_k5 |
+| scripts/drafter/wp9_drafter_graph.py | Vòng tích hợp trong CUDA graph (thêm `--k`) | Đã chạy, 100 prompt × 2 tập |
 | results/drafter/d1.pt | Bộ nháp K=3, chỉ GSM8K | Có |
 | results/drafter/d2_k5.pt | Bộ nháp đa miền, K=5 huấn luyện (dùng K=3) | Có |
 | results/drafter_runs/*.json | Kết quả đo thật wp9 | Có |
@@ -242,7 +242,7 @@ Tăng tốc so với baseline M=1 (graph), 100 prompt mỗi lượt; PLD chạy 
 
 Bộ nháp học được chỉ thắng trên toán; hòa trên code, thua trên tóm tắt (PLD tận dụng việc chép từ bài gốc). Lượt 3 của CNN/DM bị bỏ vì lỗi thao tác (kill nhầm hàng đợi), nên chỉ có 2 lượt.
 
-### Bản lai: tra cứu n-gram trong CUDA graph + bộ nháp (`scripts/wp10_hybrid_graph.py`)
+### Bản lai: tra cứu n-gram trong CUDA graph + bộ nháp (`scripts/drafter/wp10_hybrid_graph.py`)
 Khi có khớp n-gram (độ dài 3 rồi 2, lần xuất hiện gần nhất, tìm trên prompt + đã sinh) thì PLD điền m≤K khe nháp đầu; bộ nháp điền phần còn lại, hoặc toàn bộ khi không khớp. Khối luôn có M=K+1=4 nên không có chi phí kích thước khối biến đổi. Tính exact không bị ảnh hưởng vì bản nháp chỉ là đề xuất.
 
 | Tập | PLD | Bộ nháp | **Bản lai (n≥2)** | Bản lai (chỉ n=3) |
@@ -288,7 +288,7 @@ Giới hạn: 1 lượt mỗi ô ở 1.5B (nhiễu giữa các lượt ở 3B �
 
 Giả thuyết: bản lai thua PLD trên CNN/DM 1.5B vì luôn trả chi phí khối M=4. Cách sửa là chọn M∈{1,2,4} từng bước theo độ tin cậy của bản nháp (softmax top-1 của bộ nháp; token do PLD đưa vào coi là tin cậy). Bảng chi phí chỉ có M=1,2 rẻ hơn M=4 (15.0, 15.6 so với 17.8 ms; M=3 bằng M=4), và mỗi bước phải đọc một giá trị từ host để chọn graph.
 
-Mô phỏng trên CPU (`scripts/sim_adaptive_block.py`, 3B, chi phí bộ nháp 2 ms mỗi bước, số học bộ nháp fp32):
+Mô phỏng trên CPU (`scripts/drafter/sim_adaptive_block.py`, 3B, chi phí bộ nháp 2 ms mỗi bước, số học bộ nháp fp32):
 
 | Tập | Luôn M=4 | Trần oracle (biết trước, không tốn đồng bộ) | Cổng độ tin cậy tốt nhất, đồng bộ 0 ms | Tốt nhất, đồng bộ 0.3 ms |
 |---|---|---|---|---|

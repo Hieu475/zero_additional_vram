@@ -211,4 +211,4 @@ Phiên bản & $M{=}2$ & $M{=}3$ & $M{=}4$ & $M{=}8$ & $M{=}16$\\\midrule
 \section{Tóm tắt chương}
 Bộ kernel bất biến theo $M$ (LM head, attention, RMSNorm, GEMM NF4) cho phép kiểm tra theo khối exact theo bộ kernel của chính nó, và vòng PLD trên CUDA graph chạy nhanh hơn giải mã exact $M{=}1$ cùng kernel $1.14$--$1.32\times$ với $0$ lệch trong $1200$ cặp prompt-mô hình. Mức tăng là khiêm tốn, phụ thuộc workload và chỉ có với PLD; mô hình nháp thần kinh không có lợi trên đích $3$B. Tham chiếu exact là bộ kernel mới, khác bitsandbytes gốc ở phần lớn chuỗi nhưng không phát hiện giảm độ chính xác tác vụ ở cỡ mẫu nhỏ.
 
-\paragraph{Mã nguồn.} \texttt{src/zassd/kernels/}, \texttt{scripts/wp*}, số liệu ở \texttt{results/kernels/}; kế hoạch và bản thảo bài báo ở \texttt{docs/PLAN\_SHAPE\_INVARIANT\_KERNELS.md} và \texttt{docs/PAPER\_DRAFT\_KERNELS.md}.
+\paragraph{Mã nguồn.} \texttt{src/zassd/kernels/}, \texttt{scripts/kernels/wp*}, số liệu ở \texttt{results/kernels/}; kế hoạch và bản thảo bài báo ở \texttt{docs/PLAN\_SHAPE\_INVARIANT\_KERNELS.md} và \texttt{docs/PAPER\_DRAFT\_KERNELS.md}.

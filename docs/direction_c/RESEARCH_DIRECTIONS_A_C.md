@@ -37,7 +37,7 @@ Hệ quả cho cả hai hướng: nguồn gốc của sai lệch là **attention
   4. Hướng dẫn: toán tử nào cần xử lý riêng để giải mã suy đoán giữ exact.
 
 ### 1.2 Đã làm
-- `scripts/audit_op_shape_sensitivity.py`: ghi đầu vào/đầu ra thật của mọi phép chiếu 4-bit, RMSNorm, LM head và mọi lời gọi SDPA khi chạy khối ba token trên trạng thái tuần tự chính xác, gọi lại từng toán tử từng hàng và so từng bit; kèm so logits cuối-cuối (bằng từng bit, đổi argmax, margin).
+- `scripts/audit/audit_op_shape_sensitivity.py`: ghi đầu vào/đầu ra thật của mọi phép chiếu 4-bit, RMSNorm, LM head và mọi lời gọi SDPA khi chạy khối ba token trên trạng thái tuần tự chính xác, gọi lại từng toán tử từng hàng và so từng bit; kèm so logits cuối-cuối (bằng từng bit, đổi argmax, margin).
 - Kết quả đầu tiên: bảng ở Mục 0 (20 prompt GSM8K dev, 960 hàng).
 - Phát hiện phụ: bản nhị phân bitsandbytes cộng tích lũy theo cặp, khác mã nguồn đọc theo nghĩa đen (`nf4_gemv_order_emulation_v1.json`, 28.672.000 đầu ra).
 
@@ -57,7 +57,7 @@ Hệ quả cho cả hai hướng: nguồn gốc của sai lệch là **attention
 
 ### 1.4 Việc cụ thể, theo thứ tự
 1. **C2 (rẻ):** quét M và độ dài ngữ cảnh trên bitsandbytes NF4 + Qwen2.5-3B, tái dùng script hiện có (thêm tham số `--block-size`).
-2. **C3:** Qwen2.5-0.5B/1.5B và Llama 3.2 (qua `scripts/run_with_model.py` hoặc adapter).
+2. **C3:** Qwen2.5-0.5B/1.5B và Llama 3.2 (qua `scripts/tools/run_with_model.py` hoặc adapter).
 3. **C4:** thêm một backend lượng tử hóa thứ hai (HQQ là ứng viên rõ nhất vì repo đã có hạ tầng).
 4. **C5:** gộp thành một công cụ dòng lệnh duy nhất, có đầu ra JSON chuẩn và bảng tóm tắt.
 5. **C6:** đo hệ quả cuối-cuối: tỷ lệ lệch quỹ đạo của PLD không xử lý riêng, theo từng cấu hình.
@@ -79,7 +79,7 @@ MLSys, các track dữ liệu và công cụ, TMLR, hoặc workshop về suy lu�
 
 ### 1.8 Kết quả đã đo (cập nhật 03/11/2026: C2–C6)
 
-Công cụ: `scripts/shape_audit.py` (`ops`, `trajectory`, `summarize`). Bảng đầy đủ do `summarize` sinh ra: `native_bnb_profiles/C_SHAPE_AUDIT_SUMMARY.md`. Mọi số liệu: một GPU (RTX 4050), bitsandbytes 0.50.0, 20 prompt GSM8K dev (10 prompt cho trục ngữ cảnh), greedy.
+Công cụ: `scripts/audit/shape_audit.py` (`ops`, `trajectory`, `summarize`). Bảng đầy đủ do `summarize` sinh ra: `native_bnb_profiles/C_SHAPE_AUDIT_SUMMARY.md`. Mọi số liệu: một GPU (RTX 4050), bitsandbytes 0.50.0, 20 prompt GSM8K dev (10 prompt cho trục ngữ cảnh), greedy.
 
 | Phát hiện | Bằng chứng |
 |---|---|
@@ -240,7 +240,7 @@ Lần nhân bản thứ hai trên 60 prompt khác cho kết quả khớp lần �
 Forward decode bị giới hạn bởi CPU khởi chạy kernel (84% thời gian một bước M=1 là CPU enqueue; `launch_bound_gsm8k_000_v1.json`). Đây là lý do baseline `torch.compile` nhanh hơn B2, và các phép từng hàng của B2 làm tăng số kernel. CUDA graph loại bỏ chi phí này mà **giữ nguyên các kernel**, nên về nguyên tắc không đổi số học.
 
 ### 2.2 Những gì đã thăm dò
-Dùng `scripts/probe_cuda_graph_decode.py` (chụp thô, không `torch.compile`, mô hình bitsandbytes eager với `StaticCache`):
+Dùng `scripts/audit/probe_cuda_graph_decode.py` (chụp thô, không `torch.compile`, mô hình bitsandbytes eager với `StaticCache`):
 
 | Đường | Eager | Graph | Logits bằng từng bit |
 |---|---:|---:|---:|
@@ -278,7 +278,7 @@ Tham chiếu: baseline biên dịch không exact đạt 1.29–1.45x so với ea
 
 ### 2.5b Kết quả A1–A2 (03/11/2026, tham chiếu StaticCache M=1 đã được chọn)
 
-Script: `scripts/a1_rowwise_static_block.py`, `scripts/a2_graph_block.py`. Bằng chứng: `native_bnb_profiles/a1_*`, `a2_*`. Qwen2.5-3B bnb NF4, 30 prompt GSM8K dev, 48 bước, teacher-forcing, một GPU.
+Script: `scripts/lib/a1_rowwise_static_block.py`, `scripts/audit/a2_graph_block.py`. Bằng chứng: `native_bnb_profiles/a1_*`, `a2_*`. Qwen2.5-3B bnb NF4, 30 prompt GSM8K dev, 48 bước, teacher-forcing, một GPU.
 
 | Mốc | Kết quả |
 |---|---|
@@ -291,7 +291,7 @@ Script: `scripts/a1_rowwise_static_block.py`, `scripts/a2_graph_block.py`. Bằn
 
 ### 2.5c Kết quả A3–A4 (03/11/2026): điều kiện dừng đã kích hoạt
 
-Script: `scripts/a3_graph_pld_loop.py`; bằng chứng: `native_bnb_profiles/a3_graph_pld_k2_gsm8k30_v1.json`. Vòng đầy đủ (PLD K=2, n-gram 3, 128 token mới, 30 prompt GSM8K dev, cache 448): graph M=1 gồm LM head cho fallback, graph M=3 thân từng hàng, LM head lười ngoài graph, khối M=3 chỉ dùng khi tra n-gram ra đủ 2 bản nháp.
+Script: `scripts/audit/a3_graph_pld_loop.py`; bằng chứng: `native_bnb_profiles/a3_graph_pld_k2_gsm8k30_v1.json`. Vòng đầy đủ (PLD K=2, n-gram 3, 128 token mới, 30 prompt GSM8K dev, cache 448): graph M=1 gồm LM head cho fallback, graph M=3 thân từng hàng, LM head lười ngoài graph, khối M=3 chỉ dùng khi tra n-gram ra đủ 2 bản nháp.
 
 | Chỉ tiêu | Kết quả |
 |---|---|
@@ -340,12 +340,12 @@ Một đóng góp hệ thống nếu A4 cho kết quả tích cực và ngang ba
 
 | Nội dung | Tệp |
 |---|---|
-| Công cụ thống nhất và bảng tổng hợp (C5) | `scripts/shape_audit.py`, `C_SHAPE_AUDIT_SUMMARY.md` |
-| Quét M/ngữ cảnh, mô hình khác, HQQ, quỹ đạo PLD (C2–C6) | `scripts/run_c2_sweep.sh`, `run_c3_models.sh`, `run_c4_families.sh`, `run_c6.sh`, `audit_pld_trajectory_divergence.py` |
-| Phân loại toán tử theo hình dạng (C1) | `scripts/audit_op_shape_sensitivity.py`, `op_shape_sensitivity_gsm8k20_v1.json` |
+| Công cụ thống nhất và bảng tổng hợp (C5) | `scripts/audit/shape_audit.py`, `C_SHAPE_AUDIT_SUMMARY.md` |
+| Quét M/ngữ cảnh, mô hình khác, HQQ, quỹ đạo PLD (C2–C6) | `scripts/audit/run_c2_sweep.sh`, `run_c3_models.sh`, `run_c4_families.sh`, `run_c6.sh`, `audit_pld_trajectory_divergence.py` |
+| Phân loại toán tử theo hình dạng (C1) | `scripts/audit/audit_op_shape_sensitivity.py`, `op_shape_sensitivity_gsm8k20_v1.json` |
 | B2 không dùng kernel Triton | `scripts/run_b2_without_triton_linears.py`, `b2_lazy_no_triton_gsm8k10_v1.json` |
 | Thứ tự rút gọn kernel bitsandbytes | `scripts/emulate_nf4_gemv_orders.py`, `nf4_gemv_order_emulation_v1.json` |
-| Thăm dò CUDA graph (A) | `scripts/probe_cuda_graph_decode.py`, `cuda_graph_probe_m{1,3}_v1.json` |
+| Thăm dò CUDA graph (A) | `scripts/audit/probe_cuda_graph_decode.py`, `cuda_graph_probe_m{1,3}_v1.json` |
 | Mô phỏng chi phí/tốc độ | `scripts/simulate_block_size.py`, `block_size_simulation_v1.json` |
 | Chi phí CPU của forward | `scripts/profile_b2_launch_bound.py`, `launch_bound_gsm8k_000_v1.json` |
 | Lập luận theo toán tử (đã hiệu chỉnh) | `experiments/exact_quantized_feasibility/B2_OPERATOR_ARGUMENT.md` |
