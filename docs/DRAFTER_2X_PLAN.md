@@ -180,7 +180,7 @@ Mô hình đích 3B ở 4-bit đã rất rẻ, nên trần lý thuyết bị gi�
 | scripts/drafter/drafter_train.py | Huấn luyện (đã đổi sang nạp theo khối) | Đã chạy, d2_k5.pt |
 | scripts/drafter/drafter_eval_sim.py | Dự đoán tăng tốc của bộ nháp (thêm quét chi phí 0/1/1.5/2 ms) | Đã chạy với d2_k5 |
 | scripts/drafter/wp9_drafter_graph.py | Vòng tích hợp trong CUDA graph (thêm `--k`) | Đã chạy, 100 prompt × 2 tập |
-| results/drafter/d1.pt | Bộ nháp K=3, chỉ GSM8K | Có |
+| results/drafter/d1.pt | Bộ nháp K=3, chỉ GSM8K | Đã xóa 11/11/2026 (đã bị d2_k5.pt thay thế; kết quả ở mục 3.4 giữ nguyên) |
 | results/drafter/d2_k5.pt | Bộ nháp đa miền, K=5 huấn luyện (dùng K=3) | Có |
 | results/drafter_runs/*.json | Kết quả đo thật wp9 | Có |
 
