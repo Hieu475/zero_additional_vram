@@ -1,0 +1,159 @@
+{
+  "status": "experimental fixed-row schedule; finite test, not universal proof",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "prompt_id": "gsm8k_000",
+  "prompt_length": 75,
+  "physical_rows": 5,
+  "rows": [
+    {
+      "m": 1,
+      "token_inputs": [
+        53665
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 76,
+      "block_cache_length": 76
+    },
+    {
+      "m": 2,
+      "token_inputs": [
+        53665,
+        594
+      ],
+      "bitwise_logits": false,
+      "max_logit_difference": 0.25,
+      "same_argmax": false,
+      "bitwise_kv": false,
+      "sequential_cache_length": 77,
+      "block_cache_length": 77,
+      "first_module_differences": [
+        {
+          "module": "model.layers.0.self_attn.o_proj",
+          "row": 0,
+          "same_input": false,
+          "max_output_difference": 6.103515625e-05
+        },
+        {
+          "module": "model.layers.0.self_attn.o_proj",
+          "row": 1,
+          "same_input": false,
+          "max_output_difference": 0.0001220703125
+        },
+        {
+          "module": "model.layers.0.self_attn",
+          "row": 0,
+          "same_input": true,
+          "max_output_difference": 6.103515625e-05
+        },
+        {
+          "module": "model.layers.0.self_attn",
+          "row": 1,
+          "same_input": true,
+          "max_output_difference": 0.0001220703125
+        },
+        {
+          "module": "model.layers.0.post_attention_layernorm",
+          "row": 0,
+          "same_input": false,
+          "max_output_difference": 0.015625
+        },
+        {
+          "module": "model.layers.0.post_attention_layernorm",
+          "row": 1,
+          "same_input": false,
+          "max_output_difference": 0.0234375
+        },
+        {
+          "module": "model.layers.0.mlp.gate_proj",
+          "row": 0,
+          "same_input": false,
+          "max_output_difference": 0.015625
+        },
+        {
+          "module": "model.layers.0.mlp.gate_proj",
+          "row": 1,
+          "same_input": false,
+          "max_output_difference": 0.015625
+        },
+        {
+          "module": "model.layers.0.mlp.up_proj",
+          "row": 0,
+          "same_input": false,
+          "max_output_difference": 0.0078125
+        },
+        {
+          "module": "model.layers.0.mlp.up_proj",
+          "row": 1,
+          "same_input": false,
+          "max_output_difference": 0.0078125
+        },
+        {
+          "module": "model.layers.0.mlp.down_proj",
+          "row": 0,
+          "same_input": false,
+          "max_output_difference": 0.0078125
+        },
+        {
+          "module": "model.layers.0.mlp.down_proj",
+          "row": 1,
+          "same_input": false,
+          "max_output_difference": 0.00390625
+        }
+      ]
+    },
+    {
+      "m": 3,
+      "token_inputs": [
+        53665,
+        594,
+        7298
+      ],
+      "bitwise_logits": false,
+      "max_logit_difference": 0.25,
+      "same_argmax": false,
+      "bitwise_kv": false,
+      "sequential_cache_length": 78,
+      "block_cache_length": 78
+    },
+    {
+      "m": 4,
+      "token_inputs": [
+        53665,
+        594,
+        7298,
+        23681
+      ],
+      "bitwise_logits": false,
+      "max_logit_difference": 0.25,
+      "same_argmax": false,
+      "bitwise_kv": false,
+      "sequential_cache_length": 79,
+      "block_cache_length": 79
+    },
+    {
+      "m": 5,
+      "token_inputs": [
+        53665,
+        594,
+        7298,
+        23681,
+        504
+      ],
+      "bitwise_logits": false,
+      "max_logit_difference": 0.25,
+      "same_argmax": false,
+      "bitwise_kv": false,
+      "sequential_cache_length": 80,
+      "block_cache_length": 80
+    }
+  ]
+}

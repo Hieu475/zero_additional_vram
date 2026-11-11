@@ -1,0 +1,108 @@
+{
+  "status": "experimental q_proj layout comparison; finite microbenchmark",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "physical_rows": 5,
+  "iterations_per_sample": 30,
+  "rounds": 5,
+  "kernel_source_sha256": {
+    "current": "1ff2b2b8f628cd62238c956387b7d9b4bc14e59b8070feff67f1409a301fc3f5",
+    "kmajor": "c47ef5865d17765e1eb95e2fe422f9cb374b7b6b2d34f505bc13002a6edc33e5",
+    "packed": "114d7aa7a518d114bf58fe8cc326438f5a9f6942976d1f8d1aabcf7f5f82b847"
+  },
+  "results": [
+    {
+      "m": 1,
+      "median_cuda_ms": {
+        "group_scale_n8_k256": 0.03945813179016113,
+        "group_scale_kmajor_n8_k256": 0.05344853401184082,
+        "group_scale_packed_n8_k256": 0.026487465699513754
+      },
+      "kmajor_over_current_latency_ratio": 1.3545632189603105,
+      "comparisons_to_current_schedule": {
+        "group_scale_n8_k256": {
+          "bitwise_equal_to_current": true,
+          "max_abs_difference_to_current": 0.0
+        },
+        "group_scale_kmajor_n8_k256": {
+          "bitwise_equal_to_current": false,
+          "max_abs_difference_to_current": 1.9073486328125e-06
+        },
+        "group_scale_packed_n8_k256": {
+          "bitwise_equal_to_current": false,
+          "max_abs_difference_to_current": 2.384185791015625e-07
+        }
+      },
+      "row0_bitwise_equal_to_own_singleton": {
+        "group_scale_n8_k256": true,
+        "group_scale_kmajor_n8_k256": true,
+        "group_scale_packed_n8_k256": true
+      }
+    },
+    {
+      "m": 3,
+      "median_cuda_ms": {
+        "group_scale_n8_k256": 0.10181012948354086,
+        "group_scale_kmajor_n8_k256": 0.1524629275004069,
+        "group_scale_packed_n8_k256": 0.07154346307118734
+      },
+      "kmajor_over_current_latency_ratio": 1.497522184421294,
+      "comparisons_to_current_schedule": {
+        "group_scale_n8_k256": {
+          "bitwise_equal_to_current": true,
+          "max_abs_difference_to_current": 0.0
+        },
+        "group_scale_kmajor_n8_k256": {
+          "bitwise_equal_to_current": false,
+          "max_abs_difference_to_current": 0.0001220703125
+        },
+        "group_scale_packed_n8_k256": {
+          "bitwise_equal_to_current": false,
+          "max_abs_difference_to_current": 3.0517578125e-05
+        }
+      },
+      "row0_bitwise_equal_to_own_singleton": {
+        "group_scale_n8_k256": true,
+        "group_scale_kmajor_n8_k256": true,
+        "group_scale_packed_n8_k256": true
+      }
+    },
+    {
+      "m": 5,
+      "median_cuda_ms": {
+        "group_scale_n8_k256": 0.16612693468729656,
+        "group_scale_kmajor_n8_k256": 0.24960746765136718,
+        "group_scale_packed_n8_k256": 0.11588266690572104
+      },
+      "kmajor_over_current_latency_ratio": 1.502510523782356,
+      "comparisons_to_current_schedule": {
+        "group_scale_n8_k256": {
+          "bitwise_equal_to_current": true,
+          "max_abs_difference_to_current": 0.0
+        },
+        "group_scale_kmajor_n8_k256": {
+          "bitwise_equal_to_current": false,
+          "max_abs_difference_to_current": 0.00048828125
+        },
+        "group_scale_packed_n8_k256": {
+          "bitwise_equal_to_current": false,
+          "max_abs_difference_to_current": 0.0001220703125
+        }
+      },
+      "row0_bitwise_equal_to_own_singleton": {
+        "group_scale_n8_k256": true,
+        "group_scale_kmajor_n8_k256": true,
+        "group_scale_packed_n8_k256": true
+      }
+    }
+  ]
+}

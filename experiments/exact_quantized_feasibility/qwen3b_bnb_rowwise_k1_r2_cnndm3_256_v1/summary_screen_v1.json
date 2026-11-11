@@ -1,0 +1,34 @@
+{
+  "status": "one-session tuning screen; not a performance claim",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "k": 1,
+  "physical_rows": 2,
+  "attention_strategy": "bnb_rowwise",
+  "max_new_tokens": 256,
+  "n_prompts": 3,
+  "b1_token_exact": 3,
+  "bnb_token_exact": 3,
+  "shared_kv_prefixes": 768,
+  "all_b1_kv_exact": true,
+  "latency_speedup_geomean": {
+    "block_speedup_vs_b1": {
+      "per_prompt": {
+        "cnndm_000": 1.257425947792898,
+        "cnndm_001": 1.1852351411987099,
+        "cnndm_002": 1.1926351990011599
+      },
+      "geomean": 1.2113366390572273
+    },
+    "block_speedup_vs_original": {
+      "per_prompt": {
+        "cnndm_000": 1.0152591277820762,
+        "cnndm_001": 0.9340559343843426,
+        "cnndm_002": 0.8971933585764703
+      },
+      "geomean": 0.9475714031057341
+    }
+  },
+  "forced_bnb_replay": "no logits or active-KV drift through 256 tokens for all three prompts",
+  "conclusion": "B2-compatible finite screen passed; BNB-relative latency did not improve over K2/R3 multisession mean and requires repetition before selection"
+}

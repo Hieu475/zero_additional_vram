@@ -1,0 +1,150 @@
+\selectlanguage{english}
+\chapter*{Project Overview and Work Progress}
+\addcontentsline{toc}{chapter}{Project Overview and Work Progress}
+
+\section*{1. Background and Problem Statement}
+Large language models (LLMs) typically generate text autoregressively: each token is produced sequentially based on the tokens generated so far. This decoding process causes latency to grow with output length, especially when the model runs on a GPU with limited memory.
+
+Speculative decoding reduces the number of sequential decoding steps by first proposing a group of tokens and then verifying them with the target model. An independent draft model can increase memory requirements because its weights must also be loaded. This project therefore studies methods that do not require a separate draft model: layer-skip self-speculative decoding, which uses a reduced set of target-model layers to produce proposals, and Prompt Lookup Decoding (PLD), which retrieves proposed tokens from the prompt or previously generated text.
+
+The research problem is not limited to the token acceptance rate. Practical performance also depends on drafting, verification, KV-cache management, quantized inference backends, and output-sequence consistency. The project therefore evaluates both speed and correctness, and identifies the conditions under which each method helps or slows down generation.
+
+\section*{2. Objectives}
+The overall objective is to build and evaluate a speculative decoding system that does not require a separate draft model, targeting GPU environments with limited VRAM. The specific objectives are:
+\begin{enumerate}
+    \item Implement Vanilla Decoding, layer-skip, PLD, and a router that selects among decoding methods.
+    \item Organize the KV cache to reuse verified prefixes and correctly handle rejected draft tokens.
+    \item Measure latency, throughput, speedup, acceptance rate, and VRAM using the same model, prompts, and experimental conditions.
+    \item Evaluate token-level agreement with vanilla decoding and analyze numerical differences related to quantization, the KV cache, and verification execution.
+    \item Determine how the decoding method, context length, output length, and inference backend affect performance.
+\end{enumerate}
+The intended outcome is an evaluable system and evidence-based experimental conclusions. The project does not assume in advance that every speculative decoding configuration is faster than vanilla decoding.
+
+\section*{3. Methodology}
+The project combines literature review, system development, and experimental validation through the following steps:
+\begin{enumerate}
+    \item \textbf{Study the foundations:} review autoregressive decoding, speculative decoding, self-speculation, layer skipping, PLD, and KV caching.
+    \item \textbf{Analyze and design the system:} define the draft--verify workflow and the roles of the model/backend adapter, draft provider, target verifier, KV-cache manager, router, and profiler; specify cache commit and rollback states.
+    \item \textbf{Implement the system:} build the decoding methods in Python/PyTorch. The main experimental model is Qwen2.5-3B-Instruct, running on an NVIDIA RTX 4050 Laptop GPU with 6 GB of VRAM.
+    \item \textbf{Measure performance:} run paired benchmarks on identical prompts. Record throughput, latency, acceptance, token agreement, and VRAM; use Nsight for GPU profiling where appropriate.
+    \item \textbf{Analyze and extend the experiments:} investigate numerical and KV-cache differences; compare bitsandbytes NF4 with HQQ + GemLite W4A16; and expand the evaluation across context lengths and output lengths.
+    \item \textbf{Synthesize the findings:} relate each result to its configuration and measurement protocol, analyze cases without speedup, state the limitations, and complete the report.
+\end{enumerate}
+
+\section*{4. Weekly Progress}
+\small
+\begin{longtable}{p{1.6cm} p{3.6cm} p{8.5cm}}
+\toprule
+\textbf{Week} & \textbf{Activities} & \textbf{Recorded outcomes/deliverables} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Week} & \textbf{Activities} & \textbf{Recorded outcomes/deliverables} \\
+\midrule
+\endhead
+1--2 & Literature review and problem definition & Studied autoregressive and speculative decoding, self-speculation, layer-skip, PLD, and KV caching; defined the focus as accelerating inference without loading additional draft weights on a GPU with limited VRAM. \\
+3 & System design & Identified the vanilla, draft-provider, target-verifier, KV-cache-manager, router, and profiler components; described the draft--verify workflow and cache commit/rollback principles. \\
+4 & Implementation of decoding methods & Built Vanilla, layer-skip, PLD, and Hybrid Router paths using Qwen2.5-3B-Instruct as the experimental model; added throughput and memory measurement components to the benchmark. \\
+5 & Correctness checks & Added KV/logit divergence tracing and precision/backend checks; evaluated PLD across multiple sessions and reduced-sync. Results showed configuration-dependent differences; validation on a second GPU has not been completed. \\
+6 & Benchmarking and profiling & Added a paired benchmark harness; evaluated the router; checked KV capacity/quantization and HQQ/GemLite compatibility; profiled kernels; and stored data with manifests to track measurement provenance. \\
+7 & Expanded experiments & Ran the BNB/HQQ matrix at context lengths of 128, 384, 1024, and 2048 tokens; completed three output-32 matrix sessions. Initial results show that PLD/layer-skip performance varies with backend and context length. \\
+8 & Repeated benchmarking and synthesis & Expanded evaluation across source documents with multiple context and output lengths. Additional measurement sessions, reproducibility checks, and result consolidation for the report are in progress. \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section*{5. Main Results to Date}
+\textbf{System:} the repository contains Vanilla, layer-skip, PLD, and Hybrid Router paths, together with token verification, cache management, and measurement components used by the corresponding benchmarks.
+
+\textbf{Main paired benchmark:} on Qwen2.5-3B-Instruct NF4 using an RTX 4050, the full paired artifact records 150 prompts from GSM8K, HumanEval, and CNN/DailyMail (50 per dataset; up to 48 generated tokens). PLD achieved an end-to-end speedup of $1.063\times$ (95\% prompt-bootstrap CI: $[1.036,1.092]$), and the router achieved $1.050\times$ ($[1.023,1.079]$). The paired router/PLD throughput ratio was $0.989$ ($[0.985,0.993]$), so routing did not outperform PLD in this protocol. Exact sequence match for PLD and the router was 83.3\%.
+
+\textbf{Backend and context length:} the reported output-128 results across five source documents show that PLD speedup varies by backend and context length: $0.979$--$1.158\times$ for BNB and $1.066$--$1.313\times$ for HQQ. CKA90/K2 was slower than vanilla in all eight reported configurations. These are exploratory results from a small sample; sessions 2--3 have working-tree-dirty provenance. The n=20 cohort has only 13 of 24 session cells structurally complete and is missing 10 sessions, so it is not yet used to draw performance conclusions.
+
+\textbf{Correctness:} numerical drift in KV/logits and token divergence have been observed in some quantized batched-verification configurations. Therefore, the system cannot yet be claimed to preserve the generated sequence in all cases; speedup must be reported separately from exactness within the same backend and differences across backends.
+
+\section*{6. Next Steps}
+\begin{enumerate}
+    \item Complete the n=20 context matrix with all planned sessions and clean provenance, and add the missing runtime metadata.
+    \item Further analyze numerical fidelity between BNB NF4 and HQQ + GemLite W4A16.
+    \item Continue GPU profiling and identify why layer-skip has not achieved speedup in the configurations tested so far.
+    \item Finalize the benchmark protocol and consolidate the tables and figures, distinguishing confirmed results from exploratory findings.
+    \item Complete the reproducibility instructions, source code, and research limitations in the report.
+\end{enumerate}
+
+\noindent\textbf{Direction:} identify when speculative decoding works well on resource-constrained GPUs, accounting for execution cost and correctness as well as speedup.
+
+\clearpage
+\selectlanguage{vietnamese}
+\chapter*{Tóm lược đề tài và tiến độ thực hiện}
+\addcontentsline{toc}{chapter}{Tóm lược đề tài và tiến độ thực hiện}
+
+\section*{1. Bối cảnh và bài toán}
+Các mô hình ngôn ngữ lớn (Large Language Models -- LLMs) thường sinh văn bản theo cơ chế tự hồi quy: mỗi token được tạo tuần tự dựa trên các token đã có. Cách giải mã này khiến độ trễ tăng theo chiều dài đầu ra, đặc biệt khi mô hình chạy trên GPU có dung lượng bộ nhớ giới hạn.
+
+Speculative decoding giảm số bước giải mã tuần tự bằng cách tạo trước một nhóm token dự thảo rồi xác minh chúng bằng mô hình đích. Một mô hình draft độc lập có thể tăng nhu cầu bộ nhớ do phải nạp thêm trọng số. Đồ án vì vậy khảo sát các phương pháp không cần nạp thêm mô hình draft: layer-skip self-speculative decoding, trong đó mô hình đích được chạy với tập lớp rút gọn để tạo dự thảo, và Prompt Lookup Decoding (PLD), trong đó token dự thảo được tìm từ prompt hoặc phần văn bản đã sinh.
+
+Vấn đề nghiên cứu không chỉ là tỷ lệ token được chấp nhận. Hiệu quả thực tế còn phụ thuộc chi phí tạo dự thảo, xác minh, quản lý KV cache, backend lượng tử hóa và mức độ nhất quán của chuỗi đầu ra. Do đó, đồ án đánh giá cả tốc độ lẫn tính đúng đắn, đồng thời xác định các điều kiện mà mỗi phương pháp có lợi hoặc gây chậm.
+
+\section*{2. Mục tiêu}
+Mục tiêu tổng quát là xây dựng và đánh giá một hệ thống speculative decoding không cần mô hình draft độc lập, hướng tới môi trường GPU có VRAM hạn chế. Các mục tiêu cụ thể gồm:
+\begin{enumerate}
+    \item Hiện thực các baseline Vanilla Decoding, layer-skip, PLD và bộ định tuyến lựa chọn phương pháp.
+    \item Tổ chức KV cache để tái sử dụng phần tiền tố đã xác minh và xử lý đúng phần dự thảo bị từ chối.
+    \item Đo latency, throughput, speedup, acceptance rate và VRAM trên cùng mô hình, prompt và điều kiện thử nghiệm.
+    \item Đánh giá mức độ trùng khớp token với vanilla; phân tích sai khác số học liên quan đến lượng tử hóa, KV cache và cách thực thi verification.
+    \item Xác định ảnh hưởng của phương pháp giải mã, độ dài ngữ cảnh, số token sinh và inference backend đến hiệu năng.
+\end{enumerate}
+Kết quả mong muốn là một hệ thống có thể đánh giá được và một kết luận thực nghiệm có căn cứ; không giả định trước rằng mọi cấu hình speculative decoding đều nhanh hơn vanilla.
+
+\section*{3. Phương pháp thực hiện}
+Đồ án kết hợp nghiên cứu, xây dựng hệ thống và kiểm chứng thực nghiệm theo các bước:
+\begin{enumerate}
+    \item \textbf{Nghiên cứu cơ sở lý thuyết:} tìm hiểu autoregressive decoding, speculative decoding, self-speculation, layer skipping, PLD và KV cache.
+    \item \textbf{Phân tích, thiết kế:} xác định luồng draft--verify và vai trò của model/backend adapter, draft provider, target verifier, KV cache manager, router và profiler; quy định trạng thái cache được commit hoặc rollback.
+    \item \textbf{Hiện thực:} xây dựng các phương pháp giải mã bằng Python/PyTorch. Mô hình thử nghiệm chính là Qwen2.5-3B-Instruct trên NVIDIA RTX 4050 Laptop GPU với 6 GB VRAM.
+    \item \textbf{Đo lường:} benchmark paired trên cùng prompt; ghi throughput, latency, acceptance, độ khớp token và VRAM. Dùng công cụ Nsight trong các phép profiling GPU phù hợp.
+    \item \textbf{Phân tích, mở rộng:} kiểm tra sai khác số học và KV cache; so sánh bitsandbytes NF4 với HQQ + GemLite W4A16; mở rộng theo context length và số token đầu ra.
+    \item \textbf{Tổng hợp:} đối chiếu từng kết quả với cấu hình và giao thức đo, phân tích nguyên nhân các trường hợp không tăng tốc, nêu giới hạn và hoàn thiện báo cáo.
+\end{enumerate}
+
+\section*{4. Tiến độ thực hiện theo tuần}
+\small
+\begin{longtable}{p{1.6cm} p{3.6cm} p{8.5cm}}
+\toprule
+\textbf{Tuần} & \textbf{Nội dung} & \textbf{Kết quả/sản phẩm ghi nhận} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Tuần} & \textbf{Nội dung} & \textbf{Kết quả/sản phẩm ghi nhận} \\
+\midrule
+\endhead
+1--2 & Khảo sát và xác định bài toán & Tìm hiểu autoregressive/speculative decoding, self-speculation, layer-skip, PLD và KV cache; xác định trọng tâm là tăng tốc suy luận không nạp thêm trọng số draft trên GPU hạn chế VRAM. \\
+3 & Thiết kế hệ thống & Xác định các thành phần vanilla, draft provider, target verifier, KV cache manager, router và profiler; mô tả luồng draft--verify cùng nguyên tắc commit/rollback cache. \\
+4 & Hiện thực các phương pháp & Xây dựng các luồng Vanilla, layer-skip, PLD và Hybrid Router trên mô hình thử nghiệm Qwen2.5-3B-Instruct; bổ sung các thành phần đo throughput và bộ nhớ trong benchmark. \\
+5 & Kiểm tra tính đúng đắn & Thêm truy vết sai khác KV/logit, kiểm tra precision/backend, đánh giá PLD qua nhiều phiên và reduced-sync. Kết quả cho thấy sai khác phụ thuộc cấu hình; chưa có kiểm chứng trên GPU thứ hai. \\
+6 & Benchmark và profiling & Bổ sung paired benchmark harness, đánh giá router, kiểm tra KV capacity/quantization, tương thích HQQ/GemLite và profiling kernel; lưu dữ liệu cùng manifest để theo dõi nguồn gốc phép đo. \\
+7 & Mở rộng thực nghiệm & Chạy ma trận BNB/HQQ theo context length 128, 384, 1024 và 2048 token; hoàn tất ba phiên ma trận output-32. Kết quả ban đầu cho thấy hiệu năng PLD/layer-skip biến thiên theo backend và ngữ cảnh. \\
+8 & Lặp benchmark và tổng hợp & Mở rộng đánh giá trên tập dữ liệu với nhiều độ dài ngữ cảnh và số token đầu ra. Hiện đang bổ sung các phiên đo, kiểm tra tính tái lập và hoàn thiện số liệu để đưa vào báo cáo kết quả. \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section*{5. Kết quả chính đến thời điểm tổng hợp}
+\textbf{Hệ thống:} repository có các luồng Vanilla, layer-skip, PLD và Hybrid Router, cùng thành phần xác minh token, quản lý cache và thu thập số liệu trong các phép benchmark tương ứng.
+
+\textbf{Benchmark paired chính:} artifact paired đầy đủ trên Qwen2.5-3B-Instruct NF4, RTX 4050 gồm 150 prompt thuộc GSM8K, HumanEval và CNN/DailyMail (50 prompt mỗi tập, tối đa 48 token sinh). PLD đạt speedup end-to-end $1.063\times$ (CI bootstrap theo prompt 95\%: $[1.036,1.092]$), còn router đạt $1.050\times$ ($[1.023,1.079]$). Tỷ số throughput paired router/PLD là $0.989$ ($[0.985,0.993]$), nên router chưa vượt PLD trong giao thức này. Exact sequence match của PLD và router là 83.3\%.
+
+\textbf{Backend và context length:} báo cáo output-128 trên năm tài liệu nguồn ghi nhận speedup PLD dao động theo backend/ngữ cảnh: $0.979$--$1.158\times$ với BNB và $1.066$--$1.313\times$ với HQQ. CKA90/K2 chậm hơn vanilla trong cả tám cấu hình được báo cáo. Đây là kết quả exploratory với cỡ mẫu nhỏ; các phiên 2--3 có provenance working-tree-dirty. Cohort n=20 mới chỉ có 13/24 ô phiên hoàn chỉnh về cấu trúc và thiếu 10 phiên, nên chưa dùng để kết luận hiệu năng.
+
+\textbf{Tính đúng đắn:} đã phát hiện numerical drift ở KV/logit và token divergence trong một số cấu hình quantized batched verification. Vì vậy, chưa thể khẳng định hệ thống bảo toàn chuỗi token trong mọi trường hợp; speedup cần được báo cáo riêng với exactness trong cùng backend và khác biệt giữa các backend.
+
+\section*{6. Công việc tiếp theo}
+\begin{enumerate}
+    \item Hoàn thành context matrix n=20 với đủ phiên chạy và provenance sạch, đồng thời bổ sung metadata runtime còn thiếu.
+    \item Phân tích sâu hơn numerical fidelity giữa BNB NF4 và HQQ + GemLite W4A16.
+    \item Tiếp tục profiling GPU và xác định nguyên nhân layer-skip chưa đạt speedup trong các cấu hình đã thử.
+    \item Chốt giao thức benchmark, tổng hợp bảng và biểu đồ; phân biệt kết quả đã xác nhận với kết quả exploratory.
+    \item Hoàn thiện hướng dẫn tái lập, mã nguồn và phần giới hạn nghiên cứu trong báo cáo.
+\end{enumerate}
+
+\noindent\textbf{Định hướng:} tập trung xác định điều kiện áp dụng hiệu quả của speculative decoding trên GPU giới hạn tài nguyên, đồng thời cân nhắc chi phí thực thi và tính đúng đắn thay vì chỉ tối ưu một con số speedup.

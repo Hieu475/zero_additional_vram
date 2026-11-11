@@ -1,0 +1,97 @@
+{
+  "manifest_schema": "b1-fixed-row-v2",
+  "status": "experimental; finite diagnostic, not a proof",
+  "reference": "greedy singleton under the same fixed-row Qwen2 operator patch",
+  "second_baseline": "original BNB greedy, for compatibility measurement only",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "git_commit": "6465f4dc67eb15d8fb2be46606424d78539b6831",
+  "python": "3.12.13",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "transformers": "5.14.1",
+  "bitsandbytes": "0.50.0",
+  "k": 2,
+  "physical_rows": 3,
+  "attention_strategy": "padded",
+  "ngram_size": 3,
+  "reference_schedule": "qwen2_fixed_row_singleton",
+  "cache_backend": "StaticPreallocatedKVCache",
+  "greedy_tie_rule": "torch.argmax_first_index",
+  "max_new_tokens": 256,
+  "capacity": 2048,
+  "per_task": 1,
+  "start_index": 0,
+  "session_index": 1,
+  "prompt_file": "experiments/exact_quantized_feasibility/b1_long_context_cnndm_prompt.jsonl",
+  "eos_token_id": 151645,
+  "audit_state": true,
+  "input_hashes": {
+    "experiments/exact_quantized_feasibility/b1_long_context_cnndm_prompt.jsonl": "04b2d4b083c849525164f7a84a233c48d50beb249c7818529ff61c0bc9e5edfc"
+  },
+  "runtime_identity": {
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "index": 0,
+      "compute_capability": [
+        8,
+        9
+      ],
+      "total_memory_bytes": 6053232640,
+      "driver": {
+        "version": "595.99.02",
+        "compute_capability": "8.9",
+        "uuid": "GPU-794ce37a-f7d3-5b6e-8858-75c2d14741f5"
+      }
+    },
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0",
+    "model_type": "qwen2",
+    "model_config_sha256": "c7691c6ecea29745bbca27fb724ad851152eb465bf4d0334b3a0302e95a96332",
+    "model_attention_implementation": "sdpa",
+    "tokenizer": {
+      "class": "Qwen2Tokenizer",
+      "name_or_path": "Qwen/Qwen2.5-3B-Instruct",
+      "length": 151665,
+      "vocab_size": 151643,
+      "vocab_sha256": "698c955b0b438a535083d1771ef8b41069afba4b3d51a482558bdb68ea55e800",
+      "special_tokens_map": {
+        "eos_token": "<|im_end|>",
+        "pad_token": "<|endoftext|>"
+      },
+      "bos_token_id": null,
+      "eos_token_id": 151645,
+      "pad_token_id": 151643,
+      "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+    },
+    "backend_flags": {
+      "float32_matmul_precision": "highest",
+      "cuda_matmul_allow_tf32": false,
+      "cudnn_allow_tf32": true,
+      "cudnn_deterministic": false,
+      "deterministic_algorithms": false,
+      "flash_sdp_enabled": true,
+      "mem_efficient_sdp_enabled": true,
+      "math_sdp_enabled": true
+    },
+    "source_sha256": {
+      "src/zassd/certification/qwen2_padded.py": "382ad45bcb0cde697f77feef2bda33685bf780018af9a1e5ecc305eb6c421403",
+      "src/zassd/decoding/b1_exact.py": "746a66ae08c26166e43c57f1989a8906cff7efbdd696dc7bd5e78c8bf57a67f6",
+      "src/zassd/decoding/ngram.py": "0976856395ce1a293e767c84fd6b1dc6d8f277b57f0674e806896cc3913d4713",
+      "src/zassd/cache/kv_cache.py": "a56a3ad4ee163e7456e236515e8848173face82426b0fe3c0e7489b170ed3934",
+      "src/zassd/backends/base.py": "52639b82bdabd3cec1f50ac5a21b03fb91081a034b2b01c322ef68086e0d1e79"
+    },
+    "quantized_state_sha256": "c6212d37bd02338c60536b1ca674b3e0c76fbcd810ba5df8e8e28b0e16f4f6cf"
+  },
+  "reference_contract_id": "ca155f567ba080347f765335e8999b0256abafe87c88c0263ac38344b2b2ca27",
+  "reference_contract_path": "experiments/exact_quantized_feasibility/b1_reference_contract_v3.json",
+  "contract_id": "284102d7050296f2a4a76f2f9e1b2cbfc8080883166cc71ac8fe6fa222ed098a"
+}

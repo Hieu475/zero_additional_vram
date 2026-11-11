@@ -1,0 +1,127 @@
+{
+  "schema": "zassd-actual-activation-gate-up-bnb-triton-summary-v1",
+  "classification": "two-prompt, first-three-token operator screen over model-generated M=3 activations; not whole-model B2 proof or end-to-end benchmark",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "schedule": {
+    "K": 2,
+    "physical_rows": 3,
+    "attention": "bnb_rowwise",
+    "reference_linear": "native BNB Linear4bit",
+    "candidate_linear": "fixed-three-row packed Triton NF4"
+  },
+  "overall": {
+    "modules_checked": 144,
+    "bnb_triton_bitwise_equal_modules": 0,
+    "bnb_m3_vs_bnb_m1_row_invariant_modules": 144,
+    "triton_m3_vs_own_m1_row_invariant_modules": 144
+  },
+  "profiles": [
+    {
+      "prompt_id": "HumanEval/112",
+      "prompt_tokens": 157,
+      "forced_bnb_tokens": [
+        262,
+        671,
+        4615,
+        2038
+      ],
+      "whole_model_first_three_predictions_match": true,
+      "modules_checked": 72,
+      "bitwise_equal_modules": 0,
+      "bnb_and_triton_rowwise_invariant_modules": 72,
+      "by_projection": {
+        "gate_proj": {
+          "layers": 36,
+          "bnb_triton_bitwise_equal_modules": 0,
+          "bnb_m3_vs_bnb_m1_all_rows_equal_modules": 36,
+          "triton_m3_vs_triton_m1_all_rows_equal_modules": 36,
+          "triton_over_bnb_median_ratio": 0.8926416588397343,
+          "ratio_range": [
+            0.886238843151133,
+            1.009999978657192
+          ],
+          "max_abs_diff_range": [
+            0.015625,
+            0.125
+          ]
+        },
+        "up_proj": {
+          "layers": 36,
+          "bnb_triton_bitwise_equal_modules": 0,
+          "bnb_m3_vs_bnb_m1_all_rows_equal_modules": 36,
+          "triton_m3_vs_triton_m1_all_rows_equal_modules": 36,
+          "triton_over_bnb_median_ratio": 0.8918559183797905,
+          "ratio_range": [
+            0.8756655794879403,
+            0.9248313491067888
+          ],
+          "max_abs_diff_range": [
+            0.00390625,
+            0.5
+          ]
+        }
+      },
+      "artifact": "actual_gate_up_humaneval112.json"
+    },
+    {
+      "prompt_id": "cnndm_005",
+      "prompt_tokens": 403,
+      "forced_bnb_tokens": [
+        81460,
+        40948,
+        11,
+        264
+      ],
+      "whole_model_first_three_predictions_match": true,
+      "modules_checked": 72,
+      "bitwise_equal_modules": 0,
+      "bnb_and_triton_rowwise_invariant_modules": 72,
+      "by_projection": {
+        "gate_proj": {
+          "layers": 36,
+          "bnb_triton_bitwise_equal_modules": 0,
+          "bnb_m3_vs_bnb_m1_all_rows_equal_modules": 36,
+          "triton_m3_vs_triton_m1_all_rows_equal_modules": 36,
+          "triton_over_bnb_median_ratio": 0.8906709646287911,
+          "ratio_range": [
+            0.8820279955184448,
+            0.8998316681434166
+          ],
+          "max_abs_diff_range": [
+            0.015625,
+            0.125
+          ]
+        },
+        "up_proj": {
+          "layers": 36,
+          "bnb_triton_bitwise_equal_modules": 0,
+          "bnb_m3_vs_bnb_m1_all_rows_equal_modules": 36,
+          "triton_m3_vs_triton_m1_all_rows_equal_modules": 36,
+          "triton_over_bnb_median_ratio": 0.8908064935645302,
+          "ratio_range": [
+            0.8832729155278343,
+            0.9038806612468975
+          ],
+          "max_abs_diff_range": [
+            0.0078125,
+            1.0
+          ]
+        }
+      },
+      "artifact": "actual_gate_up_cnndm005.json"
+    }
+  ],
+  "interpretation": [
+    "Each backend is row-count invariant on the recorded inputs, but the BNB and Triton arithmetic schedules produce different gate/up outputs in every checked module.",
+    "Triton M=3 operator medians are about 11% lower than BNB on these activations; this speed does not satisfy B2 because outputs are not bitwise equal.",
+    "The first three full-block greedy predictions match the forced BNB continuation in both prompts, but this limited argmax agreement does not establish logits or KV-state equality."
+  ],
+  "limits": [
+    "Only gate_proj and up_proj across 36 layers; q/k/v/o/down are not included in this actual-activation run.",
+    "Two prompts; one forced three-token block per prompt; finite empirical evidence only.",
+    "CUDA operator timings are direct event timings and do not predict end-to-end speed.",
+    "Held-out GSM8K indices 300\u2013349 were not used."
+  ]
+}

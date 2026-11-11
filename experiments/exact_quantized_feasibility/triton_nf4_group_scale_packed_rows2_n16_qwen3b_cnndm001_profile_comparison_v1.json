@@ -1,0 +1,167 @@
+{
+  "status": "single-prompt torch.profiler comparison; absolute and summed times are perturbed diagnostics, not benchmark latency",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "prompt_id": "cnndm_001",
+  "prompt_tokens": 398,
+  "max_new_tokens": 32,
+  "k": 1,
+  "physical_rows": 2,
+  "runs": {
+    "N8": {
+      "profile_total_ms": 1349.4811579948873,
+      "profile_verify_ms": 1160.0760169894784,
+      "target_forwards": 27,
+      "target_rows": 36,
+      "cuda_kernel_count": 53887,
+      "cuda_kernel_duration_sum_ms": 970.1739229999997,
+      "packed_kernel": {
+        "name": "_nf4_fixed_rows_group_scale_packed_kernel",
+        "duration_ms": 585.3357089999989,
+        "calls": 6804
+      },
+      "top_cuda_kernels": [
+        {
+          "name": "_nf4_fixed_rows_group_scale_packed_kernel",
+          "duration_ms": 585.3357089999989,
+          "calls": 6804
+        },
+        {
+          "name": "void cutlass::Kernel2<cutlass_80_wmma_tensorop_f16_s161616gemm_f16_16x16_128x1_tn_align8>(cutlass_80_wmma_tensorop_f16_s161616gemm_f16_16x16_128x1_tn_align8::Params)",
+          "duration_ms": 92.41500099999998,
+          "calls": 27
+        },
+        {
+          "name": "ampere_fp16_s1688gemm_fp16_256x64_ldg8_f2f_stages_32x1_tn",
+          "duration_ms": 85.36523800000005,
+          "calls": 109
+        },
+        {
+          "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1})",
+          "duration_ms": 36.094963000001044,
+          "calls": 7092
+        },
+        {
+          "name": "void kDequantizeBlockwise<__half, 512, 64, 8, 2>(float*, unsigned char*, float*, __half*, int, int)",
+          "duration_ms": 35.54454399999999,
+          "calls": 252
+        },
+        {
+          "name": "ampere_fp16_s16816gemm_fp16_256x128_ldg8_f2f_stages_32x3_tn",
+          "duration_ms": 34.287603999999995,
+          "calls": 36
+        },
+        {
+          "name": "fmha_cutlassF_f16_aligned_64x128_rf_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::half_t, cutlass::arch::Sm80, true, 64, 128, 128, true, true>::Params)",
+          "duration_ms": 24.51465800000003,
+          "calls": 972
+        },
+        {
+          "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1})",
+          "duration_ms": 12.317069000000071,
+          "calls": 6076
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<c10::Half>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::Half>, std::array<char*, 1ul>)",
+          "duration_ms": 7.876209999999717,
+          "calls": 6336
+        },
+        {
+          "name": "ampere_fp16_s1688gemm_fp16_128x128_ldg8_relu_f2f_stages_32x1_tn",
+          "duration_ms": 6.713085999999999,
+          "calls": 36
+        },
+        {
+          "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::MeanOps<float, float, float, float>, unsigned int, float, 4, 4> >(at::native::ReduceOp<float, at::native::MeanOps<float, float, float, float>, unsigned int, float, 4, 4>)",
+          "duration_ms": 5.036050999999979,
+          "calls": 2044
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<4, at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> >, std::array<char*, 3ul> >(int, at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> >, std::array<char*, 3ul>)",
+          "duration_ms": 4.902211999999837,
+          "calls": 1008
+        }
+      ]
+    },
+    "N16": {
+      "profile_total_ms": 1452.371003004373,
+      "profile_verify_ms": 1266.495769021276,
+      "target_forwards": 27,
+      "target_rows": 36,
+      "cuda_kernel_count": 53887,
+      "cuda_kernel_duration_sum_ms": 761.1160630000012,
+      "packed_kernel": {
+        "name": "_packed_two_rows_kernel",
+        "duration_ms": 382.3184240000008,
+        "calls": 6804
+      },
+      "top_cuda_kernels": [
+        {
+          "name": "_packed_two_rows_kernel",
+          "duration_ms": 382.3184240000008,
+          "calls": 6804
+        },
+        {
+          "name": "void cutlass::Kernel2<cutlass_80_wmma_tensorop_f16_s161616gemm_f16_16x16_128x1_tn_align8>(cutlass_80_wmma_tensorop_f16_s161616gemm_f16_16x16_128x1_tn_align8::Params)",
+          "duration_ms": 90.66232600000004,
+          "calls": 27
+        },
+        {
+          "name": "ampere_fp16_s1688gemm_fp16_256x64_ldg8_f2f_stages_32x1_tn",
+          "duration_ms": 81.73300800000001,
+          "calls": 109
+        },
+        {
+          "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1} const&)::{lambda(int)#1})",
+          "duration_ms": 36.19352500000088,
+          "calls": 7092
+        },
+        {
+          "name": "ampere_fp16_s16816gemm_fp16_256x128_ldg8_f2f_stages_32x3_tn",
+          "duration_ms": 34.540335999999996,
+          "calls": 36
+        },
+        {
+          "name": "void kDequantizeBlockwise<__half, 512, 64, 8, 2>(float*, unsigned char*, float*, __half*, int, int)",
+          "duration_ms": 34.26429700000003,
+          "calls": 252
+        },
+        {
+          "name": "fmha_cutlassF_f16_aligned_64x128_rf_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::half_t, cutlass::arch::Sm80, true, 64, 128, 128, true, true>::Params)",
+          "duration_ms": 24.49241599999998,
+          "calls": 972
+        },
+        {
+          "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<c10::Half, c10::Half, c10::Half, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1})",
+          "duration_ms": 12.41981199999981,
+          "calls": 6076
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<c10::Half>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::Half>, std::array<char*, 1ul>)",
+          "duration_ms": 7.890553999999742,
+          "calls": 6336
+        },
+        {
+          "name": "ampere_fp16_s1688gemm_fp16_128x128_ldg8_relu_f2f_stages_32x1_tn",
+          "duration_ms": 6.6528670000000005,
+          "calls": 36
+        },
+        {
+          "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::MeanOps<float, float, float, float>, unsigned int, float, 4, 4> >(at::native::ReduceOp<float, at::native::MeanOps<float, float, float, float>, unsigned int, float, 4, 4>)",
+          "duration_ms": 5.119717999999986,
+          "calls": 2044
+        },
+        {
+          "name": "void at::native::(anonymous namespace)::CatArrayBatchedCopy<at::native::(anonymous namespace)::OpaqueType<2u>, unsigned int, 4, 64, 64>(at::native::(anonymous namespace)::OpaqueType<2u>*, at::native::(anonymous namespace)::CatArrInputTensorMetadata<at::native::(anonymous namespace)::OpaqueType<2u>, unsigned int, 64, 64>, at::native::(anonymous namespace)::TensorSizeStride<unsigned int, 4u>, int, unsigned int)",
+          "duration_ms": 4.9100029999999695,
+          "calls": 2016
+        }
+      ]
+    }
+  },
+  "ratios_N16_over_N8": {
+    "packed_kernel_duration": 0.6531609435774257,
+    "total_cuda_kernel_duration": 0.7845150698819612,
+    "profile_total": 1.0762440026671907
+  },
+  "interpretation": "N16 sharply reduces the two-row packed Triton kernel duration in this trace, while paired end-to-end runs across matched prompt/session slots show only a small descriptive change versus N8. Therefore kernel-time savings do not yet establish a material end-to-end gain."
+}

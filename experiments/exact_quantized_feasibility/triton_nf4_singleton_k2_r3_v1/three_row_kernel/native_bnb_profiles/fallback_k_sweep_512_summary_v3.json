@@ -1,0 +1,358 @@
+{
+  "schema": "zassd-fallback-k-sweep-summary-512-repeat-v1",
+  "classification": "six selected development prompts; two independent processes and eight paired rounds per prompt",
+  "scope": "Qwen2.5-3B-Instruct NF4, RTX 4050 Laptop GPU, 512 tokens, physical_rows=3, native BNB fallback on every empty-proposal cycle",
+  "ratio_definition": "speedup = baseline latency / candidate latency; >1 means candidate faster",
+  "prompt_count": 6,
+  "independent_processes": 12,
+  "timing_rounds_per_k": 48,
+  "all_k_values_exact_to_b1_tokens_and_kv": true,
+  "timed_candidate_tokens_match_b1": true,
+  "original_bnb_token_matches_per_k": {
+    "k1_fallback_all": 48,
+    "k2_fallback_all": 48
+  },
+  "aggregate_speedup_vs_bnb": {
+    "k1_fallback_all": {
+      "geomean_across_prompts": 1.050901293006664,
+      "prompt_cluster_bootstrap_95pct": [
+        0.9842659929233641,
+        1.1070175045736226
+      ],
+      "prompt_min": 0.9041276123617322,
+      "prompt_max": 1.1391717119979032,
+      "prompts_faster_than_bnb": 5
+    },
+    "k2_fallback_all": {
+      "geomean_across_prompts": 1.2518220121084502,
+      "prompt_cluster_bootstrap_95pct": [
+        1.1034104703733256,
+        1.4023561491188525
+      ],
+      "prompt_min": 0.9658891071127415,
+      "prompt_max": 1.5515848278176416,
+      "prompts_faster_than_bnb": 5
+    }
+  },
+  "k2_speedup_over_k1": {
+    "geomean_across_prompts": 1.1911889541280756,
+    "prompt_cluster_bootstrap_95pct": [
+      1.1185003830129194,
+      1.271961630049249
+    ],
+    "prompt_min": 1.068310594551667,
+    "prompt_max": 1.3620289298585546,
+    "prompts_k2_faster": 6
+  },
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/112",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "k1_fallback_all": 1.1391717119979032,
+        "k2_fallback_all": 1.5515848278176416
+      },
+      "k2_speedup_over_k1": 1.3620289298585546,
+      "acceptance_fraction": {
+        "k1": 0.7781818181818182,
+        "k2": 0.7411167512690355
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_k_sweep_HumanEval112_512_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.1373454198556092,
+            "k2_fallback_all": 1.5499936209020726
+          },
+          "k2_speedup_over_k1": 1.36281695414824,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 22,
+            "k2": 22
+          }
+        },
+        {
+          "artifact": "fallback_k_sweep_HumanEval112_512_rep2_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.1410009367083782,
+            "k2_fallback_all": 1.5531776682492549
+          },
+          "k2_speedup_over_k1": 1.3612413612296819,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 22,
+            "k2": 22
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "k1_fallback_all": 1.0722474174634444,
+        "k2_fallback_all": 1.2820705132993755
+      },
+      "k2_speedup_over_k1": 1.1956853356963988,
+      "acceptance_fraction": {
+        "k1": 0.71,
+        "k2": 0.625
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_k_sweep_HumanEval114_512_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.0780858478495083,
+            "k2_fallback_all": 1.2834485226788386
+          },
+          "k2_speedup_over_k1": 1.1904882391684979,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 169,
+            "k2": 169
+          }
+        },
+        {
+          "artifact": "fallback_k_sweep_HumanEval114_512_rep2_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.0664406054029907,
+            "k2_fallback_all": 1.2806939834571252
+          },
+          "k2_speedup_over_k1": 1.2009051202370258,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 169,
+            "k2": 169
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/121",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "k1_fallback_all": 1.0914381755117841,
+        "k2_fallback_all": 1.3818288631196034
+      },
+      "k2_speedup_over_k1": 1.266062424902494,
+      "acceptance_fraction": {
+        "k1": 0.7125984251968503,
+        "k2": 0.6447368421052632
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_k_sweep_HumanEval121_512_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.0857363295843439,
+            "k2_fallback_all": 1.3666329337247387
+          },
+          "k2_speedup_over_k1": 1.2587153036022396,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 77,
+            "k2": 77
+          }
+        },
+        {
+          "artifact": "fallback_k_sweep_HumanEval121_512_rep2_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.0971699652166356,
+            "k2_fallback_all": 1.3971937598095443
+          },
+          "k2_speedup_over_k1": 1.273452431350205,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 77,
+            "k2": 77
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "k1_fallback_all": 0.9041276123617322,
+        "k2_fallback_all": 0.9658891071127415
+      },
+      "k2_speedup_over_k1": 1.068310594551667,
+      "acceptance_fraction": {
+        "k1": 0.305019305019305,
+        "k2": 0.21656050955414013
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_k_sweep_HumanEval123_512_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 0.9065003451662158,
+            "k2_fallback_all": 0.9693325169119227
+          },
+          "k2_speedup_over_k1": 1.0693129043808427,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 173,
+            "k2": 173
+          }
+        },
+        {
+          "artifact": "fallback_k_sweep_HumanEval123_512_rep2_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 0.9017610901020008,
+            "k2_fallback_all": 0.9624579295154498
+          },
+          "k2_speedup_over_k1": 1.0673092242276538,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 173,
+            "k2": 173
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "k1_fallback_all": 1.0151524950245077,
+        "k2_fallback_all": 1.1230732431217054
+      },
+      "k2_speedup_over_k1": 1.1063098880475017,
+      "acceptance_fraction": {
+        "k1": 0.521978021978022,
+        "k2": 0.42474916387959866
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_k_sweep_cnndm_004_512_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.0175249574156875,
+            "k2_fallback_all": 1.1351135237361247
+          },
+          "k2_speedup_over_k1": 1.1155633239887197,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 234,
+            "k2": 234
+          }
+        },
+        {
+          "artifact": "fallback_k_sweep_cnndm_004_512_rep2_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.0127855642694383,
+            "k2_fallback_all": 1.111160675158261
+          },
+          "k2_speedup_over_k1": 1.0971332080150495,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 234,
+            "k2": 234
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "k1_fallback_all": 1.1008475950058894,
+        "k2_fallback_all": 1.2905607688488876
+      },
+      "k2_speedup_over_k1": 1.1723337314844051,
+      "acceptance_fraction": {
+        "k1": 0.7537688442211056,
+        "k2": 0.652317880794702
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_k_sweep_cnndm_003_512_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.1100903792521393,
+            "k2_fallback_all": 1.2880844149411503
+          },
+          "k2_speedup_over_k1": 1.1603419316262558,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 163,
+            "k2": 163
+          }
+        },
+        {
+          "artifact": "fallback_k_sweep_cnndm_003_512_rep2_v1.json",
+          "speedup_vs_bnb": {
+            "k1_fallback_all": 1.091681767611279,
+            "k2_fallback_all": 1.293041883569352
+          },
+          "k2_speedup_over_k1": 1.1844494631422409,
+          "bnb_token_matches": {
+            "k1_fallback_all": 4,
+            "k2_fallback_all": 4
+          },
+          "empty_proposal_cycles": {
+            "k1": 163,
+            "k2": 163
+          }
+        }
+      ]
+    }
+  ],
+  "input_sha256": {
+    "fallback_k_sweep_HumanEval112_512_v1.json": "7eabbaa9005f012781f15f44c4f8602bfd39723305a7d2387c1fa0a83985a947",
+    "fallback_k_sweep_HumanEval112_512_rep2_v1.json": "60404709f7ba4a14bfe7b8e5f05747eb3cd60df51c9e556d3e8fe83a0e90a29f",
+    "fallback_k_sweep_HumanEval114_512_v1.json": "a5aa35626bd41bf27eba2f6325eaeb16145bf4f2cbb67ee0100fa1d829b30109",
+    "fallback_k_sweep_HumanEval114_512_rep2_v1.json": "3d20c0c4e7cf5d7b1f7fcaea14a63891d71a4a1ad9e2afc1c5ae30bb704ddc9c",
+    "fallback_k_sweep_HumanEval121_512_v1.json": "1bca532b32f799cb068f0e0cf9f31aecf4b8f510d8959275b072452da90a19f5",
+    "fallback_k_sweep_HumanEval121_512_rep2_v1.json": "b5e78acaf0b9e2528fdc171da7274344eed5728809e3da68cfd5a067349ce697",
+    "fallback_k_sweep_HumanEval123_512_v1.json": "49e08a3e5d86e81c67f4c3767797403d29a7eb7ee184702549e18c69d7dc24cc",
+    "fallback_k_sweep_HumanEval123_512_rep2_v1.json": "3ec0df5d40157a205d1a5baa4560d07e0cc60f78884dde46ab31d0ecc34dc989",
+    "fallback_k_sweep_cnndm_004_512_v1.json": "d7018380c1c58ce0b6207348dd37b7ab088b29a57462dfd239fd8f0708e6c96b",
+    "fallback_k_sweep_cnndm_004_512_rep2_v1.json": "eac38401cf202d7b2e781d2015a709caec966fb1a5f210fa2b862139ba3131f7",
+    "fallback_k_sweep_cnndm_003_512_v1.json": "32ef27554afe36199d3670ff8283a2b9e391868cce67e8d1ba58355aef59c688",
+    "fallback_k_sweep_cnndm_003_512_rep2_v1.json": "8a8ad1c4b0beb838cfce6efb540deb6ccc3faf32de27f6db9ad146393f303a44"
+  },
+  "manifest_sha256s": [
+    "5e08c5dbc7b949ef2fc47b8d83827e52aa91b85fc666c8507891bba665f11a81",
+    "c5c6fb02056073dc80720e05bc7991b5fb739069ec8997c71adfa9e653ec9356",
+    "cfaba29ba2d70ff732eb76c11b43450717983c9fb6425aee71fcf52ccfe443e9"
+  ],
+  "heldout_used": false,
+  "limits": [
+    "Six selected prompts, two processes per prompt, one model and GPU; prompt-cluster bootstrap is descriptive.",
+    "Original-BNB comparison is token/latency only; no original-BNB KV-state identity claim.",
+    "GSM8K held-out indices 300-349 excluded."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_activationvec_k_sweep_512_repeats.py",
+  "source_sha256": "da9766a68505c2b35c4b36140a0a4be441bd12505ec8b53586681702ce976cf8"
+}

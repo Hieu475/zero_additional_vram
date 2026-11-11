@@ -1,0 +1,108 @@
+{
+  "schema": "zassd-bnb-simt-gate-up-layer-audit-v1",
+  "classification": "actual M=3 BNB CUDA SIMT output comparison; finite operator evidence only",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "HumanEval/112",
+  "prompt_tokens": 157,
+  "forced_bnb_tokens": [
+    262,
+    671,
+    4615
+  ],
+  "layers": [
+    0,
+    17,
+    35
+  ],
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "bitsandbytes": "0.50.0",
+  "arithmetic": "FP16 LUT centroid * FP16 nested scale rounded to FP16; FP16 activation * weight rounded to FP16; serial per-lane pair accumulation then SHFL.DOWN 16,8,4,2,1.",
+  "modules": [
+    {
+      "module": "layers.0.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true
+    },
+    {
+      "module": "layers.0.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true
+    },
+    {
+      "module": "layers.17.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true
+    },
+    {
+      "module": "layers.17.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true
+    },
+    {
+      "module": "layers.35.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true
+    },
+    {
+      "module": "layers.35.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true
+    }
+  ],
+  "overall": {
+    "exact_elements": 198144,
+    "total_elements": 198144,
+    "bitwise_exact": true
+  },
+  "source_sha256": "f57ef00b9627131e327333b1e3138a921adcef79223d68921140e9651d586b87",
+  "limits": [
+    "One prompt and selected gate/up projections only.",
+    "No whole-model token/KV identity claim or performance claim.",
+    "GSM8K held-out indices 300-349 were not used."
+  ]
+}

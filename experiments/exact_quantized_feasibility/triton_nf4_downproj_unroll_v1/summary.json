@@ -1,0 +1,46 @@
+{
+  "status": "no-go for ordered K-loop unrolling on down_proj; finite M=1/2 screen only",
+  "configuration": {
+    "shape": "11008x2048",
+    "block_n": 16,
+    "block_k": 256,
+    "num_warps": 1,
+    "rounds": 15,
+    "iterations_per_sample": 50
+  },
+  "correctness": {
+    "reference_n16_w1_m1_rowwise_singleton_equal": true,
+    "ordered_unroll2_m1_rowwise_singleton_equal": true,
+    "unroll2_m1_equals_reference": true,
+    "reference_n16_w1_m2_rowwise_singleton_equal": true,
+    "ordered_unroll2_m2_rowwise_singleton_equal": true,
+    "unroll2_m2_equals_reference": true
+  },
+  "paired_reference_over_unroll2_geomean_latency_ratio": {
+    "1": 0.944140981285184,
+    "2": 0.9811418545422298
+  },
+  "single_schedule_medians_ms": {
+    "1": {
+      "reference_n16_w1": 0.11104255676269531,
+      "ordered_unroll2": 0.13187071800231934
+    },
+    "2": {
+      "reference_n16_w1": 0.13147775650024415,
+      "ordered_unroll2": 0.13584832191467286
+    }
+  },
+  "decision": "Unroll factors 2/4/8 are slower than factor 1 in the initial screen. In higher-repeat alternating A/B, unroll 2 remained bitwise equal to the current reference but did not improve latency: it was about 5.9% slower at M=1 and 1.9% slower at M=2 by paired geometric mean. Reject; do not integrate or create a runtime contract.",
+  "limits": [
+    "Finite single-GPU operator experiment; no end-to-end inference run.",
+    "Individual A/B rounds show substantial latency variability, especially at M=2; report paired values descriptively.",
+    "Held-out GSM8K indices 300-349 were not used."
+  ],
+  "artifacts": {
+    "initial_screen": "operator_benchmark.json",
+    "paired_confirmation": "paired_confirm.json",
+    "kernel_prototype": "../../../src/zassd/certification/nf4_fixed_rows_group_scale_packed_rows_unroll.py",
+    "benchmark_harness": "../../../scripts/benchmark_nf4_downproj_unroll.py",
+    "confirmation_harness": "../../../scripts/confirm_nf4_downproj_unroll2.py"
+  }
+}

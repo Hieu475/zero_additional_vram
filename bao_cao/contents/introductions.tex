@@ -1,0 +1,27 @@
+\chapter{Giới thiệu}
+
+\section{Bối cảnh và động lực nghiên cứu}
+Mô hình ngôn ngữ lớn thường sinh đầu ra theo cơ chế tự hồi quy, trong đó mỗi token mới phụ thuộc vào các token đã sinh trước đó. Sự phụ thuộc tuần tự này làm tăng độ trễ khi sinh chuỗi dài. Speculative decoding giảm số bước tuần tự bằng cách tạo trước các token ứng viên rồi dùng mô hình đích kiểm tra chúng. Cách triển khai dùng một mô hình draft riêng có thể làm tăng đáng kể nhu cầu bộ nhớ vì phải lưu đồng thời trọng số của draft và target.
+
+Self-speculative decoding tạo draft từ chính mô hình đích, chẳng hạn bằng cách bỏ qua một số lớp; Prompt Lookup Decoding (PLD) tạo draft bằng cách tra cứu các chuỗi token đã xuất hiện trong ngữ cảnh. Hai cách tiếp cận tránh nạp thêm trọng số draft nhưng có các chi phí khác nhau: layer-skip vẫn thực thi một phần mô hình, còn PLD phụ thuộc vào mức độ lặp lại của workload. Trong cả hai trường hợp, target vẫn cần xác minh các token dự thảo.
+
+Mâu thuẫn kỹ thuật trung tâm là giảm bộ nhớ trọng số không đồng nghĩa với giảm độ trễ. Hiệu quả phụ thuộc vào chi phí draft, verify, backend lượng tử hóa, quản lý KV cache và độ ổn định số học. Vì thế cần một đánh giá có đối chứng để xác định trong điều kiện nào các phương pháp không dùng trọng số draft bổ sung thực sự có lợi.
+
+\section{Mục tiêu và câu hỏi nghiên cứu}
+Mục tiêu của đồ án là xây dựng và đánh giá một hệ thống giải mã suy đoán cho GPU có VRAM hạn chế, tập trung vào hiệu năng, chi phí bộ nhớ và độ khớp chuỗi đầu ra. Các câu hỏi nghiên cứu được đặt ra như sau:
+\begin{description}
+    \item[RQ1.] Khi nào layer-skip và PLD tạo speedup so với vanilla decoding trên GPU giới hạn VRAM?
+    \item[RQ2.] Chi phí draft, verify và overhead quyết định ranh giới khả thi (feasibility boundary) của từng hành động như thế nào?
+    \item[RQ3.] Backend lượng tử hóa, chế độ thực thi theo lô/tuần tự và trạng thái KV cache ảnh hưởng thế nào đến numerical fidelity và exact token match?
+    \item[RQ4.] Router có cải thiện so với phương pháp cố định tốt nhất trên cùng workload không?
+    \item[RQ5.] Có thể xây dựng một vòng giải mã suy đoán trên mô hình NF4 cho đúng từng token và KV của greedy tuần tự gốc, không thêm bộ nhớ đáng kể, và với tốc độ như thế nào?
+    \item[RQ6.] Có thể thiết kế kernel 4-bit mà kết quả mỗi hàng không phụ thuộc số hàng trong khối, để kiểm tra theo khối vừa exact vừa đọc trọng số một lần, và mức tăng tốc đạt được là bao nhiêu?
+\end{description}
+
+\section{Phạm vi và giới hạn}
+Đồ án tập trung vào suy luận batch nhỏ trên GPU laptop có VRAM hạn chế, không huấn luyện lại mô hình ngôn ngữ và không nạp auxiliary draft-model weights trong các phương pháp mục tiêu. Các phương thức được khảo sát gồm vanilla, layer-skip, PLD và router kết hợp. Đánh giá bao gồm throughput/latency, bộ nhớ và sequence fidelity dưới greedy decoding. Hai backend lượng tử hóa BNB NF4 và HQQ+GemLite W4A16 được khảo sát trong các thí nghiệm riêng. Benchmark paired chính dùng Qwen2.5-3B-Instruct NF4 trên RTX 4050; các thí nghiệm backend/numerical fidelity có thể khác về giao thức, cỡ mẫu hoặc giới hạn token và được báo cáo tách biệt.
+
+Phần giải mã exact ở Chương 6 và Chương 7 chỉ xét backend bitsandbytes NF4, họ mô hình Qwen2.5 (Chương 7 thêm OLMo-2), batch 1 và greedy decoding trên một GPU, và so sánh tốc độ với chính greedy bitsandbytes gốc. Kết luận chỉ áp dụng cho cấu hình, model revision, backend, prompt set và giao thức được nêu trong từng thí nghiệm. Đồ án không khẳng định lossless behavior trên mọi backend, precision hoặc execution mode; cũng không khái quát speedup đo được trên RTX 4050 thành bảo đảm cho thiết bị khác.
+
+\section{Cấu trúc báo cáo}
+Báo cáo gồm tám chương. Chương 1 nêu động lực, câu hỏi nghiên cứu và phạm vi. Chương 2 trình bày cơ sở lý thuyết, công trình liên quan và các vấn đề nghiên cứu được khảo sát. Chương 3 mô tả yêu cầu, kiến trúc, thuật toán giải mã, quản lý KV cache, mô hình chi phí và router. Chương 4 trình bày hiện thực chương trình. Chương 5 mô tả giao thức và kết quả thực nghiệm. Chương 6 trình bày vòng giải mã suy đoán exact trên NF4 (B2) và bằng chứng đánh giá nó, trả lời RQ5. Chương 7 trình bày bộ kernel 4-bit bất biến theo số hàng và vòng giải mã exact trên CUDA graph, trả lời RQ6. Chương 8 tổng kết, nêu giới hạn và hướng phát triển.

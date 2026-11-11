@@ -1,0 +1,44 @@
+{
+  "status": "development-only 256-token closed-loop B1 validation",
+  "configuration": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "k": 2,
+    "ngram_size": 3,
+    "physical_rows": 3,
+    "block_k": 32,
+    "attention_strategy": "triton_batched",
+    "quantized_linear_strategy": "fixed_rows",
+    "timed_rounds_per_prompt": 1
+  },
+  "prompts": {
+    "cnndm_003": {
+      "token_kv_lengths_exact_to_b1": true,
+      "shared_kv_prefixes": 256,
+      "accepted_draft_tokens": 78,
+      "draft_tokens": 142,
+      "speedup_vs_b1": 1.4856437833661433,
+      "speedup_vs_original_bnb": 1.101733812201898,
+      "block_matches_bnb_tokens": false,
+      "artifact": "triton_fixed_row_attention_closed_loop_cnndm003_k2_r3_256_s2_v1.json"
+    },
+    "cnndm_004": {
+      "token_kv_lengths_exact_to_b1": true,
+      "shared_kv_prefixes": 256,
+      "accepted_draft_tokens": 71,
+      "draft_tokens": 135,
+      "speedup_vs_b1": 1.404837527095474,
+      "speedup_vs_original_bnb": 1.0347071303177984,
+      "block_matches_bnb_tokens": false,
+      "artifact": "triton_fixed_row_attention_closed_loop_cnndm004_k2_r3_256_s3_v1.json"
+    }
+  },
+  "descriptive_two_prompt_geomean_speedup_vs_b1": 1.4446757901926843,
+  "descriptive_two_prompt_geomean_speedup_vs_original_bnb": 1.067694633871274,
+  "timed_outputs_matching_original_bnb": 0,
+  "limitations": [
+    "Two development prompts and one timing pair per prompt; exploratory only.",
+    "B1 equality is within the custom fixed-row attention reference.",
+    "Both block outputs diverged from original BNB tokens.",
+    "Held-out GSM8K indices 300\u2013349 were not used."
+  ]
+}

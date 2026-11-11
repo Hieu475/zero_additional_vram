@@ -1,0 +1,78 @@
+{
+  "status": "completed model load for locked development sweep",
+  "protocol_sha256": "61ce798959d8ae9b9ce66d8475ebff5aa7dd64076ea9777db7a01bdf882d78b3",
+  "cohort_sha256": "12f1b072d375bdcbc819a24d125e73b3307ed0d37a802d6f0e377e193aaf48e3",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "family": "OLMo2",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "device": "cuda:0",
+  "M_values": [
+    3,
+    5,
+    9
+  ],
+  "runtime_identity": {
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "index": 0,
+      "compute_capability": [
+        8,
+        9
+      ],
+      "total_memory_bytes": 6053232640,
+      "driver": {
+        "version": "595.99.02",
+        "compute_capability": "8.9",
+        "uuid": "GPU-794ce37a-f7d3-5b6e-8858-75c2d14741f5"
+      }
+    },
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0",
+    "model_type": "olmo2",
+    "model_config_sha256": "c5650308d3e0aa3d69348cf72f2c3869154c6cd4a0fc2136ae5daaf2381b15e7",
+    "model_attention_implementation": "sdpa",
+    "tokenizer": {
+      "class": "TokenizersBackend",
+      "name_or_path": "allenai/OLMo-2-0425-1B-Instruct",
+      "length": 100278,
+      "vocab_size": 100278,
+      "vocab_sha256": "b3f4fed02e2294853b11f1c2de83b57b898f5d6a95be63336e1cbf7c0ca39719",
+      "special_tokens_map": {
+        "bos_token": "<|endoftext|>",
+        "eos_token": "<|endoftext|>",
+        "unk_token": "<|endoftext|>",
+        "pad_token": "<|pad|>"
+      },
+      "bos_token_id": 100257,
+      "eos_token_id": 100257,
+      "pad_token_id": 100277,
+      "chat_template_sha256": "fe689ffbd6a4e2d0532d7480696b065b10e0e1eff3f9b9fc4bea415761e4bf4a"
+    },
+    "backend_flags": {
+      "float32_matmul_precision": "highest",
+      "cuda_matmul_allow_tf32": false,
+      "cudnn_allow_tf32": true,
+      "cudnn_deterministic": false,
+      "deterministic_algorithms": false,
+      "flash_sdp_enabled": true,
+      "mem_efficient_sdp_enabled": true,
+      "math_sdp_enabled": true
+    },
+    "source_sha256": {
+      "src/zassd/certification/qwen2_padded.py": "382ad45bcb0cde697f77feef2bda33685bf780018af9a1e5ecc305eb6c421403",
+      "src/zassd/decoding/b1_exact.py": "746a66ae08c26166e43c57f1989a8906cff7efbdd696dc7bd5e78c8bf57a67f6",
+      "src/zassd/decoding/ngram.py": "0976856395ce1a293e767c84fd6b1dc6d8f277b57f0674e806896cc3913d4713",
+      "src/zassd/cache/kv_cache.py": "a56a3ad4ee163e7456e236515e8848173face82426b0fe3c0e7489b170ed3934",
+      "src/zassd/backends/base.py": "52639b82bdabd3cec1f50ac5a21b03fb91081a034b2b01c322ef68086e0d1e79",
+      "scripts/run_b1_block_pilot.py": "01900282116f7ee21166e9f37f31fb2abaea5beb12c192cfdb49d13f7c3c13db"
+    },
+    "quantized_state_sha256": "537a00ed0358570711b8daa1bcb80f45c5f5be3ec59ecaf1882d9ccc65aa99ce"
+  }
+}

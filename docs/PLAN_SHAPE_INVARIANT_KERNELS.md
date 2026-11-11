@@ -1,0 +1,255 @@
+# Kế hoạch nghiên cứu duy nhất: kernel 4-bit bất biến theo hình dạng cho giải mã suy đoán exact
+
+Ngày: 05/11/2026. Đây là hướng duy nhất để theo đến khi nộp bài. Mọi việc khác (xem mục 11) chỉ được làm nếu phục vụ trực tiếp hướng này. Mọi con số "đã đo" trỏ về `C_SHAPE_AUDIT_SUMMARY.md`, `RESEARCH_DIRECTIONS_A_C.md` và thư mục `experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/`. Chỗ nào chưa có bằng chứng được ghi **CHƯA BIẾT**.
+
+---
+
+## 1. Luận điểm và đóng góp dự kiến
+
+**Vấn đề.** Giải mã suy đoán (speculative decoding) về lý thuyết không đổi kết quả. Trên mô hình 4-bit thực tế, khối K+1 token chạy qua kernel khác với từng token một, kết quả đổi từng bit ở một số toán tử, và chuỗi sinh ra lệch khỏi greedy tuần tự (đã đo: 26–82% chuỗi lệch với PLD ngây thơ; 34–66% với mô hình nháp thật).
+
+**Cách sửa hiện có và giới hạn.** Chạy từng hàng những toán tử nhạy (đã đo: đưa lệch về 0/50–0/60 ở mọi ô). Nhưng mỗi hàng đọc lại toàn bộ trọng số của toán tử đó. Giải mã suy đoán có lợi chính vì đọc trọng số một lần cho nhiều token, nên chạy từng hàng làm mất đúng lợi ích đó. Kết quả hướng A cho thấy suy đoán exact trên nền CUDA graph chỉ thêm 1.009x.
+
+**Đề xuất.** Bộ kernel 4-bit **bất biến theo số hàng M**: kết quả của hàng i bằng từng bit dù hàng đó được tính cùng 1, 2, ... hay 8 hàng khác, nhưng trọng số chỉ được đọc một lần cho cả khối. Dùng chung cho baseline (M=1) và bộ xác minh, nên "exact" đúng theo thiết kế, không chỉ theo quan sát.
+
+**Đóng góp (theo thứ tự quan trọng):**
+1. Bộ kernel (GEMM NF4, LM head, attention, RMSNorm) bất biến theo M, với chứng minh theo cấu trúc (thứ tự cộng gộp cố định, không phụ thuộc M) cộng kiểm tra từng bit thực nghiệm.
+2. Khung giải mã suy đoán exact cho mô hình 4-bit dùng các kernel đó, với số đo tốc độ đầu-cuối so với (a) chạy từng hàng và (b) baseline cùng kernel.
+3. Phân tích chi phí: bất biến theo M tốn bao nhiêu so với bnb/cuBLAS ở M=1, và lợi bao nhiêu ở M>1.
+4. Kiểm toán có sẵn (`shape_audit.py`) trở thành công cụ kiểm chứng, không còn là đóng góp chính.
+
+**Không tuyên bố:** "phát hiện hiện tượng mới" (đã có ở batch-invariant ops, LLM-42), "kernel 4-bit nhanh nhất", "exact cho mọi backend/GPU".
+
+## 2. Định nghĩa "exact" (phải thống nhất trước khi viết kernel)
+
+- **Tham chiếu mới** = greedy tuần tự M=1 chạy bằng **chính bộ kernel bất biến này**. Không cố tái tạo thứ tự cộng của cuBLAS/bnb (đóng nguồn một phần, đổi theo phiên bản).
+- Hệ quả cần nói thẳng trong bài: tham chiếu này **không** bằng từng bit với đường HF+bnb mặc định. Phải đo và báo cáo độ khác biệt token giữa hai tham chiếu (kỳ vọng rất nhỏ nhưng **CHƯA BIẾT**), vì người đọc sẽ hỏi.
+- Điều kiện exact: với mọi M trong [1, M_max], đầu ra hàng i của kernel(M) bằng đầu ra của kernel(1) trên hàng i, từng bit. Kiểm tra bằng thử nghiệm ngẫu nhiên lớn trên từng kernel và bằng quỹ đạo đầu-cuối.
+
+## 3. Thiết kế kỹ thuật
+
+Nguyên tắc chung: với mỗi phần tử đầu ra, thứ tự cộng gộp (cây rút gọn, kích thước khối, thứ tự split-K) là hằng số cố định, **không phụ thuộc M**. Mỗi chương trình (program/warp) tính một tập hàng, nhưng phép rút gọn của từng hàng chỉ phụ thuộc chiều K và cấu hình cố định. Không dùng split-K động, không dùng atomics, không để auto-tune chọn cấu hình khác nhau theo M.
+
+| Toán tử | Phương án | Ghi chú rủi ro |
+|---|---|---|
+| LM head (fp16, vocab lớn) | Kernel Triton đọc trọng số một lần, tính M hàng, rút gọn fp32 cây cố định | Toán tử đắt nhất khi chạy từng hàng (Qwen 3B ≈ 0.6 GB đọc M lần). Làm đầu tiên |
+| Attention | Split-KV với kích thước chia cố định, hợp nhất kiểu log-sum-exp theo thứ tự cố định | Phải đúng cho GQA (K/V gốc, không nhân bản; xem lỗi GQA đã gặp) và mặt nạ nhân quả theo hàng |
+| RMSNorm | Một chương trình mỗi hàng, rút gọn cố định | Rẻ; hiện chỉ lệch hiếm |
+| GEMM NF4 | Kernel Triton giải lượng tử NF4 (blocksize, absmax của bnb) và nhân, thứ tự K cố định | Chỉ cần cho M≥4 (bnb 0.50.0 đã exact đến M=3 trên projection). Cần đọc đúng quant state của bnb. Thư mục `three_row_kernel` có thể đã có phần nền; **cần kiểm tra trước khi viết lại** |
+
+Việc gắn vào mô hình: thay các module bằng wrapper (cùng cơ chế `rowwise` đã dùng trong `audit_pld_trajectory_divergence.py`), nên khung D/PLD hiện có dùng lại được.
+
+## 4. Các gói công việc, thứ tự và tiêu chí qua cổng
+
+Mỗi gói có tiêu chí **đặt trước**. Không qua cổng thì báo kết quả âm, không đổi tiêu chí sau.
+
+**WP1 — Kernel LM head bất biến (ước tính vài ngày).**
+- Làm: kernel Triton; thử bằng nhau từng bit giữa M=1..8 trên đầu vào thật (lấy từ hook) và ngẫu nhiên (≥10^6 hàng).
+- Đo: thời gian ở M=1 và M=3,5,8 so với cuBLAS và so với chạy M lần.
+- Qua cổng nếu: bằng nhau từng bit ở mọi M; thời gian ở M=4 nhỏ hơn 4 lần thời gian M=1 của chính nó (tức thực sự dùng chung đọc trọng số), và chậm hơn cuBLAS M=1 không quá 1.5x.
+- Nếu rớt: báo âm, dừng; hướng này không khả thi trên phần cứng này (xem mục 8).
+
+**WP2 — Attention bất biến.** Qua cổng nếu bằng nhau từng bit M=1..8 trên các độ dài ngữ cảnh 128–3000, GQA và MHA; không chậm hơn SDPA mặc định quá 2x ở ngữ cảnh ≤1000.
+
+**WP3 — RMSNorm và GEMM NF4 bất biến.** GEMM NF4 chỉ làm nếu muốn K≥3. Qua cổng nếu bằng nhau từng bit và chi phí ở M=1 không quá 1.3x so với bnb.
+
+**WP4 — Tích hợp và kiểm tra quỹ đạo.** Giải mã suy đoán (PLD và mô hình nháp thật) dùng toàn bộ kernel. Qua cổng nếu 0 chuỗi lệch trên ≥500 prompt (cận trên Wilson 95% ≈ 0.8%) ở mọi ô chính.
+
+**WP5 — Tốc độ đầu-cuối (kết quả quyết định).** Đo token/giây với cùng quy trình, cùng prompt, cùng nhiệt độ GPU, lặp ≥5 lần, báo trung vị và khoảng. So sánh: (a) baseline cùng kernel M=1, (b) suy đoán exact cùng kernel, (c) suy đoán chạy từng hàng, (d) suy đoán ngây thơ (không exact, làm trần).
+- **Mục tiêu thành công tối thiểu:** (b) nhanh hơn (a) ít nhất 1.15x trên một cấu hình có mô hình nháp thật, và (b) nhanh hơn (c) ít nhất 1.3x.
+- **Kết quả âm hợp lệ:** nếu (b) không vượt (a) ít nhất 1.05x, bài vẫn có thể là bài âm có giá trị, nhưng không nhắm ICML/MLSys; chuyển sang TMLR/workshop.
+
+**WP6 — Tổng quát hóa (làm khi WP1–WP5 qua cổng).** Mô hình thứ hai và thứ ba (OLMo-2, Phi-3.5, Qwen3-4B); torchao INT4 nếu kernel áp dụng được; GPU thứ hai và mô hình 7B (bạn đã hoãn; **bắt buộc** nếu nhắm ICML/MLSys). Kiểm tra bnb 0.50.1/0.50.2.
+
+**WP7 — Viết bài.** Dùng `PAPER_DRAFT_DIRECTION_C.md` làm nền cho phần kiểm toán/động cơ; đổi trọng tâm sang kernel và tốc độ.
+
+## 5. Thực nghiệm sẽ đưa vào bài
+
+1. Bảng bất biến: kernel × M × độ dài ngữ cảnh × mô hình, tỷ lệ phần tử khác bit (kỳ vọng 0 tuyệt đối).
+2. Bảng chi phí kernel: thời gian ở M=1,2,4,8 so với bnb/cuBLAS/SDPA.
+3. Bảng quỹ đạo: ngây thơ / từng hàng / kernel bất biến, ≥500 prompt, 3 tập dữ liệu, kèm khoảng Wilson.
+4. Bảng tốc độ đầu-cuối (WP5) kèm phân rã thời gian: LM head, attention, projection, phần còn lại.
+5. Khác biệt token giữa tham chiếu bất biến và HF+bnb mặc định (mục 2).
+6. Phụ lục: kết quả kiểm toán hiện có, các kết quả âm (A, B, HQQ), tính không xác định của HQQ+GemLite.
+
+## 6. Kết quả mong đợi (nói rõ độ chắc chắn)
+
+- **Khá chắc:** kernel bất biến có thể đạt bằng nhau từng bit theo cấu trúc; quỹ đạo 0 lệch.
+- **Không chắc (CHƯA BIẾT):** chi phí ở M=1 so với cuBLAS/bnb; mức tăng tốc đầu-cuối. Hướng A cho thấy phần tăng tốc exact còn rất mỏng, và mô hình ≤3B trên RTX 4050 6 GB bị giới hạn bởi overhead khởi chạy kernel, không chỉ băng thông. Đây là rủi ro lớn nhất.
+- **Thực tế hóa kỳ vọng:** kết quả thành công hợp lý là 1.15–1.5x so với baseline exact cùng kernel, chưa phải mức tăng tốc cao của suy đoán không exact.
+
+## 7. Tiêu chí dừng và quyết định (đặt trước)
+
+- Sau WP1: nếu không qua cổng, dừng hướng này và quay lại bài kiểm toán thuần (TMLR/workshop), không tìm hướng mới tùy hứng.
+- Sau WP5: nếu thành công tối thiểu đạt, mở rộng WP6 và nhắm hội nghị. Nếu không, viết bài âm/phương pháp cho TMLR.
+- Không đổi tiêu chí sau khi thấy dữ liệu.
+
+## 8. Rủi ro và cách giảm
+
+| Rủi ro | Giảm |
+|---|---|
+| Kernel Triton chậm hơn cuBLAS nhiều | Đo ở WP1 trước khi làm các phần khác; cổng 1.5x |
+| Overhead khởi chạy làm mất lợi ích | Kết hợp CUDA graph (đã có a2/a3); đo phân rã |
+| Chỉ 6 GB VRAM, mô hình ≤3B | WP6; GPU/mô hình lớn là điều kiện cho ICML/MLSys |
+| Tham chiếu mới khác HF+bnb | Báo cáo khác biệt token, nêu rõ định nghĩa |
+| Bằng nhau từng bit chỉ trên GPU/phiên bản Triton này | Ghi phiên bản; thử ít nhất hai phiên bản Triton nếu có thể; không tuyên bố vượt GPU |
+| Tính mới bị đồng thời công bố/đã có | Tra tài liệu lại ngay trước khi nộp (LLM-42 và batch-invariant ops là gần nhất; tôi mới đọc một phần) |
+
+## 9. Nơi nộp (cần xác nhận từ trang chính thức, không dựa trí nhớ)
+
+- Mục tiêu cao: ICML 2027 hoặc MLSys 2028 (hạn ICML 2027 mới có ước tính bên thứ ba; MLSys 2027 đã quá hạn).
+- Nền an toàn: TMLR (nộp liên tục) hoặc workshop về suy luận hiệu quả.
+- Quyết định chọn sau WP5, theo kết quả tốc độ và WP6.
+
+## 10. Cách dùng kết quả đã có
+
+- Kiểm toán từng toán tử: dùng làm động cơ và công cụ kiểm chứng.
+- Kết quả D (mô hình nháp thật lệch 34–66%, từng hàng về 0): dùng làm bằng chứng vấn đề trên hệ thống thật và đường chuẩn "từng hàng".
+- Kết quả A (1.009x): giữ làm phụ lục âm; chính nó là lý do hướng này cần kernel dùng chung đọc trọng số.
+- Kết quả B (mô hình dự đoán không đạt R² ≥ 0.8): để ở phụ lục như kết quả âm, không phát triển thêm.
+
+## 11. Ngoài phạm vi (không làm nếu không phục vụ hướng này)
+
+Xác minh có chứng nhận theo margin; kernel NF4 nhanh hơn bnb nói chung; vLLM (hướng A, khó trên 6 GB); HQQ/GemLite (không xác định); thuật toán suy đoán mới. Nếu có ý tưởng mới trong lúc làm, ghi vào một danh sách riêng, không bắt đầu làm trước khi WP5 xong.
+
+## 12. Việc đầu tiên khi bắt đầu
+
+1. Đọc `three_row_kernel/` và các kernel Triton NF4 có sẵn để biết phần nào dùng lại được.
+2. Viết kernel LM head bất biến + bộ thử bằng nhau từng bit (WP1).
+3. Báo kết quả qua/không qua cổng WP1 trước khi sang WP2.
+
+---
+
+## 13. Kết quả WP1 (05/11/2026): kernel LM head bất biến theo M — QUA CỔNG
+
+Mã: `src/zassd/kernels/lm_head_invariant.py`; thử nghiệm: `scripts/kernels/wp1_lm_head_invariant.py`; số liệu: `results/kernels/wp1_lm_head_*.json`.
+
+Thiết kế cuối: mọi lời gọi (M = 1..16) đều chạy cùng một kernel Triton trên khối kích thước cố định 16 hàng (đệm số 0), `tl.dot` fp16→fp32, K chia khối 128 theo thứ tự cố định, không split-K, không atomics, không auto-tune. Bản đầu dùng `tl.sum` thay cho `tl.dot` chậm hơn cuBLAS 7.3x (24.5 ms so với 3.34 ms) và đã bị bỏ.
+
+Kết quả (RTX 4050 Laptop, Triton 3.6.0, dữ liệu ngẫu nhiên cùng kích thước thật, 200 khối × 7 kích thước M × vị trí ngẫu nhiên):
+- **Bất biến:** 0 hàng lệch trên 27 000 hàng, ở cả 5 hình dạng (V,K) = (151936,2048), (151936,1536), (151936,896), (32064,3072), (100352,2048).
+- **Chi phí:** M=1: 3.42 ms so với cuBLAS 3.34 ms (1.02x), hằng số theo M=1..8 (cổng yêu cầu ≤ 1.5x và thời gian M=4 < 4 lần M=1: đạt). Chạy từng hàng 3 lần tốn 10.8 ms, kernel mới xử lý 3 hàng trong 3.42 ms (3.2x ít hơn).
+- **Phát hiện phụ:** kernel này bằng từng bit với GEMM của cuBLAS ở M≥2 (0 phần tử khác), nhưng cuBLAS ở M=1 (đường gemv) khác 1.2% phần tử. Nghĩa là tham chiếu bất biến trùng với đường GEMM của cuBLAS, không trùng với M=1 mặc định của HF; độ khác biệt token đầu-cuối vẫn phải đo (mục 2).
+- **Giới hạn:** dữ liệu ngẫu nhiên, một GPU, một phiên bản Triton; bất biến dựa trên tính chất của MMA và được kiểm chứng bằng thực nghiệm, chưa phải chứng minh. Tích hợp vào mô hình thật là WP4.
+
+Bước tiếp theo theo kế hoạch: WP2 (attention bất biến).
+
+---
+
+## 14. Kết quả WP2–WP5 (05/11/2026)
+
+Mã: `src/zassd/kernels/` (`attention_invariant.py`, `rmsnorm_invariant.py`, `nf4_gemm_cuda.py` + `csrc/nf4_gemm.cu`, `invariant_mode.py`); thử nghiệm: `scripts/wp2_*`, `wp3_*`, `wp4_*`, `wp5_*`, `run_wp5_eval.sh`; số liệu: `results/kernels/`. Cần nvcc (CUDA 12.8) để biên dịch kernel NF4 lần đầu. Phần cứng: RTX 4050 Laptop 6 GB; mô hình Qwen2.5-3B-Instruct bnb NF4, Triton 3.6.0, bnb 0.50.0.
+
+**WP2 attention (Triton, split-KV, chia khối tuyệt đối 256 khóa, gộp theo thứ tự cố định): QUA.** 0 hàng lệch trên 6300 (Qwen 3B GQA 16/2, D=128), 6300 (Qwen 1.5B 12/2), 6300 (0.5B 14/2, D=64), 2100 (MHA 32/32), ngữ cảnh 128–3000; bf16 cũng 0 lệch. Sai số so với fp32 ≈ 1e-4. Trong CUDA graph: ≤ 2.1x SDPA ở M=1, nhưng nhanh hơn SDPA có mặt nạ 5–25 lần ở M=3.
+
+**WP3 GEMM NF4 (CUDA C++): QUA, sau hai lần làm lại.** Bản Triton dùng tensor core đúng nhưng chậm hơn bnb 15–20 lần; bản Triton CUDA-core chậm hơn 4–5 lần; bản CUDA (một warp/4 hàng đầu ra, giải lượng tử một lần cho mọi hàng, tích lũy fp32 theo thứ tự cố định, xor-butterfly) bất biến theo M, theo biến thể MP∈{1,2,4,8} và số hàng/warp: 0 lệch trên 7000 hàng. Sai số so với ma trận giải lượng tử fp32 bằng sai số của bnb. Thời gian bước giải mã đầy đủ trong CUDA graph: M=1 15.0 ms (bnb 16.3), M=3–4 17.7 ms (bnb 21.2 và 31.5), M=5–6 23.6 ms (bnb 31). Kernel GEMM chiếm 9.2 ms ở M=1, chậm hơn `gemm_4bit_simt` của bnb (8.9 ms) khoảng 3%, nhanh hơn rõ ở M≥3.
+
+**Lỗi đã bắt được (ghi lại để không lặp):** bản đầu của kernel NF4 đọc bias fp16 như bf16 và cho đầu ra vô nghĩa trong mô hình thật, trong khi vẫn "exact" 100% vì mọi cách chạy đều sinh cùng một chuỗi lặp vô nghĩa. Chỉ lộ ra khi đọc văn bản sinh ra. Bài học: kiểm tra "exact" phải đi kèm kiểm tra văn bản/độ chính xác. Đã sửa (bias chuyển sang fp32) và so từng lớp với ma trận giải lượng tử fp32 trên kích hoạt thật: sai số bằng bnb. Các số liệu WP5 ở dưới đều sinh sau bản sửa; số liệu "nf4" trước đó đã bị loại.
+
+**WP4 đúng từng bit đầu-cuối:** vòng PLD trên CUDA graph, token và KV đã commit bằng từng bit so với giải mã tuần tự M=1 dưới cùng chế độ bất biến: GSM8K 50/50, CNN/DM 20/20, HumanEval 20/20 (Qwen 3B, K=2).
+
+**WP5 tốc độ (tok/s, PLD K=2, ngram 3, 128 token mới, bước lặp trên cùng phiên):**
+
+| Tập | Prompt | Baseline exact (kernel bất biến, M=1 graph) | Vòng PLD exact bất biến | Tăng so với baseline | Vòng exact cũ (chạy từng hàng) | Tăng so với vòng cũ |
+|---|---|---|---|---|---|---|
+| GSM8K | 50 | 62.4 | 74.4 | 1.19x | 58.5 | 1.27x |
+| CNN/DM | 20 | 58.5 | 69.4 | 1.19x | 52.3 | 1.33x |
+| HumanEval | 20 | 58.8 | 76.2 | 1.30x | 56.6 (phiên khác; chạy lại thành công, exact) | 1.34x |
+
+(Baseline exact bất biến nhanh hơn baseline graph cũ dùng kernel gốc: 62.4 so với 57.8 tok/s trên GSM8K.)
+
+**Kết quả âm / chưa đạt tiêu chí:**
+- Giải mã suy đoán với mô hình nháp thật (Qwen 0.5B bf16, K=2, GSM8K, 5 prompt): exact nhưng **0.66x** so với baseline vì bước nháp tốn ~10 ms, gần bằng bước mục tiêu 4-bit 3B (15 ms). Tiêu chí tối thiểu của kế hoạch ("≥ 1.15x trên cấu hình có mô hình nháp thật") **chưa đạt**; mức tăng đạt được là với PLD (không cần mô hình nháp).
+- PLD K=4 thấp hơn K=2 (1.145x so với 1.206x trên 10 prompt).
+- Tiêu chí "≥ 1.3x so với chạy từng hàng": đạt ở CNN/DM (1.33x) và HumanEval (1.34x), chưa đạt ở GSM8K (1.27x).
+
+**Giới hạn cần nói thẳng:** (1) tham chiếu bất biến **không** bằng từng bit với đường HF+bnb mặc định (các kernel khác thứ tự cộng); trên GSM8K 3B, chuỗi tham chiếu mới khác chuỗi mặc định ở khoảng 4/6 prompt trong thử nhanh, thường ở token muộn; chưa đo ở quy mô và chưa kiểm tra độ chính xác tác vụ; (2) một GPU, một mô hình mục tiêu (Qwen 3B) cho phần tốc độ, chưa chạy 7B hay GPU khác; (3) bất biến được kiểm chứng bằng thực nghiệm và cấu trúc, chưa phải chứng minh hình thức; (4) lần chạy HumanEval đầu của vòng cũ lỗi; lần chạy lại sau đó thành công (nguyên nhân lỗi đầu chưa tra, có thể do ngữ cảnh/cache).
+
+**Việc tiếp theo, theo thứ tự:** (a) đo độ khác biệt token và độ chính xác tác vụ giữa tham chiếu bất biến và đường mặc định trên ≥ 100 prompt; (b) chạy lại PLD với ≥ 100 prompt mỗi tập, nhiều mô hình (Qwen 1.5B/0.5B, OLMo-2, Phi-3.5 cần head_dim 96 cho attention); (c) tối ưu thêm kernel GEMM M=1 (hiện ~1.3x thời gian lý thuyết); (d) tìm nguồn nháp rẻ hơn (mô hình nháp nhỏ hơn/nén, n-gram tốt hơn); (e) GPU/mô hình lớn hơn.
+
+---
+
+## 15. Kết quả WP6a (05/11/2026): tham chiếu bất biến so với đường HF+bnb mặc định
+
+Mã: `scripts/kernels/wp6_reference_agreement.py`, `scripts/kernels/wp6_score_answers.py`, `scripts/kernels/run_wp6.sh`; số liệu: `results/kernels/wp6_agreement_*`. Qwen2.5-3B NF4, giải mã greedy eager, hai chế độ (mặc định và `invariant_mode` đủ 4 toán tử).
+
+| Tập | Prompt | Chuỗi giống hệt | Vị trí lệch đầu tiên (trung vị) |
+|---|---|---|---|
+| GSM8K eval (400 token tối đa, dừng ở câu trả lời) | 50 | 15 (30%) | 42 token |
+| GSM8K ext150 (320 token) | 150 | 66 (44%) | 74.5 token |
+
+Tức là tham chiếu bất biến khác tham chiếu mặc định ở 56–70% chuỗi. Đây cùng cỡ với mức lệch của PLD ngây thơ so với tuần tự trong mục kiểm toán (26–82%): bất kỳ hai cài đặt hợp lệ khác thứ tự cộng đều tách nhau, nên "exact" chỉ có nghĩa so với một tham chiếu xác định, và tham chiếu mới chính là cái được bảo đảm.
+
+Độ chính xác GSM8K trên 50 prompt có đáp án chuẩn (bộ trích xuất đáp án được viết sau khi xem văn bản, áp dụng giống nhau cho cả hai chế độ: `\boxed` > "answer is" > dòng "Answer:" > đoạn kết luận; 5/50 không trích được ở mỗi chế độ):
+
+| | Mặc định | Bất biến |
+|---|---|---|
+| Đúng | 33/50 (66%) | 36/50 (72%) |
+| Cặp khác nhau (mặc định đúng/bất biến sai, và ngược lại) | 2 | 5 |
+| Cùng đáp án khi cả hai đều có | 37/44 | |
+
+Chênh lệch +6 điểm nằm trong nhiễu của 50 prompt (7 cặp bất đồng, 2 so với 5): **không phát hiện giảm độ chính xác, nhưng cũng không chứng minh tương đương**. ext150 không có đáp án chuẩn nên chỉ dùng cho so sánh chuỗi (bộ trích xuất đáp án không trích được ở các prompt đó, bị bỏ).
+
+Giới hạn: một mô hình, một tác vụ, n=50 cho độ chính xác; chưa kiểm tra HumanEval/CNN-DM, chưa thử mô hình khác.
+
+---
+
+## 16. Kết quả WP5 ở quy mô lớn (05/11/2026)
+
+`scripts/kernels/run_wp5_scale.sh`, số liệu `results/kernels/wp5_scale_*.json`. PLD K=2, ngram 3, 128 token mới, CUDA graph, bốn toán tử bất biến (LM head, RMSNorm, attention, GEMM NF4). Baseline = giải mã M=1 exact cũng bằng kernel bất biến (cùng phiên, cùng prompt). "Exact" = token sinh ra VÀ KV đã commit bằng từng bit với tham chiếu tuần tự M=1 bất biến, và baseline graph cũng bằng tham chiếu.
+
+| Ô | Prompt | Exact | Baseline tok/s | Vòng PLD tok/s | Tăng (tổng) | Tăng theo prompt: trung vị [min, max] |
+|---|---|---|---|---|---|---|
+| Qwen2.5-3B, GSM8K | 200 | 200/200 | 61.2 | 71.8 | 1.17x | 1.18 [1.01, 1.40] |
+| Qwen2.5-3B, HumanEval | 100 | 100/100 | 58.9 | 77.6 | 1.32x | 1.32 [1.01, 2.22] |
+| Qwen2.5-3B, CNN/DM | 100 | 100/100 | 58.7 | 70.7 | 1.21x | 1.21 [0.98, 1.54] |
+| Qwen2.5-1.5B, GSM8K | 100 | 100/100 | 97.1 | 115.6 | 1.19x | 1.18 [1.01, 1.53] |
+| Qwen2.5-0.5B, GSM8K | 100 | 100/100 | 196.0 | 241.9 | 1.23x | 1.22 [1.05, 1.67] |
+| OLMo-2-1B, GSM8K | 100 | 100/100 | 136.2 | 155.1 | 1.14x | 1.13 [1.02, 1.37] |
+
+700 lượt chạy, 4 mô hình, 3 họ (Qwen2.5, OLMo-2; kiến trúc GQA và MHA, head_dim 64 và 128), 0 lệch. Cận trên Wilson 95% của tỷ lệ lệch: 1.9% (n=200), 3.7% (n=100). Tăng tốc nằm trong khoảng 1.14–1.32x; chỉ 1 prompt (CNN/DM) chậm hơn baseline (0.98x). Không đo được tăng tốc cho Phi-3.5 (head_dim 96 chưa được kernel attention hỗ trợ).
+
+Giới hạn: một GPU (RTX 4050), K=2 cố định, greedy, batch 1; tốc độ phụ thuộc mức PLD tìm được bản nháp (HumanEval cao nhất, 1.32x); đây là PLD, không phải mô hình nháp (xem mục 14: mô hình nháp thật hiện chậm hơn).
+
+---
+
+## 17. Mục 3–4 của "việc tiếp theo": tối ưu kernel và nguồn nháp rẻ hơn (05/11/2026) — kết luận: bão hòa trên phần cứng này
+
+**Tối ưu GEMM NF4 (mục 3).** Chẩn đoán trên gate_proj (Qwen 3B), M=1/4/8: 0.077/0.104/0.150 ms. Tắt làm tròn trọng số về bf16: 0.076/0.094/0.143 ms; thay tra bảng bằng phép tính: 0.077/0.091/0.150 ms. Tức là làm tròn và tra bảng gần như không đáng kể. Ở M=4 kernel gần giới hạn số phép FMA (~17 µs cho 90 M FMA ở đỉnh lý thuyết), ở M=1 còn cách giới hạn băng thông (~0.06 ms) khoảng 20%. Ước tính trần lợi ích: ≤ 10% thời gian bước giải mã (1.5–2.5 ms trên 15–18 ms), và nó tăng đồng đều cho cả baseline và vòng PLD nên gần như không đổi tỷ số tăng tốc. **Không đầu tư thêm** trừ khi cần tốc độ tuyệt đối.
+
+**Nguồn nháp rẻ hơn (mục 4).** Tính từ số đo thay vì thử thêm: chi phí bước nháp 0.5B bf16 ≈ 10 ms (0.67 bước mục tiêu); ngay cả nháp 0.5B nén NF4 (sàn băng thông ~2.7 ms, thực tế khó dưới ~5 ms) cho K=2 chi phí ≈ 1.19 + 2×0.33 ≈ 1.86 bước mục tiêu cho 1.62 token/khối (0.62 bản nháp được nhận mỗi khối, GSM8K): ~0.87x, vẫn dưới baseline. Ngay cả nháp miễn phí chỉ đạt trần 1.62/1.19 ≈ 1.36x. Kết hợp PLD khi có bản nháp rồi mới gọi mô hình nháp khi không có không giúp được vì khối có nháp tốn thêm chi phí nháp ở mọi bước không có n-gram. **Kết luận:** với mục tiêu NF4 3B (đã rất rẻ) trên GPU này, mô hình nháp thần kinh không có lợi; PLD là nguồn nháp phù hợp.
+
+**Mục còn lại cần tài nguyên bạn đang hoãn:** GPU khác và mô hình ≥ 7B. Với mô hình lớn hơn bước mục tiêu đắt hơn nhiều so với bước nháp 0.5B, nên đây là nơi mô hình nháp có thể có lợi; chưa đo được ở đây.
+
+**Cập nhật HumanEval (100 prompt, chạy liền nhau, `scripts/kernels/run_wp5_he_rowwise.sh`, `results/kernels/wp5_he100_*.json`):** vòng cũ chạy từng hàng 58.9 và 59.4 tok/s (hai lần, lệch 0.9%), vòng bất biến 81.9 tok/s: tăng 1.39x/1.38x, cả ba lần đều exact; so với baseline M=1 bất biến cùng phiên 62.4 tok/s: 1.31x. Tiêu chí ≥1.3x so với chạy từng hàng đạt trên HumanEval với n=100.
+
+**Cập nhật 06/11/2026 (100 prompt mỗi tập, chạy liền nhau: vòng cũ, vòng bất biến, vòng cũ; `scripts/kernels/run_wp5_rowwise_100.sh`, `results/kernels/wp5_{gsm8k,cnndm}100_*.json`):** GSM8K 79.0 so với 62.7/61.2 tok/s (1.26x/1.29x); CNN/DM 76.5 so với 56.4/57.0 (1.36x/1.34x); HumanEval 81.9 so với 58.9/59.4 (1.39x/1.38x); tất cả exact; trôi giữa hai lần chạy vòng cũ ≤ 2.4%. Tiêu chí ≥1.3x so với chạy từng hàng: đạt ở CNN/DM và HumanEval, GSM8K 1.26–1.29x (chưa đạt). So với baseline M=1 bất biến cùng phiên: 1.18x, 1.20x, 1.31x.
+
+**WP6b (06/11/2026): HumanEval pass@1, tham chiếu bất biến so với mặc định** (`scripts/kernels/wp6_humaneval_passk.py`, `results/kernels/wp6_humaneval_pass1.json`, Qwen2.5-3B NF4, 100 prompt, prompt thô, 384 token tối đa): pass@1 61/61, bất đồng 3 và 3 bài; chuỗi token giống hệt 72/100 (hoàn thành sau khi cắt: 74/100). Không phát hiện khác biệt độ chính xác; nhưng 61% thấp hơn con số công bố (prompt thô và cách cắt đơn giản), chỉ dùng để so hai chế độ.
+
+**Attention head_dim 96 (06/11/2026):** kernel pad head_dim lên lũy thừa 2 trong kernel (mặt nạ), 0 lệch trên 700 hàng (MHA 32/32, ngữ cảnh 128–2000); kernel D=64/128 vẫn 0/315 lệch; thêm test `test_attention_head_dim_96_...`.
+
+**Phi-3.5-mini (06/11/2026):** `scripts/kernels/run_wp5_phi.sh`, `results/kernels/wp5_scale_phi35_gsm8k100.json`: 100/100 exact, 72.7 -> 85.9 tok/s = 1.18x (median 1.18 [1.05, 1.41]). Cần 3 sửa hạ tầng: head_dim 96 trong kernel attention; LongRoPE cố định chế độ hệ số ngắn (ngữ cảnh ≤ 4096; bản gốc đồng bộ dữ liệu làm hỏng graph); StaticCache dùng lớp tĩnh thường (sliding-window layer giữ độ dài bằng int Python, không rollback được). Lần chạy đầu trước khi sửa cache không exact và cho 1.74x bất thường. Tổng: 800 lượt exact, 5 mô hình, 3 họ.
+
+**bitsandbytes phiên bản (`scripts/kernels/wp7_bnb_versions.py`, `results/kernels/wp7_*`):** stock NF4 lệch ~60% phần tử (dữ liệu ngẫu nhiên) ở mọi M≥2 trên 0.49.2, chỉ từ M≥4 trên 0.50.0/0.50.1 (giống hệt nhau). Test kernel (5/5) và vòng exact 20 prompt (20/20, 1.19x và 1.20x) đạt trên 0.49.2 và 0.50.1. 0.50.2 chưa thử.
+
+**Llama-3.2 + kiểm tra EOS (06/11/2026):** Llama-3.2-1B/3B (bản sao unsloth, không cần token) chạy không sửa kernel: 100/100 exact mỗi mô hình, 1.27x và 1.24x. `scripts/kernels/run_wp8_eos.sh` chạy lại 6 ô (600 lượt, đều exact) ghi vị trí EOS: tỷ lệ prompt có EOS trong 128 token 0–26%; tăng tốc chỉ trên prompt không có EOS 1.18/1.32/1.21/1.23/1.29/1.19x so với 1.18/1.32/1.20/1.24/1.27/1.18x khi tính hết (lệch <2%): văn bản sau EOS không làm phồng số đo. Tổng cộng 1000 cặp prompt-mô hình, 7 mô hình, 4 họ, 0 lệch. Mẫu 5 prompt đầu của Llama-3B cho 1.37x, ở n=100 là 1.24x: không rút kết luận từ mẫu nhỏ.
+
+**Mistral-7B-Instruct-v0.3 (06/11/2026, `scripts/kernels/run_wp5_mistral7b.sh`, `results/kernels/wp8_mistral7b_*.json`):** mô hình 7B (bản NF4 dựng sẵn của unsloth) vừa GPU 6 GB với cache ngắn; chạy không sửa kernel. GSM8K 100/100 exact, 38.1 -> 45.8 tok/s = 1.20x; HumanEval 100/100 exact, 35.5 -> 44.1 = 1.24x (1.28x trên 55 prompt không EOS). Bước đích ~27 ms (gấp ~1.8 lần 3B); tăng PLD tương đương mô hình nhỏ. Tổng: 1200 cặp prompt-mô hình, 8 mô hình, 5 họ, 0 lệch. Mô hình nháp thần kinh trên 7B chưa thử (không có bản nháp cùng tokenizer sẵn).
+
+## 18. Bộ nháp học được và bản lai (10–11/11/2026)
+
+Chi tiết, phương pháp và rủi ro: `docs/DRAFTER_2X_PLAN.md` (mục 9–12). Tóm tắt: nguồn nháp là điểm nghẽn (mục 17 kết luận bão hòa với n-gram), nên thêm bộ nháp học được kiểu EAGLE (đầu vào trạng thái ẩn cuối và embedding của pend; LM head thu gọn 16384 token vì LM head đầy đủ tốn ~3 ms/lần đọc), chạy trong cùng CUDA graph, xác minh bằng kernel bất biến. Chi phí bộ nháp K=3 đo thật 2.0 ms/bước (không phải 1 ms như giả định ban đầu). Mô phỏng sau khi dùng đúng chi phí thấp hơn số đo ~6%, khớp mức hiệu chuẩn.
+
+Đo thật, tăng tốc so với baseline M=1 exact, trung bình 2–3 lượt xen kẽ, 100 prompt mỗi lượt, K=3 (`scripts/drafter/summarize_drafter_runs.py`; 18 ô đều exact):
+
+| Mô hình | Tập | PLD | Bộ nháp | Bản lai |
+|---|---|---|---|---|
+| Qwen2.5-3B | GSM8K | 1.217±0.004 | **1.696±0.023** | 1.655±0.024 |
+| Qwen2.5-3B | HumanEval | 1.389±0.002 | 1.370±0.001 | **1.584±0.025** |
+| Qwen2.5-3B | CNN/DM | 1.250±0.002 | 1.108 | 1.240±0.024 |
+| Qwen2.5-1.5B | GSM8K | 1.229±0.001 | **1.576±0.014** | 1.567±0.010 |
+| Qwen2.5-1.5B | HumanEval | 1.529±0.001 | 1.340±0.012 | **1.704±0.010** |
+| Qwen2.5-1.5B | CNN/DM | **1.550±0.002** | 1.068±0.009 | 1.472±0.009 |
+
+Kết luận: tăng tốc cao nhất đo được 1.70x (chưa đạt 2x); bộ nháp thắng trên toán, PLD thắng hoặc hòa trên tóm tắt, bản lai thắng trên code ở cả hai mô hình. Khối biến đổi theo độ tin cậy là kết quả âm (mô phỏng). Giới hạn: một GPU, hai kích thước cùng họ Qwen, CNN/DM của 3B (PLD, bộ nháp) chỉ 2 lượt; bộ nháp phải huấn luyện riêng cho từng mô hình.

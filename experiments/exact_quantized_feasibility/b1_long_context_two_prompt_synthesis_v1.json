@@ -1,0 +1,74 @@
+{
+  "status": "descriptive aggregation of two long development prompts; separate B1 contracts by physical row count; not held-out evidence or a universal reference comparison",
+  "source_reports": [
+    "b1_multisession_long_cnndm001_v1.json",
+    "b1_multisession_long_cnndm002_v1.json"
+  ],
+  "by_k": {
+    "2": {
+      "physical_rows": 3,
+      "paired_prompt_sessions": 4,
+      "exact_vs_b1": 4,
+      "exact_vs_original_bnb": 0,
+      "equal_prompt_weight_mean_speedup_vs_b1_singleton": 1.3941941203920742,
+      "equal_prompt_weight_mean_speedup_vs_original_bnb": 1.0120044584231598,
+      "by_prompt": {
+        "b1_long_context_cnndm_001_prompt/cnndm_001": {
+          "mean_speedup_vs_b1_singleton": 1.4125861623833715,
+          "mean_speedup_vs_original_bnb": 1.0214752645079894,
+          "sessions": 2
+        },
+        "b1_long_context_cnndm_002_prompt/cnndm_002": {
+          "mean_speedup_vs_b1_singleton": 1.3758020784007772,
+          "mean_speedup_vs_original_bnb": 1.0025336523383301,
+          "sessions": 2
+        }
+      }
+    },
+    "4": {
+      "physical_rows": 5,
+      "paired_prompt_sessions": 4,
+      "exact_vs_b1": 4,
+      "exact_vs_original_bnb": 0,
+      "equal_prompt_weight_mean_speedup_vs_b1_singleton": 1.521572036037047,
+      "equal_prompt_weight_mean_speedup_vs_original_bnb": 0.9536395435057531,
+      "by_prompt": {
+        "b1_long_context_cnndm_001_prompt/cnndm_001": {
+          "mean_speedup_vs_b1_singleton": 1.4637670278046206,
+          "mean_speedup_vs_original_bnb": 0.9117900243833612,
+          "sessions": 2
+        },
+        "b1_long_context_cnndm_002_prompt/cnndm_002": {
+          "mean_speedup_vs_b1_singleton": 1.5793770442694737,
+          "mean_speedup_vs_original_bnb": 0.995489062628145,
+          "sessions": 2
+        }
+      }
+    },
+    "8": {
+      "physical_rows": 9,
+      "paired_prompt_sessions": 4,
+      "exact_vs_b1": 4,
+      "exact_vs_original_bnb": 0,
+      "equal_prompt_weight_mean_speedup_vs_b1_singleton": 1.596824758171916,
+      "equal_prompt_weight_mean_speedup_vs_original_bnb": 0.9502230764883917,
+      "by_prompt": {
+        "b1_long_context_cnndm_001_prompt/cnndm_001": {
+          "mean_speedup_vs_b1_singleton": 1.542712621792846,
+          "mean_speedup_vs_original_bnb": 0.9094401037959053,
+          "sessions": 2
+        },
+        "b1_long_context_cnndm_002_prompt/cnndm_002": {
+          "mean_speedup_vs_b1_singleton": 1.650936894550986,
+          "mean_speedup_vs_original_bnb": 0.9910060491808779,
+          "sessions": 2
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Only two prompts and two process sessions per prompt.",
+    "Session measurements share one GPU and runtime.",
+    "Each K uses its own fixed-row singleton contract; speedup to BNB is a performance ratio despite zero token sequence equality vs BNB."
+  ]
+}

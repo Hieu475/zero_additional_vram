@@ -1,0 +1,69 @@
+{
+  "status": "gated development-only HumanEval/112 long-run screen; no product-runtime contract",
+  "configuration": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "prompt_id": "HumanEval/112",
+    "max_new_tokens": 256,
+    "k": 1,
+    "physical_rows": 2,
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "process_sessions": [
+    20,
+    21
+  ],
+  "runs": 2,
+  "paired_rounds": [
+    {
+      "artifact": "closed_loop_humaneval112_256_s20_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.8527600195379739,
+      "speedup_vs_original_bnb": 1.6910200243665874,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "artifact": "closed_loop_humaneval112_256_s20_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.972062609855851,
+      "speedup_vs_original_bnb": 1.7533393345495165,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "artifact": "closed_loop_humaneval112_256_s21_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.9272630174349128,
+      "speedup_vs_original_bnb": 1.7556701947381383,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "artifact": "closed_loop_humaneval112_256_s21_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.8909662344426978,
+      "speedup_vs_original_bnb": 1.8348068555865145,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    }
+  ],
+  "all_runs_exact_to_optimized_b1": true,
+  "shared_state_prefixes_per_run": 256,
+  "aggregate_descriptive_geomean_speedup_vs_optimized_b1_singleton": 1.9102541762935064,
+  "aggregate_descriptive_geomean_speedup_vs_original_bnb": 1.757972204863257,
+  "accepted_draft_tokens": 250,
+  "draft_tokens": 252,
+  "bnb_token_matches": 0,
+  "bnb_token_comparisons": 4,
+  "limitations": [
+    "One prompt only, two independent process sessions, four timing pairs.",
+    "Finite empirical B1 equality on one RTX 4050; not a proof.",
+    "Prompt has exceptionally high draft acceptance; performance does not generalize.",
+    "No original BNB token/state equivalence; block output differed in all four rounds.",
+    "Held-out GSM8K indices 300-349 were not used."
+  ],
+  "artifacts": [
+    "closed_loop_humaneval112_256_s20_v1.json",
+    "closed_loop_humaneval112_256_s21_v1.json"
+  ]
+}

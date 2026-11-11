@@ -1,0 +1,170 @@
+{
+  "schema": "zassd-activationvec-nf4-cache-policy-v1",
+  "classification": "paired operator screen of activation load cache policy; no end-to-end integration claim",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "cnndm_003",
+  "prompt_sha256": "baea8efa9760531deacd4b71b497fe768b9b4c9445fecba57b015e44b57e9f51",
+  "forced_tokens": [
+    20924,
+    3693,
+    18478
+  ],
+  "launch": {
+    "out_tile": 8,
+    "num_warps": 8
+  },
+  "cache_policy": {
+    "streaming": "ld.global.cs.v4.u32",
+    "candidate": "ld.global.ca.v4.u32",
+    "weight_load_policy": "unchanged"
+  },
+  "results": {
+    "q_proj": {
+      "input_shape": [
+        3,
+        2048
+      ],
+      "output_shape": [
+        3,
+        2048
+      ],
+      "streaming_exact_elements": 6144,
+      "cached_exact_elements": 6144,
+      "total_elements": 6144,
+      "streaming_matches_bnb_m3": true,
+      "cached_matches_bnb_m3": true,
+      "cached_max_abs_diff": 0.0,
+      "streaming_median_ms": 0.024767999537289143,
+      "cached_median_ms": 0.0248819999396801,
+      "cached_over_streaming_speedup": 0.9948585761167537,
+      "paired_ratios": [
+        1.0787980556303538,
+        0.9617224760452157,
+        0.9948453963964355,
+        1.1608414268688487,
+        0.9948717558370717,
+        0.9172175814282859,
+        1.0541557527301983,
+        1.098848629527474,
+        0.9742861531551802,
+        0.9954188894526804,
+        0.9267769725638614,
+        0.9754532334284578,
+        1.0013245134205666,
+        0.9370066448084785,
+        0.9856544203406608,
+        1.2330178061111992,
+        0.9913285060592347,
+        1.4731788730703679,
+        1.130732944395874,
+        0.9058617644007015
+      ],
+      "paired_rounds": 20,
+      "repeats_per_round": 8
+    },
+    "gate_proj": {
+      "input_shape": [
+        3,
+        2048
+      ],
+      "output_shape": [
+        3,
+        11008
+      ],
+      "streaming_exact_elements": 33024,
+      "cached_exact_elements": 33024,
+      "total_elements": 33024,
+      "streaming_matches_bnb_m3": true,
+      "cached_matches_bnb_m3": true,
+      "cached_max_abs_diff": 0.0,
+      "streaming_median_ms": 0.09728000313043594,
+      "cached_median_ms": 0.09651199728250504,
+      "cached_over_streaming_speedup": 1.0090253055095126,
+      "paired_ratios": [
+        1.0092226547278846,
+        1.0039735402617,
+        1.006640157057107,
+        1.008206276839503,
+        0.98549251592517,
+        1.0101542263742316,
+        1.013092243360243,
+        1.0107223242145105,
+        1.0092838133831459,
+        1.0079994077086198,
+        1.0088279562911404,
+        1.0077606352473605,
+        1.0092838133831459,
+        1.0344371176460112,
+        0.986755019986815,
+        1.00929621987995,
+        1.009308503844879,
+        1.0043003966670174,
+        1.0106383011661193,
+        1.0084281482286892
+      ],
+      "paired_rounds": 20,
+      "repeats_per_round": 8
+    },
+    "down_proj": {
+      "input_shape": [
+        3,
+        11008
+      ],
+      "output_shape": [
+        3,
+        2048
+      ],
+      "streaming_exact_elements": 6144,
+      "cached_exact_elements": 6144,
+      "total_elements": 6144,
+      "streaming_matches_bnb_m3": true,
+      "cached_matches_bnb_m3": true,
+      "cached_max_abs_diff": 0.0,
+      "streaming_median_ms": 0.09779199957847595,
+      "cached_median_ms": 0.09625400230288506,
+      "cached_over_streaming_speedup": 1.0153992222116703,
+      "paired_ratios": [
+        1.0543046647620298,
+        1.0198885466383998,
+        1.0624575289435019,
+        1.0148769333728196,
+        1.0157113606801553,
+        1.0146082682246222,
+        1.0137549652603997,
+        1.0150870837431853,
+        0.9917507101297002,
+        1.0380434507525238,
+        1.0183921478719482,
+        1.015071610333864,
+        1.0159574130472777,
+        1.0162283110586339,
+        1.017667833578408,
+        1.0136226609827619,
+        1.0131704620960342,
+        1.0173345390661859,
+        1.0132978184047974,
+        1.0144204633197162
+      ],
+      "paired_rounds": 20,
+      "repeats_per_round": 8
+    }
+  },
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "triton": "3.6.0",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "source_hashes": {
+    "runner": "39cdb421b94e1690e9d18ed37ed6fa4a2981efe07cd3b6b3a22a479a4f7fb6e6",
+    "base_kernel": "322da0c917025d9879761fce33b1b5c29880badd41fb79f14b0978e4ac4a4c7a",
+    "generated_ca_kernel": "10008ce2a9d7d0173fdad7d3de62915378b1b623a4be076961f8b6580b41643a"
+  },
+  "limitations": [
+    "layer 0 projections on one development prompt",
+    "not a B1/full-model exactness proof",
+    "GSM8K held-out indices 300-349 excluded"
+  ]
+}

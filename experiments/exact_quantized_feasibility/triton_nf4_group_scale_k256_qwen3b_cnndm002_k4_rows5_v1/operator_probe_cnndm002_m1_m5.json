@@ -1,0 +1,91 @@
+{
+  "status": "experimental fixed-row schedule; finite test, not universal proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa",
+    "model_dtype": "torch.float16"
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "prompt_id": "cnndm_002",
+  "prompt_length": 419,
+  "reference_contract_id": "10b2da991db49afae753515a4681dc7c5d22262080980647212f370a8fb12c23",
+  "physical_rows": 5,
+  "attention_strategy": "padded",
+  "quantized_linear_strategy": "triton_nf4_group_scale_k256",
+  "rows": [
+    {
+      "m": 1,
+      "token_inputs": [
+        576
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 420,
+      "block_cache_length": 420
+    },
+    {
+      "m": 2,
+      "token_inputs": [
+        576,
+        4549
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 421,
+      "block_cache_length": 421,
+      "first_module_differences": [],
+      "attention_tensor_differences": []
+    },
+    {
+      "m": 3,
+      "token_inputs": [
+        576,
+        4549,
+        34334
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 422,
+      "block_cache_length": 422
+    },
+    {
+      "m": 4,
+      "token_inputs": [
+        576,
+        4549,
+        34334,
+        64452
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 423,
+      "block_cache_length": 423
+    },
+    {
+      "m": 5,
+      "token_inputs": [
+        576,
+        4549,
+        34334,
+        64452,
+        619
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 424,
+      "block_cache_length": 424
+    }
+  ]
+}

@@ -1,0 +1,4208 @@
+{
+  "status": "finite per-cycle hindsight cost oracle; optimistic, not a deployable policy or proof",
+  "reference_contract_ids": [
+    "5384a3f519201f532d4481273e0ee9ded724674e7645a30e830251bc9a8a1d12"
+  ],
+  "same_reference_contract": true,
+  "k_values": [
+    8
+  ],
+  "oracle_assumptions": [
+    "All candidate cycle edges were measured from the same B1 token and state trajectory.",
+    "Cycle action cost uses the median observed draft+verify+commit wall time across sessions.",
+    "The oracle has zero K-selection/switching/checkpoint overhead and uses future knowledge.",
+    "Only K values and fixed-row schedule represented in the supplied runs are considered.",
+    "A zero-cost final edge is allowed only for a token already pending at EOS/budget completion.",
+    "Cycle timing stops before trace-list append and state-observer hashing; per-request residual is the median measured block total minus prefill and cycle sums.",
+    "That residual may change with cycle count; applying its median to a different path is an approximation."
+  ],
+  "prompt_count": 1,
+  "prompts": [
+    {
+      "task": "cnndm",
+      "id": "cnndm_000",
+      "sessions": 2,
+      "k_coverage": [
+        8
+      ],
+      "common_reference_tokens": true,
+      "input_identity_equal": true,
+      "reference_states_equal": true,
+      "all_state_audits_exact": true,
+      "reference_token_count": 256,
+      "cycle_action_count": 140,
+      "median_b1_singleton_total_s": 11.481546306500604,
+      "fixed_k": {
+        "8": {
+          "median_total_s": 6.266940233999776,
+          "samples": 2
+        }
+      },
+      "fixed_k_cycle_model": {
+        "8": {
+          "predicted_total_s": 6.266940233999776,
+          "cycle_cost_s": 6.062835918013661,
+          "path": [
+            {
+              "k": 8,
+              "start": 0,
+              "end": 1,
+              "emitted_tokens": [
+                576
+              ],
+              "state_end": 1,
+              "cost_s": 0.044635995998760336,
+              "draft_s": 6.536049841088243e-05,
+              "verify_s": 0.0444422045002284,
+              "commit_s": 3.9578499126946554e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 1,
+              "end": 2,
+              "emitted_tokens": [
+                21841
+              ],
+              "state_end": 2,
+              "cost_s": 0.04278994000014791,
+              "draft_s": 4.979950244887732e-05,
+              "verify_s": 0.042685838001489174,
+              "commit_s": 3.300800017314032e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 2,
+              "end": 4,
+              "emitted_tokens": [
+                21914,
+                18562
+              ],
+              "state_end": 4,
+              "cost_s": 0.049649423997834674,
+              "draft_s": 5.972150029265322e-05,
+              "verify_s": 0.04945045550084615,
+              "commit_s": 0.00011802699918916915,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 4,
+              "end": 5,
+              "emitted_tokens": [
+                10859
+              ],
+              "state_end": 5,
+              "cost_s": 0.04331632250068651,
+              "draft_s": 6.718499935232103e-05,
+              "verify_s": 0.04287498600024264,
+              "commit_s": 3.470949923212174e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 5,
+              "end": 6,
+              "emitted_tokens": [
+                279
+              ],
+              "state_end": 6,
+              "cost_s": 0.0428591644995322,
+              "draft_s": 5.1682000048458576e-05,
+              "verify_s": 0.04273969099813257,
+              "commit_s": 4.8306001190212555e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 6,
+              "end": 9,
+              "emitted_tokens": [
+                7179,
+                32736,
+                7154
+              ],
+              "state_end": 9,
+              "cost_s": 0.04474454149931262,
+              "draft_s": 6.49719986540731e-05,
+              "verify_s": 0.04457868650024466,
+              "commit_s": 7.785100024193525e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 9,
+              "end": 10,
+              "emitted_tokens": [
+                11
+              ],
+              "state_end": 10,
+              "cost_s": 0.044279160001678974,
+              "draft_s": 5.824649997521192e-05,
+              "verify_s": 0.04416800599756243,
+              "commit_s": 3.2822501452756114e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 10,
+              "end": 11,
+              "emitted_tokens": [
+                10454
+              ],
+              "state_end": 11,
+              "cost_s": 0.0461686175003706,
+              "draft_s": 5.233399861026555e-05,
+              "verify_s": 0.045711951001067064,
+              "commit_s": 0.0003868450021400349,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 11,
+              "end": 12,
+              "emitted_tokens": [
+                279
+              ],
+              "state_end": 12,
+              "cost_s": 0.0445665530005499,
+              "draft_s": 5.433700243884232e-05,
+              "verify_s": 0.044461555500674876,
+              "commit_s": 3.1530002161161974e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 12,
+              "end": 18,
+              "emitted_tokens": [
+                220,
+                16,
+                17,
+                18,
+                6498,
+                4462
+              ],
+              "state_end": 18,
+              "cost_s": 0.04338307099897065,
+              "draft_s": 6.1019502027193084e-05,
+              "verify_s": 0.042911100999845075,
+              "commit_s": 0.0003900914998666849,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 18,
+              "end": 19,
+              "emitted_tokens": [
+                323
+              ],
+              "state_end": 19,
+              "cost_s": 0.042990604999431525,
+              "draft_s": 5.304900150804315e-05,
+              "verify_s": 0.042762602999573573,
+              "commit_s": 0.00015647149848518893,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 19,
+              "end": 20,
+              "emitted_tokens": [
+                48680
+              ],
+              "state_end": 20,
+              "cost_s": 0.04491281400078151,
+              "draft_s": 5.309149855747819e-05,
+              "verify_s": 0.043996014501317404,
+              "commit_s": 0.0005201420008233981,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 20,
+              "end": 21,
+              "emitted_tokens": [
+                279
+              ],
+              "state_end": 21,
+              "cost_s": 0.042716057500001625,
+              "draft_s": 5.310549931891728e-05,
+              "verify_s": 0.04261484249946079,
+              "commit_s": 2.9499498850782402e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 21,
+              "end": 22,
+              "emitted_tokens": [
+                5473
+              ],
+              "state_end": 22,
+              "cost_s": 0.04106652249902254,
+              "draft_s": 6.05315017310204e-05,
+              "verify_s": 0.04090824650302238,
+              "commit_s": 7.74154977989383e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 22,
+              "end": 30,
+              "emitted_tokens": [
+                28001,
+                916,
+                10491,
+                16660,
+                304,
+                21841,
+                38443,
+                13
+              ],
+              "state_end": 30,
+              "cost_s": 0.04419160549878143,
+              "draft_s": 4.238250039634295e-05,
+              "verify_s": 0.04373901900180499,
+              "commit_s": 0.0003906915007974021,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 30,
+              "end": 31,
+              "emitted_tokens": [
+                1096
+              ],
+              "state_end": 31,
+              "cost_s": 0.04363347300204623,
+              "draft_s": 5.6394501370959915e-05,
+              "verify_s": 0.04352501100038353,
+              "commit_s": 3.288849984528497e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 31,
+              "end": 32,
+              "emitted_tokens": [
+                3271
+              ],
+              "state_end": 32,
+              "cost_s": 0.043762851499195676,
+              "draft_s": 5.432399848359637e-05,
+              "verify_s": 0.04315897349988518,
+              "commit_s": 0.0005310664982971502,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 32,
+              "end": 33,
+              "emitted_tokens": [
+                11
+              ],
+              "state_end": 33,
+              "cost_s": 0.04295160549918364,
+              "draft_s": 5.878899901290424e-05,
+              "verify_s": 0.042840998497922556,
+              "commit_s": 3.221750012016855e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 33,
+              "end": 34,
+              "emitted_tokens": [
+                16087
+              ],
+              "state_end": 34,
+              "cost_s": 0.04295614250077051,
+              "draft_s": 6.0684498748742044e-05,
+              "verify_s": 0.042823798499739496,
+              "commit_s": 5.124749986862298e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 34,
+              "end": 35,
+              "emitted_tokens": [
+                553
+              ],
+              "state_end": 35,
+              "cost_s": 0.043383363999964786,
+              "draft_s": 5.61419983569067e-05,
+              "verify_s": 0.04322951850190293,
+              "commit_s": 7.953699969220906e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 35,
+              "end": 36,
+              "emitted_tokens": [
+                6778
+              ],
+              "state_end": 36,
+              "cost_s": 0.04412680200039176,
+              "draft_s": 5.925299774389714e-05,
+              "verify_s": 0.04360852250101743,
+              "commit_s": 0.00043925850150117185,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 36,
+              "end": 38,
+              "emitted_tokens": [
+                323,
+                279
+              ],
+              "state_end": 38,
+              "cost_s": 0.04300597699875652,
+              "draft_s": 6.176699935167562e-05,
+              "verify_s": 0.042871990999628906,
+              "commit_s": 5.1449998863972723e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 38,
+              "end": 39,
+              "emitted_tokens": [
+                547
+              ],
+              "state_end": 39,
+              "cost_s": 0.04229882499930682,
+              "draft_s": 5.5111000619945116e-05,
+              "verify_s": 0.042114752999623306,
+              "commit_s": 0.00010942150038317777,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 39,
+              "end": 40,
+              "emitted_tokens": [
+                808
+              ],
+              "state_end": 40,
+              "cost_s": 0.04522047300088161,
+              "draft_s": 5.710500045097433e-05,
+              "verify_s": 0.045108741001968156,
+              "commit_s": 3.550400106178131e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 40,
+              "end": 41,
+              "emitted_tokens": [
+                2572
+              ],
+              "state_end": 41,
+              "cost_s": 0.04291076799927396,
+              "draft_s": 5.719500040868297e-05,
+              "verify_s": 0.04280138699868985,
+              "commit_s": 3.350099905219395e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 41,
+              "end": 42,
+              "emitted_tokens": [
+                374
+              ],
+              "state_end": 42,
+              "cost_s": 0.04360167450249719,
+              "draft_s": 5.688999954145402e-05,
+              "verify_s": 0.04345020549953915,
+              "commit_s": 7.561699931102339e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 42,
+              "end": 43,
+              "emitted_tokens": [
+                3884
+              ],
+              "state_end": 43,
+              "cost_s": 0.04287419900174427,
+              "draft_s": 5.995750143483747e-05,
+              "verify_s": 0.04275876349856844,
+              "commit_s": 3.532149821694475e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 43,
+              "end": 44,
+              "emitted_tokens": [
+                438
+              ],
+              "state_end": 44,
+              "cost_s": 0.0439156609991187,
+              "draft_s": 5.6581500757602043e-05,
+              "verify_s": 0.04372663800131704,
+              "commit_s": 0.00011399450158933178,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 44,
+              "end": 45,
+              "emitted_tokens": [
+                264
+              ],
+              "state_end": 45,
+              "cost_s": 0.0451890545009519,
+              "draft_s": 5.893150046176743e-05,
+              "verify_s": 0.044724807999955374,
+              "commit_s": 3.933150219381787e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 45,
+              "end": 46,
+              "emitted_tokens": [
+                3019
+              ],
+              "state_end": 46,
+              "cost_s": 0.044240128501769505,
+              "draft_s": 6.535100146720652e-05,
+              "verify_s": 0.044100726501710596,
+              "commit_s": 5.279449942463543e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 46,
+              "end": 47,
+              "emitted_tokens": [
+                6974
+              ],
+              "state_end": 47,
+              "cost_s": 0.04674036650067137,
+              "draft_s": 5.918400165683124e-05,
+              "verify_s": 0.04662613049913489,
+              "commit_s": 3.59759978891816e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 47,
+              "end": 48,
+              "emitted_tokens": [
+                7046
+              ],
+              "state_end": 48,
+              "cost_s": 0.04361003749909287,
+              "draft_s": 5.908850107516628e-05,
+              "verify_s": 0.04300402800072334,
+              "commit_s": 0.0005286324994813185,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 48,
+              "end": 49,
+              "emitted_tokens": [
+                12161
+              ],
+              "state_end": 49,
+              "cost_s": 0.04418024249935115,
+              "draft_s": 6.332600059977267e-05,
+              "verify_s": 0.04398315850085055,
+              "commit_s": 5.5304997658822685e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 49,
+              "end": 50,
+              "emitted_tokens": [
+                323
+              ],
+              "state_end": 50,
+              "cost_s": 0.041937719000998186,
+              "draft_s": 7.082350202836096e-05,
+              "verify_s": 0.04180301300038991,
+              "commit_s": 4.352749965619296e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 50,
+              "end": 51,
+              "emitted_tokens": [
+                13391
+              ],
+              "state_end": 51,
+              "cost_s": 0.045074360499711474,
+              "draft_s": 6.452749767049681e-05,
+              "verify_s": 0.04413025649955671,
+              "commit_s": 0.0008612724996055476,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 51,
+              "end": 52,
+              "emitted_tokens": [
+                97670
+              ],
+              "state_end": 52,
+              "cost_s": 0.04183135549828876,
+              "draft_s": 5.785349821962882e-05,
+              "verify_s": 0.04171888249948097,
+              "commit_s": 3.566750092431903e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 52,
+              "end": 53,
+              "emitted_tokens": [
+                11
+              ],
+              "state_end": 53,
+              "cost_s": 0.04360334499870078,
+              "draft_s": 5.944300028204452e-05,
+              "verify_s": 0.043490128500707215,
+              "commit_s": 3.506499888317194e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 53,
+              "end": 55,
+              "emitted_tokens": [
+                4092,
+                311
+              ],
+              "state_end": 55,
+              "cost_s": 0.041164979498717,
+              "draft_s": 6.528400081151631e-05,
+              "verify_s": 0.041029401998457615,
+              "commit_s": 5.037550181441475e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 55,
+              "end": 56,
+              "emitted_tokens": [
+                21841
+              ],
+              "state_end": 56,
+              "cost_s": 0.041415749001316726,
+              "draft_s": 5.923100070504006e-05,
+              "verify_s": 0.041147598498355364,
+              "commit_s": 0.00019049899856327102,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 56,
+              "end": 57,
+              "emitted_tokens": [
+                7359
+              ],
+              "state_end": 57,
+              "cost_s": 0.04459067450079601,
+              "draft_s": 5.8368999816593714e-05,
+              "verify_s": 0.044154937500934466,
+              "commit_s": 3.052400097658392e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 57,
+              "end": 58,
+              "emitted_tokens": [
+                13
+              ],
+              "state_end": 58,
+              "cost_s": 0.041046319500310346,
+              "draft_s": 5.6527000197093e-05,
+              "verify_s": 0.040943526500996086,
+              "commit_s": 2.897700142057147e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 58,
+              "end": 59,
+              "emitted_tokens": [
+                715
+              ],
+              "state_end": 59,
+              "cost_s": 0.04352224499962176,
+              "draft_s": 5.630149826174602e-05,
+              "verify_s": 0.04340542300087691,
+              "commit_s": 4.0619501305627637e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 59,
+              "end": 60,
+              "emitted_tokens": [
+                785
+              ],
+              "state_end": 60,
+              "cost_s": 0.04297848450187303,
+              "draft_s": 5.943649921391625e-05,
+              "verify_s": 0.04286648249762948,
+              "commit_s": 3.367499994055834e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 60,
+              "end": 62,
+              "emitted_tokens": [
+                21841,
+                21914
+              ],
+              "state_end": 62,
+              "cost_s": 0.040903507000621175,
+              "draft_s": 6.353349999699276e-05,
+              "verify_s": 0.04077283050173719,
+              "commit_s": 4.700049976236187e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 62,
+              "end": 63,
+              "emitted_tokens": [
+                702
+              ],
+              "state_end": 63,
+              "cost_s": 0.04304000900083338,
+              "draft_s": 5.800500002806075e-05,
+              "verify_s": 0.042906087001028936,
+              "commit_s": 5.5807999160606414e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 63,
+              "end": 64,
+              "emitted_tokens": [
+                18562
+              ],
+              "state_end": 64,
+              "cost_s": 0.04253976899963163,
+              "draft_s": 6.112700066296384e-05,
+              "verify_s": 0.04242404500109842,
+              "commit_s": 3.4669497836148366e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 64,
+              "end": 69,
+              "emitted_tokens": [
+                10859,
+                279,
+                7179,
+                32736,
+                7154
+              ],
+              "state_end": 69,
+              "cost_s": 0.04233400349949079,
+              "draft_s": 6.605400085391011e-05,
+              "verify_s": 0.04173052099758934,
+              "commit_s": 0.0005184159999771509,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 69,
+              "end": 70,
+              "emitted_tokens": [
+                320
+              ],
+              "state_end": 70,
+              "cost_s": 0.04244632300287776,
+              "draft_s": 7.091299994499423e-05,
+              "verify_s": 0.04231107849955151,
+              "commit_s": 4.444750084076077e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 70,
+              "end": 71,
+              "emitted_tokens": [
+                87202
+              ],
+              "state_end": 71,
+              "cost_s": 0.041978438501246274,
+              "draft_s": 6.118449891800992e-05,
+              "verify_s": 0.04185633350061835,
+              "commit_s": 4.0963999708765186e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 71,
+              "end": 72,
+              "emitted_tokens": [
+                701
+              ],
+              "state_end": 72,
+              "cost_s": 0.04286725999918417,
+              "draft_s": 6.056700112822e-05,
+              "verify_s": 0.0427527834999637,
+              "commit_s": 3.4871000025304966e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 72,
+              "end": 73,
+              "emitted_tokens": [
+                3259
+              ],
+              "state_end": 73,
+              "cost_s": 0.042491942000197014,
+              "draft_s": 5.739699918194674e-05,
+              "verify_s": 0.04237770449981326,
+              "commit_s": 3.858299896819517e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 73,
+              "end": 74,
+              "emitted_tokens": [
+                432
+              ],
+              "state_end": 74,
+              "cost_s": 0.04420278299949132,
+              "draft_s": 6.060349915060215e-05,
+              "verify_s": 0.04372767150016443,
+              "commit_s": 0.00039469950024795253,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 74,
+              "end": 75,
+              "emitted_tokens": [
+                279
+              ],
+              "state_end": 75,
+              "cost_s": 0.0438693215000967,
+              "draft_s": 6.599200060009025e-05,
+              "verify_s": 0.043272643501040875,
+              "commit_s": 0.00050916650070576,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 75,
+              "end": 84,
+              "emitted_tokens": [
+                220,
+                16,
+                17,
+                18,
+                6498,
+                4462,
+                323,
+                48680,
+                279
+              ],
+              "state_end": 84,
+              "cost_s": 0.04344142300215026,
+              "draft_s": 6.897549974382855e-05,
+              "verify_s": 0.042986767997717834,
+              "commit_s": 4.290399738238193e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 84,
+              "end": 93,
+              "emitted_tokens": [
+                5473,
+                28001,
+                916,
+                10491,
+                16660,
+                304,
+                21841,
+                38443,
+                13
+              ],
+              "state_end": 93,
+              "cost_s": 0.041336924501592875,
+              "draft_s": 4.810149948752951e-05,
+              "verify_s": 0.04087404300116759,
+              "commit_s": 0.0003931595019821543,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 93,
+              "end": 101,
+              "emitted_tokens": [
+                1096,
+                3271,
+                11,
+                16087,
+                553,
+                6778,
+                323,
+                279
+              ],
+              "state_end": 101,
+              "cost_s": 0.04197955650124641,
+              "draft_s": 4.854300095757935e-05,
+              "verify_s": 0.041832194499875186,
+              "commit_s": 7.80099999246886e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 101,
+              "end": 104,
+              "emitted_tokens": [
+                3639,
+                4180,
+                11
+              ],
+              "state_end": 104,
+              "cost_s": 0.04130971449740173,
+              "draft_s": 4.5209500967757776e-05,
+              "verify_s": 0.04120047350261302,
+              "commit_s": 4.56375018984545e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 104,
+              "end": 105,
+              "emitted_tokens": [
+                374
+              ],
+              "state_end": 105,
+              "cost_s": 0.04316038149954693,
+              "draft_s": 6.235799992282409e-05,
+              "verify_s": 0.043042454000897123,
+              "commit_s": 3.573100002540741e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 105,
+              "end": 114,
+              "emitted_tokens": [
+                3884,
+                438,
+                264,
+                3019,
+                6974,
+                7046,
+                12161,
+                323,
+                13391
+              ],
+              "state_end": 114,
+              "cost_s": 0.043140086499988683,
+              "draft_s": 7.182599983934779e-05,
+              "verify_s": 0.04248592700059817,
+              "commit_s": 0.0005344599994714372,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 114,
+              "end": 121,
+              "emitted_tokens": [
+                97670,
+                11,
+                4092,
+                311,
+                21841,
+                7359,
+                13
+              ],
+              "state_end": 121,
+              "cost_s": 0.040820784499373985,
+              "draft_s": 4.6863000534358434e-05,
+              "verify_s": 0.040711060501053,
+              "commit_s": 4.376199831312988e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 121,
+              "end": 122,
+              "emitted_tokens": [
+                151643
+              ],
+              "state_end": 122,
+              "cost_s": 0.04274237450044893,
+              "draft_s": 6.837000000814442e-05,
+              "verify_s": 0.042619279000064125,
+              "commit_s": 3.545199979271274e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 122,
+              "end": 123,
+              "emitted_tokens": [
+                33975
+              ],
+              "state_end": 123,
+              "cost_s": 0.0439833569998882,
+              "draft_s": 6.456650044128764e-05,
+              "verify_s": 0.04386704450007528,
+              "commit_s": 3.374700099811889e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 123,
+              "end": 124,
+              "emitted_tokens": [
+                10512
+              ],
+              "state_end": 124,
+              "cost_s": 0.04238432000056491,
+              "draft_s": 6.365250010276213e-05,
+              "verify_s": 0.042273732000467135,
+              "commit_s": 2.9069500669720583e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 124,
+              "end": 128,
+              "emitted_tokens": [
+                10357,
+                30969,
+                279,
+                4401
+              ],
+              "state_end": 128,
+              "cost_s": 0.042700316500486224,
+              "draft_s": 7.097500019881409e-05,
+              "verify_s": 0.042537761000858154,
+              "commit_s": 5.979900015518069e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 128,
+              "end": 129,
+              "emitted_tokens": [
+                11
+              ],
+              "state_end": 129,
+              "cost_s": 0.04290663699975994,
+              "draft_s": 6.9586500103469e-05,
+              "verify_s": 0.04277456650015665,
+              "commit_s": 4.224250005790964e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 129,
+              "end": 130,
+              "emitted_tokens": [
+                27798
+              ],
+              "state_end": 130,
+              "cost_s": 0.04290625700014061,
+              "draft_s": 6.532850056828465e-05,
+              "verify_s": 0.04244303750056133,
+              "commit_s": 0.0003786709985433845,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 130,
+              "end": 131,
+              "emitted_tokens": [
+                429
+              ],
+              "state_end": 131,
+              "cost_s": 0.04395031849890074,
+              "draft_s": 6.73140002618311e-05,
+              "verify_s": 0.04382289900240721,
+              "commit_s": 4.082849955011625e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 131,
+              "end": 132,
+              "emitted_tokens": [
+                16636
+              ],
+              "state_end": 132,
+              "cost_s": 0.04162368749894085,
+              "draft_s": 6.828700134065002e-05,
+              "verify_s": 0.0415068969996355,
+              "commit_s": 2.997450064867735e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 132,
+              "end": 133,
+              "emitted_tokens": [
+                10887
+              ],
+              "state_end": 133,
+              "cost_s": 0.04414563400132465,
+              "draft_s": 6.378599937306717e-05,
+              "verify_s": 0.04401193749799859,
+              "commit_s": 5.0975499107153155e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 133,
+              "end": 142,
+              "emitted_tokens": [
+                311,
+                46326,
+                551,
+                40934,
+                369,
+                18169,
+                279,
+                58232,
+                1265
+              ],
+              "state_end": 142,
+              "cost_s": 0.04266577199814492,
+              "draft_s": 7.388500125671271e-05,
+              "verify_s": 0.04247958900123194,
+              "commit_s": 7.650699990335852e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 142,
+              "end": 148,
+              "emitted_tokens": [
+                7069,
+                835,
+                862,
+                7262,
+                11,
+                323
+              ],
+              "state_end": 148,
+              "cost_s": 0.04176565250054409,
+              "draft_s": 5.27654992765747e-05,
+              "verify_s": 0.04163869949843502,
+              "commit_s": 4.993049878976308e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 148,
+              "end": 149,
+              "emitted_tokens": [
+                429
+              ],
+              "state_end": 149,
+              "cost_s": 0.0429380064997531,
+              "draft_s": 6.593249963771086e-05,
+              "verify_s": 0.04281081249973795,
+              "commit_s": 4.289500066079199e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 149,
+              "end": 150,
+              "emitted_tokens": [
+                5837
+              ],
+              "state_end": 150,
+              "cost_s": 0.042831873999602976,
+              "draft_s": 6.702000064251479e-05,
+              "verify_s": 0.04271233100007521,
+              "commit_s": 3.310500142106321e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 150,
+              "end": 151,
+              "emitted_tokens": [
+                12613
+              ],
+              "state_end": 151,
+              "cost_s": 0.042836286997044226,
+              "draft_s": 6.708799992338754e-05,
+              "verify_s": 0.04268066550139338,
+              "commit_s": 7.007450039964169e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 151,
+              "end": 152,
+              "emitted_tokens": [
+                20178
+              ],
+              "state_end": 152,
+              "cost_s": 0.04298132350049855,
+              "draft_s": 6.885849870741367e-05,
+              "verify_s": 0.04284650249792321,
+              "commit_s": 4.749199979414698e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 152,
+              "end": 156,
+              "emitted_tokens": [
+                25505,
+                315,
+                279,
+                5473
+              ],
+              "state_end": 156,
+              "cost_s": 0.04286260650042095,
+              "draft_s": 7.482600085495505e-05,
+              "verify_s": 0.04270743100096297,
+              "commit_s": 6.071799907658715e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 156,
+              "end": 157,
+              "emitted_tokens": [
+                1265
+              ],
+              "state_end": 157,
+              "cost_s": 0.045027491498331074,
+              "draft_s": 7.400850154226646e-05,
+              "verify_s": 0.04480412750126561,
+              "commit_s": 0.0001292729994020192,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 157,
+              "end": 158,
+              "emitted_tokens": [
+                653
+              ],
+              "state_end": 158,
+              "cost_s": 0.044305649998932495,
+              "draft_s": 7.1647998993285e-05,
+              "verify_s": 0.044145220001155394,
+              "commit_s": 3.133149766654242e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 158,
+              "end": 159,
+              "emitted_tokens": [
+                773
+              ],
+              "state_end": 159,
+              "cost_s": 0.04403495549922809,
+              "draft_s": 6.769599895051215e-05,
+              "verify_s": 0.043917543998759356,
+              "commit_s": 3.15984998451313e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 159,
+              "end": 160,
+              "emitted_tokens": [
+                13
+              ],
+              "state_end": 160,
+              "cost_s": 0.042969744999936665,
+              "draft_s": 6.861650217615534e-05,
+              "verify_s": 0.04284125699996366,
+              "commit_s": 4.161300057603512e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 160,
+              "end": 161,
+              "emitted_tokens": [
+                4710
+              ],
+              "state_end": 161,
+              "cost_s": 0.04307793850057351,
+              "draft_s": 7.326699960685801e-05,
+              "verify_s": 0.042952180499924,
+              "commit_s": 3.3106498449342325e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 161,
+              "end": 162,
+              "emitted_tokens": [
+                785
+              ],
+              "state_end": 162,
+              "cost_s": 0.04331968149926979,
+              "draft_s": 6.851900070614647e-05,
+              "verify_s": 0.04320072350128612,
+              "commit_s": 3.168249713780824e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 162,
+              "end": 163,
+              "emitted_tokens": [
+                1376
+              ],
+              "state_end": 163,
+              "cost_s": 0.041483111499474035,
+              "draft_s": 6.887950075906701e-05,
+              "verify_s": 0.04135455299910973,
+              "commit_s": 4.118299875699449e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 163,
+              "end": 164,
+              "emitted_tokens": [
+                3501
+              ],
+              "state_end": 164,
+              "cost_s": 0.0430931770006282,
+              "draft_s": 7.977099994604941e-05,
+              "verify_s": 0.042833706000237726,
+              "commit_s": 0.0001585160007380182,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 164,
+              "end": 165,
+              "emitted_tokens": [
+                525
+              ],
+              "state_end": 165,
+              "cost_s": 0.0450761819993204,
+              "draft_s": 7.544200161646586e-05,
+              "verify_s": 0.04462502899878018,
+              "commit_s": 3.4998000046471134e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 165,
+              "end": 166,
+              "emitted_tokens": [
+                510
+              ],
+              "state_end": 166,
+              "cost_s": 0.04421630149954581,
+              "draft_s": 6.9989499024814e-05,
+              "verify_s": 0.04408740299913916,
+              "commit_s": 3.978999848186504e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 166,
+              "end": 167,
+              "emitted_tokens": [
+                16
+              ],
+              "state_end": 167,
+              "cost_s": 0.044913819001521915,
+              "draft_s": 7.466950046364218e-05,
+              "verify_s": 0.044778071000109776,
+              "commit_s": 4.124550105188973e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 167,
+              "end": 168,
+              "emitted_tokens": [
+                13
+              ],
+              "state_end": 168,
+              "cost_s": 0.04375518249980814,
+              "draft_s": 7.135549822123721e-05,
+              "verify_s": 0.04349986850138521,
+              "commit_s": 0.00016247550047410186,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 168,
+              "end": 169,
+              "emitted_tokens": [
+                576
+              ],
+              "state_end": 169,
+              "cost_s": 0.04370828499850177,
+              "draft_s": 7.848700079193804e-05,
+              "verify_s": 0.042773553997903946,
+              "commit_s": 0.0005227554993325612,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 169,
+              "end": 171,
+              "emitted_tokens": [
+                21841,
+                21914
+              ],
+              "state_end": 171,
+              "cost_s": 0.04242715999862412,
+              "draft_s": 8.023000191315077e-05,
+              "verify_s": 0.04227649850145099,
+              "commit_s": 4.8712001444073394e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 171,
+              "end": 172,
+              "emitted_tokens": [
+                10859
+              ],
+              "state_end": 172,
+              "cost_s": 0.04486924649972934,
+              "draft_s": 7.377899964922108e-05,
+              "verify_s": 0.04472319399974367,
+              "commit_s": 5.245399916020688e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 172,
+              "end": 178,
+              "emitted_tokens": [
+                279,
+                7179,
+                32736,
+                7154,
+                320,
+                87202
+              ],
+              "state_end": 178,
+              "cost_s": 0.04269665800165967,
+              "draft_s": 8.078549944912083e-05,
+              "verify_s": 0.04251412600206095,
+              "commit_s": 7.973500032676384e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 178,
+              "end": 179,
+              "emitted_tokens": [
+                4292
+              ],
+              "state_end": 179,
+              "cost_s": 0.04452808700079913,
+              "draft_s": 6.641399886575527e-05,
+              "verify_s": 0.043923234999965644,
+              "commit_s": 0.0005195425001147669,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 179,
+              "end": 180,
+              "emitted_tokens": [
+                17
+              ],
+              "state_end": 180,
+              "cost_s": 0.044774833499104716,
+              "draft_s": 7.16499998816289e-05,
+              "verify_s": 0.04464026899768214,
+              "commit_s": 4.294549944461323e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 180,
+              "end": 181,
+              "emitted_tokens": [
+                13
+              ],
+              "state_end": 181,
+              "cost_s": 0.04304833750029502,
+              "draft_s": 7.746800110908225e-05,
+              "verify_s": 0.04291077500056417,
+              "commit_s": 3.9528498746221885e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 181,
+              "end": 182,
+              "emitted_tokens": [
+                1084
+              ],
+              "state_end": 182,
+              "cost_s": 0.045577532500828966,
+              "draft_s": 7.483350054826587e-05,
+              "verify_s": 0.04540858250038582,
+              "commit_s": 7.344250116148032e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 182,
+              "end": 183,
+              "emitted_tokens": [
+                6116
+              ],
+              "state_end": 183,
+              "cost_s": 0.044214871999429306,
+              "draft_s": 7.355499838013202e-05,
+              "verify_s": 0.044038600999556365,
+              "commit_s": 8.343500121554825e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 183,
+              "end": 190,
+              "emitted_tokens": [
+                279,
+                220,
+                16,
+                17,
+                18,
+                6498,
+                4462
+              ],
+              "state_end": 190,
+              "cost_s": 0.04414136349805631,
+              "draft_s": 9.429350029677153e-05,
+              "verify_s": 0.043504628498340026,
+              "commit_s": 0.0005213545009610243,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 190,
+              "end": 191,
+              "emitted_tokens": [
+                11
+              ],
+              "state_end": 191,
+              "cost_s": 0.04284066999935021,
+              "draft_s": 7.883100079197902e-05,
+              "verify_s": 0.04221716499887407,
+              "commit_s": 0.0005236825018073432,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 191,
+              "end": 192,
+              "emitted_tokens": [
+                48680
+              ],
+              "state_end": 192,
+              "cost_s": 0.046830727500491776,
+              "draft_s": 7.799949889886193e-05,
+              "verify_s": 0.04668978200061247,
+              "commit_s": 4.270400131645147e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 192,
+              "end": 196,
+              "emitted_tokens": [
+                279,
+                5473,
+                28001,
+                916
+              ],
+              "state_end": 196,
+              "cost_s": 0.04490285349857004,
+              "draft_s": 8.474349851894658e-05,
+              "verify_s": 0.044402730998626794,
+              "commit_s": 0.00039428049967682455,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 196,
+              "end": 197,
+              "emitted_tokens": [
+                21841
+              ],
+              "state_end": 197,
+              "cost_s": 0.045090740501109394,
+              "draft_s": 7.872050082369242e-05,
+              "verify_s": 0.04495188849978149,
+              "commit_s": 4.044299930683337e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 197,
+              "end": 198,
+              "emitted_tokens": [
+                38443
+              ],
+              "state_end": 198,
+              "cost_s": 0.04421077500046522,
+              "draft_s": 8.508400060236454e-05,
+              "verify_s": 0.04404722499930358,
+              "commit_s": 5.640250128635671e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 198,
+              "end": 199,
+              "emitted_tokens": [
+                624
+              ],
+              "state_end": 199,
+              "cost_s": 0.04506358700200508,
+              "draft_s": 7.857600030547474e-05,
+              "verify_s": 0.044887492500492954,
+              "commit_s": 7.832849951228127e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 199,
+              "end": 200,
+              "emitted_tokens": [
+                18
+              ],
+              "state_end": 200,
+              "cost_s": 0.04488649699851521,
+              "draft_s": 7.911350076028612e-05,
+              "verify_s": 0.04474916199978907,
+              "commit_s": 3.8084001062088646e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 200,
+              "end": 201,
+              "emitted_tokens": [
+                13
+              ],
+              "state_end": 201,
+              "cost_s": 0.042016274001071,
+              "draft_s": 7.227749847515952e-05,
+              "verify_s": 0.04188278149922553,
+              "commit_s": 4.2337498598499224e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 201,
+              "end": 202,
+              "emitted_tokens": [
+                576
+              ],
+              "state_end": 202,
+              "cost_s": 0.043590007999227964,
+              "draft_s": 8.91069994395366e-05,
+              "verify_s": 0.04342785150038253,
+              "commit_s": 5.225200038694311e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 202,
+              "end": 203,
+              "emitted_tokens": [
+                3271
+              ],
+              "state_end": 203,
+              "cost_s": 0.04484925450014998,
+              "draft_s": 7.676149834878743e-05,
+              "verify_s": 0.04471472250043007,
+              "commit_s": 3.8447500628535636e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 203,
+              "end": 204,
+              "emitted_tokens": [
+                572
+              ],
+              "state_end": 204,
+              "cost_s": 0.044371824000336346,
+              "draft_s": 7.46710011299001e-05,
+              "verify_s": 0.0442342255028052,
+              "commit_s": 4.280500070308335e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 204,
+              "end": 205,
+              "emitted_tokens": [
+                16087
+              ],
+              "state_end": 205,
+              "cost_s": 0.04496748299970932,
+              "draft_s": 7.277800068550278e-05,
+              "verify_s": 0.044833768499302096,
+              "commit_s": 4.054850069223903e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 205,
+              "end": 211,
+              "emitted_tokens": [
+                553,
+                6778,
+                323,
+                279,
+                3639,
+                4180
+              ],
+              "state_end": 211,
+              "cost_s": 0.04311348800001724,
+              "draft_s": 8.537249959772453e-05,
+              "verify_s": 0.042611357999703614,
+              "commit_s": 0.00039526349974039476,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 211,
+              "end": 212,
+              "emitted_tokens": [
+                624
+              ],
+              "state_end": 212,
+              "cost_s": 0.04529438499957905,
+              "draft_s": 8.020350105653051e-05,
+              "verify_s": 0.04502945650165202,
+              "commit_s": 0.00016356550077034626,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 212,
+              "end": 213,
+              "emitted_tokens": [
+                19
+              ],
+              "state_end": 213,
+              "cost_s": 0.044327424500806956,
+              "draft_s": 8.031649849726819e-05,
+              "verify_s": 0.04387566700097523,
+              "commit_s": 3.310850115667563e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 213,
+              "end": 214,
+              "emitted_tokens": [
+                13
+              ],
+              "state_end": 214,
+              "cost_s": 0.04552702050023072,
+              "draft_s": 7.430200093949679e-05,
+              "verify_s": 0.04535905349985114,
+              "commit_s": 7.349149927904364e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 214,
+              "end": 215,
+              "emitted_tokens": [
+                1084
+              ],
+              "state_end": 215,
+              "cost_s": 0.04248689450105303,
+              "draft_s": 8.510100087733008e-05,
+              "verify_s": 0.04227707649988588,
+              "commit_s": 7.560249832749832e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 215,
+              "end": 216,
+              "emitted_tokens": [
+                374
+              ],
+              "state_end": 216,
+              "cost_s": 0.045111694002116565,
+              "draft_s": 7.656300113012549e-05,
+              "verify_s": 0.04494464400158904,
+              "commit_s": 7.191750046331435e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 216,
+              "end": 221,
+              "emitted_tokens": [
+                3884,
+                438,
+                264,
+                3019,
+                6974
+              ],
+              "state_end": 221,
+              "cost_s": 0.04254873450008745,
+              "draft_s": 8.412649913225323e-05,
+              "verify_s": 0.04238034749869257,
+              "commit_s": 6.323399975372013e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 221,
+              "end": 222,
+              "emitted_tokens": [
+                12161
+              ],
+              "state_end": 222,
+              "cost_s": 0.043898102499952074,
+              "draft_s": 8.422999962931499e-05,
+              "verify_s": 0.0437524780008971,
+              "commit_s": 4.124500082980376e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 222,
+              "end": 225,
+              "emitted_tokens": [
+                323,
+                13391,
+                97670
+              ],
+              "state_end": 225,
+              "cost_s": 0.043807247500808444,
+              "draft_s": 8.913549936551135e-05,
+              "verify_s": 0.043648222999763675,
+              "commit_s": 4.6698500227648765e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 225,
+              "end": 226,
+              "emitted_tokens": [
+                624
+              ],
+              "state_end": 226,
+              "cost_s": 0.04549729950122128,
+              "draft_s": 8.454949966107961e-05,
+              "verify_s": 0.04487803449956118,
+              "commit_s": 0.000515724499564385,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 226,
+              "end": 227,
+              "emitted_tokens": [
+                20
+              ],
+              "state_end": 227,
+              "cost_s": 0.04549564950139029,
+              "draft_s": 7.807299880369101e-05,
+              "verify_s": 0.04525022199777595,
+              "commit_s": 0.00010893599937844556,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 227,
+              "end": 228,
+              "emitted_tokens": [
+                13
+              ],
+              "state_end": 228,
+              "cost_s": 0.045656487498490606,
+              "draft_s": 8.028999945963733e-05,
+              "verify_s": 0.04516392149889725,
+              "commit_s": 0.0003918170004908461,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 228,
+              "end": 229,
+              "emitted_tokens": [
+                11097
+              ],
+              "state_end": 229,
+              "cost_s": 0.04564111900072021,
+              "draft_s": 7.972899948072154e-05,
+              "verify_s": 0.04550458300036553,
+              "commit_s": 3.5980499887955375e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 229,
+              "end": 235,
+              "emitted_tokens": [
+                10512,
+                10357,
+                30969,
+                279,
+                4401,
+                13
+              ],
+              "state_end": 235,
+              "cost_s": 0.04217678050008544,
+              "draft_s": 8.393999996769708e-05,
+              "verify_s": 0.04202233200157934,
+              "commit_s": 5.013649752072524e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 235,
+              "end": 236,
+              "emitted_tokens": [
+                715
+              ],
+              "state_end": 236,
+              "cost_s": 0.04608688700136554,
+              "draft_s": 8.92630014277529e-05,
+              "verify_s": 0.04544654099845502,
+              "commit_s": 0.0005302940007823054,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 236,
+              "end": 237,
+              "emitted_tokens": [
+                21
+              ],
+              "state_end": 237,
+              "cost_s": 0.044235044999368256,
+              "draft_s": 8.618299943918828e-05,
+              "verify_s": 0.04408686649912852,
+              "commit_s": 4.022800021630246e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 237,
+              "end": 238,
+              "emitted_tokens": [
+                13
+              ],
+              "state_end": 238,
+              "cost_s": 0.046048371003053035,
+              "draft_s": 8.020799759833608e-05,
+              "verify_s": 0.04591332050040364,
+              "commit_s": 3.5813500289805233e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 238,
+              "end": 239,
+              "emitted_tokens": [
+                576
+              ],
+              "state_end": 239,
+              "cost_s": 0.040809225998600596,
+              "draft_s": 8.520249866705853e-05,
+              "verify_s": 0.040651775498190545,
+              "commit_s": 5.1949000408058055e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 239,
+              "end": 240,
+              "emitted_tokens": [
+                58232
+              ],
+              "state_end": 240,
+              "cost_s": 0.04521533449951676,
+              "draft_s": 8.035749851842411e-05,
+              "verify_s": 0.045080947000315064,
+              "commit_s": 3.571600063878577e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 240,
+              "end": 241,
+              "emitted_tokens": [
+                1431
+              ],
+              "state_end": 241,
+              "cost_s": 0.042779515501024434,
+              "draft_s": 7.625950092915446e-05,
+              "verify_s": 0.042652434998672106,
+              "commit_s": 3.0043500373722054e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 241,
+              "end": 242,
+              "emitted_tokens": [
+                702
+              ],
+              "state_end": 242,
+              "cost_s": 0.04450648600140994,
+              "draft_s": 7.683749936404638e-05,
+              "verify_s": 0.04437220549880294,
+              "commit_s": 3.8879499697941355e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 242,
+              "end": 243,
+              "emitted_tokens": [
+                28001
+              ],
+              "state_end": 243,
+              "cost_s": 0.04335065650047909,
+              "draft_s": 8.246750257967506e-05,
+              "verify_s": 0.04321568900013517,
+              "commit_s": 3.276300230936613e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 243,
+              "end": 244,
+              "emitted_tokens": [
+                916
+              ],
+              "state_end": 244,
+              "cost_s": 0.041939371500120615,
+              "draft_s": 8.710749716556165e-05,
+              "verify_s": 0.041721376499481266,
+              "commit_s": 0.00011070400069002062,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 244,
+              "end": 250,
+              "emitted_tokens": [
+                10491,
+                16660,
+                304,
+                21841,
+                38443,
+                13
+              ],
+              "state_end": 250,
+              "cost_s": 0.043323434500052826,
+              "draft_s": 5.747749855800066e-05,
+              "verify_s": 0.04319603499970981,
+              "commit_s": 4.926549991068896e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 250,
+              "end": 251,
+              "emitted_tokens": [
+                715
+              ],
+              "state_end": 251,
+              "cost_s": 0.04242448050172243,
+              "draft_s": 8.80009993124986e-05,
+              "verify_s": 0.042269499997928506,
+              "commit_s": 4.5809001676389016e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 251,
+              "end": 252,
+              "emitted_tokens": [
+                22
+              ],
+              "state_end": 252,
+              "cost_s": 0.04566485550094512,
+              "draft_s": 7.85134998295689e-05,
+              "verify_s": 0.045055891499941936,
+              "commit_s": 0.0005110594993311679,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 252,
+              "end": 253,
+              "emitted_tokens": [
+                13
+              ],
+              "state_end": 253,
+              "cost_s": 0.04212584800188779,
+              "draft_s": 7.856350021029357e-05,
+              "verify_s": 0.041996068499429384,
+              "commit_s": 3.177000144205522e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 253,
+              "end": 254,
+              "emitted_tokens": [
+                576
+              ],
+              "state_end": 254,
+              "cost_s": 0.04424481699970784,
+              "draft_s": 8.54459995025536e-05,
+              "verify_s": 0.044059971000024234,
+              "commit_s": 8.019750021048822e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": 8,
+              "start": 254,
+              "end": 255,
+              "emitted_tokens": [
+                83945
+              ],
+              "state_end": 255,
+              "cost_s": 0.04449503400064714,
+              "draft_s": 7.809750059095677e-05,
+              "verify_s": 0.04436663600063184,
+              "commit_s": 3.215600190742407e-05,
+              "timing_samples": 2
+            },
+            {
+              "k": null,
+              "start": 255,
+              "end": 256,
+              "emitted_tokens": [
+                572
+              ],
+              "cost_s": 0.0,
+              "action": "emit already-pending terminal/budget token",
+              "timing_samples": 0
+            }
+          ]
+        }
+      },
+      "cycle_oracle": {
+        "predicted_total_s": 6.266940233999776,
+        "cycle_cost_s": 6.062835918013661,
+        "median_prefill_s": 0.20074399699842616,
+        "median_noncycle_overhead_s": 0.0033603189876885153,
+        "median_component_sum_error_s": 1.978150066861417e-05,
+        "speedup_vs_singleton": 1.8320816662986887,
+        "gain_vs_best_fixed_k": 1.0,
+        "path": [
+          {
+            "k": 8,
+            "start": 0,
+            "end": 1,
+            "emitted_tokens": [
+              576
+            ],
+            "state_end": 1,
+            "cost_s": 0.044635995998760336,
+            "draft_s": 6.536049841088243e-05,
+            "verify_s": 0.0444422045002284,
+            "commit_s": 3.9578499126946554e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 1,
+            "end": 2,
+            "emitted_tokens": [
+              21841
+            ],
+            "state_end": 2,
+            "cost_s": 0.04278994000014791,
+            "draft_s": 4.979950244887732e-05,
+            "verify_s": 0.042685838001489174,
+            "commit_s": 3.300800017314032e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 2,
+            "end": 4,
+            "emitted_tokens": [
+              21914,
+              18562
+            ],
+            "state_end": 4,
+            "cost_s": 0.049649423997834674,
+            "draft_s": 5.972150029265322e-05,
+            "verify_s": 0.04945045550084615,
+            "commit_s": 0.00011802699918916915,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 4,
+            "end": 5,
+            "emitted_tokens": [
+              10859
+            ],
+            "state_end": 5,
+            "cost_s": 0.04331632250068651,
+            "draft_s": 6.718499935232103e-05,
+            "verify_s": 0.04287498600024264,
+            "commit_s": 3.470949923212174e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 5,
+            "end": 6,
+            "emitted_tokens": [
+              279
+            ],
+            "state_end": 6,
+            "cost_s": 0.0428591644995322,
+            "draft_s": 5.1682000048458576e-05,
+            "verify_s": 0.04273969099813257,
+            "commit_s": 4.8306001190212555e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 6,
+            "end": 9,
+            "emitted_tokens": [
+              7179,
+              32736,
+              7154
+            ],
+            "state_end": 9,
+            "cost_s": 0.04474454149931262,
+            "draft_s": 6.49719986540731e-05,
+            "verify_s": 0.04457868650024466,
+            "commit_s": 7.785100024193525e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 9,
+            "end": 10,
+            "emitted_tokens": [
+              11
+            ],
+            "state_end": 10,
+            "cost_s": 0.044279160001678974,
+            "draft_s": 5.824649997521192e-05,
+            "verify_s": 0.04416800599756243,
+            "commit_s": 3.2822501452756114e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 10,
+            "end": 11,
+            "emitted_tokens": [
+              10454
+            ],
+            "state_end": 11,
+            "cost_s": 0.0461686175003706,
+            "draft_s": 5.233399861026555e-05,
+            "verify_s": 0.045711951001067064,
+            "commit_s": 0.0003868450021400349,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 11,
+            "end": 12,
+            "emitted_tokens": [
+              279
+            ],
+            "state_end": 12,
+            "cost_s": 0.0445665530005499,
+            "draft_s": 5.433700243884232e-05,
+            "verify_s": 0.044461555500674876,
+            "commit_s": 3.1530002161161974e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 12,
+            "end": 18,
+            "emitted_tokens": [
+              220,
+              16,
+              17,
+              18,
+              6498,
+              4462
+            ],
+            "state_end": 18,
+            "cost_s": 0.04338307099897065,
+            "draft_s": 6.1019502027193084e-05,
+            "verify_s": 0.042911100999845075,
+            "commit_s": 0.0003900914998666849,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 18,
+            "end": 19,
+            "emitted_tokens": [
+              323
+            ],
+            "state_end": 19,
+            "cost_s": 0.042990604999431525,
+            "draft_s": 5.304900150804315e-05,
+            "verify_s": 0.042762602999573573,
+            "commit_s": 0.00015647149848518893,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 19,
+            "end": 20,
+            "emitted_tokens": [
+              48680
+            ],
+            "state_end": 20,
+            "cost_s": 0.04491281400078151,
+            "draft_s": 5.309149855747819e-05,
+            "verify_s": 0.043996014501317404,
+            "commit_s": 0.0005201420008233981,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 20,
+            "end": 21,
+            "emitted_tokens": [
+              279
+            ],
+            "state_end": 21,
+            "cost_s": 0.042716057500001625,
+            "draft_s": 5.310549931891728e-05,
+            "verify_s": 0.04261484249946079,
+            "commit_s": 2.9499498850782402e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 21,
+            "end": 22,
+            "emitted_tokens": [
+              5473
+            ],
+            "state_end": 22,
+            "cost_s": 0.04106652249902254,
+            "draft_s": 6.05315017310204e-05,
+            "verify_s": 0.04090824650302238,
+            "commit_s": 7.74154977989383e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 22,
+            "end": 30,
+            "emitted_tokens": [
+              28001,
+              916,
+              10491,
+              16660,
+              304,
+              21841,
+              38443,
+              13
+            ],
+            "state_end": 30,
+            "cost_s": 0.04419160549878143,
+            "draft_s": 4.238250039634295e-05,
+            "verify_s": 0.04373901900180499,
+            "commit_s": 0.0003906915007974021,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 30,
+            "end": 31,
+            "emitted_tokens": [
+              1096
+            ],
+            "state_end": 31,
+            "cost_s": 0.04363347300204623,
+            "draft_s": 5.6394501370959915e-05,
+            "verify_s": 0.04352501100038353,
+            "commit_s": 3.288849984528497e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 31,
+            "end": 32,
+            "emitted_tokens": [
+              3271
+            ],
+            "state_end": 32,
+            "cost_s": 0.043762851499195676,
+            "draft_s": 5.432399848359637e-05,
+            "verify_s": 0.04315897349988518,
+            "commit_s": 0.0005310664982971502,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 32,
+            "end": 33,
+            "emitted_tokens": [
+              11
+            ],
+            "state_end": 33,
+            "cost_s": 0.04295160549918364,
+            "draft_s": 5.878899901290424e-05,
+            "verify_s": 0.042840998497922556,
+            "commit_s": 3.221750012016855e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 33,
+            "end": 34,
+            "emitted_tokens": [
+              16087
+            ],
+            "state_end": 34,
+            "cost_s": 0.04295614250077051,
+            "draft_s": 6.0684498748742044e-05,
+            "verify_s": 0.042823798499739496,
+            "commit_s": 5.124749986862298e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 34,
+            "end": 35,
+            "emitted_tokens": [
+              553
+            ],
+            "state_end": 35,
+            "cost_s": 0.043383363999964786,
+            "draft_s": 5.61419983569067e-05,
+            "verify_s": 0.04322951850190293,
+            "commit_s": 7.953699969220906e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 35,
+            "end": 36,
+            "emitted_tokens": [
+              6778
+            ],
+            "state_end": 36,
+            "cost_s": 0.04412680200039176,
+            "draft_s": 5.925299774389714e-05,
+            "verify_s": 0.04360852250101743,
+            "commit_s": 0.00043925850150117185,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 36,
+            "end": 38,
+            "emitted_tokens": [
+              323,
+              279
+            ],
+            "state_end": 38,
+            "cost_s": 0.04300597699875652,
+            "draft_s": 6.176699935167562e-05,
+            "verify_s": 0.042871990999628906,
+            "commit_s": 5.1449998863972723e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 38,
+            "end": 39,
+            "emitted_tokens": [
+              547
+            ],
+            "state_end": 39,
+            "cost_s": 0.04229882499930682,
+            "draft_s": 5.5111000619945116e-05,
+            "verify_s": 0.042114752999623306,
+            "commit_s": 0.00010942150038317777,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 39,
+            "end": 40,
+            "emitted_tokens": [
+              808
+            ],
+            "state_end": 40,
+            "cost_s": 0.04522047300088161,
+            "draft_s": 5.710500045097433e-05,
+            "verify_s": 0.045108741001968156,
+            "commit_s": 3.550400106178131e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 40,
+            "end": 41,
+            "emitted_tokens": [
+              2572
+            ],
+            "state_end": 41,
+            "cost_s": 0.04291076799927396,
+            "draft_s": 5.719500040868297e-05,
+            "verify_s": 0.04280138699868985,
+            "commit_s": 3.350099905219395e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 41,
+            "end": 42,
+            "emitted_tokens": [
+              374
+            ],
+            "state_end": 42,
+            "cost_s": 0.04360167450249719,
+            "draft_s": 5.688999954145402e-05,
+            "verify_s": 0.04345020549953915,
+            "commit_s": 7.561699931102339e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 42,
+            "end": 43,
+            "emitted_tokens": [
+              3884
+            ],
+            "state_end": 43,
+            "cost_s": 0.04287419900174427,
+            "draft_s": 5.995750143483747e-05,
+            "verify_s": 0.04275876349856844,
+            "commit_s": 3.532149821694475e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 43,
+            "end": 44,
+            "emitted_tokens": [
+              438
+            ],
+            "state_end": 44,
+            "cost_s": 0.0439156609991187,
+            "draft_s": 5.6581500757602043e-05,
+            "verify_s": 0.04372663800131704,
+            "commit_s": 0.00011399450158933178,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 44,
+            "end": 45,
+            "emitted_tokens": [
+              264
+            ],
+            "state_end": 45,
+            "cost_s": 0.0451890545009519,
+            "draft_s": 5.893150046176743e-05,
+            "verify_s": 0.044724807999955374,
+            "commit_s": 3.933150219381787e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 45,
+            "end": 46,
+            "emitted_tokens": [
+              3019
+            ],
+            "state_end": 46,
+            "cost_s": 0.044240128501769505,
+            "draft_s": 6.535100146720652e-05,
+            "verify_s": 0.044100726501710596,
+            "commit_s": 5.279449942463543e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 46,
+            "end": 47,
+            "emitted_tokens": [
+              6974
+            ],
+            "state_end": 47,
+            "cost_s": 0.04674036650067137,
+            "draft_s": 5.918400165683124e-05,
+            "verify_s": 0.04662613049913489,
+            "commit_s": 3.59759978891816e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 47,
+            "end": 48,
+            "emitted_tokens": [
+              7046
+            ],
+            "state_end": 48,
+            "cost_s": 0.04361003749909287,
+            "draft_s": 5.908850107516628e-05,
+            "verify_s": 0.04300402800072334,
+            "commit_s": 0.0005286324994813185,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 48,
+            "end": 49,
+            "emitted_tokens": [
+              12161
+            ],
+            "state_end": 49,
+            "cost_s": 0.04418024249935115,
+            "draft_s": 6.332600059977267e-05,
+            "verify_s": 0.04398315850085055,
+            "commit_s": 5.5304997658822685e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 49,
+            "end": 50,
+            "emitted_tokens": [
+              323
+            ],
+            "state_end": 50,
+            "cost_s": 0.041937719000998186,
+            "draft_s": 7.082350202836096e-05,
+            "verify_s": 0.04180301300038991,
+            "commit_s": 4.352749965619296e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 50,
+            "end": 51,
+            "emitted_tokens": [
+              13391
+            ],
+            "state_end": 51,
+            "cost_s": 0.045074360499711474,
+            "draft_s": 6.452749767049681e-05,
+            "verify_s": 0.04413025649955671,
+            "commit_s": 0.0008612724996055476,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 51,
+            "end": 52,
+            "emitted_tokens": [
+              97670
+            ],
+            "state_end": 52,
+            "cost_s": 0.04183135549828876,
+            "draft_s": 5.785349821962882e-05,
+            "verify_s": 0.04171888249948097,
+            "commit_s": 3.566750092431903e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 52,
+            "end": 53,
+            "emitted_tokens": [
+              11
+            ],
+            "state_end": 53,
+            "cost_s": 0.04360334499870078,
+            "draft_s": 5.944300028204452e-05,
+            "verify_s": 0.043490128500707215,
+            "commit_s": 3.506499888317194e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 53,
+            "end": 55,
+            "emitted_tokens": [
+              4092,
+              311
+            ],
+            "state_end": 55,
+            "cost_s": 0.041164979498717,
+            "draft_s": 6.528400081151631e-05,
+            "verify_s": 0.041029401998457615,
+            "commit_s": 5.037550181441475e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 55,
+            "end": 56,
+            "emitted_tokens": [
+              21841
+            ],
+            "state_end": 56,
+            "cost_s": 0.041415749001316726,
+            "draft_s": 5.923100070504006e-05,
+            "verify_s": 0.041147598498355364,
+            "commit_s": 0.00019049899856327102,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 56,
+            "end": 57,
+            "emitted_tokens": [
+              7359
+            ],
+            "state_end": 57,
+            "cost_s": 0.04459067450079601,
+            "draft_s": 5.8368999816593714e-05,
+            "verify_s": 0.044154937500934466,
+            "commit_s": 3.052400097658392e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 57,
+            "end": 58,
+            "emitted_tokens": [
+              13
+            ],
+            "state_end": 58,
+            "cost_s": 0.041046319500310346,
+            "draft_s": 5.6527000197093e-05,
+            "verify_s": 0.040943526500996086,
+            "commit_s": 2.897700142057147e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 58,
+            "end": 59,
+            "emitted_tokens": [
+              715
+            ],
+            "state_end": 59,
+            "cost_s": 0.04352224499962176,
+            "draft_s": 5.630149826174602e-05,
+            "verify_s": 0.04340542300087691,
+            "commit_s": 4.0619501305627637e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 59,
+            "end": 60,
+            "emitted_tokens": [
+              785
+            ],
+            "state_end": 60,
+            "cost_s": 0.04297848450187303,
+            "draft_s": 5.943649921391625e-05,
+            "verify_s": 0.04286648249762948,
+            "commit_s": 3.367499994055834e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 60,
+            "end": 62,
+            "emitted_tokens": [
+              21841,
+              21914
+            ],
+            "state_end": 62,
+            "cost_s": 0.040903507000621175,
+            "draft_s": 6.353349999699276e-05,
+            "verify_s": 0.04077283050173719,
+            "commit_s": 4.700049976236187e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 62,
+            "end": 63,
+            "emitted_tokens": [
+              702
+            ],
+            "state_end": 63,
+            "cost_s": 0.04304000900083338,
+            "draft_s": 5.800500002806075e-05,
+            "verify_s": 0.042906087001028936,
+            "commit_s": 5.5807999160606414e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 63,
+            "end": 64,
+            "emitted_tokens": [
+              18562
+            ],
+            "state_end": 64,
+            "cost_s": 0.04253976899963163,
+            "draft_s": 6.112700066296384e-05,
+            "verify_s": 0.04242404500109842,
+            "commit_s": 3.4669497836148366e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 64,
+            "end": 69,
+            "emitted_tokens": [
+              10859,
+              279,
+              7179,
+              32736,
+              7154
+            ],
+            "state_end": 69,
+            "cost_s": 0.04233400349949079,
+            "draft_s": 6.605400085391011e-05,
+            "verify_s": 0.04173052099758934,
+            "commit_s": 0.0005184159999771509,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 69,
+            "end": 70,
+            "emitted_tokens": [
+              320
+            ],
+            "state_end": 70,
+            "cost_s": 0.04244632300287776,
+            "draft_s": 7.091299994499423e-05,
+            "verify_s": 0.04231107849955151,
+            "commit_s": 4.444750084076077e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 70,
+            "end": 71,
+            "emitted_tokens": [
+              87202
+            ],
+            "state_end": 71,
+            "cost_s": 0.041978438501246274,
+            "draft_s": 6.118449891800992e-05,
+            "verify_s": 0.04185633350061835,
+            "commit_s": 4.0963999708765186e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 71,
+            "end": 72,
+            "emitted_tokens": [
+              701
+            ],
+            "state_end": 72,
+            "cost_s": 0.04286725999918417,
+            "draft_s": 6.056700112822e-05,
+            "verify_s": 0.0427527834999637,
+            "commit_s": 3.4871000025304966e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 72,
+            "end": 73,
+            "emitted_tokens": [
+              3259
+            ],
+            "state_end": 73,
+            "cost_s": 0.042491942000197014,
+            "draft_s": 5.739699918194674e-05,
+            "verify_s": 0.04237770449981326,
+            "commit_s": 3.858299896819517e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 73,
+            "end": 74,
+            "emitted_tokens": [
+              432
+            ],
+            "state_end": 74,
+            "cost_s": 0.04420278299949132,
+            "draft_s": 6.060349915060215e-05,
+            "verify_s": 0.04372767150016443,
+            "commit_s": 0.00039469950024795253,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 74,
+            "end": 75,
+            "emitted_tokens": [
+              279
+            ],
+            "state_end": 75,
+            "cost_s": 0.0438693215000967,
+            "draft_s": 6.599200060009025e-05,
+            "verify_s": 0.043272643501040875,
+            "commit_s": 0.00050916650070576,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 75,
+            "end": 84,
+            "emitted_tokens": [
+              220,
+              16,
+              17,
+              18,
+              6498,
+              4462,
+              323,
+              48680,
+              279
+            ],
+            "state_end": 84,
+            "cost_s": 0.04344142300215026,
+            "draft_s": 6.897549974382855e-05,
+            "verify_s": 0.042986767997717834,
+            "commit_s": 4.290399738238193e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 84,
+            "end": 93,
+            "emitted_tokens": [
+              5473,
+              28001,
+              916,
+              10491,
+              16660,
+              304,
+              21841,
+              38443,
+              13
+            ],
+            "state_end": 93,
+            "cost_s": 0.041336924501592875,
+            "draft_s": 4.810149948752951e-05,
+            "verify_s": 0.04087404300116759,
+            "commit_s": 0.0003931595019821543,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 93,
+            "end": 101,
+            "emitted_tokens": [
+              1096,
+              3271,
+              11,
+              16087,
+              553,
+              6778,
+              323,
+              279
+            ],
+            "state_end": 101,
+            "cost_s": 0.04197955650124641,
+            "draft_s": 4.854300095757935e-05,
+            "verify_s": 0.041832194499875186,
+            "commit_s": 7.80099999246886e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 101,
+            "end": 104,
+            "emitted_tokens": [
+              3639,
+              4180,
+              11
+            ],
+            "state_end": 104,
+            "cost_s": 0.04130971449740173,
+            "draft_s": 4.5209500967757776e-05,
+            "verify_s": 0.04120047350261302,
+            "commit_s": 4.56375018984545e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 104,
+            "end": 105,
+            "emitted_tokens": [
+              374
+            ],
+            "state_end": 105,
+            "cost_s": 0.04316038149954693,
+            "draft_s": 6.235799992282409e-05,
+            "verify_s": 0.043042454000897123,
+            "commit_s": 3.573100002540741e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 105,
+            "end": 114,
+            "emitted_tokens": [
+              3884,
+              438,
+              264,
+              3019,
+              6974,
+              7046,
+              12161,
+              323,
+              13391
+            ],
+            "state_end": 114,
+            "cost_s": 0.043140086499988683,
+            "draft_s": 7.182599983934779e-05,
+            "verify_s": 0.04248592700059817,
+            "commit_s": 0.0005344599994714372,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 114,
+            "end": 121,
+            "emitted_tokens": [
+              97670,
+              11,
+              4092,
+              311,
+              21841,
+              7359,
+              13
+            ],
+            "state_end": 121,
+            "cost_s": 0.040820784499373985,
+            "draft_s": 4.6863000534358434e-05,
+            "verify_s": 0.040711060501053,
+            "commit_s": 4.376199831312988e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 121,
+            "end": 122,
+            "emitted_tokens": [
+              151643
+            ],
+            "state_end": 122,
+            "cost_s": 0.04274237450044893,
+            "draft_s": 6.837000000814442e-05,
+            "verify_s": 0.042619279000064125,
+            "commit_s": 3.545199979271274e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 122,
+            "end": 123,
+            "emitted_tokens": [
+              33975
+            ],
+            "state_end": 123,
+            "cost_s": 0.0439833569998882,
+            "draft_s": 6.456650044128764e-05,
+            "verify_s": 0.04386704450007528,
+            "commit_s": 3.374700099811889e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 123,
+            "end": 124,
+            "emitted_tokens": [
+              10512
+            ],
+            "state_end": 124,
+            "cost_s": 0.04238432000056491,
+            "draft_s": 6.365250010276213e-05,
+            "verify_s": 0.042273732000467135,
+            "commit_s": 2.9069500669720583e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 124,
+            "end": 128,
+            "emitted_tokens": [
+              10357,
+              30969,
+              279,
+              4401
+            ],
+            "state_end": 128,
+            "cost_s": 0.042700316500486224,
+            "draft_s": 7.097500019881409e-05,
+            "verify_s": 0.042537761000858154,
+            "commit_s": 5.979900015518069e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 128,
+            "end": 129,
+            "emitted_tokens": [
+              11
+            ],
+            "state_end": 129,
+            "cost_s": 0.04290663699975994,
+            "draft_s": 6.9586500103469e-05,
+            "verify_s": 0.04277456650015665,
+            "commit_s": 4.224250005790964e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 129,
+            "end": 130,
+            "emitted_tokens": [
+              27798
+            ],
+            "state_end": 130,
+            "cost_s": 0.04290625700014061,
+            "draft_s": 6.532850056828465e-05,
+            "verify_s": 0.04244303750056133,
+            "commit_s": 0.0003786709985433845,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 130,
+            "end": 131,
+            "emitted_tokens": [
+              429
+            ],
+            "state_end": 131,
+            "cost_s": 0.04395031849890074,
+            "draft_s": 6.73140002618311e-05,
+            "verify_s": 0.04382289900240721,
+            "commit_s": 4.082849955011625e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 131,
+            "end": 132,
+            "emitted_tokens": [
+              16636
+            ],
+            "state_end": 132,
+            "cost_s": 0.04162368749894085,
+            "draft_s": 6.828700134065002e-05,
+            "verify_s": 0.0415068969996355,
+            "commit_s": 2.997450064867735e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 132,
+            "end": 133,
+            "emitted_tokens": [
+              10887
+            ],
+            "state_end": 133,
+            "cost_s": 0.04414563400132465,
+            "draft_s": 6.378599937306717e-05,
+            "verify_s": 0.04401193749799859,
+            "commit_s": 5.0975499107153155e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 133,
+            "end": 142,
+            "emitted_tokens": [
+              311,
+              46326,
+              551,
+              40934,
+              369,
+              18169,
+              279,
+              58232,
+              1265
+            ],
+            "state_end": 142,
+            "cost_s": 0.04266577199814492,
+            "draft_s": 7.388500125671271e-05,
+            "verify_s": 0.04247958900123194,
+            "commit_s": 7.650699990335852e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 142,
+            "end": 148,
+            "emitted_tokens": [
+              7069,
+              835,
+              862,
+              7262,
+              11,
+              323
+            ],
+            "state_end": 148,
+            "cost_s": 0.04176565250054409,
+            "draft_s": 5.27654992765747e-05,
+            "verify_s": 0.04163869949843502,
+            "commit_s": 4.993049878976308e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 148,
+            "end": 149,
+            "emitted_tokens": [
+              429
+            ],
+            "state_end": 149,
+            "cost_s": 0.0429380064997531,
+            "draft_s": 6.593249963771086e-05,
+            "verify_s": 0.04281081249973795,
+            "commit_s": 4.289500066079199e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 149,
+            "end": 150,
+            "emitted_tokens": [
+              5837
+            ],
+            "state_end": 150,
+            "cost_s": 0.042831873999602976,
+            "draft_s": 6.702000064251479e-05,
+            "verify_s": 0.04271233100007521,
+            "commit_s": 3.310500142106321e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 150,
+            "end": 151,
+            "emitted_tokens": [
+              12613
+            ],
+            "state_end": 151,
+            "cost_s": 0.042836286997044226,
+            "draft_s": 6.708799992338754e-05,
+            "verify_s": 0.04268066550139338,
+            "commit_s": 7.007450039964169e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 151,
+            "end": 152,
+            "emitted_tokens": [
+              20178
+            ],
+            "state_end": 152,
+            "cost_s": 0.04298132350049855,
+            "draft_s": 6.885849870741367e-05,
+            "verify_s": 0.04284650249792321,
+            "commit_s": 4.749199979414698e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 152,
+            "end": 156,
+            "emitted_tokens": [
+              25505,
+              315,
+              279,
+              5473
+            ],
+            "state_end": 156,
+            "cost_s": 0.04286260650042095,
+            "draft_s": 7.482600085495505e-05,
+            "verify_s": 0.04270743100096297,
+            "commit_s": 6.071799907658715e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 156,
+            "end": 157,
+            "emitted_tokens": [
+              1265
+            ],
+            "state_end": 157,
+            "cost_s": 0.045027491498331074,
+            "draft_s": 7.400850154226646e-05,
+            "verify_s": 0.04480412750126561,
+            "commit_s": 0.0001292729994020192,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 157,
+            "end": 158,
+            "emitted_tokens": [
+              653
+            ],
+            "state_end": 158,
+            "cost_s": 0.044305649998932495,
+            "draft_s": 7.1647998993285e-05,
+            "verify_s": 0.044145220001155394,
+            "commit_s": 3.133149766654242e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 158,
+            "end": 159,
+            "emitted_tokens": [
+              773
+            ],
+            "state_end": 159,
+            "cost_s": 0.04403495549922809,
+            "draft_s": 6.769599895051215e-05,
+            "verify_s": 0.043917543998759356,
+            "commit_s": 3.15984998451313e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 159,
+            "end": 160,
+            "emitted_tokens": [
+              13
+            ],
+            "state_end": 160,
+            "cost_s": 0.042969744999936665,
+            "draft_s": 6.861650217615534e-05,
+            "verify_s": 0.04284125699996366,
+            "commit_s": 4.161300057603512e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 160,
+            "end": 161,
+            "emitted_tokens": [
+              4710
+            ],
+            "state_end": 161,
+            "cost_s": 0.04307793850057351,
+            "draft_s": 7.326699960685801e-05,
+            "verify_s": 0.042952180499924,
+            "commit_s": 3.3106498449342325e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 161,
+            "end": 162,
+            "emitted_tokens": [
+              785
+            ],
+            "state_end": 162,
+            "cost_s": 0.04331968149926979,
+            "draft_s": 6.851900070614647e-05,
+            "verify_s": 0.04320072350128612,
+            "commit_s": 3.168249713780824e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 162,
+            "end": 163,
+            "emitted_tokens": [
+              1376
+            ],
+            "state_end": 163,
+            "cost_s": 0.041483111499474035,
+            "draft_s": 6.887950075906701e-05,
+            "verify_s": 0.04135455299910973,
+            "commit_s": 4.118299875699449e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 163,
+            "end": 164,
+            "emitted_tokens": [
+              3501
+            ],
+            "state_end": 164,
+            "cost_s": 0.0430931770006282,
+            "draft_s": 7.977099994604941e-05,
+            "verify_s": 0.042833706000237726,
+            "commit_s": 0.0001585160007380182,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 164,
+            "end": 165,
+            "emitted_tokens": [
+              525
+            ],
+            "state_end": 165,
+            "cost_s": 0.0450761819993204,
+            "draft_s": 7.544200161646586e-05,
+            "verify_s": 0.04462502899878018,
+            "commit_s": 3.4998000046471134e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 165,
+            "end": 166,
+            "emitted_tokens": [
+              510
+            ],
+            "state_end": 166,
+            "cost_s": 0.04421630149954581,
+            "draft_s": 6.9989499024814e-05,
+            "verify_s": 0.04408740299913916,
+            "commit_s": 3.978999848186504e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 166,
+            "end": 167,
+            "emitted_tokens": [
+              16
+            ],
+            "state_end": 167,
+            "cost_s": 0.044913819001521915,
+            "draft_s": 7.466950046364218e-05,
+            "verify_s": 0.044778071000109776,
+            "commit_s": 4.124550105188973e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 167,
+            "end": 168,
+            "emitted_tokens": [
+              13
+            ],
+            "state_end": 168,
+            "cost_s": 0.04375518249980814,
+            "draft_s": 7.135549822123721e-05,
+            "verify_s": 0.04349986850138521,
+            "commit_s": 0.00016247550047410186,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 168,
+            "end": 169,
+            "emitted_tokens": [
+              576
+            ],
+            "state_end": 169,
+            "cost_s": 0.04370828499850177,
+            "draft_s": 7.848700079193804e-05,
+            "verify_s": 0.042773553997903946,
+            "commit_s": 0.0005227554993325612,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 169,
+            "end": 171,
+            "emitted_tokens": [
+              21841,
+              21914
+            ],
+            "state_end": 171,
+            "cost_s": 0.04242715999862412,
+            "draft_s": 8.023000191315077e-05,
+            "verify_s": 0.04227649850145099,
+            "commit_s": 4.8712001444073394e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 171,
+            "end": 172,
+            "emitted_tokens": [
+              10859
+            ],
+            "state_end": 172,
+            "cost_s": 0.04486924649972934,
+            "draft_s": 7.377899964922108e-05,
+            "verify_s": 0.04472319399974367,
+            "commit_s": 5.245399916020688e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 172,
+            "end": 178,
+            "emitted_tokens": [
+              279,
+              7179,
+              32736,
+              7154,
+              320,
+              87202
+            ],
+            "state_end": 178,
+            "cost_s": 0.04269665800165967,
+            "draft_s": 8.078549944912083e-05,
+            "verify_s": 0.04251412600206095,
+            "commit_s": 7.973500032676384e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 178,
+            "end": 179,
+            "emitted_tokens": [
+              4292
+            ],
+            "state_end": 179,
+            "cost_s": 0.04452808700079913,
+            "draft_s": 6.641399886575527e-05,
+            "verify_s": 0.043923234999965644,
+            "commit_s": 0.0005195425001147669,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 179,
+            "end": 180,
+            "emitted_tokens": [
+              17
+            ],
+            "state_end": 180,
+            "cost_s": 0.044774833499104716,
+            "draft_s": 7.16499998816289e-05,
+            "verify_s": 0.04464026899768214,
+            "commit_s": 4.294549944461323e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 180,
+            "end": 181,
+            "emitted_tokens": [
+              13
+            ],
+            "state_end": 181,
+            "cost_s": 0.04304833750029502,
+            "draft_s": 7.746800110908225e-05,
+            "verify_s": 0.04291077500056417,
+            "commit_s": 3.9528498746221885e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 181,
+            "end": 182,
+            "emitted_tokens": [
+              1084
+            ],
+            "state_end": 182,
+            "cost_s": 0.045577532500828966,
+            "draft_s": 7.483350054826587e-05,
+            "verify_s": 0.04540858250038582,
+            "commit_s": 7.344250116148032e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 182,
+            "end": 183,
+            "emitted_tokens": [
+              6116
+            ],
+            "state_end": 183,
+            "cost_s": 0.044214871999429306,
+            "draft_s": 7.355499838013202e-05,
+            "verify_s": 0.044038600999556365,
+            "commit_s": 8.343500121554825e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 183,
+            "end": 190,
+            "emitted_tokens": [
+              279,
+              220,
+              16,
+              17,
+              18,
+              6498,
+              4462
+            ],
+            "state_end": 190,
+            "cost_s": 0.04414136349805631,
+            "draft_s": 9.429350029677153e-05,
+            "verify_s": 0.043504628498340026,
+            "commit_s": 0.0005213545009610243,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 190,
+            "end": 191,
+            "emitted_tokens": [
+              11
+            ],
+            "state_end": 191,
+            "cost_s": 0.04284066999935021,
+            "draft_s": 7.883100079197902e-05,
+            "verify_s": 0.04221716499887407,
+            "commit_s": 0.0005236825018073432,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 191,
+            "end": 192,
+            "emitted_tokens": [
+              48680
+            ],
+            "state_end": 192,
+            "cost_s": 0.046830727500491776,
+            "draft_s": 7.799949889886193e-05,
+            "verify_s": 0.04668978200061247,
+            "commit_s": 4.270400131645147e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 192,
+            "end": 196,
+            "emitted_tokens": [
+              279,
+              5473,
+              28001,
+              916
+            ],
+            "state_end": 196,
+            "cost_s": 0.04490285349857004,
+            "draft_s": 8.474349851894658e-05,
+            "verify_s": 0.044402730998626794,
+            "commit_s": 0.00039428049967682455,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 196,
+            "end": 197,
+            "emitted_tokens": [
+              21841
+            ],
+            "state_end": 197,
+            "cost_s": 0.045090740501109394,
+            "draft_s": 7.872050082369242e-05,
+            "verify_s": 0.04495188849978149,
+            "commit_s": 4.044299930683337e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 197,
+            "end": 198,
+            "emitted_tokens": [
+              38443
+            ],
+            "state_end": 198,
+            "cost_s": 0.04421077500046522,
+            "draft_s": 8.508400060236454e-05,
+            "verify_s": 0.04404722499930358,
+            "commit_s": 5.640250128635671e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 198,
+            "end": 199,
+            "emitted_tokens": [
+              624
+            ],
+            "state_end": 199,
+            "cost_s": 0.04506358700200508,
+            "draft_s": 7.857600030547474e-05,
+            "verify_s": 0.044887492500492954,
+            "commit_s": 7.832849951228127e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 199,
+            "end": 200,
+            "emitted_tokens": [
+              18
+            ],
+            "state_end": 200,
+            "cost_s": 0.04488649699851521,
+            "draft_s": 7.911350076028612e-05,
+            "verify_s": 0.04474916199978907,
+            "commit_s": 3.8084001062088646e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 200,
+            "end": 201,
+            "emitted_tokens": [
+              13
+            ],
+            "state_end": 201,
+            "cost_s": 0.042016274001071,
+            "draft_s": 7.227749847515952e-05,
+            "verify_s": 0.04188278149922553,
+            "commit_s": 4.2337498598499224e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 201,
+            "end": 202,
+            "emitted_tokens": [
+              576
+            ],
+            "state_end": 202,
+            "cost_s": 0.043590007999227964,
+            "draft_s": 8.91069994395366e-05,
+            "verify_s": 0.04342785150038253,
+            "commit_s": 5.225200038694311e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 202,
+            "end": 203,
+            "emitted_tokens": [
+              3271
+            ],
+            "state_end": 203,
+            "cost_s": 0.04484925450014998,
+            "draft_s": 7.676149834878743e-05,
+            "verify_s": 0.04471472250043007,
+            "commit_s": 3.8447500628535636e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 203,
+            "end": 204,
+            "emitted_tokens": [
+              572
+            ],
+            "state_end": 204,
+            "cost_s": 0.044371824000336346,
+            "draft_s": 7.46710011299001e-05,
+            "verify_s": 0.0442342255028052,
+            "commit_s": 4.280500070308335e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 204,
+            "end": 205,
+            "emitted_tokens": [
+              16087
+            ],
+            "state_end": 205,
+            "cost_s": 0.04496748299970932,
+            "draft_s": 7.277800068550278e-05,
+            "verify_s": 0.044833768499302096,
+            "commit_s": 4.054850069223903e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 205,
+            "end": 211,
+            "emitted_tokens": [
+              553,
+              6778,
+              323,
+              279,
+              3639,
+              4180
+            ],
+            "state_end": 211,
+            "cost_s": 0.04311348800001724,
+            "draft_s": 8.537249959772453e-05,
+            "verify_s": 0.042611357999703614,
+            "commit_s": 0.00039526349974039476,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 211,
+            "end": 212,
+            "emitted_tokens": [
+              624
+            ],
+            "state_end": 212,
+            "cost_s": 0.04529438499957905,
+            "draft_s": 8.020350105653051e-05,
+            "verify_s": 0.04502945650165202,
+            "commit_s": 0.00016356550077034626,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 212,
+            "end": 213,
+            "emitted_tokens": [
+              19
+            ],
+            "state_end": 213,
+            "cost_s": 0.044327424500806956,
+            "draft_s": 8.031649849726819e-05,
+            "verify_s": 0.04387566700097523,
+            "commit_s": 3.310850115667563e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 213,
+            "end": 214,
+            "emitted_tokens": [
+              13
+            ],
+            "state_end": 214,
+            "cost_s": 0.04552702050023072,
+            "draft_s": 7.430200093949679e-05,
+            "verify_s": 0.04535905349985114,
+            "commit_s": 7.349149927904364e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 214,
+            "end": 215,
+            "emitted_tokens": [
+              1084
+            ],
+            "state_end": 215,
+            "cost_s": 0.04248689450105303,
+            "draft_s": 8.510100087733008e-05,
+            "verify_s": 0.04227707649988588,
+            "commit_s": 7.560249832749832e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 215,
+            "end": 216,
+            "emitted_tokens": [
+              374
+            ],
+            "state_end": 216,
+            "cost_s": 0.045111694002116565,
+            "draft_s": 7.656300113012549e-05,
+            "verify_s": 0.04494464400158904,
+            "commit_s": 7.191750046331435e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 216,
+            "end": 221,
+            "emitted_tokens": [
+              3884,
+              438,
+              264,
+              3019,
+              6974
+            ],
+            "state_end": 221,
+            "cost_s": 0.04254873450008745,
+            "draft_s": 8.412649913225323e-05,
+            "verify_s": 0.04238034749869257,
+            "commit_s": 6.323399975372013e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 221,
+            "end": 222,
+            "emitted_tokens": [
+              12161
+            ],
+            "state_end": 222,
+            "cost_s": 0.043898102499952074,
+            "draft_s": 8.422999962931499e-05,
+            "verify_s": 0.0437524780008971,
+            "commit_s": 4.124500082980376e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 222,
+            "end": 225,
+            "emitted_tokens": [
+              323,
+              13391,
+              97670
+            ],
+            "state_end": 225,
+            "cost_s": 0.043807247500808444,
+            "draft_s": 8.913549936551135e-05,
+            "verify_s": 0.043648222999763675,
+            "commit_s": 4.6698500227648765e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 225,
+            "end": 226,
+            "emitted_tokens": [
+              624
+            ],
+            "state_end": 226,
+            "cost_s": 0.04549729950122128,
+            "draft_s": 8.454949966107961e-05,
+            "verify_s": 0.04487803449956118,
+            "commit_s": 0.000515724499564385,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 226,
+            "end": 227,
+            "emitted_tokens": [
+              20
+            ],
+            "state_end": 227,
+            "cost_s": 0.04549564950139029,
+            "draft_s": 7.807299880369101e-05,
+            "verify_s": 0.04525022199777595,
+            "commit_s": 0.00010893599937844556,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 227,
+            "end": 228,
+            "emitted_tokens": [
+              13
+            ],
+            "state_end": 228,
+            "cost_s": 0.045656487498490606,
+            "draft_s": 8.028999945963733e-05,
+            "verify_s": 0.04516392149889725,
+            "commit_s": 0.0003918170004908461,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 228,
+            "end": 229,
+            "emitted_tokens": [
+              11097
+            ],
+            "state_end": 229,
+            "cost_s": 0.04564111900072021,
+            "draft_s": 7.972899948072154e-05,
+            "verify_s": 0.04550458300036553,
+            "commit_s": 3.5980499887955375e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 229,
+            "end": 235,
+            "emitted_tokens": [
+              10512,
+              10357,
+              30969,
+              279,
+              4401,
+              13
+            ],
+            "state_end": 235,
+            "cost_s": 0.04217678050008544,
+            "draft_s": 8.393999996769708e-05,
+            "verify_s": 0.04202233200157934,
+            "commit_s": 5.013649752072524e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 235,
+            "end": 236,
+            "emitted_tokens": [
+              715
+            ],
+            "state_end": 236,
+            "cost_s": 0.04608688700136554,
+            "draft_s": 8.92630014277529e-05,
+            "verify_s": 0.04544654099845502,
+            "commit_s": 0.0005302940007823054,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 236,
+            "end": 237,
+            "emitted_tokens": [
+              21
+            ],
+            "state_end": 237,
+            "cost_s": 0.044235044999368256,
+            "draft_s": 8.618299943918828e-05,
+            "verify_s": 0.04408686649912852,
+            "commit_s": 4.022800021630246e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 237,
+            "end": 238,
+            "emitted_tokens": [
+              13
+            ],
+            "state_end": 238,
+            "cost_s": 0.046048371003053035,
+            "draft_s": 8.020799759833608e-05,
+            "verify_s": 0.04591332050040364,
+            "commit_s": 3.5813500289805233e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 238,
+            "end": 239,
+            "emitted_tokens": [
+              576
+            ],
+            "state_end": 239,
+            "cost_s": 0.040809225998600596,
+            "draft_s": 8.520249866705853e-05,
+            "verify_s": 0.040651775498190545,
+            "commit_s": 5.1949000408058055e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 239,
+            "end": 240,
+            "emitted_tokens": [
+              58232
+            ],
+            "state_end": 240,
+            "cost_s": 0.04521533449951676,
+            "draft_s": 8.035749851842411e-05,
+            "verify_s": 0.045080947000315064,
+            "commit_s": 3.571600063878577e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 240,
+            "end": 241,
+            "emitted_tokens": [
+              1431
+            ],
+            "state_end": 241,
+            "cost_s": 0.042779515501024434,
+            "draft_s": 7.625950092915446e-05,
+            "verify_s": 0.042652434998672106,
+            "commit_s": 3.0043500373722054e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 241,
+            "end": 242,
+            "emitted_tokens": [
+              702
+            ],
+            "state_end": 242,
+            "cost_s": 0.04450648600140994,
+            "draft_s": 7.683749936404638e-05,
+            "verify_s": 0.04437220549880294,
+            "commit_s": 3.8879499697941355e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 242,
+            "end": 243,
+            "emitted_tokens": [
+              28001
+            ],
+            "state_end": 243,
+            "cost_s": 0.04335065650047909,
+            "draft_s": 8.246750257967506e-05,
+            "verify_s": 0.04321568900013517,
+            "commit_s": 3.276300230936613e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 243,
+            "end": 244,
+            "emitted_tokens": [
+              916
+            ],
+            "state_end": 244,
+            "cost_s": 0.041939371500120615,
+            "draft_s": 8.710749716556165e-05,
+            "verify_s": 0.041721376499481266,
+            "commit_s": 0.00011070400069002062,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 244,
+            "end": 250,
+            "emitted_tokens": [
+              10491,
+              16660,
+              304,
+              21841,
+              38443,
+              13
+            ],
+            "state_end": 250,
+            "cost_s": 0.043323434500052826,
+            "draft_s": 5.747749855800066e-05,
+            "verify_s": 0.04319603499970981,
+            "commit_s": 4.926549991068896e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 250,
+            "end": 251,
+            "emitted_tokens": [
+              715
+            ],
+            "state_end": 251,
+            "cost_s": 0.04242448050172243,
+            "draft_s": 8.80009993124986e-05,
+            "verify_s": 0.042269499997928506,
+            "commit_s": 4.5809001676389016e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 251,
+            "end": 252,
+            "emitted_tokens": [
+              22
+            ],
+            "state_end": 252,
+            "cost_s": 0.04566485550094512,
+            "draft_s": 7.85134998295689e-05,
+            "verify_s": 0.045055891499941936,
+            "commit_s": 0.0005110594993311679,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 252,
+            "end": 253,
+            "emitted_tokens": [
+              13
+            ],
+            "state_end": 253,
+            "cost_s": 0.04212584800188779,
+            "draft_s": 7.856350021029357e-05,
+            "verify_s": 0.041996068499429384,
+            "commit_s": 3.177000144205522e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 253,
+            "end": 254,
+            "emitted_tokens": [
+              576
+            ],
+            "state_end": 254,
+            "cost_s": 0.04424481699970784,
+            "draft_s": 8.54459995025536e-05,
+            "verify_s": 0.044059971000024234,
+            "commit_s": 8.019750021048822e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": 8,
+            "start": 254,
+            "end": 255,
+            "emitted_tokens": [
+              83945
+            ],
+            "state_end": 255,
+            "cost_s": 0.04449503400064714,
+            "draft_s": 7.809750059095677e-05,
+            "verify_s": 0.04436663600063184,
+            "commit_s": 3.215600190742407e-05,
+            "timing_samples": 2
+          },
+          {
+            "k": null,
+            "start": 255,
+            "end": 256,
+            "emitted_tokens": [
+              572
+            ],
+            "cost_s": 0.0,
+            "action": "emit already-pending terminal/budget token",
+            "timing_samples": 0
+          }
+        ]
+      }
+    }
+  ]
+}

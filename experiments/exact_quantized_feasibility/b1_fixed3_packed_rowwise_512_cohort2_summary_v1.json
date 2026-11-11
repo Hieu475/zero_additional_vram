@@ -1,0 +1,196 @@
+{
+  "schema": "zassd-fixed3-packed-rowwise-512-cohort2-v1",
+  "classification": "development-only; two process sessions per prompt; descriptive results",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "configuration": {
+    "k": 2,
+    "physical_rows": 3,
+    "attention_strategy": "rowwise",
+    "quantized_linear_strategy": "triton_nf4_fixed_three_rows_group_scale_packed",
+    "ngram_size": 3,
+    "max_new_tokens": 512,
+    "capacity": 2048
+  },
+  "prompts": 4,
+  "process_runs": 8,
+  "b1_tokens_and_all_512_kv_prefixes_exact_runs": 8,
+  "original_bnb_token_match_runs": 0,
+  "geomean_speedup_vs_b1_singleton": 1.4661314416820865,
+  "geomean_speedup_vs_original_bnb": 1.1934791464817402,
+  "per_prompt": {
+    "humaneval:HumanEval/118": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_512_cohort2_s25_v1/rows.jsonl",
+          "session_index": 25,
+          "speedup_vs_b1_singleton": 1.8926942644718088,
+          "speedup_vs_original_bnb": 1.516437887001575,
+          "accepted_draft_tokens": 262,
+          "draft_tokens": 310,
+          "cycles": 250,
+          "shared_state_prefixes": 512,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 191
+        },
+        {
+          "artifact": "b1_fixed3_packed_512_cohort2_s26_v1/rows.jsonl",
+          "session_index": 26,
+          "speedup_vs_b1_singleton": 1.9420345591800148,
+          "speedup_vs_original_bnb": 1.5195326331239944,
+          "accepted_draft_tokens": 262,
+          "draft_tokens": 310,
+          "cycles": 250,
+          "shared_state_prefixes": 512,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 191
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.9172056935983817,
+      "geomean_speedup_vs_original_bnb": 1.5179844713976784,
+      "accepted_draft_tokens": 524,
+      "draft_tokens": 620,
+      "all_b1_exact": true,
+      "bnb_match_runs": 0,
+      "divergence_indices": [
+        191,
+        191
+      ]
+    },
+    "humaneval:HumanEval/119": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_512_cohort2_s25_v1/rows.jsonl",
+          "session_index": 25,
+          "speedup_vs_b1_singleton": 1.6702122255258305,
+          "speedup_vs_original_bnb": 1.360602069911759,
+          "accepted_draft_tokens": 222,
+          "draft_tokens": 378,
+          "cycles": 290,
+          "shared_state_prefixes": 512,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 77
+        },
+        {
+          "artifact": "b1_fixed3_packed_512_cohort2_s26_v1/rows.jsonl",
+          "session_index": 26,
+          "speedup_vs_b1_singleton": 1.6584647049278503,
+          "speedup_vs_original_bnb": 1.4089255659145175,
+          "accepted_draft_tokens": 222,
+          "draft_tokens": 378,
+          "cycles": 290,
+          "shared_state_prefixes": 512,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 77
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.6643281003977506,
+      "geomean_speedup_vs_original_bnb": 1.3845530113848616,
+      "accepted_draft_tokens": 444,
+      "draft_tokens": 756,
+      "all_b1_exact": true,
+      "bnb_match_runs": 0,
+      "divergence_indices": [
+        77,
+        77
+      ]
+    },
+    "cnndm:cnndm_008": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_512_cohort2_s25_v1/rows.jsonl",
+          "session_index": 25,
+          "speedup_vs_b1_singleton": 1.22352858386638,
+          "speedup_vs_original_bnb": 0.989402543313843,
+          "accepted_draft_tokens": 122,
+          "draft_tokens": 278,
+          "cycles": 389,
+          "shared_state_prefixes": 512,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 68
+        },
+        {
+          "artifact": "b1_fixed3_packed_512_cohort2_s26_v1/rows.jsonl",
+          "session_index": 26,
+          "speedup_vs_b1_singleton": 1.2229594295977066,
+          "speedup_vs_original_bnb": 0.9612468965021433,
+          "accepted_draft_tokens": 122,
+          "draft_tokens": 278,
+          "cycles": 389,
+          "shared_state_prefixes": 512,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 68
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.2232439736298388,
+      "geomean_speedup_vs_original_bnb": 0.9752231150622708,
+      "accepted_draft_tokens": 244,
+      "draft_tokens": 556,
+      "all_b1_exact": true,
+      "bnb_match_runs": 0,
+      "divergence_indices": [
+        68,
+        68
+      ]
+    },
+    "cnndm:cnndm_009": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_512_cohort2_s25_v1/rows.jsonl",
+          "session_index": 25,
+          "speedup_vs_b1_singleton": 1.1798584749517222,
+          "speedup_vs_original_bnb": 1.0098188648911937,
+          "accepted_draft_tokens": 94,
+          "draft_tokens": 214,
+          "cycles": 418,
+          "shared_state_prefixes": 512,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 248
+        },
+        {
+          "artifact": "b1_fixed3_packed_512_cohort2_s26_v1/rows.jsonl",
+          "session_index": 26,
+          "speedup_vs_b1_singleton": 1.1877139613397596,
+          "speedup_vs_original_bnb": 0.9703164468269448,
+          "accepted_draft_tokens": 94,
+          "draft_tokens": 214,
+          "cycles": 418,
+          "shared_state_prefixes": 512,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 248
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.1837797021005207,
+      "geomean_speedup_vs_original_bnb": 0.9898706243343327,
+      "accepted_draft_tokens": 188,
+      "draft_tokens": 428,
+      "all_b1_exact": true,
+      "bnb_match_runs": 0,
+      "divergence_indices": [
+        248,
+        248
+      ]
+    }
+  },
+  "limitations": [
+    "four selected development prompts on one GPU",
+    "no population-level inference",
+    "held-out GSM8K indices 300-349 excluded"
+  ]
+}

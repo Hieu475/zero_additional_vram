@@ -1,0 +1,139 @@
+{
+  "status": "experimental singleton optimization; no contract update or runtime integration",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "HumanEval/114",
+  "prompt_sha256": "4bdb0afd53bc0e28529bafba0538d6b3a566ad5f476fb7f1016cfabe823f1c3f",
+  "session": 28,
+  "experiment_manifest": "experiments/exact_quantized_feasibility/triton_nf4_singleton_row_kernel_v1/experiment_manifest.json",
+  "manifest_preflight": "passed",
+  "base_b1_reference_contract": {
+    "contract_id": "61f0c8f15fbc91b9ce86dd35da55360940accdc59642d1fe9faff985a2019bee",
+    "model_state_sha256": "c6212d37bd02338c60536b1ca674b3e0c76fbcd810ba5df8e8e28b0e16f4f6cf",
+    "verified_source_count": 16
+  },
+  "parameters": {
+    "k": 1,
+    "ngram_size": 3,
+    "physical_rows": 2,
+    "max_new_tokens": 8,
+    "block_k": 32,
+    "attention_strategy": "triton_batched",
+    "quantized_linear_strategy": "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+    "singleton_nf4_kernel": "one-row experimental kernel",
+    "block_nf4_kernel": "existing two-row kernel",
+    "timing_rounds": 1
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "reference": {
+    "token_ids": [
+      262,
+      671,
+      4615,
+      2038,
+      1588,
+      198,
+      262,
+      1308
+    ],
+    "state_prefixes": 8
+  },
+  "block": {
+    "token_ids": [
+      262,
+      671,
+      4615,
+      2038,
+      1588,
+      198,
+      262,
+      1308
+    ],
+    "state_prefixes": 8
+  },
+  "token_match": true,
+  "shared_state_prefixes": 8,
+  "all_shared_states_equal": true,
+  "same_prefix_domain": true,
+  "state_mismatches": [],
+  "timing": {
+    "paired_rounds": [
+      {
+        "round": 0,
+        "method_order": [
+          "original_bnb_greedy",
+          "optimized_b1_singleton",
+          "optimized_b1_block"
+        ],
+        "methods": {
+          "original_bnb_greedy": {
+            "token_ids": [
+              262,
+              671,
+              4615,
+              2038,
+              1588,
+              198,
+              262,
+              1308
+            ],
+            "total_s": 0.256494592999843,
+            "prefill_s": 0.07396698100001231,
+            "decode_s": 0.18252392999966105
+          },
+          "optimized_b1_singleton": {
+            "token_ids": [
+              262,
+              671,
+              4615,
+              2038,
+              1588,
+              198,
+              262,
+              1308
+            ],
+            "total_s": 0.2649732169993513,
+            "prefill_s": 0.07283877299960295,
+            "verify_s": 0.19173251399934088,
+            "accepted_draft_tokens": 0,
+            "draft_tokens": 2
+          },
+          "optimized_b1_block": {
+            "token_ids": [
+              262,
+              671,
+              4615,
+              2038,
+              1588,
+              198,
+              262,
+              1308
+            ],
+            "total_s": 0.2727400329995362,
+            "prefill_s": 0.07408637099979387,
+            "verify_s": 0.19362709800043376,
+            "accepted_draft_tokens": 0,
+            "draft_tokens": 2
+          }
+        },
+        "block_matches_singleton": true,
+        "block_matches_original_bnb": true
+      }
+    ],
+    "geometric_mean_speedup_vs_optimized_b1_singleton": 0.9715230070379945,
+    "geometric_mean_speedup_vs_original_bnb": 0.9404361735201491,
+    "speedup_vs_b1_samples": [
+      0.9715230070379945
+    ],
+    "speedup_vs_bnb_samples": [
+      0.9404361735201491
+    ]
+  },
+  "limitations": [
+    "Finite development-only closed loop; singleton uses the prototype and block uses the current two-row kernel.",
+    "Not yet pinned by a live B1 reference contract; no BNB state-equivalence claim.",
+    "Held-out GSM8K indices 300-349 were not used."
+  ]
+}

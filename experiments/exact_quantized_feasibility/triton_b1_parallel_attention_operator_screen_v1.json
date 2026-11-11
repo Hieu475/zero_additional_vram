@@ -1,0 +1,87 @@
+{
+  "scope": "synthetic fixed-row Triton attention; shape-invariance screen only",
+  "device": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "triton": "3.6.0",
+  "dtype": "torch.bfloat16",
+  "prefix_length": 397,
+  "rows": 3,
+  "heads": 16,
+  "head_dim": 128,
+  "reduction": "fixed per-query online-softmax; tiled variant uses a fixed key-tile reduction",
+  "block_k": 32,
+  "rowwise_exact": true,
+  "row_results": [
+    {
+      "row": 0,
+      "visible_kv_length": 398,
+      "bitwise_equal": true,
+      "max_abs": 0.0
+    },
+    {
+      "row": 1,
+      "visible_kv_length": 399,
+      "bitwise_equal": true,
+      "max_abs": 0.0
+    },
+    {
+      "row": 2,
+      "visible_kv_length": 400,
+      "bitwise_equal": true,
+      "max_abs": 0.0
+    }
+  ],
+  "tiled_rowwise_exact": true,
+  "tiled_row_results": [
+    {
+      "row": 0,
+      "visible_kv_length": 398,
+      "bitwise_equal": true,
+      "max_abs": 0.0
+    },
+    {
+      "row": 1,
+      "visible_kv_length": 399,
+      "bitwise_equal": true,
+      "max_abs": 0.0
+    },
+    {
+      "row": 2,
+      "visible_kv_length": 400,
+      "bitwise_equal": true,
+      "max_abs": 0.0
+    }
+  ],
+  "torch_sdpa_row_results": [
+    {
+      "row": 0,
+      "bitwise_equal": false,
+      "max_abs": 0.001953125
+    },
+    {
+      "row": 1,
+      "bitwise_equal": false,
+      "max_abs": 0.0009765625
+    },
+    {
+      "row": 2,
+      "bitwise_equal": false,
+      "max_abs": 0.001953125
+    }
+  ],
+  "median_block_ms": 0.15137600153684616,
+  "median_singleton_calls_ms": 0.42793600261211395,
+  "speedup_vs_singleton_calls": 2.8269738813780916,
+  "tiled_median_block_ms": 0.046831998974084854,
+  "tiled_median_singleton_calls_ms": 0.11497600004076958,
+  "tiled_speedup_vs_singleton_calls": 2.455073508700604,
+  "torch_sdpa_median_block_ms": 0.04505600035190582,
+  "torch_sdpa_median_singleton_calls_ms": 0.08499199897050858,
+  "torch_sdpa_speedup_vs_singleton_calls": 1.886363598781211,
+  "rounds": 20,
+  "limitations": [
+    "synthetic tensors only; not compared with Qwen SDPA outputs",
+    "one program per query/head with sequential key tiles; not yet a production attention kernel",
+    "does not implement GQA packing, cache writes, masks, or model integration"
+  ]
+}

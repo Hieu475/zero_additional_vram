@@ -1,0 +1,202 @@
+{
+  "schema": "zassd-activationvec-nf4-m3-fp-fusion-ab-v1",
+  "classification": "paired operator A/B; fixed activations, fixed geometry, exactness gated",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "cnndm_003",
+  "prompt_sha256": "baea8efa9760531deacd4b71b497fe768b9b4c9445fecba57b015e44b57e9f51",
+  "forced_tokens": [
+    20924,
+    3693,
+    18478
+  ],
+  "launch": {
+    "out_tile": 8,
+    "num_warps": 8
+  },
+  "comparison": {
+    "reference": "enable_fp_fusion=False",
+    "candidate": "enable_fp_fusion=True"
+  },
+  "results": {
+    "q_proj": {
+      "input_shape": [
+        3,
+        2048
+      ],
+      "output_shape": [
+        3,
+        2048
+      ],
+      "input_sha256": "8c4e484ba9555c4ea25a6111522d71b5db427937e2e6707e89bb768e30945547",
+      "no_fusion_exact_elements": 6144,
+      "fp_fusion_exact_elements": 6144,
+      "total_elements": 6144,
+      "both_bitwise_exact_to_bnb_m3": true,
+      "no_fusion_median_ms": 0.026165999472141266,
+      "fp_fusion_median_ms": 0.025599999353289604,
+      "paired_no_fusion_over_fp_fusion": [
+        1.5137417522111418,
+        0.9310539701967561,
+        1.0150000418367573,
+        7.878166505862159,
+        0.9985734555788349,
+        1.2827970280089795,
+        1.3236267999432536,
+        0.9662202231432275,
+        1.0396924736089355,
+        1.0353535850922533,
+        0.9507725061217672,
+        1.0348635511069317,
+        0.47435798077992636,
+        0.7698112786893744,
+        0.9845238301472723,
+        0.9929378359729332,
+        0.9583332981837804,
+        0.9902115553550646,
+        0.9801345530216159,
+        0.8623198338399065,
+        1.0389881152428542,
+        1.0047170170715245,
+        1.0250000454747363,
+        1.0447160917999014,
+        1.0,
+        1.0553298494861567,
+        1.010521327111256,
+        1.0056818616104002,
+        1.0250195184530755,
+        1.0012684415939865,
+        1.0462802298282274,
+        0.9853009773862647
+      ],
+      "median_speedup": 1.0051994393409625,
+      "paired_rounds": 32,
+      "repeats_per_round": 8
+    },
+    "gate_proj": {
+      "input_shape": [
+        3,
+        2048
+      ],
+      "output_shape": [
+        3,
+        11008
+      ],
+      "input_sha256": "2828866fc96f942732fd554b03af0809103d33aa02936a4180711f686dc1d989",
+      "no_fusion_exact_elements": 33024,
+      "fp_fusion_exact_elements": 33024,
+      "total_elements": 33024,
+      "both_bitwise_exact_to_bnb_m3": true,
+      "no_fusion_median_ms": 0.091754000633955,
+      "fp_fusion_median_ms": 0.0939520001411438,
+      "paired_no_fusion_over_fp_fusion": [
+        3.176933618726753,
+        0.9927874915445339,
+        0.9996468899555361,
+        0.9982369399944682,
+        1.047978488157906,
+        0.9985915385572058,
+        0.968493151231072,
+        0.9971830771144118,
+        0.9946000628350378,
+        1.0,
+        1.0010548603519622,
+        0.9202076311189152,
+        1.001406480469283,
+        0.9996468899555361,
+        0.9105992553919724,
+        0.9729364300649902,
+        0.9968265740882969,
+        0.9943741599901825,
+        0.9957687380849778,
+        1.0542005623112638,
+        1.0,
+        0.9997242319404576,
+        0.9949748361556736,
+        0.9941479683991903,
+        1.0476641382590735,
+        0.996574724640334,
+        1.0,
+        1.0036695080629372,
+        0.9973991524729522,
+        0.9974358779185358,
+        1.0707113621281243,
+        0.9983118315990961
+      ],
+      "median_speedup": 0.9982743857967822,
+      "paired_rounds": 32,
+      "repeats_per_round": 8
+    },
+    "down_proj": {
+      "input_shape": [
+        3,
+        11008
+      ],
+      "output_shape": [
+        3,
+        2048
+      ],
+      "input_sha256": "4f98c200929d10b36ec7b3a35ba272fba49f133dde393370d2ddec21f7931d0f",
+      "no_fusion_exact_elements": 6144,
+      "fp_fusion_exact_elements": 6144,
+      "total_elements": 6144,
+      "both_bitwise_exact_to_bnb_m3": true,
+      "no_fusion_median_ms": 0.09960399940609932,
+      "fp_fusion_median_ms": 0.09785600006580353,
+      "paired_no_fusion_over_fp_fusion": [
+        1.0534386735750338,
+        1.0,
+        1.0152090934972158,
+        1.0177890600217137,
+        0.9983209938820206,
+        0.9986329350116322,
+        1.0310945465431418,
+        0.99758698500061,
+        0.9997659157146863,
+        1.0022683186636974,
+        1.01607374895325,
+        1.0219118661239037,
+        0.9988377410685078,
+        0.9989567184261583,
+        0.9948848716506219,
+        1.0485672098774923,
+        1.03416560347808,
+        0.9986842005495875,
+        0.9984789482812552,
+        1.0006165432967589,
+        1.0013175330596884,
+        0.9996294342407209,
+        1.001603621006562,
+        0.9819730206796276,
+        0.9986595852025197,
+        1.0608099857404567,
+        0.9986893740120718,
+        0.9908616253463204,
+        1.0017269293368976,
+        1.0013192712431658,
+        1.0013422139208812,
+        0.9990141997622725
+      ],
+      "median_speedup": 1.0003082716483793,
+      "paired_rounds": 32,
+      "repeats_per_round": 8
+    }
+  },
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "triton": "3.6.0",
+    "cuda": "12.8",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "source_hashes": {
+    "runner": "e20d9f7da018639abf49b54a93d9131be3eb4ea91303ccab279ff99ece165f73",
+    "fusion_driver": "02d69996e0e58eda2cc98322fdfd3120583d47cf1cad195f1e33e72b3ebb70c6",
+    "base_kernel": "322da0c917025d9879761fce33b1b5c29880badd41fb79f14b0978e4ac4a4c7a"
+  },
+  "limitations": [
+    "one development prompt and layer-0 q/gate/down projections",
+    "does not establish whole-model B1 equivalence or end-to-end speedup",
+    "GSM8K held-out indices 300-349 excluded"
+  ]
+}

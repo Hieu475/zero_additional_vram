@@ -1,0 +1,112 @@
+{
+  "schema": "b1-reference-contract-v1",
+  "status": "experimental finite reference identity; not a proof",
+  "reference": "greedy singleton under the fixed-row Qwen2 operator patch",
+  "model": {
+    "id": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "model_type": "qwen2",
+    "config_sha256": "c7691c6ecea29745bbca27fb724ad851152eb465bf4d0334b3a0302e95a96332"
+  },
+  "weights": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "quantized_state_sha256": "c6212d37bd02338c60536b1ca674b3e0c76fbcd810ba5df8e8e28b0e16f4f6cf"
+  },
+  "tokenizer": {
+    "class": "Qwen2Tokenizer",
+    "name_or_path": "Qwen/Qwen2.5-3B-Instruct",
+    "length": 151665,
+    "vocab_size": 151643,
+    "vocab_sha256": "698c955b0b438a535083d1771ef8b41069afba4b3d51a482558bdb68ea55e800",
+    "special_tokens_map": {
+      "eos_token": "<|im_end|>",
+      "pad_token": "<|endoftext|>"
+    },
+    "bos_token_id": null,
+    "eos_token_id": 151645,
+    "pad_token_id": 151643,
+    "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+  },
+  "runtime": {
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "index": 0,
+      "compute_capability": [
+        8,
+        9
+      ],
+      "total_memory_bytes": 6053232640,
+      "driver": {
+        "version": "595.99.02",
+        "compute_capability": "8.9",
+        "uuid": "GPU-794ce37a-f7d3-5b6e-8858-75c2d14741f5"
+      }
+    },
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0",
+    "triton": "3.6.0",
+    "model_attention_implementation": "sdpa",
+    "backend_flags": {
+      "float32_matmul_precision": "highest",
+      "cuda_matmul_allow_tf32": false,
+      "cudnn_allow_tf32": true,
+      "cudnn_deterministic": false,
+      "deterministic_algorithms": false,
+      "flash_sdp_enabled": true,
+      "mem_efficient_sdp_enabled": true,
+      "math_sdp_enabled": true
+    },
+    "source_sha256": {
+      "src/zassd/certification/qwen2_padded.py": "a59746db8d3c4ee5a998b6680eb7e533b77857e7a2864af73fe3ce851d196c70",
+      "src/zassd/certification/fixed_row_dispatch.py": "0422f2d06dcd93da94377a45a5094f4e12e48d5a3dbef1a489559911b4ddfb38",
+      "src/zassd/certification/model_capabilities.py": "2db5071e8db113026bc9ed88a5cd479efea69da2d6a53f7f58d097c692843791",
+      "src/zassd/decoding/b1_exact.py": "e19b4e6440697fc96e6e6e7b1902da843fa45b8cae0e62700c4ac331f99b0d63",
+      "src/zassd/decoding/ngram.py": "0976856395ce1a293e767c84fd6b1dc6d8f277b57f0674e806896cc3913d4713",
+      "src/zassd/cache/kv_cache.py": "a56a3ad4ee163e7456e236515e8848173face82426b0fe3c0e7489b170ed3934",
+      "src/zassd/backends/base.py": "00c77e4731ef61cda25d4393d865b1f21b7422689870d680529aa79165df9ef6"
+    }
+  },
+  "operator_schedule": {
+    "name": "qwen2_fixed_row_bnb_rowwise_fixed_rows_singleton",
+    "attention_strategy": "bnb_rowwise",
+    "physical_rows": 3
+  },
+  "cache": {
+    "backend": "StaticPreallocatedKVCache",
+    "capacity": 768,
+    "batch_size": 1,
+    "logical_length": "must equal committed prefix length"
+  },
+  "greedy": {
+    "tie_rule": "torch.argmax_first_index",
+    "eos_token_id": 151645,
+    "sampling": "disabled",
+    "stop_rules": [
+      "EOS",
+      "caller token budget"
+    ]
+  },
+  "supported_domain": {
+    "architecture": "Qwen2 only",
+    "batch_size": 1,
+    "attention": "SDPA padded fixed-row path",
+    "external_attention_mask": false,
+    "external_position_ids": false,
+    "custom_cache_position": false,
+    "inputs_embeds": false,
+    "sliding_window": false,
+    "output_attentions": false
+  },
+  "reference_contract_id": "3428440b58a5a02f2781fe859f6afe6ab8b8c2acbfb2aa2e4e63d309b3ebbadb",
+  "provenance": {
+    "source_manifest": "experiments/exact_quantized_feasibility/qwen3b_bnb_rowwise_k2_r3_cnndm3_256_v1/manifest.json",
+    "source_contract_id": "6199326828447cd13c3ab4dad9d8b0dbcc1ab1733d07945a340f4bad8ab825d0",
+    "source_prompt_file": "data/benchmarks/cnndm_eval.jsonl",
+    "source_input_hashes": {
+      "data/benchmarks/cnndm_eval.jsonl": "11b5e9db9851878491854f6e166c513aa0ed6668d635ccb49d97592032d02096"
+    }
+  }
+}

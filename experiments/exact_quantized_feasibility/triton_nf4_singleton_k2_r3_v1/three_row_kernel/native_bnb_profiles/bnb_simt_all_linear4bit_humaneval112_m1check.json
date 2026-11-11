@@ -1,0 +1,4076 @@
+{
+  "schema": "zassd-bnb-simt-linear4bit-audit-v1",
+  "classification": "actual M=3 BNB CUDA SIMT output comparison; finite operator evidence only",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "HumanEval/112",
+  "prompt_tokens": 157,
+  "forced_bnb_tokens": [
+    262,
+    671,
+    4615
+  ],
+  "layers": [
+    0,
+    17,
+    35
+  ],
+  "selection": "all Linear4bit modules",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "bitsandbytes": "0.50.0",
+  "arithmetic": "FP16 LUT centroid * FP16 nested scale rounded to FP16; FP16 activation * weight rounded to FP16; serial per-lane pair accumulation then SHFL.DOWN 16,8,4,2,1.",
+  "modules": [
+    {
+      "module": "model.layers.0.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.0.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.0.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.0.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.0.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.0.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.0.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.1.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.1.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.1.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.1.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.1.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.1.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.1.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.2.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.2.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.2.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.2.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.2.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.2.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.2.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.3.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.3.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.3.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.3.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.3.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.3.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.3.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.4.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.4.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.4.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.4.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.4.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.4.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.4.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.5.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.5.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.5.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.5.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.5.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.5.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.5.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.6.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.6.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.6.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.6.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.6.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.6.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.6.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.7.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.7.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.7.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.7.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.7.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.7.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.7.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.8.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.8.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.8.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.8.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.8.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.8.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.8.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.9.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.9.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.9.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.9.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.9.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.9.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.9.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.10.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.10.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.10.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.10.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.10.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.10.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.10.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.11.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.11.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.11.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.11.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.11.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.11.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.11.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.12.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.12.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.12.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.12.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.12.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.12.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.12.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.13.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.13.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.13.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.13.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.13.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.13.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.13.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.14.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.14.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.14.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.14.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.14.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.14.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.14.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.15.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.15.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.15.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.15.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.15.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.15.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.15.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.16.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.16.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.16.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.16.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.16.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.16.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.16.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.17.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.17.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.17.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.17.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.17.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.17.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.17.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.18.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.18.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.18.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.18.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.18.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.18.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.18.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.19.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.19.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.19.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.19.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.19.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.19.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.19.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.20.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.20.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.20.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.20.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.20.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.20.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.20.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.21.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.21.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.21.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.21.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.21.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.21.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.21.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.22.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.22.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.22.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.22.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.22.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.22.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.22.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.23.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.23.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.23.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.23.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.23.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.23.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.23.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.24.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.24.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.24.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.24.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.24.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.24.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.24.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.25.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.25.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.25.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.25.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.25.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.25.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.25.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.26.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.26.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.26.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.26.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.26.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.26.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.26.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.27.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.27.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.27.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.27.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.27.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.27.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.27.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.28.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.28.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.28.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.28.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.28.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.28.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.28.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.29.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.29.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.29.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.29.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.29.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.29.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.29.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.30.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.30.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.30.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.30.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.30.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.30.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.30.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.31.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.31.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.31.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.31.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.31.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.31.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.31.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.32.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.32.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.32.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.32.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.32.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.32.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.32.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.33.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.33.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.33.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.33.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.33.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.33.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.33.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.34.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.34.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.34.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.34.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.34.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.34.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.34.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.35.self_attn.q_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.35.self_attn.k_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.35.self_attn.v_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 256,
+      "exact_elements": 768,
+      "total_elements": 768,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 768,
+      "m1_vs_m3_total_elements": 768,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.35.self_attn.o_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.35.mlp.gate_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.35.mlp.up_proj",
+      "activation_shape": [
+        3,
+        2048
+      ],
+      "output_features": 11008,
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 33024,
+      "m1_vs_m3_total_elements": 33024,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    },
+    {
+      "module": "model.layers.35.mlp.down_proj",
+      "activation_shape": [
+        3,
+        11008
+      ],
+      "output_features": 2048,
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "max_abs_diff": 0.0,
+      "bitwise_exact": true,
+      "m1_vs_m3_exact_elements": 6144,
+      "m1_vs_m3_total_elements": 6144,
+      "m1_vs_m3_max_abs_diff": 0.0,
+      "m1_vs_m3_bitwise_equal": true
+    }
+  ],
+  "overall": {
+    "exact_elements": 3096576,
+    "total_elements": 3096576,
+    "bitwise_exact": true,
+    "m1_vs_m3_exact_elements": 3096576,
+    "m1_vs_m3_total_elements": 3096576,
+    "m1_vs_m3_bitwise_equal": true
+  },
+  "source_sha256": "2499bb269b8b4297000e108336705f54e96f2edee0820f0f41fa1b7611becddd",
+  "limits": [
+    "One prompt; module selection is recorded above.",
+    "M=1 vs M=3 equality is checked at Linear4bit module outputs on these captured activations only; no whole-model token/KV identity or performance claim.",
+    "GSM8K held-out indices 300-349 were not used."
+  ],
+  "post_run_annotation": {
+    "layers": "all",
+    "reason": "The --all-linears flag selected all Linear4bit modules; the --layers list is ignored in this mode. The original run arguments and source hash are otherwise unchanged."
+  }
+}

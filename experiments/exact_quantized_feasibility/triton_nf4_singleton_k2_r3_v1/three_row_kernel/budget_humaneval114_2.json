@@ -1,0 +1,168 @@
+{
+  "status": "experimental K=2/R=3 singleton optimization; no product runtime integration",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "HumanEval/114",
+  "prompt_sha256": "4bdb0afd53bc0e28529bafba0538d6b3a566ad5f476fb7f1016cfabe823f1c3f",
+  "input_prompt_characters": 236,
+  "input_prompt_tokens": 83,
+  "session": 15,
+  "experiment_manifest": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/budget_boundary_experiment_manifest.json",
+  "manifest_preflight": "passed",
+  "base_b1_reference_contract": {
+    "contract_id": "61f0c8f15fbc91b9ce86dd35da55360940accdc59642d1fe9faff985a2019bee",
+    "model_state_sha256": "c6212d37bd02338c60536b1ca674b3e0c76fbcd810ba5df8e8e28b0e16f4f6cf",
+    "verified_source_count": 16
+  },
+  "parameters": {
+    "k": 2,
+    "ngram_size": 3,
+    "physical_rows": 3,
+    "max_new_tokens": 2,
+    "block_k": 32,
+    "attention_strategy": "triton_batched",
+    "quantized_linear_strategy": "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+    "singleton_nf4_kernel": "one-row experimental kernel",
+    "block_nf4_kernel": "existing two-row kernel",
+    "timing_rounds": 1
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "reference": {
+    "token_ids": [
+      262,
+      671
+    ],
+    "state_prefixes": 2
+  },
+  "block": {
+    "token_ids": [
+      262,
+      671
+    ],
+    "state_prefixes": 2
+  },
+  "token_match": true,
+  "shared_state_prefixes": 2,
+  "all_shared_states_equal": true,
+  "same_prefix_domain": true,
+  "state_mismatches": [],
+  "memory_telemetry": {
+    "scope": "per-method decode call after model load; peak includes persistent model allocations",
+    "incremental_peak_allocated_bytes": "peak_allocated_bytes minus allocated baseline immediately before the call",
+    "reserved_memory_note": "allocator-reserved values can remain cached and are not equivalent to live tensor bytes"
+  },
+  "timing": {
+    "paired_rounds": [
+      {
+        "round": 0,
+        "method_order": [
+          "optimized_b1_block",
+          "optimized_b1_singleton",
+          "original_bnb_greedy"
+        ],
+        "methods": {
+          "optimized_b1_block": {
+            "token_ids": [
+              262,
+              671
+            ],
+            "total_s": 0.10770593899906089,
+            "prefill_s": 0.07403176899970276,
+            "verify_s": 0.03092028900027799,
+            "accepted_draft_tokens": 0,
+            "draft_tokens": 1,
+            "memory": {
+              "baseline_allocated_bytes": 2074559488,
+              "peak_allocated_bytes": 2103999488,
+              "incremental_peak_allocated_bytes": 29440000,
+              "baseline_reserved_bytes": 2206203904,
+              "peak_reserved_bytes": 2206203904,
+              "incremental_peak_reserved_bytes": 0
+            }
+          },
+          "optimized_b1_singleton": {
+            "token_ids": [
+              262,
+              671
+            ],
+            "total_s": 0.09996182800023234,
+            "prefill_s": 0.07169826700010162,
+            "verify_s": 0.02797762599948328,
+            "accepted_draft_tokens": 0,
+            "draft_tokens": 1,
+            "memory": {
+              "baseline_allocated_bytes": 2074559488,
+              "peak_allocated_bytes": 2103998976,
+              "incremental_peak_allocated_bytes": 29439488,
+              "baseline_reserved_bytes": 2206203904,
+              "peak_reserved_bytes": 2206203904,
+              "incremental_peak_reserved_bytes": 0
+            }
+          },
+          "original_bnb_greedy": {
+            "token_ids": [
+              262,
+              671
+            ],
+            "total_s": 0.09773385200060147,
+            "prefill_s": 0.07165055899895378,
+            "decode_s": 0.026080100000399398,
+            "memory": {
+              "baseline_allocated_bytes": 2074559488,
+              "peak_allocated_bytes": 2175618560,
+              "incremental_peak_allocated_bytes": 101059072,
+              "baseline_reserved_bytes": 2206203904,
+              "peak_reserved_bytes": 2206203904,
+              "incremental_peak_reserved_bytes": 0
+            }
+          }
+        },
+        "block_matches_singleton": true,
+        "block_matches_original_bnb": true
+      }
+    ],
+    "geometric_mean_speedup_vs_optimized_b1_singleton": 0.928099498776051,
+    "geometric_mean_speedup_vs_original_bnb": 0.9074137685337262,
+    "speedup_vs_b1_samples": [
+      0.928099498776051
+    ],
+    "speedup_vs_bnb_samples": [
+      0.9074137685337262
+    ]
+  },
+  "limitations": [
+    "Finite development-only closed loop; singleton uses the prototype and block uses the current two-row kernel.",
+    "Not yet pinned by a live B1 reference contract; no BNB state-equivalence claim.",
+    "Held-out GSM8K indices 300-349 were not used."
+  ],
+  "terminal_branch_audit": {
+    "eos_token_id": 151645,
+    "block_terminal_eos": false,
+    "cycle_trace": [
+      {
+        "output_start": 0,
+        "pending": 262,
+        "draft_tokens": [
+          16246
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          262
+        ],
+        "draft_s": 3.386999924259726e-05,
+        "verify_s": 0.03092028900027799,
+        "commit_s": 4.1933000829885714e-05,
+        "cycle_s": 0.03115912999965076,
+        "cache_len_after": 84,
+        "next_pending": 671
+      }
+    ],
+    "eos_draft_events": [],
+    "accepted_eos_candidate_seen": false,
+    "rejected_eos_candidate_seen": false,
+    "trace_runner_sha256": "8a67def78869e1756df81f51626234a11a91925300f1624c6eee263486bf9a4b"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "status": "completed",
+  "scope": "single-prefix shape diagnostic; not full-sequence exactness or a universal guarantee",
+  "protocol_sha256": "9f833c6baff42e8edcac90ab629499af308e8cc47598a8975140f1f1fa3a60a2",
+  "cohort_sha256": "01610458c693cb12d715bb0474ede6d354e1dee33c599d2cc08e7d805546ff08",
+  "model": "microsoft/Phi-3.5-mini-instruct",
+  "revision": "2fe192450127e6a83f7441aef6e3ca586c338b77",
+  "family": "Phi3",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "cnndm_056",
+  "task": "cnndm",
+  "prompt_sha256": "4d4b66ada51bba86f5bfbdceca3ab6239329a35316a430ad9cb6d152b7446cdd",
+  "prompt_token_count": 341,
+  "prompt_token_ids_sha256": "7bed6f027eb7734394ad2ac00f65368716c2b218ff378367b9594fa87132168f",
+  "M": 9,
+  "candidate_ids": [
+    11571,
+    26954,
+    29892,
+    263,
+    4628,
+    3014,
+    310,
+    24043,
+    20305
+  ],
+  "candidate_length": 9,
+  "linear_singleton_counts": {
+    "patched_modules": 129,
+    "split_forward_calls": 129,
+    "single_row_kernel_calls": 1161
+  },
+  "ordinary_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.375,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.375,
+      0.625,
+      0.25,
+      0.25
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.25,
+    "kv_value_max_abs": 0.08203125,
+    "first_kv_different_layer": 0
+  },
+  "singleton_linear_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.25,
+      0.25,
+      0.25,
+      0.5,
+      0.25,
+      0.375,
+      0.5,
+      0.25,
+      0.3125
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.28125,
+    "kv_value_max_abs": 0.09375,
+    "first_kv_different_layer": 1
+  },
+  "model_manifest": "experiments/exact_quantized_feasibility/crossmodel_shape_repeat_v1/session2/manifests/phi35_3p8b.json"
+}

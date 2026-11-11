@@ -1,0 +1,40 @@
+{
+  "schema": "zassd-k2-nsys-capture-v1",
+  "classification": "Nsight Systems diagnostic capture; profiled latency is not benchmark timing",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "prompt_id": "HumanEval/123",
+  "prompt_sha256": "517b9458e64b1285c8fed0636622367f2fbdd313e8f23027250740cd7588f9e3",
+  "max_new_tokens": 256,
+  "schedule": {
+    "k": 2,
+    "ngram_size": 3,
+    "physical_rows": 3,
+    "attention": "bnb_rowwise",
+    "fallback": "native BNB M=1 on every empty-proposal cycle"
+  },
+  "b1_token_and_committed_kv_exact": true,
+  "shared_state_prefixes": 256,
+  "state_mismatch_positions": [],
+  "empty_proposal_cycles": 109,
+  "fallback_forwards": 109,
+  "metrics": {
+    "output_tokens": 256,
+    "total_s_under_capture": 8.453790276005748,
+    "prefill_s": 0.09823886900267098,
+    "draft_s": 0.017069596142391674,
+    "verify_s": 8.297582175058778,
+    "cycles": 193,
+    "draft_tokens": 168,
+    "accepted_draft_tokens": 63,
+    "target_rows": 361
+  },
+  "runner_sha256": "a16ea925799aea802aad7a5b840d1252b70e82761c1c9778d954a7e18cbba0a6",
+  "heldout_used": false,
+  "limits": [
+    "Nsight timing is diagnostic and instrumented; do not compare it with unprofiled latency.",
+    "One selected prompt, one model and GPU; no BNB KV-state identity claim.",
+    "GSM8K held-out indices 300-349 excluded."
+  ]
+}

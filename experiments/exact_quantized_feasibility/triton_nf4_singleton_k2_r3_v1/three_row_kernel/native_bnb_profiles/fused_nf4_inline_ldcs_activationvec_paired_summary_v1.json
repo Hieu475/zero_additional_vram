@@ -1,0 +1,292 @@
+{
+  "schema": "zassd-bnb-fused-nf4-activation-vector-load-paired-v1",
+  "classification": "development-only single-operator prototype evidence; not runtime integration or whole-decoder equivalence",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "layer": 0,
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "triton": "3.6.0",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "source": "scripts/benchmark_bnb_nf4_fused_inline_ldcs_activationvec_half2.py",
+  "source_sha256": "28472441117e609afc620caae0094ccdcff7745a68ce2508657f85572330c0e8",
+  "methods": {
+    "gate_proj": {
+      "runs": [
+        {
+          "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_gate_l0_cnndm003_v1.json",
+          "bitwise_exact": true,
+          "exact_elements": 33024,
+          "total_elements": 33024,
+          "paired_median_speedup": 1.3668798058501022,
+          "triton_median_ms": 0.08844200149178505,
+          "bnb_median_ms": 0.12144999951124191,
+          "rounds": 30
+        },
+        {
+          "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_gate_l0_cnndm003_s2_v1.json",
+          "bitwise_exact": true,
+          "exact_elements": 33024,
+          "total_elements": 33024,
+          "paired_median_speedup": 1.3664403497226418,
+          "triton_median_ms": 0.0900459997355938,
+          "bnb_median_ms": 0.12350999936461449,
+          "rounds": 30
+        }
+      ],
+      "all_exact": true,
+      "paired_rounds": 60,
+      "combined_paired_median_speedup": 1.3668798058501022,
+      "combined_paired_geomean_speedup": 1.3674250232802567,
+      "bootstrap_95pct_ci_median_speedup": [
+        1.360542348205753,
+        1.3863657150539352
+      ]
+    },
+    "up_proj": {
+      "runs": [
+        {
+          "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_up_l0_cnndm003_s1_v1.json",
+          "bitwise_exact": true,
+          "exact_elements": 33024,
+          "total_elements": 33024,
+          "paired_median_speedup": 1.369909765562131,
+          "triton_median_ms": 0.08875999972224236,
+          "bnb_median_ms": 0.12172799929976463,
+          "rounds": 30
+        }
+      ],
+      "all_exact": true,
+      "paired_rounds": 30,
+      "combined_paired_median_speedup": 1.369909765562131,
+      "combined_paired_geomean_speedup": 1.3720865208166695,
+      "bootstrap_95pct_ci_median_speedup": [
+        1.3632809757409747,
+        1.38709975878135
+      ]
+    },
+    "q_proj": {
+      "runs": [
+        {
+          "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_q_l0_cnndm003_v1.json",
+          "bitwise_exact": true,
+          "exact_elements": 6144,
+          "total_elements": 6144,
+          "paired_median_speedup": 2.210203939360478,
+          "triton_median_ms": 0.022207999601960182,
+          "bnb_median_ms": 0.04862000048160553,
+          "rounds": 30
+        },
+        {
+          "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_q_l0_cnndm003_s2_v1.json",
+          "bitwise_exact": true,
+          "exact_elements": 6144,
+          "total_elements": 6144,
+          "paired_median_speedup": 2.454737370777873,
+          "triton_median_ms": 0.02252800017595291,
+          "bnb_median_ms": 0.055598000064492226,
+          "rounds": 30
+        }
+      ],
+      "all_exact": true,
+      "paired_rounds": 60,
+      "combined_paired_median_speedup": 2.3040776056429024,
+      "combined_paired_geomean_speedup": 2.367307658932591,
+      "bootstrap_95pct_ci_median_speedup": [
+        2.2371117094661526,
+        2.3620644694212194
+      ]
+    }
+  },
+  "sass_comparison": {
+    "triton_activation_vector_candidate": {
+      "sass_instruction_lines": 1250,
+      "ldg_instructions": 49,
+      "ldg_e128": 13,
+      "ldg_u16": 0
+    },
+    "bnb_m3_reference_template": {
+      "sass_instructions": 1248,
+      "ldg_instructions": 13
+    },
+    "sass_artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_gate_l0_cnndm003_v1.sass.txt",
+    "interpretation": "Activation loads are packed into vector instructions; this aligns the generated schedule much more closely with the audited BNB template."
+  },
+  "scope_limits": [
+    "One RTX 4050, two development prompts, layer 0 only.",
+    "Tests native BNB output identity for selected linear operators; does not establish full-model KV/state or token equivalence.",
+    "K must be divisible by 1024; down_proj K=11008 is outside this prototype contract.",
+    "GSM8K held-out indices 300-349 were not used."
+  ],
+  "prompt_ids": [
+    "cnndm_002",
+    "cnndm_003"
+  ],
+  "two_prompt_combined_methods": {
+    "gate_proj": {
+      "runs": [
+        {
+          "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_gate_l0_cnndm003_v1.json",
+          "bitwise_exact": true,
+          "exact_elements": 33024,
+          "total_elements": 33024,
+          "paired_median_speedup": 1.3668798058501022,
+          "triton_median_ms": 0.08844200149178505,
+          "bnb_median_ms": 0.12144999951124191,
+          "rounds": 30
+        },
+        {
+          "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_gate_l0_cnndm003_s2_v1.json",
+          "bitwise_exact": true,
+          "exact_elements": 33024,
+          "total_elements": 33024,
+          "paired_median_speedup": 1.3664403497226418,
+          "triton_median_ms": 0.0900459997355938,
+          "bnb_median_ms": 0.12350999936461449,
+          "rounds": 30
+        },
+        {
+          "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_gate_l0_cnndm002_s1_v1.json",
+          "bitwise_exact": true,
+          "exact_elements": 33024,
+          "total_elements": 33024,
+          "paired_median_speedup": 1.373397104611504,
+          "triton_median_ms": 0.09028400108218193,
+          "bnb_median_ms": 0.12364800274372101,
+          "rounds": 30
+        }
+      ],
+      "all_exact": true,
+      "paired_rounds": 90,
+      "combined_paired_median_speedup": 1.37073937011864,
+      "combined_paired_geomean_speedup": 1.370507458375825,
+      "bootstrap_95pct_ci_median_speedup": [
+        1.3652809984829506,
+        1.3862476704306959
+      ]
+    },
+    "q_proj": {
+      "runs": [
+        {
+          "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_q_l0_cnndm003_v1.json",
+          "bitwise_exact": true,
+          "exact_elements": 6144,
+          "total_elements": 6144,
+          "paired_median_speedup": 2.210203939360478,
+          "triton_median_ms": 0.022207999601960182,
+          "bnb_median_ms": 0.04862000048160553,
+          "rounds": 30
+        },
+        {
+          "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_q_l0_cnndm003_s2_v1.json",
+          "bitwise_exact": true,
+          "exact_elements": 6144,
+          "total_elements": 6144,
+          "paired_median_speedup": 2.454737370777873,
+          "triton_median_ms": 0.02252800017595291,
+          "bnb_median_ms": 0.055598000064492226,
+          "rounds": 30
+        },
+        {
+          "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_q_l0_cnndm002_s1_v1.json",
+          "bitwise_exact": true,
+          "exact_elements": 6144,
+          "total_elements": 6144,
+          "paired_median_speedup": 2.2766132879296443,
+          "triton_median_ms": 0.022665999829769135,
+          "bnb_median_ms": 0.05047399923205376,
+          "rounds": 30
+        }
+      ],
+      "all_exact": true,
+      "paired_rounds": 90,
+      "combined_paired_median_speedup": 2.2946872633470736,
+      "combined_paired_geomean_speedup": 2.3242280698370923,
+      "bootstrap_95pct_ci_median_speedup": [
+        2.2333758715935637,
+        2.3330822259767943
+      ]
+    },
+    "up_proj": {
+      "runs": [
+        {
+          "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_up_l0_cnndm003_s1_v1.json",
+          "bitwise_exact": true,
+          "exact_elements": 33024,
+          "total_elements": 33024,
+          "paired_median_speedup": 1.369909765562131,
+          "triton_median_ms": 0.08875999972224236,
+          "bnb_median_ms": 0.12172799929976463,
+          "rounds": 30
+        }
+      ],
+      "all_exact": true,
+      "paired_rounds": 30,
+      "combined_paired_median_speedup": 1.369909765562131,
+      "combined_paired_geomean_speedup": 1.3720865208166695,
+      "bootstrap_95pct_ci_median_speedup": [
+        1.3632809757409747,
+        1.3870821550736436
+      ]
+    }
+  },
+  "partial_k_tail_extension": {
+    "artifacts": [
+      {
+        "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_down_l0_cnndm003_v1.json",
+        "prompt_id": "cnndm_003",
+        "layer": 0,
+        "projection": "down_proj",
+        "shape": [
+          3,
+          11008
+        ],
+        "bitwise_exact": true,
+        "exact_elements": 6144,
+        "total_elements": 6144,
+        "paired_rounds": 30,
+        "paired_median_speedup": 1.3400139603355385,
+        "paired_triton_median_ms": 0.09196799993515015,
+        "paired_bnb_median_ms": 0.12190200015902519
+      },
+      {
+        "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/fused_nf4_inline_ldcs_activationvec_half2_down_l35_cnndm002_s1_v1.json",
+        "prompt_id": "cnndm_002",
+        "layer": 35,
+        "projection": "down_proj",
+        "shape": [
+          3,
+          11008
+        ],
+        "bitwise_exact": true,
+        "exact_elements": 6144,
+        "total_elements": 6144,
+        "paired_rounds": 30,
+        "paired_median_speedup": 1.351594083773267,
+        "paired_triton_median_ms": 0.09030400216579437,
+        "paired_bnb_median_ms": 0.12127400189638138
+      }
+    ],
+    "source": "scripts/benchmark_bnb_nf4_fused_inline_ldcs_activationvec_tailmask_half2.py",
+    "source_sha256": "322da0c917025d9879761fce33b1b5c29880badd41fb79f14b0978e4ac4a4c7a",
+    "all_exact": true,
+    "prompts": [
+      "cnndm_002",
+      "cnndm_003"
+    ],
+    "layers": [
+      0,
+      35
+    ],
+    "paired_rounds": 60,
+    "combined_paired_median_speedup": 1.3479980943439398,
+    "bootstrap_95pct_ci_median_speedup": [
+      1.3412549854778149,
+      1.3524376091164712
+    ],
+    "scope_note": "Two prompt/layer cases on one GPU; finite operator-level evidence."
+  }
+}

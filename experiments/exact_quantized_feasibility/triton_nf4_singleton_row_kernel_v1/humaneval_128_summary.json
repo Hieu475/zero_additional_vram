@@ -1,0 +1,256 @@
+{
+  "status": "development-only HumanEval extension screen; gated experimental singleton optimization, not product-runtime contract",
+  "configuration": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "k": 1,
+    "physical_rows": 2,
+    "max_new_tokens": 128,
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "prompts": {
+    "HumanEval/110": {
+      "artifacts": [
+        "closed_loop_humaneval110_128_s11_v1.json",
+        "closed_loop_humaneval110_128_s13_v1.json"
+      ],
+      "process_sessions": [
+        11,
+        13
+      ],
+      "token_kv_logical_lengths_exact": true,
+      "shared_state_prefixes_per_run": 128,
+      "accepted_draft_tokens": 36,
+      "draft_tokens": 88,
+      "timing_rounds": 4,
+      "speedup_vs_optimized_b1_geomean": 1.1725235162849408,
+      "speedup_vs_bnb_geomean": 1.0507377288792468,
+      "bnb_token_matches": 0,
+      "bnb_token_comparisons": 4
+    },
+    "HumanEval/111": {
+      "artifacts": [
+        "closed_loop_humaneval111_128_s12_v1.json",
+        "closed_loop_humaneval111_128_s14_v1.json"
+      ],
+      "process_sessions": [
+        12,
+        14
+      ],
+      "token_kv_logical_lengths_exact": true,
+      "shared_state_prefixes_per_run": 128,
+      "accepted_draft_tokens": 34,
+      "draft_tokens": 66,
+      "timing_rounds": 4,
+      "speedup_vs_optimized_b1_geomean": 1.1156011513304662,
+      "speedup_vs_bnb_geomean": 1.0698291200757495,
+      "bnb_token_matches": 4,
+      "bnb_token_comparisons": 4
+    },
+    "HumanEval/112": {
+      "artifacts": [
+        "closed_loop_humaneval112_128_s16_v1.json",
+        "closed_loop_humaneval112_128_s17_v1.json"
+      ],
+      "process_sessions": [
+        16,
+        17
+      ],
+      "token_kv_logical_lengths_exact": true,
+      "shared_state_prefixes_per_run": 128,
+      "accepted_draft_tokens": 122,
+      "draft_tokens": 124,
+      "timing_rounds": 4,
+      "speedup_vs_optimized_b1_geomean": 1.7892278321604733,
+      "speedup_vs_bnb_geomean": 1.6698727806356275,
+      "bnb_token_matches": 0,
+      "bnb_token_comparisons": 4
+    },
+    "HumanEval/113": {
+      "artifacts": [
+        "closed_loop_humaneval113_128_s18_v1.json",
+        "closed_loop_humaneval113_128_s19_v1.json"
+      ],
+      "process_sessions": [
+        18,
+        19
+      ],
+      "token_kv_logical_lengths_exact": true,
+      "shared_state_prefixes_per_run": 128,
+      "accepted_draft_tokens": 54,
+      "draft_tokens": 84,
+      "timing_rounds": 4,
+      "speedup_vs_optimized_b1_geomean": 1.2133359026488035,
+      "speedup_vs_bnb_geomean": 1.111859459676693,
+      "bnb_token_matches": 0,
+      "bnb_token_comparisons": 4
+    }
+  },
+  "paired_rounds": [
+    {
+      "prompt_id": "HumanEval/110",
+      "artifact": "closed_loop_humaneval110_128_s11_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.1335233827906237,
+      "speedup_vs_original_bnb": 1.0518387050872984,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "HumanEval/110",
+      "artifact": "closed_loop_humaneval110_128_s11_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.2296473847835894,
+      "speedup_vs_original_bnb": 1.0595008275893982,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "HumanEval/110",
+      "artifact": "closed_loop_humaneval110_128_s13_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.1133023457691587,
+      "speedup_vs_original_bnb": 1.0378116009100362,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "HumanEval/110",
+      "artifact": "closed_loop_humaneval110_128_s13_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.2180413977974736,
+      "speedup_vs_original_bnb": 1.053921679078942,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "HumanEval/111",
+      "artifact": "closed_loop_humaneval111_128_s12_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.1434148005167224,
+      "speedup_vs_original_bnb": 1.0515912919610686,
+      "block_matches_b1": true,
+      "block_matches_bnb": true
+    },
+    {
+      "prompt_id": "HumanEval/111",
+      "artifact": "closed_loop_humaneval111_128_s12_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.1390695372326254,
+      "speedup_vs_original_bnb": 1.0625196217393562,
+      "block_matches_b1": true,
+      "block_matches_bnb": true
+    },
+    {
+      "prompt_id": "HumanEval/111",
+      "artifact": "closed_loop_humaneval111_128_s14_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.154126717357362,
+      "speedup_vs_original_bnb": 1.111695619642739,
+      "block_matches_b1": true,
+      "block_matches_bnb": true
+    },
+    {
+      "prompt_id": "HumanEval/111",
+      "artifact": "closed_loop_humaneval111_128_s14_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.0304532028887365,
+      "speedup_vs_original_bnb": 1.0546001413615205,
+      "block_matches_b1": true,
+      "block_matches_bnb": true
+    },
+    {
+      "prompt_id": "HumanEval/112",
+      "artifact": "closed_loop_humaneval112_128_s16_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.7906398276640034,
+      "speedup_vs_original_bnb": 1.6912808542076334,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "HumanEval/112",
+      "artifact": "closed_loop_humaneval112_128_s16_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.8712959522858899,
+      "speedup_vs_original_bnb": 1.6932560994307713,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "HumanEval/112",
+      "artifact": "closed_loop_humaneval112_128_s17_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.7476771928254076,
+      "speedup_vs_original_bnb": 1.6315092942771503,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "HumanEval/112",
+      "artifact": "closed_loop_humaneval112_128_s17_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.7500507534111136,
+      "speedup_vs_original_bnb": 1.6642003506464822,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "HumanEval/113",
+      "artifact": "closed_loop_humaneval113_128_s18_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.2641014560896326,
+      "speedup_vs_original_bnb": 1.175210662596686,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "HumanEval/113",
+      "artifact": "closed_loop_humaneval113_128_s18_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.2223717621683319,
+      "speedup_vs_original_bnb": 1.1371365184312487,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "HumanEval/113",
+      "artifact": "closed_loop_humaneval113_128_s19_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.2365718495714235,
+      "speedup_vs_original_bnb": 1.110268326610842,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "HumanEval/113",
+      "artifact": "closed_loop_humaneval113_128_s19_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.134278233961383,
+      "speedup_vs_original_bnb": 1.0300144110484408,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    }
+  ],
+  "all_runs_exact_to_optimized_b1": true,
+  "aggregate_descriptive_geomean_speedup_vs_optimized_b1_singleton": 1.2981333348079538,
+  "aggregate_descriptive_geomean_speedup_vs_original_bnb": 1.2019475199398857,
+  "bnb_token_matches": 4,
+  "bnb_token_comparisons": 16,
+  "limitations": [
+    "Four development prompts, two independent process sessions per prompt, sixteen timing pairs total.",
+    "Exploratory results on one RTX 4050; prompt-level estimates vary and are not a general performance claim.",
+    "Exactness is relative to experimental optimized B1 singleton; original BNB fidelity varies by prompt.",
+    "Singleton kernel is not integrated or pinned by a live product reference contract.",
+    "Held-out GSM8K indices 300-349 were not used."
+  ],
+  "artifacts": [
+    "closed_loop_humaneval110_128_s11_v1.json",
+    "closed_loop_humaneval110_128_s13_v1.json",
+    "closed_loop_humaneval111_128_s12_v1.json",
+    "closed_loop_humaneval111_128_s14_v1.json",
+    "closed_loop_humaneval112_128_s16_v1.json",
+    "closed_loop_humaneval112_128_s17_v1.json",
+    "closed_loop_humaneval113_128_s18_v1.json",
+    "closed_loop_humaneval113_128_s19_v1.json"
+  ]
+}

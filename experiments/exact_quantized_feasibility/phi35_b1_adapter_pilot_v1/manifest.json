@@ -1,0 +1,31 @@
+{
+  "schema": "phi3-fixed-row-adapter-pilot-v1",
+  "status": "experimental development validation; not a correctness proof",
+  "model": "microsoft/Phi-3.5-mini-instruct",
+  "revision": "2fe192450127e6a83f7441aef6e3ca586c338b77",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "python": "3.12.13",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "transformers": "5.14.1",
+  "bitsandbytes": "0.50.0",
+  "attention_implementation": "sdpa",
+  "k": 4,
+  "physical_rows": 5,
+  "attention_strategy": "padded",
+  "max_new_tokens": 64,
+  "capacity": 1024,
+  "prompt_file": "experiments/exact_quantized_feasibility/llama32_1b_adapter_validation_cohort_v1.jsonl",
+  "prompt_file_sha256": "eec4835644ced88df64498ac18729d0dd4c74ac37928897ba81a1495a9b11e45",
+  "source_sha256": {
+    "src/zassd/certification/phi3_padded.py": "a9a196c4bb61d18d470ba7e9bead0f49fee0f99349ce920969ff70fd484f9f7b",
+    "src/zassd/certification/fixed_row_dispatch.py": "06b478e8434275296b9ab4bb405e3265d9925f86857151f5edd5cd216ae7aa58",
+    "src/zassd/certification/model_capabilities.py": "5b5c5bcaedd38066b774f519b69feb3498e60b12c7bc4d011882ce8ae2275259",
+    "src/zassd/decoding/b1_exact.py": "20fc4209abcc9512132ee2c15de11d87f56141f6018c8510f85addf17c8ee93a"
+  },
+  "git_commit": "6465f4dc67eb15d8fb2be46606424d78539b6831"
+}

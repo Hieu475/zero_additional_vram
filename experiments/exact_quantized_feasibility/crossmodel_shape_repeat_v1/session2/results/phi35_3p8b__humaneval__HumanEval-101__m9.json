@@ -1,0 +1,91 @@
+{
+  "status": "completed",
+  "scope": "single-prefix shape diagnostic; not full-sequence exactness or a universal guarantee",
+  "protocol_sha256": "9f833c6baff42e8edcac90ab629499af308e8cc47598a8975140f1f1fa3a60a2",
+  "cohort_sha256": "01610458c693cb12d715bb0474ede6d354e1dee33c599d2cc08e7d805546ff08",
+  "model": "microsoft/Phi-3.5-mini-instruct",
+  "revision": "2fe192450127e6a83f7441aef6e3ca586c338b77",
+  "family": "Phi3",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "HumanEval/101",
+  "task": "humaneval",
+  "prompt_sha256": "96a270267ea64b34c5d4364f00c969284296ae45017b988c20a1c1c306dfc486",
+  "prompt_token_count": 125,
+  "prompt_token_ids_sha256": "0aa9582899304f619a5cc93c06f07cf29f65385a0f8d24e665f650695e920f14",
+  "M": 9,
+  "candidate_ids": [
+    1678,
+    736,
+    269,
+    29889,
+    6506,
+    28165,
+    613,
+    376,
+    376
+  ],
+  "candidate_length": 9,
+  "linear_singleton_counts": {
+    "patched_modules": 129,
+    "split_forward_calls": 129,
+    "single_row_kernel_calls": 1161
+  },
+  "ordinary_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.25,
+      0.25,
+      0.5,
+      0.25,
+      0.25,
+      0.25,
+      0.375,
+      0.5,
+      0.5
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.25,
+    "kv_value_max_abs": 0.125,
+    "first_kv_different_layer": 0
+  },
+  "singleton_linear_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.25,
+      0.25,
+      0.375,
+      0.375,
+      0.25,
+      0.5,
+      0.375,
+      0.375,
+      0.5
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.25,
+    "kv_value_max_abs": 0.15625,
+    "first_kv_different_layer": 1
+  },
+  "model_manifest": "experiments/exact_quantized_feasibility/crossmodel_shape_repeat_v1/session2/manifests/phi35_3p8b.json"
+}

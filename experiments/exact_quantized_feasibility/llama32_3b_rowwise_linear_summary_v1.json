@@ -1,0 +1,42 @@
+{
+  "schema": "llama32-3b-rowwise-quantized-linear-pilot-v1",
+  "status": "experimental alternative; exact to fixed-row singleton in finite sample; slower than BNB baseline",
+  "model": "unsloth/Llama-3.2-3B-Instruct",
+  "revision": "006f5dcd1393c3add266de40994ba96225e9689d",
+  "probe_count": 3,
+  "probe_M_values": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "probe_logit_bitwise_passes": 27,
+  "probe_kv_bitwise_passes": 27,
+  "pilot_rows": 6,
+  "pilot_token_matches_singleton": 6,
+  "pilot_token_matches_original_bnb": 4,
+  "state_prefix_audits_passed": 6,
+  "mean_speedup_vs_fixed_row_singleton": 1.0605847523467258,
+  "mean_speedup_vs_original_bnb": 0.8607082261266983,
+  "prompt_prefix_counts": [
+    64,
+    64,
+    64,
+    64,
+    64,
+    64
+  ],
+  "artifacts": [
+    "experiments/exact_quantized_feasibility/llama32_3b_perf_rowwise_linears_k2rows3_session0_v1/rows.jsonl",
+    "experiments/exact_quantized_feasibility/llama32_3b_perf_rowwise_linears_k2rows3_session1_v1/rows.jsonl",
+    "experiments/exact_quantized_feasibility/llama32_3b_fixed_row_gsm8k050_rowwise_linears_rows9_v1.json",
+    "experiments/exact_quantized_feasibility/llama32_3b_fixed_row_cnndm050_rowwise_linears_rows9_v1.json",
+    "experiments/exact_quantized_feasibility/llama32_3b_fixed_row_humaneval100_rowwise_linears_rows9_v1.json"
+  ],
+  "scope": "three development prompts, two timing sessions, one pinned model/runtime; not a speedup claim"
+}

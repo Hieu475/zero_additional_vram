@@ -1,0 +1,113 @@
+{
+  "schema": "zassd-fixed3-packed-rowwise-1024-pilot-v1",
+  "classification": "development-only; two process sessions per prompt; descriptive results",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "configuration": {
+    "k": 2,
+    "physical_rows": 3,
+    "attention_strategy": "rowwise",
+    "quantized_linear_strategy": "triton_nf4_fixed_three_rows_group_scale_packed",
+    "ngram_size": 3,
+    "max_new_tokens": 1024,
+    "capacity": 2048
+  },
+  "prompts": 2,
+  "process_runs": 4,
+  "b1_tokens_and_all_1024_kv_prefixes_exact_runs": 4,
+  "original_bnb_token_match_runs": 0,
+  "geomean_speedup_vs_b1_singleton_all_runs": 1.9390830170415874,
+  "geomean_speedup_vs_original_bnb_all_runs": 1.5269235192025465,
+  "per_prompt": {
+    "humaneval:HumanEval/117": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_1024_s27_v1/rows.jsonl",
+          "session_index": 27,
+          "speedup_vs_b1_singleton": 1.999671877953494,
+          "speedup_vs_original_bnb": 1.5560215761570089,
+          "accepted_draft_tokens": 564,
+          "draft_tokens": 614,
+          "cycles": 459,
+          "shared_state_prefixes": 1024,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 162
+        },
+        {
+          "artifact": "b1_fixed3_packed_1024_s28_v1/rows.jsonl",
+          "session_index": 28,
+          "speedup_vs_b1_singleton": 2.016022212508997,
+          "speedup_vs_original_bnb": 1.577020368338614,
+          "accepted_draft_tokens": 564,
+          "draft_tokens": 614,
+          "cycles": 459,
+          "shared_state_prefixes": 1024,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 162
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 2.0078304021216096,
+      "geomean_speedup_vs_original_bnb": 1.5664857864576864,
+      "accepted_draft_tokens": 1128,
+      "draft_tokens": 1228,
+      "all_b1_exact": true,
+      "bnb_match_runs": 0,
+      "divergence_indices": [
+        162,
+        162
+      ]
+    },
+    "cnndm:cnndm_006": {
+      "runs": [
+        {
+          "artifact": "b1_fixed3_packed_1024_s27_v1/rows.jsonl",
+          "session_index": 27,
+          "speedup_vs_b1_singleton": 1.8909648474926175,
+          "speedup_vs_original_bnb": 1.4639039308057393,
+          "accepted_draft_tokens": 549,
+          "draft_tokens": 637,
+          "cycles": 475,
+          "shared_state_prefixes": 1024,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 12
+        },
+        {
+          "artifact": "b1_fixed3_packed_1024_s28_v1/rows.jsonl",
+          "session_index": 28,
+          "speedup_vs_b1_singleton": 1.8545908104107633,
+          "speedup_vs_original_bnb": 1.51322547541252,
+          "accepted_draft_tokens": 549,
+          "draft_tokens": 637,
+          "cycles": 475,
+          "shared_state_prefixes": 1024,
+          "matches_b1_tokens": true,
+          "b1_state_exact_all_prefixes": true,
+          "matches_original_bnb_tokens": false,
+          "first_bnb_divergence_index": 12
+        }
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.8726895175040625,
+      "geomean_speedup_vs_original_bnb": 1.4883604138956974,
+      "accepted_draft_tokens": 1098,
+      "draft_tokens": 1274,
+      "all_b1_exact": true,
+      "bnb_match_runs": 0,
+      "divergence_indices": [
+        12,
+        12
+      ]
+    }
+  },
+  "limitations": [
+    "two selected development prompts on one GPU",
+    "two process sessions per prompt",
+    "held-out GSM8K indices 300-349 excluded",
+    "finite empirical B1 matching does not prove universal equivalence or BNB trajectory identity"
+  ]
+}

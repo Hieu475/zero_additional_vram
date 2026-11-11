@@ -1,0 +1,494 @@
+{
+  "schema": "zassd-b2-draft-policies-v1",
+  "benchmark": "data/benchmarks/cnndm_eval.jsonl",
+  "policies": {
+    "base": {
+      "ngram_max": 3,
+      "min_size": 2,
+      "vote": false,
+      "min_reps": 1
+    },
+    "vote": {
+      "ngram_max": 3,
+      "min_size": 2,
+      "vote": true,
+      "min_reps": 1
+    }
+  },
+  "summary": {
+    "base": {
+      "geomean_speedup": 1.1554565050941088,
+      "below_bnb": 0,
+      "exact_prompts": 20,
+      "mean_block_cycles": 30.6
+    },
+    "vote": {
+      "geomean_speedup": 1.1585770917402893,
+      "below_bnb": 0,
+      "exact_prompts": 20,
+      "mean_block_cycles": 30.45
+    }
+  },
+  "per_prompt": [
+    {
+      "prompt_id": "cnndm_020",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.0322109448867223,
+        "vote": 1.0381679480556676
+      },
+      "acceptance": {
+        "base": 0.21311475409836064,
+        "vote": 0.21311475409836064
+      },
+      "block_cycles": {
+        "base": 31,
+        "vote": 31
+      },
+      "fallback_cycles": {
+        "base": 84,
+        "vote": 84
+      }
+    },
+    {
+      "prompt_id": "cnndm_021",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1453437751580255,
+        "vote": 1.139121343302042
+      },
+      "acceptance": {
+        "base": 0.4262295081967213,
+        "vote": 0.4262295081967213
+      },
+      "block_cycles": {
+        "base": 31,
+        "vote": 31
+      },
+      "fallback_cycles": {
+        "base": 71,
+        "vote": 71
+      }
+    },
+    {
+      "prompt_id": "cnndm_022",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1131662772596345,
+        "vote": 1.100883224020994
+      },
+      "acceptance": {
+        "base": 0.41304347826086957,
+        "vote": 0.41304347826086957
+      },
+      "block_cycles": {
+        "base": 23,
+        "vote": 23
+      },
+      "fallback_cycles": {
+        "base": 85,
+        "vote": 85
+      }
+    },
+    {
+      "prompt_id": "cnndm_023",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1720984176924751,
+        "vote": 1.1770874129012296
+      },
+      "acceptance": {
+        "base": 0.45588235294117646,
+        "vote": 0.45588235294117646
+      },
+      "block_cycles": {
+        "base": 34,
+        "vote": 34
+      },
+      "fallback_cycles": {
+        "base": 62,
+        "vote": 62
+      }
+    },
+    {
+      "prompt_id": "cnndm_024",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2240561874912277,
+        "vote": 1.2392146794209604
+      },
+      "acceptance": {
+        "base": 0.55,
+        "vote": 0.55
+      },
+      "block_cycles": {
+        "base": 30,
+        "vote": 30
+      },
+      "fallback_cycles": {
+        "base": 64,
+        "vote": 64
+      }
+    },
+    {
+      "prompt_id": "cnndm_025",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.060518768484835,
+        "vote": 1.0902911095589276
+      },
+      "acceptance": {
+        "base": 0.3333333333333333,
+        "vote": 0.3333333333333333
+      },
+      "block_cycles": {
+        "base": 21,
+        "vote": 21
+      },
+      "fallback_cycles": {
+        "base": 92,
+        "vote": 92
+      }
+    },
+    {
+      "prompt_id": "cnndm_026",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2808832465028224,
+        "vote": 1.2760249647156143
+      },
+      "acceptance": {
+        "base": 0.6060606060606061,
+        "vote": 0.6060606060606061
+      },
+      "block_cycles": {
+        "base": 33,
+        "vote": 33
+      },
+      "fallback_cycles": {
+        "base": 54,
+        "vote": 54
+      }
+    },
+    {
+      "prompt_id": "cnndm_027",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2490792122736318,
+        "vote": 1.246462949713873
+      },
+      "acceptance": {
+        "base": 0.6060606060606061,
+        "vote": 0.6060606060606061
+      },
+      "block_cycles": {
+        "base": 33,
+        "vote": 33
+      },
+      "fallback_cycles": {
+        "base": 54,
+        "vote": 54
+      }
+    },
+    {
+      "prompt_id": "cnndm_028",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.0976100140438652,
+        "vote": 1.100912096831418
+      },
+      "acceptance": {
+        "base": 0.3382352941176471,
+        "vote": 0.3382352941176471
+      },
+      "block_cycles": {
+        "base": 34,
+        "vote": 34
+      },
+      "fallback_cycles": {
+        "base": 70,
+        "vote": 70
+      }
+    },
+    {
+      "prompt_id": "cnndm_029",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1176062905640232,
+        "vote": 1.1158588136179095
+      },
+      "acceptance": {
+        "base": 0.38461538461538464,
+        "vote": 0.38461538461538464
+      },
+      "block_cycles": {
+        "base": 26,
+        "vote": 26
+      },
+      "fallback_cycles": {
+        "base": 81,
+        "vote": 81
+      }
+    },
+    {
+      "prompt_id": "cnndm_030",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.209360801492283,
+        "vote": 1.19398333745914
+      },
+      "acceptance": {
+        "base": 0.5384615384615384,
+        "vote": 0.5384615384615384
+      },
+      "block_cycles": {
+        "base": 26,
+        "vote": 26
+      },
+      "fallback_cycles": {
+        "base": 73,
+        "vote": 73
+      }
+    },
+    {
+      "prompt_id": "cnndm_031",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.093797466851043,
+        "vote": 1.0958476227137932
+      },
+      "acceptance": {
+        "base": 0.2916666666666667,
+        "vote": 0.2916666666666667
+      },
+      "block_cycles": {
+        "base": 24,
+        "vote": 24
+      },
+      "fallback_cycles": {
+        "base": 90,
+        "vote": 90
+      }
+    },
+    {
+      "prompt_id": "cnndm_032",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.3073071334115358,
+        "vote": 1.329790996084267
+      },
+      "acceptance": {
+        "base": 0.625,
+        "vote": 0.625
+      },
+      "block_cycles": {
+        "base": 40,
+        "vote": 40
+      },
+      "fallback_cycles": {
+        "base": 37,
+        "vote": 37
+      }
+    },
+    {
+      "prompt_id": "cnndm_033",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1603010961298215,
+        "vote": 1.1681279209280924
+      },
+      "acceptance": {
+        "base": 0.5,
+        "vote": 0.5
+      },
+      "block_cycles": {
+        "base": 28,
+        "vote": 28
+      },
+      "fallback_cycles": {
+        "base": 72,
+        "vote": 72
+      }
+    },
+    {
+      "prompt_id": "cnndm_034",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2433753126252527,
+        "vote": 1.2188249772907267
+      },
+      "acceptance": {
+        "base": 0.48717948717948717,
+        "vote": 0.48717948717948717
+      },
+      "block_cycles": {
+        "base": 39,
+        "vote": 39
+      },
+      "fallback_cycles": {
+        "base": 50,
+        "vote": 50
+      }
+    },
+    {
+      "prompt_id": "cnndm_035",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1456561736938569,
+        "vote": 1.1632655159218568
+      },
+      "acceptance": {
+        "base": 0.46153846153846156,
+        "vote": 0.46153846153846156
+      },
+      "block_cycles": {
+        "base": 33,
+        "vote": 33
+      },
+      "fallback_cycles": {
+        "base": 65,
+        "vote": 65
+      }
+    },
+    {
+      "prompt_id": "cnndm_036",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.116586451853262,
+        "vote": 1.0823409471098533
+      },
+      "acceptance": {
+        "base": 0.32142857142857145,
+        "vote": 0.32142857142857145
+      },
+      "block_cycles": {
+        "base": 28,
+        "vote": 28
+      },
+      "fallback_cycles": {
+        "base": 81,
+        "vote": 81
+      }
+    },
+    {
+      "prompt_id": "cnndm_037",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1620141311380698,
+        "vote": 1.1744909689620284
+      },
+      "acceptance": {
+        "base": 0.43548387096774194,
+        "vote": 0.43548387096774194
+      },
+      "block_cycles": {
+        "base": 31,
+        "vote": 31
+      },
+      "fallback_cycles": {
+        "base": 69,
+        "vote": 69
+      }
+    },
+    {
+      "prompt_id": "cnndm_038",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.121035456783944,
+        "vote": 1.1230079337325543
+      },
+      "acceptance": {
+        "base": 0.3392857142857143,
+        "vote": 0.3392857142857143
+      },
+      "block_cycles": {
+        "base": 28,
+        "vote": 28
+      },
+      "fallback_cycles": {
+        "base": 80,
+        "vote": 80
+      }
+    },
+    {
+      "prompt_id": "cnndm_039",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1012011978855152,
+        "vote": 1.1409922264441381
+      },
+      "acceptance": {
+        "base": 0.3076923076923077,
+        "vote": 0.375
+      },
+      "block_cycles": {
+        "base": 39,
+        "vote": 36
+      },
+      "fallback_cycles": {
+        "base": 64,
+        "vote": 64
+      }
+    }
+  ]
+}

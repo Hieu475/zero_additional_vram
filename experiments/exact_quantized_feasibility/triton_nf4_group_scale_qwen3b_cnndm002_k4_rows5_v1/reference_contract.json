@@ -1,0 +1,114 @@
+{
+  "schema": "b1-reference-contract-v1",
+  "status": "experimental finite reference identity; not a proof",
+  "reference": "greedy singleton under the fixed-row Qwen2 operator patch",
+  "model": {
+    "id": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "model_type": "qwen2",
+    "config_sha256": "754cee15e75334c1cda7bc86f8cc2969587f17a6d812eec07b2a6cc1171ebfe3"
+  },
+  "weights": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "quantized_state_sha256": "7109e12db9ac462270757795ec82051b0dd904498b8a567e98444f7c5f4ee7a3"
+  },
+  "tokenizer": {
+    "class": "Qwen2Tokenizer",
+    "name_or_path": "Qwen/Qwen2.5-3B-Instruct",
+    "length": 151665,
+    "vocab_size": 151643,
+    "vocab_sha256": "698c955b0b438a535083d1771ef8b41069afba4b3d51a482558bdb68ea55e800",
+    "special_tokens_map": {
+      "eos_token": "<|im_end|>",
+      "pad_token": "<|endoftext|>"
+    },
+    "bos_token_id": null,
+    "eos_token_id": 151645,
+    "pad_token_id": 151643,
+    "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f"
+  },
+  "runtime": {
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "index": 0,
+      "compute_capability": [
+        8,
+        9
+      ],
+      "total_memory_bytes": 6053232640,
+      "driver": {
+        "version": "595.99.02",
+        "compute_capability": "8.9",
+        "uuid": "GPU-794ce37a-f7d3-5b6e-8858-75c2d14741f5"
+      }
+    },
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0",
+    "triton": "3.6.0",
+    "model_attention_implementation": "sdpa",
+    "backend_flags": {
+      "float32_matmul_precision": "highest",
+      "cuda_matmul_allow_tf32": false,
+      "cudnn_allow_tf32": true,
+      "cudnn_deterministic": false,
+      "deterministic_algorithms": false,
+      "flash_sdp_enabled": true,
+      "mem_efficient_sdp_enabled": true,
+      "math_sdp_enabled": true
+    },
+    "source_sha256": {
+      "src/zassd/certification/qwen2_padded.py": "749ae69dc803270cebc0385d7f1d20777d133e0fab5d52abe7237cacb420e8e6",
+      "src/zassd/certification/nf4_fixed_rows.py": "7ec90b1012f6b69163328657aeea698287f3645d66b3eaf4de30bd227c84defa",
+      "src/zassd/certification/nf4_fixed_rows_group_scale.py": "1ff2b2b8f628cd62238c956387b7d9b4bc14e59b8070feff67f1409a301fc3f5",
+      "src/zassd/certification/fixed_row_dispatch.py": "cbac0dadcc67cbe4230250a096d65129de7a4f306e5a822f84bd73095c25008b",
+      "src/zassd/certification/model_capabilities.py": "be34dab0aeb0a2a9fb25f203f4d5b79d8f604779d0d57a8a07b238ea77fb54bc",
+      "src/zassd/decoding/b1_exact.py": "e19b4e6440697fc96e6e6e7b1902da843fa45b8cae0e62700c4ac331f99b0d63",
+      "src/zassd/decoding/ngram.py": "0976856395ce1a293e767c84fd6b1dc6d8f277b57f0674e806896cc3913d4713",
+      "src/zassd/cache/kv_cache.py": "a56a3ad4ee163e7456e236515e8848173face82426b0fe3c0e7489b170ed3934",
+      "src/zassd/backends/base.py": "00c77e4731ef61cda25d4393d865b1f21b7422689870d680529aa79165df9ef6"
+    }
+  },
+  "operator_schedule": {
+    "name": "qwen2_fixed_row_padded_triton_nf4_group_scale_singleton",
+    "attention_strategy": "padded",
+    "physical_rows": 5
+  },
+  "cache": {
+    "backend": "StaticPreallocatedKVCache",
+    "capacity": 512,
+    "batch_size": 1,
+    "logical_length": "must equal committed prefix length"
+  },
+  "greedy": {
+    "tie_rule": "torch.argmax_first_index",
+    "eos_token_id": 151645,
+    "sampling": "disabled",
+    "stop_rules": [
+      "EOS",
+      "caller token budget"
+    ]
+  },
+  "supported_domain": {
+    "architecture": "Qwen2 only",
+    "batch_size": 1,
+    "attention": "SDPA padded fixed-row path",
+    "external_attention_mask": false,
+    "external_position_ids": false,
+    "custom_cache_position": false,
+    "inputs_embeds": false,
+    "sliding_window": false,
+    "output_attentions": false
+  },
+  "reference_contract_id": "b98504ee9bfd2aeb9ea5869ae123eda8635a8a6331b748a2d5ef9de6d55b0dd1",
+  "provenance": {
+    "source_manifest": "experiments/exact_quantized_feasibility/triton_nf4_group_scale_qwen3b_cnndm002_k4_rows5_v1/manifest.json",
+    "source_contract_id": "85f825b7c6f6efc4c22a8d58031578b1fc9b8f26cdf108b23f3c26488f96ae0d",
+    "source_prompt_file": "experiments/exact_quantized_feasibility/b1_long_context_cnndm_002_prompt.jsonl",
+    "source_input_hashes": {
+      "experiments/exact_quantized_feasibility/b1_long_context_cnndm_002_prompt.jsonl": "1cb8b82af469085ef303dae12b5a130ba9a82372e85d991976a706410249b40e"
+    }
+  }
+}

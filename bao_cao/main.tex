@@ -1,0 +1,48 @@
+% !TeX program = xelatex
+\documentclass[a4paper, 12pt]{report}
+\input{packages}
+
+\begin{document}
+\pagenumbering{gobble}
+\input{contents/titlepage}
+\clearpage
+
+\pagenumbering{roman}
+\input{contents/acknowledgement}
+\clearpage
+\input{contents/abstract}
+\clearpage
+\input{contents/abbreviations}
+\clearpage
+
+\tableofcontents
+\clearpage
+\listoffigures
+\clearpage
+\listoftables
+\clearpage
+
+\pagenumbering{arabic}
+\input{contents/introductions}
+\clearpage
+\input{contents/related_works}
+\clearpage
+\input{contents/chuong3}
+\clearpage
+\input{contents/chuong4}
+\clearpage
+\input{contents/chuong5}
+\clearpage
+\input{contents/chuong_b2}
+\clearpage
+\input{contents/chuong_kernel}
+\clearpage
+\input{contents/chuong6}
+\clearpage
+
+\renewcommand{\bibname}{Tài liệu tham khảo}
+\addcontentsline{toc}{chapter}{Tài liệu tham khảo}
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}

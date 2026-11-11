@@ -1,0 +1,353 @@
+{
+  "status": "finite operator-only dataflow experiment; pairwise reduction is a separate B1 arithmetic schedule",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "block_n": 16,
+  "block_k": 256,
+  "num_warps_sweep": [
+    1,
+    2,
+    4
+  ],
+  "iterations_per_sample": 20,
+  "rounds_per_m": 5,
+  "results": {
+    "q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "correctness": {
+        "interleaved_w1_m1_rowwise_singleton_equal": true,
+        "pairwise_w1_m1_rowwise_singleton_equal": true,
+        "interleaved_w2_m1_rowwise_singleton_equal": true,
+        "pairwise_w2_m1_rowwise_singleton_equal": true,
+        "interleaved_w4_m1_rowwise_singleton_equal": true,
+        "pairwise_w4_m1_rowwise_singleton_equal": true,
+        "interleaved_w1_m2_rowwise_singleton_equal": true,
+        "pairwise_w1_m2_rowwise_singleton_equal": true,
+        "interleaved_w2_m2_rowwise_singleton_equal": true,
+        "pairwise_w2_m2_rowwise_singleton_equal": true,
+        "interleaved_w4_m2_rowwise_singleton_equal": true,
+        "pairwise_w4_m2_rowwise_singleton_equal": true
+      },
+      "cross_schedule_difference": {
+        "1": {
+          "1": {
+            "bitwise_equal_to_interleaved": false,
+            "max_abs_difference": 0.00048828125
+          },
+          "2": {
+            "bitwise_equal_to_interleaved": false,
+            "max_abs_difference": 0.00048828125
+          },
+          "4": {
+            "bitwise_equal_to_interleaved": true,
+            "max_abs_difference": 0.0
+          }
+        },
+        "2": {
+          "1": {
+            "bitwise_equal_to_interleaved": false,
+            "max_abs_difference": 0.00048828125
+          },
+          "2": {
+            "bitwise_equal_to_interleaved": false,
+            "max_abs_difference": 0.00048828125
+          },
+          "4": {
+            "bitwise_equal_to_interleaved": false,
+            "max_abs_difference": 3.814697265625e-06
+          }
+        }
+      },
+      "latency_by_m": {
+        "1": {
+          "median_cuda_ms": {
+            "interleaved_w1": 0.02416960000991821,
+            "pairwise_w1": 0.024780799448490144,
+            "interleaved_w2": 0.0242576003074646,
+            "pairwise_w2": 0.027647998929023743,
+            "interleaved_w4": 0.02452480047941208,
+            "pairwise_w4": 0.026473599672317504
+          },
+          "samples_ms": {
+            "interleaved_w1": [
+              0.031523200869560244,
+              0.02416960000991821,
+              0.024985599517822265,
+              0.023396800458431243,
+              0.022988800704479218
+            ],
+            "pairwise_w1": [
+              0.02529279887676239,
+              0.023193599283695222,
+              0.02370080053806305,
+              0.024780799448490144,
+              0.024879999458789825
+            ],
+            "interleaved_w2": [
+              0.02457599937915802,
+              0.02502079904079437,
+              0.0242576003074646,
+              0.02344000041484833,
+              0.02359360009431839
+            ],
+            "pairwise_w2": [
+              0.02774080038070679,
+              0.027647998929023743,
+              0.027502399682998658,
+              0.027555200457572936,
+              0.027647998929023743
+            ],
+            "interleaved_w4": [
+              0.02452480047941208,
+              0.02389120012521744,
+              0.024780799448490144,
+              0.02420639991760254,
+              0.02529279887676239
+            ],
+            "pairwise_w4": [
+              0.026470398902893065,
+              0.026419198513031004,
+              0.026556798815727235,
+              0.026473599672317504,
+              0.027251198887825012
+            ]
+          },
+          "pairwise_w1_over_interleaved": 1.0252879418079373,
+          "pairwise_w2_over_interleaved": 1.1397664475704896,
+          "pairwise_w4_over_interleaved": 1.0794623872492415
+        },
+        "2": {
+          "median_cuda_ms": {
+            "interleaved_w1": 0.02534399926662445,
+            "pairwise_w1": 0.02462719976902008,
+            "interleaved_w2": 0.023552000522613525,
+            "pairwise_w2": 0.02815999984741211,
+            "interleaved_w4": 0.02452480047941208,
+            "pairwise_w4": 0.02611039876937866
+          },
+          "samples_ms": {
+            "interleaved_w1": [
+              0.027136000990867614,
+              0.023534399271011353,
+              0.02534399926662445,
+              0.023654399812221526,
+              0.03296160101890564
+            ],
+            "pairwise_w1": [
+              0.02462719976902008,
+              0.02375199943780899,
+              0.026311999559402464,
+              0.02325119972229004,
+              0.02661119997501373
+            ],
+            "interleaved_w2": [
+              0.024784000217914583,
+              0.023552000522613525,
+              0.025353598594665527,
+              0.023449599742889404,
+              0.023500800132751465
+            ],
+            "pairwise_w2": [
+              0.02820639908313751,
+              0.028262400627136232,
+              0.02815999984741211,
+              0.02815999984741211,
+              0.02805759906768799
+            ],
+            "interleaved_w4": [
+              0.024566400051116943,
+              0.02452480047941208,
+              0.02452480047941208,
+              0.024849599599838255,
+              0.02452480047941208
+            ],
+            "pairwise_w4": [
+              0.02611039876937866,
+              0.026009601354599,
+              0.026015999913215637,
+              0.027382400631904603,
+              0.02656799852848053
+            ]
+          },
+          "pairwise_w1_over_interleaved": 0.9717171907218162,
+          "pairwise_w2_over_interleaved": 1.1956521409030287,
+          "pairwise_w4_over_interleaved": 1.0646528517652019
+        }
+      }
+    },
+    "down_proj": {
+      "in_features": 11008,
+      "out_features": 2048,
+      "correctness": {
+        "interleaved_w1_m1_rowwise_singleton_equal": true,
+        "pairwise_w1_m1_rowwise_singleton_equal": true,
+        "interleaved_w2_m1_rowwise_singleton_equal": true,
+        "pairwise_w2_m1_rowwise_singleton_equal": true,
+        "interleaved_w4_m1_rowwise_singleton_equal": true,
+        "pairwise_w4_m1_rowwise_singleton_equal": true,
+        "interleaved_w1_m2_rowwise_singleton_equal": true,
+        "pairwise_w1_m2_rowwise_singleton_equal": true,
+        "interleaved_w2_m2_rowwise_singleton_equal": true,
+        "pairwise_w2_m2_rowwise_singleton_equal": true,
+        "interleaved_w4_m2_rowwise_singleton_equal": true,
+        "pairwise_w4_m2_rowwise_singleton_equal": true
+      },
+      "cross_schedule_difference": {
+        "1": {
+          "1": {
+            "bitwise_equal_to_interleaved": false,
+            "max_abs_difference": 3.814697265625e-06
+          },
+          "2": {
+            "bitwise_equal_to_interleaved": false,
+            "max_abs_difference": 0.000244140625
+          },
+          "4": {
+            "bitwise_equal_to_interleaved": false,
+            "max_abs_difference": 0.0009765625
+          }
+        },
+        "2": {
+          "1": {
+            "bitwise_equal_to_interleaved": false,
+            "max_abs_difference": 0.001953125
+          },
+          "2": {
+            "bitwise_equal_to_interleaved": false,
+            "max_abs_difference": 0.001953125
+          },
+          "4": {
+            "bitwise_equal_to_interleaved": false,
+            "max_abs_difference": 0.001953125
+          }
+        }
+      },
+      "latency_by_m": {
+        "1": {
+          "median_cuda_ms": {
+            "interleaved_w1": 0.11759680509567261,
+            "pairwise_w1": 0.12240480184555054,
+            "interleaved_w2": 0.12052479982376099,
+            "pairwise_w2": 0.15052160024642944,
+            "interleaved_w4": 0.12416000366210937,
+            "pairwise_w4": 0.1421679973602295
+          },
+          "samples_ms": {
+            "interleaved_w1": [
+              0.11876640319824219,
+              0.11759680509567261,
+              0.11755520105361938,
+              0.11791360378265381,
+              0.11750400066375732
+            ],
+            "pairwise_w1": [
+              0.12262400388717651,
+              0.12240480184555054,
+              0.1223680019378662,
+              0.12544000148773193,
+              0.1223680019378662
+            ],
+            "interleaved_w2": [
+              0.1240015983581543,
+              0.120414400100708,
+              0.12042239904403687,
+              0.12052479982376099,
+              0.12241439819335938
+            ],
+            "pairwise_w2": [
+              0.1505280017852783,
+              0.15063040256500243,
+              0.1503216028213501,
+              0.15032320022583007,
+              0.15052160024642944
+            ],
+            "interleaved_w4": [
+              0.12416000366210937,
+              0.12462079524993896,
+              0.1242624044418335,
+              0.12396320104598998,
+              0.12395520210266113
+            ],
+            "pairwise_w4": [
+              0.14212960004806519,
+              0.14217599630355834,
+              0.14396480321884156,
+              0.1421679973602295,
+              0.1419263958930969
+            ]
+          },
+          "pairwise_w1_over_interleaved": 1.04088543686171,
+          "pairwise_w2_over_interleaved": 1.2488848806762731,
+          "pairwise_w4_over_interleaved": 1.145038604759769
+        },
+        "2": {
+          "median_cuda_ms": {
+            "interleaved_w1": 0.11776000261306763,
+            "pairwise_w1": 0.12324320077896118,
+            "interleaved_w2": 0.11950080394744873,
+            "pairwise_w2": 0.15673439502716063,
+            "interleaved_w4": 0.12421120405197143,
+            "pairwise_w4": 0.14407680034637452
+          },
+          "samples_ms": {
+            "interleaved_w1": [
+              0.11933120489120483,
+              0.11776000261306763,
+              0.11776000261306763,
+              0.1176576018333435,
+              0.11760640144348145
+            ],
+            "pairwise_w1": [
+              0.12646399736404418,
+              0.12318240404129029,
+              0.12324320077896118,
+              0.1259600043296814,
+              0.12312959432601929
+            ],
+            "interleaved_w2": [
+              0.11960320472717285,
+              0.11907680034637451,
+              0.11914240121841431,
+              0.11950080394744873,
+              0.12180479764938354
+            ],
+            "pairwise_w2": [
+              0.15672320127487183,
+              0.15673439502716063,
+              0.1564079999923706,
+              0.156876802444458,
+              0.15805439949035643
+            ],
+            "interleaved_w4": [
+              0.12421120405197143,
+              0.12416000366210937,
+              0.12436480522155761,
+              0.12416000366210937,
+              0.12462079524993896
+            ],
+            "pairwise_w4": [
+              0.14433280229568482,
+              0.14401600360870362,
+              0.14498239755630493,
+              0.14391839504241943,
+              0.14407680034637452
+            ]
+          },
+          "pairwise_w1_over_interleaved": 1.0465624833918363,
+          "pairwise_w2_over_interleaved": 1.3115760718738396,
+          "pairwise_w4_over_interleaved": 1.1599340127649924
+        }
+      }
+    }
+  }
+}

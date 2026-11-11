@@ -1,0 +1,126 @@
+{
+  "schema": "zassd-activationvec-fallback-kv-closed-loop-v1",
+  "classification": "development-only per-step KV/token audit; finite evidence, not a proof",
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "benchmark": "data/benchmarks/gsm8k_eval.jsonl",
+  "max_new_tokens": 64,
+  "per_prompt": [
+    {
+      "prompt_id": "gsm8k_000",
+      "fallback_on_empty": true,
+      "tokens_match": true,
+      "observed_prefixes": 46,
+      "kv_mismatch_prefixes": [],
+      "unknown_prefixes": [],
+      "kv_prefixes_equal": true,
+      "fallback_cycles": 28,
+      "block_cycles": 18,
+      "accepted_draft_tokens": 18,
+      "draft_tokens": 36
+    },
+    {
+      "prompt_id": "gsm8k_000",
+      "fallback_on_empty": false,
+      "tokens_match": true,
+      "observed_prefixes": 46,
+      "kv_mismatch_prefixes": [],
+      "unknown_prefixes": [],
+      "kv_prefixes_equal": true,
+      "fallback_cycles": 0,
+      "block_cycles": 46,
+      "accepted_draft_tokens": 18,
+      "draft_tokens": 36
+    },
+    {
+      "prompt_id": "gsm8k_001",
+      "fallback_on_empty": true,
+      "tokens_match": true,
+      "observed_prefixes": 51,
+      "kv_mismatch_prefixes": [],
+      "unknown_prefixes": [],
+      "kv_prefixes_equal": true,
+      "fallback_cycles": 33,
+      "block_cycles": 17,
+      "accepted_draft_tokens": 13,
+      "draft_tokens": 34
+    },
+    {
+      "prompt_id": "gsm8k_001",
+      "fallback_on_empty": false,
+      "tokens_match": true,
+      "observed_prefixes": 51,
+      "kv_mismatch_prefixes": [],
+      "unknown_prefixes": [],
+      "kv_prefixes_equal": true,
+      "fallback_cycles": 0,
+      "block_cycles": 50,
+      "accepted_draft_tokens": 13,
+      "draft_tokens": 34
+    },
+    {
+      "prompt_id": "gsm8k_002",
+      "fallback_on_empty": true,
+      "tokens_match": true,
+      "observed_prefixes": 43,
+      "kv_mismatch_prefixes": [],
+      "unknown_prefixes": [],
+      "kv_prefixes_equal": true,
+      "fallback_cycles": 26,
+      "block_cycles": 17,
+      "accepted_draft_tokens": 21,
+      "draft_tokens": 33
+    },
+    {
+      "prompt_id": "gsm8k_002",
+      "fallback_on_empty": false,
+      "tokens_match": true,
+      "observed_prefixes": 43,
+      "kv_mismatch_prefixes": [],
+      "unknown_prefixes": [],
+      "kv_prefixes_equal": true,
+      "fallback_cycles": 0,
+      "block_cycles": 43,
+      "accepted_draft_tokens": 21,
+      "draft_tokens": 33
+    },
+    {
+      "prompt_id": "gsm8k_003",
+      "fallback_on_empty": true,
+      "tokens_match": true,
+      "observed_prefixes": 48,
+      "kv_mismatch_prefixes": [],
+      "unknown_prefixes": [],
+      "kv_prefixes_equal": true,
+      "fallback_cycles": 30,
+      "block_cycles": 17,
+      "accepted_draft_tokens": 16,
+      "draft_tokens": 34
+    },
+    {
+      "prompt_id": "gsm8k_003",
+      "fallback_on_empty": false,
+      "tokens_match": true,
+      "observed_prefixes": 48,
+      "kv_mismatch_prefixes": [],
+      "unknown_prefixes": [],
+      "kv_prefixes_equal": true,
+      "fallback_cycles": 0,
+      "block_cycles": 47,
+      "accepted_draft_tokens": 16,
+      "draft_tokens": 34
+    }
+  ],
+  "all_passed": true,
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/audit_activationvec_fallback_kv_closed_loop.py",
+  "source_sha256": "d64babb0ddfb988021f1f1a43b2a1ce342779a9def70277bba572a36c0ac05f5",
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "scope_limits": [
+    "Development prompts only; GSM8K held-out indices 300-349 excluded.",
+    "KV compared at non-terminal committed prefixes; reference is original BNB greedy."
+  ]
+}

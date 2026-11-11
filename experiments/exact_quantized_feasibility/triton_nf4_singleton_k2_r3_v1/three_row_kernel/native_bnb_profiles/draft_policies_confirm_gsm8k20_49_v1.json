@@ -1,0 +1,724 @@
+{
+  "schema": "zassd-b2-draft-policies-v1",
+  "benchmark": "data/benchmarks/gsm8k_eval.jsonl",
+  "policies": {
+    "base": {
+      "ngram_max": 3,
+      "min_size": 2,
+      "vote": false,
+      "min_reps": 1
+    },
+    "vote": {
+      "ngram_max": 3,
+      "min_size": 2,
+      "vote": true,
+      "min_reps": 1
+    }
+  },
+  "summary": {
+    "base": {
+      "geomean_speedup": 1.174120025307734,
+      "below_bnb": 0,
+      "exact_prompts": 30,
+      "mean_block_cycles": 31.366666666666667
+    },
+    "vote": {
+      "geomean_speedup": 1.1755075123750194,
+      "below_bnb": 0,
+      "exact_prompts": 30,
+      "mean_block_cycles": 31.4
+    }
+  },
+  "per_prompt": [
+    {
+      "prompt_id": "gsm8k_020",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2088708371117922,
+        "vote": 1.2120579330514238
+      },
+      "acceptance": {
+        "base": 0.5166666666666667,
+        "vote": 0.5166666666666667
+      },
+      "block_cycles": {
+        "base": 30,
+        "vote": 30
+      },
+      "fallback_cycles": {
+        "base": 66,
+        "vote": 66
+      }
+    },
+    {
+      "prompt_id": "gsm8k_021",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1142866434367773,
+        "vote": 1.113224973493114
+      },
+      "acceptance": {
+        "base": 0.3116883116883117,
+        "vote": 0.32
+      },
+      "block_cycles": {
+        "base": 39,
+        "vote": 38
+      },
+      "fallback_cycles": {
+        "base": 65,
+        "vote": 65
+      }
+    },
+    {
+      "prompt_id": "gsm8k_022",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.133050580001542,
+        "vote": 1.1436081748523002
+      },
+      "acceptance": {
+        "base": 0.39705882352941174,
+        "vote": 0.39705882352941174
+      },
+      "block_cycles": {
+        "base": 34,
+        "vote": 34
+      },
+      "fallback_cycles": {
+        "base": 66,
+        "vote": 66
+      }
+    },
+    {
+      "prompt_id": "gsm8k_023",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2740176415303617,
+        "vote": 1.2890652485830785
+      },
+      "acceptance": {
+        "base": 0.6538461538461539,
+        "vote": 0.6538461538461539
+      },
+      "block_cycles": {
+        "base": 26,
+        "vote": 26
+      },
+      "fallback_cycles": {
+        "base": 67,
+        "vote": 67
+      }
+    },
+    {
+      "prompt_id": "gsm8k_024",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.165028894714859,
+        "vote": 1.1884459524569577
+      },
+      "acceptance": {
+        "base": 0.5294117647058824,
+        "vote": 0.5294117647058824
+      },
+      "block_cycles": {
+        "base": 26,
+        "vote": 26
+      },
+      "fallback_cycles": {
+        "base": 75,
+        "vote": 75
+      }
+    },
+    {
+      "prompt_id": "gsm8k_025",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1056684040911007,
+        "vote": 1.074105322354668
+      },
+      "acceptance": {
+        "base": 0.2361111111111111,
+        "vote": 0.2361111111111111
+      },
+      "block_cycles": {
+        "base": 36,
+        "vote": 36
+      },
+      "fallback_cycles": {
+        "base": 74,
+        "vote": 74
+      }
+    },
+    {
+      "prompt_id": "gsm8k_026",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.301851661977501,
+        "vote": 1.2784459812670752
+      },
+      "acceptance": {
+        "base": 0.5405405405405406,
+        "vote": 0.5131578947368421
+      },
+      "block_cycles": {
+        "base": 37,
+        "vote": 38
+      },
+      "fallback_cycles": {
+        "base": 50,
+        "vote": 50
+      }
+    },
+    {
+      "prompt_id": "gsm8k_027",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.137365656537716,
+        "vote": 1.1229946040566943
+      },
+      "acceptance": {
+        "base": 0.42105263157894735,
+        "vote": 0.42105263157894735
+      },
+      "block_cycles": {
+        "base": 29,
+        "vote": 29
+      },
+      "fallback_cycles": {
+        "base": 75,
+        "vote": 75
+      }
+    },
+    {
+      "prompt_id": "gsm8k_028",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1091583350048384,
+        "vote": 1.119518080159852
+      },
+      "acceptance": {
+        "base": 0.38235294117647056,
+        "vote": 0.35714285714285715
+      },
+      "block_cycles": {
+        "base": 34,
+        "vote": 35
+      },
+      "fallback_cycles": {
+        "base": 68,
+        "vote": 68
+      }
+    },
+    {
+      "prompt_id": "gsm8k_029",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1658354272229288,
+        "vote": 1.18093359700209
+      },
+      "acceptance": {
+        "base": 0.45614035087719296,
+        "vote": 0.45614035087719296
+      },
+      "block_cycles": {
+        "base": 29,
+        "vote": 29
+      },
+      "fallback_cycles": {
+        "base": 72,
+        "vote": 72
+      }
+    },
+    {
+      "prompt_id": "gsm8k_030",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1359267448853312,
+        "vote": 1.1506297563978742
+      },
+      "acceptance": {
+        "base": 0.34210526315789475,
+        "vote": 0.36486486486486486
+      },
+      "block_cycles": {
+        "base": 38,
+        "vote": 37
+      },
+      "fallback_cycles": {
+        "base": 63,
+        "vote": 63
+      }
+    },
+    {
+      "prompt_id": "gsm8k_031",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1895486239062019,
+        "vote": 1.1930431384761695
+      },
+      "acceptance": {
+        "base": 0.45588235294117646,
+        "vote": 0.45588235294117646
+      },
+      "block_cycles": {
+        "base": 34,
+        "vote": 34
+      },
+      "fallback_cycles": {
+        "base": 62,
+        "vote": 62
+      }
+    },
+    {
+      "prompt_id": "gsm8k_032",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1310110455713545,
+        "vote": 1.1391039994417433
+      },
+      "acceptance": {
+        "base": 0.37254901960784315,
+        "vote": 0.37254901960784315
+      },
+      "block_cycles": {
+        "base": 26,
+        "vote": 26
+      },
+      "fallback_cycles": {
+        "base": 82,
+        "vote": 82
+      }
+    },
+    {
+      "prompt_id": "gsm8k_033",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1422194747108265,
+        "vote": 1.1741307108833412
+      },
+      "acceptance": {
+        "base": 0.5,
+        "vote": 0.5
+      },
+      "block_cycles": {
+        "base": 25,
+        "vote": 25
+      },
+      "fallback_cycles": {
+        "base": 77,
+        "vote": 77
+      }
+    },
+    {
+      "prompt_id": "gsm8k_034",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2129885818015296,
+        "vote": 1.1968962443957374
+      },
+      "acceptance": {
+        "base": 0.4931506849315068,
+        "vote": 0.4931506849315068
+      },
+      "block_cycles": {
+        "base": 37,
+        "vote": 37
+      },
+      "fallback_cycles": {
+        "base": 55,
+        "vote": 55
+      }
+    },
+    {
+      "prompt_id": "gsm8k_035",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2178973922097338,
+        "vote": 1.2101628071664723
+      },
+      "acceptance": {
+        "base": 0.47058823529411764,
+        "vote": 0.47058823529411764
+      },
+      "block_cycles": {
+        "base": 34,
+        "vote": 34
+      },
+      "fallback_cycles": {
+        "base": 62,
+        "vote": 62
+      }
+    },
+    {
+      "prompt_id": "gsm8k_036",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1295775503988403,
+        "vote": 1.1670374886167705
+      },
+      "acceptance": {
+        "base": 0.5,
+        "vote": 0.5
+      },
+      "block_cycles": {
+        "base": 24,
+        "vote": 24
+      },
+      "fallback_cycles": {
+        "base": 79,
+        "vote": 79
+      }
+    },
+    {
+      "prompt_id": "gsm8k_037",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1534729940479314,
+        "vote": 1.1305106131907094
+      },
+      "acceptance": {
+        "base": 0.4074074074074074,
+        "vote": 0.4074074074074074
+      },
+      "block_cycles": {
+        "base": 27,
+        "vote": 27
+      },
+      "fallback_cycles": {
+        "base": 78,
+        "vote": 78
+      }
+    },
+    {
+      "prompt_id": "gsm8k_038",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1855850269061614,
+        "vote": 1.207160229673113
+      },
+      "acceptance": {
+        "base": 0.4603174603174603,
+        "vote": 0.4603174603174603
+      },
+      "block_cycles": {
+        "base": 32,
+        "vote": 32
+      },
+      "fallback_cycles": {
+        "base": 66,
+        "vote": 66
+      }
+    },
+    {
+      "prompt_id": "gsm8k_039",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2066187818989669,
+        "vote": 1.2041527784776704
+      },
+      "acceptance": {
+        "base": 0.5172413793103449,
+        "vote": 0.5172413793103449
+      },
+      "block_cycles": {
+        "base": 29,
+        "vote": 29
+      },
+      "fallback_cycles": {
+        "base": 68,
+        "vote": 68
+      }
+    },
+    {
+      "prompt_id": "gsm8k_040",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2895072494462925,
+        "vote": 1.2919570181988813
+      },
+      "acceptance": {
+        "base": 0.6301369863013698,
+        "vote": 0.6301369863013698
+      },
+      "block_cycles": {
+        "base": 37,
+        "vote": 37
+      },
+      "fallback_cycles": {
+        "base": 45,
+        "vote": 45
+      }
+    },
+    {
+      "prompt_id": "gsm8k_041",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1682288610681215,
+        "vote": 1.1648859689658144
+      },
+      "acceptance": {
+        "base": 0.4918032786885246,
+        "vote": 0.4918032786885246
+      },
+      "block_cycles": {
+        "base": 31,
+        "vote": 31
+      },
+      "fallback_cycles": {
+        "base": 67,
+        "vote": 67
+      }
+    },
+    {
+      "prompt_id": "gsm8k_042",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1984810420032732,
+        "vote": 1.1987861210126487
+      },
+      "acceptance": {
+        "base": 0.5370370370370371,
+        "vote": 0.5370370370370371
+      },
+      "block_cycles": {
+        "base": 27,
+        "vote": 27
+      },
+      "fallback_cycles": {
+        "base": 71,
+        "vote": 71
+      }
+    },
+    {
+      "prompt_id": "gsm8k_043",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.207615985786579,
+        "vote": 1.2027997169374178
+      },
+      "acceptance": {
+        "base": 0.5230769230769231,
+        "vote": 0.5230769230769231
+      },
+      "block_cycles": {
+        "base": 33,
+        "vote": 33
+      },
+      "fallback_cycles": {
+        "base": 60,
+        "vote": 60
+      }
+    },
+    {
+      "prompt_id": "gsm8k_044",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1533395945534652,
+        "vote": 1.1553327182293756
+      },
+      "acceptance": {
+        "base": 0.39705882352941174,
+        "vote": 0.37142857142857144
+      },
+      "block_cycles": {
+        "base": 34,
+        "vote": 35
+      },
+      "fallback_cycles": {
+        "base": 66,
+        "vote": 66
+      }
+    },
+    {
+      "prompt_id": "gsm8k_045",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.192878746135672,
+        "vote": 1.155471127366077
+      },
+      "acceptance": {
+        "base": 0.4794520547945205,
+        "vote": 0.4533333333333333
+      },
+      "block_cycles": {
+        "base": 37,
+        "vote": 38
+      },
+      "fallback_cycles": {
+        "base": 56,
+        "vote": 56
+      }
+    },
+    {
+      "prompt_id": "gsm8k_046",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1635321444540656,
+        "vote": 1.2129090772269335
+      },
+      "acceptance": {
+        "base": 0.39705882352941174,
+        "vote": 0.453125
+      },
+      "block_cycles": {
+        "base": 34,
+        "vote": 32
+      },
+      "fallback_cycles": {
+        "base": 66,
+        "vote": 66
+      }
+    },
+    {
+      "prompt_id": "gsm8k_047",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1138190548212814,
+        "vote": 1.125449424526278
+      },
+      "acceptance": {
+        "base": 0.37735849056603776,
+        "vote": 0.37735849056603776
+      },
+      "block_cycles": {
+        "base": 27,
+        "vote": 27
+      },
+      "fallback_cycles": {
+        "base": 81,
+        "vote": 81
+      }
+    },
+    {
+      "prompt_id": "gsm8k_048",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.1186939350021492,
+        "vote": 1.096707534726433
+      },
+      "acceptance": {
+        "base": 0.3409090909090909,
+        "vote": 0.30434782608695654
+      },
+      "block_cycles": {
+        "base": 22,
+        "vote": 23
+      },
+      "fallback_cycles": {
+        "base": 90,
+        "vote": 90
+      }
+    },
+    {
+      "prompt_id": "gsm8k_049",
+      "exact": {
+        "base": true,
+        "vote": true
+      },
+      "speedup": {
+        "base": 1.2311390828639424,
+        "vote": 1.1995138870425945
+      },
+      "acceptance": {
+        "base": 0.5151515151515151,
+        "vote": 0.5151515151515151
+      },
+      "block_cycles": {
+        "base": 33,
+        "vote": 33
+      },
+      "fallback_cycles": {
+        "base": 60,
+        "vote": 60
+      }
+    }
+  ]
+}

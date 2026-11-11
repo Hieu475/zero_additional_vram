@@ -1,0 +1,133 @@
+{
+  "schema": "zassd-activationvec-no-proposal-fallback-branches-summary-v1",
+  "classification": "controlled proposal branch audit; finite EOS/rollback/fallback evidence",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_count": 5,
+  "scenario_count": 15,
+  "all_scenarios_pass": true,
+  "rollback_cases_reach_fallback": true,
+  "accepted_terminal_eos_skips_fallback": true,
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/111",
+      "artifact": "activationvec_no_proposal_fallback_branches_humaneval111_v1.json",
+      "scenarios": {
+        "accept_one_reject_eos_then_empty_proposals": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 9
+        },
+        "accept_terminal_eos_without_fallback": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 0
+        },
+        "reject_first_and_eos_suffix_then_empty_proposals": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 10
+        }
+      }
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "artifact": "activationvec_no_proposal_fallback_branches_humaneval114_v1.json",
+      "scenarios": {
+        "accept_one_reject_eos_then_empty_proposals": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 9
+        },
+        "accept_terminal_eos_without_fallback": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 0
+        },
+        "reject_first_and_eos_suffix_then_empty_proposals": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 10
+        }
+      }
+    },
+    {
+      "prompt_id": "HumanEval/116",
+      "artifact": "activationvec_no_proposal_fallback_branches_humaneval116_v2.json",
+      "scenarios": {
+        "accept_one_reject_eos_then_empty_proposals": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 9
+        },
+        "accept_terminal_eos_without_fallback": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 0
+        },
+        "reject_first_and_eos_suffix_then_empty_proposals": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 10
+        }
+      }
+    },
+    {
+      "prompt_id": "HumanEval/121",
+      "artifact": "activationvec_no_proposal_fallback_branches_humaneval121_v1.json",
+      "scenarios": {
+        "accept_one_reject_eos_then_empty_proposals": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 9
+        },
+        "accept_terminal_eos_without_fallback": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 0
+        },
+        "reject_first_and_eos_suffix_then_empty_proposals": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 10
+        }
+      }
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "artifact": "activationvec_no_proposal_fallback_branches_humaneval123_v2.json",
+      "scenarios": {
+        "accept_one_reject_eos_then_empty_proposals": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 9
+        },
+        "accept_terminal_eos_without_fallback": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 0
+        },
+        "reject_first_and_eos_suffix_then_empty_proposals": {
+          "token_match_reference": true,
+          "state_exact_reference": true,
+          "fallback_forwards": 10
+        }
+      }
+    }
+  ],
+  "input_sha256": {
+    "activationvec_no_proposal_fallback_branches_humaneval111_v1.json": "c8f1533de6a7bacc4eb26ceee77cb4c6d26b181e977738df8a36d8a4f44b6205",
+    "activationvec_no_proposal_fallback_branches_humaneval114_v1.json": "eee0a07138881bea3931cceacbe46a77e283a89abe249446f93968be4975b02c",
+    "activationvec_no_proposal_fallback_branches_humaneval116_v2.json": "c398f89909b24d6aff24b55c4e00014b217a3268d32ae6ae3fb610991023e48b",
+    "activationvec_no_proposal_fallback_branches_humaneval121_v1.json": "0a178925edfa6ce5d7c58162d15fcd0c0a68db60568c3cf8cbd52c311aa02e5a",
+    "activationvec_no_proposal_fallback_branches_humaneval123_v2.json": "3eb9ee92b7ac57b65fd608bcbe6fe636be36a41955edbde066f8efe643e44877"
+  },
+  "heldout_used": false,
+  "limits": [
+    "Controlled n-gram proposal scripts; not a natural proposal distribution.",
+    "Accepted-EOS uses a test-only tokenizer EOS override.",
+    "Five prompts on one GPU; GSM8K held-out indices 300-349 excluded."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_activationvec_no_proposal_fallback_branches.py",
+  "source_sha256": "3ff18e79c285c25ed99b8e8419aa5203ed12d8bd8184ea358e9f8ba0020c63bf"
+}

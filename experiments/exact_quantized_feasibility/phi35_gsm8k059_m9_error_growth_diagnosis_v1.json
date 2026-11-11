@@ -1,0 +1,778 @@
+{
+  "scope": "instrumented single-prefix Phi-3.5-Mini NF4 shape diagnostic; CPU hook copies alter execution timing; not causal proof or whole-sequence exactness",
+  "model": "microsoft/Phi-3.5-mini-instruct",
+  "revision": "2fe192450127e6a83f7441aef6e3ca586c338b77",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "gsm8k_059",
+  "prompt_length": 36,
+  "prompt_token_ids_sha256": "6354de007a6fa5a4d0bf3972828300da1a19f5495a3784f61204fba23f238cae",
+  "M": 9,
+  "candidate_ids": [
+    13,
+    13,
+    13,
+    29937,
+    673,
+    13,
+    13,
+    1762,
+    1284
+  ],
+  "candidate_row_argmax_equal": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "replicated_across_two_process_sessions": true,
+  "repeat_comparison": "candidate IDs, all ordinary metrics, and all singleton-linear metrics identical in 630/630 sweep configurations",
+  "ordinary_final_metrics": {
+    "per_row_logit_max_abs": [
+      0.5,
+      0.5,
+      0.375,
+      0.5,
+      0.5,
+      25.125,
+      0.625,
+      0.5,
+      0.921875
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 12.875,
+    "kv_value_max_abs": 17.46875,
+    "first_kv_different_layer": 0
+  },
+  "singleton_linear_final_metrics": {
+    "per_row_logit_max_abs": [
+      0.25,
+      0.5,
+      0.5,
+      0.5,
+      1.0,
+      24.640625,
+      0.75,
+      0.375,
+      0.25
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 4.3046875,
+    "kv_value_max_abs": 3.375,
+    "first_kv_different_layer": 2
+  },
+  "first_hooked_equal_primary_input_different_output": {
+    "module": "model.layers.0.self_attn.qkv_proj",
+    "input_max_abs": 0.0,
+    "input_bitwise_equal": true,
+    "input_max_abs_by_candidate_row": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "output_max_abs": 0.03125,
+    "output_bitwise_equal": false,
+    "output_max_abs_by_candidate_row": [
+      0.03125,
+      0.03125,
+      0.03125,
+      0.015625,
+      0.015625,
+      0.03125,
+      0.03125,
+      0.015625,
+      0.015625
+    ]
+  },
+  "layer_output_error_growth": [
+    {
+      "layer": 0,
+      "output_max_abs_all_rows": 0.03125,
+      "output_max_abs_by_candidate_row": [
+        0.0078125,
+        0.015625,
+        0.015625,
+        0.0078125,
+        0.001953125,
+        0.03125,
+        0.00390625,
+        0.001953125,
+        0.0009765625
+      ],
+      "row5_output_max_abs": 0.03125,
+      "input_bitwise_equal": true
+    },
+    {
+      "layer": 1,
+      "output_max_abs_all_rows": 0.03125,
+      "output_max_abs_by_candidate_row": [
+        0.03125,
+        0.001953125,
+        0.015625,
+        0.00390625,
+        0.0078125,
+        0.03125,
+        0.0078125,
+        0.00390625,
+        0.015625
+      ],
+      "row5_output_max_abs": 0.03125,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 2,
+      "output_max_abs_all_rows": 0.03125,
+      "output_max_abs_by_candidate_row": [
+        0.03125,
+        0.0078125,
+        0.03125,
+        0.0048828125,
+        0.015625,
+        0.03125,
+        0.0078125,
+        0.0078125,
+        0.0078125
+      ],
+      "row5_output_max_abs": 0.03125,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 3,
+      "output_max_abs_all_rows": 0.03125,
+      "output_max_abs_by_candidate_row": [
+        0.03125,
+        0.03125,
+        0.03125,
+        0.03125,
+        0.015625,
+        0.03125,
+        0.03125,
+        0.03125,
+        0.015625
+      ],
+      "row5_output_max_abs": 0.03125,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 4,
+      "output_max_abs_all_rows": 0.0625,
+      "output_max_abs_by_candidate_row": [
+        0.0625,
+        0.03125,
+        0.03125,
+        0.03125,
+        0.015625,
+        0.03125,
+        0.03125,
+        0.03125,
+        0.015625
+      ],
+      "row5_output_max_abs": 0.03125,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 5,
+      "output_max_abs_all_rows": 0.0625,
+      "output_max_abs_by_candidate_row": [
+        0.03125,
+        0.015625,
+        0.0625,
+        0.03125,
+        0.015625,
+        0.0625,
+        0.0625,
+        0.03125,
+        0.015625
+      ],
+      "row5_output_max_abs": 0.0625,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 6,
+      "output_max_abs_all_rows": 0.0625,
+      "output_max_abs_by_candidate_row": [
+        0.0625,
+        0.03125,
+        0.0625,
+        0.0625,
+        0.0625,
+        0.0625,
+        0.0625,
+        0.0625,
+        0.03125
+      ],
+      "row5_output_max_abs": 0.0625,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 7,
+      "output_max_abs_all_rows": 0.0625,
+      "output_max_abs_by_candidate_row": [
+        0.0625,
+        0.0625,
+        0.0625,
+        0.0625,
+        0.03125,
+        0.0625,
+        0.0625,
+        0.0625,
+        0.03125
+      ],
+      "row5_output_max_abs": 0.0625,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 8,
+      "output_max_abs_all_rows": 0.125,
+      "output_max_abs_by_candidate_row": [
+        0.0625,
+        0.125,
+        0.0625,
+        0.125,
+        0.0234375,
+        0.0625,
+        0.0625,
+        0.125,
+        0.0625
+      ],
+      "row5_output_max_abs": 0.0625,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 9,
+      "output_max_abs_all_rows": 0.25,
+      "output_max_abs_by_candidate_row": [
+        0.125,
+        0.125,
+        0.125,
+        0.125,
+        0.03125,
+        0.0625,
+        0.0625,
+        0.25,
+        0.0625
+      ],
+      "row5_output_max_abs": 0.0625,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 10,
+      "output_max_abs_all_rows": 0.25,
+      "output_max_abs_by_candidate_row": [
+        0.125,
+        0.125,
+        0.125,
+        0.125,
+        0.25,
+        0.125,
+        0.0625,
+        0.25,
+        0.0625
+      ],
+      "row5_output_max_abs": 0.125,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 11,
+      "output_max_abs_all_rows": 0.5,
+      "output_max_abs_by_candidate_row": [
+        0.125,
+        0.125,
+        0.25,
+        0.125,
+        0.25,
+        0.1875,
+        0.03125,
+        0.5,
+        0.125
+      ],
+      "row5_output_max_abs": 0.1875,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 12,
+      "output_max_abs_all_rows": 0.5,
+      "output_max_abs_by_candidate_row": [
+        0.125,
+        0.0625,
+        0.25,
+        0.0625,
+        0.25,
+        0.5,
+        0.0625,
+        0.375,
+        0.25
+      ],
+      "row5_output_max_abs": 0.5,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 13,
+      "output_max_abs_all_rows": 2.625,
+      "output_max_abs_by_candidate_row": [
+        0.25,
+        0.0625,
+        0.25,
+        0.25,
+        0.25,
+        2.625,
+        0.125,
+        0.5,
+        0.25
+      ],
+      "row5_output_max_abs": 2.625,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 14,
+      "output_max_abs_all_rows": 2.75,
+      "output_max_abs_by_candidate_row": [
+        0.25,
+        0.0625,
+        0.25,
+        0.25,
+        0.5,
+        2.75,
+        0.25,
+        0.5,
+        0.125
+      ],
+      "row5_output_max_abs": 2.75,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 15,
+      "output_max_abs_all_rows": 3.375,
+      "output_max_abs_by_candidate_row": [
+        0.25,
+        0.0625,
+        0.25,
+        0.25,
+        0.5,
+        3.375,
+        0.09375,
+        0.5,
+        0.125
+      ],
+      "row5_output_max_abs": 3.375,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 16,
+      "output_max_abs_all_rows": 5.5,
+      "output_max_abs_by_candidate_row": [
+        0.25,
+        0.25,
+        0.25,
+        0.25,
+        0.5,
+        5.5,
+        0.125,
+        0.3125,
+        0.25
+      ],
+      "row5_output_max_abs": 5.5,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 17,
+      "output_max_abs_all_rows": 8.25,
+      "output_max_abs_by_candidate_row": [
+        0.25,
+        0.25,
+        0.25,
+        0.25,
+        0.5,
+        8.25,
+        0.25,
+        0.3125,
+        0.25
+      ],
+      "row5_output_max_abs": 8.25,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 18,
+      "output_max_abs_all_rows": 8.25,
+      "output_max_abs_by_candidate_row": [
+        0.25,
+        0.25,
+        0.5,
+        0.5,
+        0.5,
+        8.25,
+        0.5,
+        0.5,
+        0.25
+      ],
+      "row5_output_max_abs": 8.25,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 19,
+      "output_max_abs_all_rows": 11.75,
+      "output_max_abs_by_candidate_row": [
+        0.25,
+        0.25,
+        0.5,
+        0.5,
+        0.5,
+        11.75,
+        0.5,
+        0.5,
+        0.25
+      ],
+      "row5_output_max_abs": 11.75,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 20,
+      "output_max_abs_all_rows": 13.25,
+      "output_max_abs_by_candidate_row": [
+        0.25,
+        0.25,
+        0.5,
+        0.5,
+        0.75,
+        13.25,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "row5_output_max_abs": 13.25,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 21,
+      "output_max_abs_all_rows": 13.0,
+      "output_max_abs_by_candidate_row": [
+        0.25,
+        0.25,
+        0.5,
+        0.5,
+        0.75,
+        13.0,
+        0.75,
+        0.5,
+        0.5
+      ],
+      "row5_output_max_abs": 13.0,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 22,
+      "output_max_abs_all_rows": 12.5,
+      "output_max_abs_by_candidate_row": [
+        0.25,
+        0.5,
+        0.5,
+        0.5,
+        1.0,
+        12.5,
+        0.75,
+        0.5,
+        1.0
+      ],
+      "row5_output_max_abs": 12.5,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 23,
+      "output_max_abs_all_rows": 17.0,
+      "output_max_abs_by_candidate_row": [
+        0.5,
+        0.75,
+        0.5,
+        0.5,
+        1.25,
+        17.0,
+        0.75,
+        1.5,
+        1.0
+      ],
+      "row5_output_max_abs": 17.0,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 24,
+      "output_max_abs_all_rows": 19.0,
+      "output_max_abs_by_candidate_row": [
+        0.5,
+        0.75,
+        0.5,
+        1.0,
+        1.25,
+        19.0,
+        1.0,
+        1.0,
+        1.5
+      ],
+      "row5_output_max_abs": 19.0,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 25,
+      "output_max_abs_all_rows": 75.0,
+      "output_max_abs_by_candidate_row": [
+        0.5,
+        0.75,
+        0.4375,
+        1.0,
+        1.25,
+        75.0,
+        1.0,
+        1.0,
+        2.0
+      ],
+      "row5_output_max_abs": 75.0,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 26,
+      "output_max_abs_all_rows": 75.5,
+      "output_max_abs_by_candidate_row": [
+        0.34375,
+        0.75,
+        0.5,
+        1.0,
+        2.0,
+        75.5,
+        1.0,
+        1.0,
+        2.0
+      ],
+      "row5_output_max_abs": 75.5,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 27,
+      "output_max_abs_all_rows": 79.75,
+      "output_max_abs_by_candidate_row": [
+        0.375,
+        0.75,
+        1.0,
+        0.5,
+        2.0,
+        79.75,
+        1.0,
+        2.0,
+        2.0
+      ],
+      "row5_output_max_abs": 79.75,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 28,
+      "output_max_abs_all_rows": 80.75,
+      "output_max_abs_by_candidate_row": [
+        0.5,
+        0.75,
+        1.0,
+        2.0,
+        2.0,
+        80.75,
+        2.0,
+        2.0,
+        1.0
+      ],
+      "row5_output_max_abs": 80.75,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 29,
+      "output_max_abs_all_rows": 732.75,
+      "output_max_abs_by_candidate_row": [
+        0.5,
+        0.75,
+        1.0,
+        4.0,
+        2.0,
+        732.75,
+        4.0,
+        2.0,
+        1.0
+      ],
+      "row5_output_max_abs": 732.75,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 30,
+      "output_max_abs_all_rows": 415.0,
+      "output_max_abs_by_candidate_row": [
+        0.5,
+        0.625,
+        2.0,
+        4.0,
+        2.5,
+        415.0,
+        4.0,
+        4.0,
+        4.0
+      ],
+      "row5_output_max_abs": 415.0,
+      "input_bitwise_equal": false
+    },
+    {
+      "layer": 31,
+      "output_max_abs_all_rows": 259.25,
+      "output_max_abs_by_candidate_row": [
+        1.0,
+        1.25,
+        3.0,
+        4.0,
+        2.0,
+        259.25,
+        8.5,
+        4.0,
+        3.0
+      ],
+      "row5_output_max_abs": 259.25,
+      "input_bitwise_equal": false
+    }
+  ],
+  "candidate_row_5_threshold_crossing_first_layer": {
+    "0.1": 10,
+    "1": 13,
+    "10": 19,
+    "100": 29
+  },
+  "largest_module_output_differences": [
+    {
+      "module": "model.layers.29",
+      "output_max_abs": 732.75,
+      "row5_output_max_abs": 732.75,
+      "input_max_abs": 80.75
+    },
+    {
+      "module": "model.layers.29.mlp.down_proj",
+      "output_max_abs": 652.0,
+      "row5_output_max_abs": 652.0,
+      "input_max_abs": 180.1875
+    },
+    {
+      "module": "model.layers.30",
+      "output_max_abs": 415.0,
+      "row5_output_max_abs": 415.0,
+      "input_max_abs": 732.75
+    },
+    {
+      "module": "model.layers.30.mlp.down_proj",
+      "output_max_abs": 317.90625,
+      "row5_output_max_abs": 317.90625,
+      "input_max_abs": 131.375
+    },
+    {
+      "module": "model.layers.31",
+      "output_max_abs": 259.25,
+      "row5_output_max_abs": 259.25,
+      "input_max_abs": 415.0
+    },
+    {
+      "module": "model.layers.31.mlp.down_proj",
+      "output_max_abs": 181.25,
+      "row5_output_max_abs": 181.25,
+      "input_max_abs": 76.25
+    },
+    {
+      "module": "model.layers.28",
+      "output_max_abs": 80.75,
+      "row5_output_max_abs": 80.75,
+      "input_max_abs": 79.75
+    },
+    {
+      "module": "model.layers.27",
+      "output_max_abs": 79.75,
+      "row5_output_max_abs": 79.75,
+      "input_max_abs": 75.5
+    },
+    {
+      "module": "model.layers.26",
+      "output_max_abs": 75.5,
+      "row5_output_max_abs": 75.5,
+      "input_max_abs": 75.0
+    },
+    {
+      "module": "model.layers.25",
+      "output_max_abs": 75.0,
+      "row5_output_max_abs": 75.0,
+      "input_max_abs": 19.0
+    },
+    {
+      "module": "model.layers.25.mlp.down_proj",
+      "output_max_abs": 53.625,
+      "row5_output_max_abs": 53.625,
+      "input_max_abs": 39.5625
+    },
+    {
+      "module": "model.layers.31.self_attn.o_proj",
+      "output_max_abs": 52.0,
+      "row5_output_max_abs": 52.0,
+      "input_max_abs": 3.91796875
+    },
+    {
+      "module": "lm_head",
+      "output_max_abs": 25.125,
+      "row5_output_max_abs": 25.125,
+      "input_max_abs": 20.0703125
+    },
+    {
+      "module": "model.layers.29.mlp.gate_up_proj",
+      "output_max_abs": 23.671875,
+      "row5_output_max_abs": 23.671875,
+      "input_max_abs": 6.875
+    },
+    {
+      "module": "model.layers.30.mlp.gate_up_proj",
+      "output_max_abs": 23.0625,
+      "row5_output_max_abs": 23.0625,
+      "input_max_abs": 11.546875
+    }
+  ],
+  "interpretation": "The first localized perturbation is layer-0 Phi fused qkv_proj with identical recorded primary input and 0.03125 maximum output difference. The whole decoder-layer row-5 error grows through depth and becomes large from layers 13 onward; later MLP down_proj outputs dominate the largest observed differences. This is consistent with amplification of an early shape-dependent perturbation, but hooks omit some non-tensor arguments/internal attention state and do not prove a unique causal path.",
+  "candidate_token_text": [
+    "\n",
+    "\n",
+    "\n",
+    "#",
+    "Answer",
+    "\n",
+    "\n",
+    "To",
+    "find"
+  ],
+  "outlier_candidate_row": 5,
+  "outlier_candidate_token_text": "\\n (newline token, id 13)"
+}

@@ -1,0 +1,1196 @@
+{
+  "status": "operator-only finite shape screen; direct module calls, not end-to-end latency",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "cnndm_003",
+  "prompt_tokens": 262,
+  "first_generated_token": 20924,
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "rows": [
+    1,
+    2,
+    3,
+    5
+  ],
+  "rounds": 10,
+  "iterations_per_round": 25,
+  "results": {
+    "model.layers.0.self_attn.q_proj": {
+      "module_class": "Linear4bit",
+      "captured_m1_input_shape": [
+        1,
+        1,
+        2048
+      ],
+      "input_dtype": "torch.bfloat16",
+      "m_shapes": {
+        "1": {
+          "input_shape": [
+            1,
+            1,
+            2048
+          ],
+          "output_shape": [
+            1,
+            1,
+            2048
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.032051200866699214,
+          "samples_ms": [
+            0.04329728126525879,
+            0.03255039930343628,
+            0.03203072071075439,
+            0.030965759754180908,
+            0.032144639492034915,
+            0.032071681022644044,
+            0.03305471897125244,
+            0.031036159992218017,
+            0.03076096057891846,
+            0.03117055892944336
+          ],
+          "latency_ratio_vs_m1": 1.0
+        },
+        "2": {
+          "input_shape": [
+            1,
+            2,
+            2048
+          ],
+          "output_shape": [
+            1,
+            2,
+            2048
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.03132992029190063,
+          "samples_ms": [
+            0.07299327850341797,
+            0.031079680919647218,
+            0.03153023958206177,
+            0.03108479976654053,
+            0.0311296010017395,
+            0.03043328046798706,
+            0.03165184020996094,
+            0.03166208028793335,
+            0.031580159664154055,
+            0.030883839130401613
+          ],
+          "latency_ratio_vs_m1": 0.9774959890645476
+        },
+        "3": {
+          "input_shape": [
+            1,
+            3,
+            2048
+          ],
+          "output_shape": [
+            1,
+            3,
+            2048
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.03140288114547729,
+          "samples_ms": [
+            0.033543679714202884,
+            0.031287040710449215,
+            0.03133055925369263,
+            0.03028480052947998,
+            0.031006720066070557,
+            0.03358975887298584,
+            0.03235840082168579,
+            0.03267071962356567,
+            0.03138816118240356,
+            0.031417601108551026
+          ],
+          "latency_ratio_vs_m1": 0.9797723734621276
+        },
+        "5": {
+          "input_shape": [
+            1,
+            5,
+            2048
+          ],
+          "output_shape": [
+            1,
+            5,
+            2048
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0078125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0078125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0078125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0078125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0078125
+            }
+          ],
+          "median_cuda_ms": 0.04476160049438477,
+          "samples_ms": [
+            0.04583168029785156,
+            0.044766721725463865,
+            0.04468736171722412,
+            0.04468736171722412,
+            0.044642558097839354,
+            0.04476799964904785,
+            0.04476799964904785,
+            0.044756479263305664,
+            0.04464640140533447,
+            0.045342721939086915
+          ],
+          "latency_ratio_vs_m1": 1.3965654728678667
+        }
+      }
+    },
+    "model.layers.0.mlp.gate_proj": {
+      "module_class": "Linear4bit",
+      "captured_m1_input_shape": [
+        1,
+        1,
+        2048
+      ],
+      "input_dtype": "torch.bfloat16",
+      "m_shapes": {
+        "1": {
+          "input_shape": [
+            1,
+            1,
+            2048
+          ],
+          "output_shape": [
+            1,
+            1,
+            11008
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.06789120197296142,
+          "samples_ms": [
+            0.0683353614807129,
+            0.06767104148864746,
+            0.06763391971588134,
+            0.06775936126708984,
+            0.06791168212890625,
+            0.0678707218170166,
+            0.06881408214569092,
+            0.06881279945373535,
+            0.07012095928192139,
+            0.067706880569458
+          ],
+          "latency_ratio_vs_m1": 1.0
+        },
+        "2": {
+          "input_shape": [
+            1,
+            2,
+            2048
+          ],
+          "output_shape": [
+            1,
+            2,
+            11008
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.09052160263061523,
+          "samples_ms": [
+            0.1506112003326416,
+            0.08941568374633789,
+            0.0904422378540039,
+            0.09056256294250488,
+            0.09048064231872559,
+            0.09142271995544433,
+            0.09061375617980957,
+            0.09046784400939942,
+            0.13230079650878906,
+            0.08938495635986328
+          ],
+          "latency_ratio_vs_m1": 1.3333333333333335
+        },
+        "3": {
+          "input_shape": [
+            1,
+            3,
+            2048
+          ],
+          "output_shape": [
+            1,
+            3,
+            11008
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.1197478437423706,
+          "samples_ms": [
+            0.12022272109985352,
+            0.11993472099304199,
+            0.11959936141967774,
+            0.12496895790100097,
+            0.11943936347961426,
+            0.11964544296264648,
+            0.12045568466186524,
+            0.11950719833374024,
+            0.11985024452209472,
+            0.11960320472717285
+          ],
+          "latency_ratio_vs_m1": 1.7638197625380354
+        },
+        "5": {
+          "input_shape": [
+            1,
+            5,
+            2048
+          ],
+          "output_shape": [
+            1,
+            5,
+            11008
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0078125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0078125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0078125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0078125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0078125
+            }
+          ],
+          "median_cuda_ms": 0.1962924861907959,
+          "samples_ms": [
+            0.19446783065795897,
+            0.1950809669494629,
+            0.20025344848632812,
+            0.1975040054321289,
+            0.20004863739013673,
+            0.19405824661254883,
+            0.1981644821166992,
+            0.19471616744995118,
+            0.24015104293823242,
+            0.19377023696899415
+          ],
+          "latency_ratio_vs_m1": 2.891280173077095
+        }
+      }
+    },
+    "model.layers.0.mlp.up_proj": {
+      "module_class": "Linear4bit",
+      "captured_m1_input_shape": [
+        1,
+        1,
+        2048
+      ],
+      "input_dtype": "torch.bfloat16",
+      "m_shapes": {
+        "1": {
+          "input_shape": [
+            1,
+            1,
+            2048
+          ],
+          "output_shape": [
+            1,
+            1,
+            11008
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.06888512134552002,
+          "samples_ms": [
+            0.06939775943756103,
+            0.07064576148986816,
+            0.0690995216369629,
+            0.06887936115264892,
+            0.068853759765625,
+            0.0689356803894043,
+            0.06807551860809326,
+            0.06782976150512696,
+            0.06881279945373535,
+            0.06889088153839111
+          ],
+          "latency_ratio_vs_m1": 1.0
+        },
+        "2": {
+          "input_shape": [
+            1,
+            2,
+            2048
+          ],
+          "output_shape": [
+            1,
+            2,
+            11008
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.09222464084625245,
+          "samples_ms": [
+            0.09142911911010743,
+            0.09065728187561035,
+            0.09601408004760742,
+            0.09052032470703125,
+            0.09048064231872559,
+            0.09116543769836426,
+            0.09388031959533691,
+            0.09302016258239747,
+            0.09306624412536621,
+            0.09305855751037598
+          ],
+          "latency_ratio_vs_m1": 1.338818006629676
+        },
+        "3": {
+          "input_shape": [
+            1,
+            3,
+            2048
+          ],
+          "output_shape": [
+            1,
+            3,
+            11008
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.12306240081787109,
+          "samples_ms": [
+            0.16539648056030273,
+            0.12187007904052734,
+            0.12353535652160645,
+            0.1657651138305664,
+            0.1218175983428955,
+            0.12291711807250977,
+            0.12288000106811524,
+            0.12320768356323242,
+            0.12266752243041992,
+            0.164085750579834
+          ],
+          "latency_ratio_vs_m1": 1.7864873925474258
+        },
+        "5": {
+          "input_shape": [
+            1,
+            5,
+            2048
+          ],
+          "output_shape": [
+            1,
+            5,
+            11008
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.00390625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.00390625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.00390625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.00390625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.00390625
+            }
+          ],
+          "median_cuda_ms": 0.19754815101623535,
+          "samples_ms": [
+            0.19713663101196288,
+            0.19795967102050782,
+            0.2593587112426758,
+            0.1966080093383789,
+            0.19799936294555665,
+            0.2379750442504883,
+            0.19407232284545897,
+            0.19521535873413087,
+            0.23441408157348634,
+            0.1922662353515625
+          ],
+          "latency_ratio_vs_m1": 2.8677912901591047
+        }
+      }
+    },
+    "model.layers.0.mlp.down_proj": {
+      "module_class": "Linear4bit",
+      "captured_m1_input_shape": [
+        1,
+        1,
+        11008
+      ],
+      "input_dtype": "torch.bfloat16",
+      "m_shapes": {
+        "1": {
+          "input_shape": [
+            1,
+            1,
+            11008
+          ],
+          "output_shape": [
+            1,
+            1,
+            2048
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.07329792022705078,
+          "samples_ms": [
+            0.07351424217224121,
+            0.0739737606048584,
+            0.07417856216430664,
+            0.07323647975921631,
+            0.07335936069488526,
+            0.07305856227874756,
+            0.07208960056304932,
+            0.07192575931549072,
+            0.0729369592666626,
+            0.0743833589553833
+          ],
+          "latency_ratio_vs_m1": 1.0
+        },
+        "2": {
+          "input_shape": [
+            1,
+            2,
+            11008
+          ],
+          "output_shape": [
+            1,
+            2,
+            2048
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.09033728122711182,
+          "samples_ms": [
+            0.09196800231933594,
+            0.09035776138305664,
+            0.14839808464050294,
+            0.08921088218688965,
+            0.09014399528503418,
+            0.0902348804473877,
+            0.09022336006164551,
+            0.09137920379638671,
+            0.09031680107116699,
+            0.13210495948791504
+          ],
+          "latency_ratio_vs_m1": 1.2324671825241313
+        },
+        "3": {
+          "input_shape": [
+            1,
+            3,
+            11008
+          ],
+          "output_shape": [
+            1,
+            3,
+            2048
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.11840320110321045,
+          "samples_ms": [
+            0.11871232032775879,
+            0.1182579231262207,
+            0.11960320472717285,
+            0.11825152397155762,
+            0.15847552299499512,
+            0.11722751617431641,
+            0.11820927619934082,
+            0.11816960334777832,
+            0.11927552223205566,
+            0.11854847908020019
+          ],
+          "latency_ratio_vs_m1": 1.6153691774123962
+        },
+        "5": {
+          "input_shape": [
+            1,
+            5,
+            11008
+          ],
+          "output_shape": [
+            1,
+            5,
+            2048
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.00390625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.00390625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.00390625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.00390625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.00390625
+            }
+          ],
+          "median_cuda_ms": 0.21422656059265135,
+          "samples_ms": [
+            0.21406848907470702,
+            0.2170751953125,
+            0.27303936004638674,
+            0.2129996871948242,
+            0.2143846321105957,
+            0.21310848236083985,
+            0.2535974311828613,
+            0.21311872482299804,
+            0.2543475151062012,
+            0.21196800231933594
+          ],
+          "latency_ratio_vs_m1": 2.922682661787046
+        }
+      }
+    },
+    "model.layers.35.mlp.gate_proj": {
+      "module_class": "Linear4bit",
+      "captured_m1_input_shape": [
+        1,
+        1,
+        2048
+      ],
+      "input_dtype": "torch.bfloat16",
+      "m_shapes": {
+        "1": {
+          "input_shape": [
+            1,
+            1,
+            2048
+          ],
+          "output_shape": [
+            1,
+            1,
+            11008
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.06888832092285156,
+          "samples_ms": [
+            0.07155456066131592,
+            0.06924928188323974,
+            0.0689356803894043,
+            0.06884096145629882,
+            0.06864255905151367,
+            0.06904960155487061,
+            0.06799359798431397,
+            0.06799359798431397,
+            0.0687667179107666,
+            0.07090176105499267
+          ],
+          "latency_ratio_vs_m1": 1.0
+        },
+        "2": {
+          "input_shape": [
+            1,
+            2,
+            2048
+          ],
+          "output_shape": [
+            1,
+            2,
+            11008
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.09124032020568848,
+          "samples_ms": [
+            0.09161727905273437,
+            0.1495462417602539,
+            0.08946047782897949,
+            0.09086336135864258,
+            0.09060352325439452,
+            0.09072640419006348,
+            0.09239295959472656,
+            0.09195520401000977,
+            0.09077247619628906,
+            0.13324416160583497
+          ],
+          "latency_ratio_vs_m1": 1.3244671808428754
+        },
+        "3": {
+          "input_shape": [
+            1,
+            3,
+            2048
+          ],
+          "output_shape": [
+            1,
+            3,
+            11008
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.12348992347717286,
+          "samples_ms": [
+            0.12099840164184571,
+            0.12500224113464356,
+            0.12427264213562011,
+            0.16805248260498046,
+            0.12214271545410156,
+            0.12324864387512208,
+            0.122675199508667,
+            0.12373120307922364,
+            0.12517375946044923,
+            0.12321151733398437
+          ],
+          "latency_ratio_vs_m1": 1.792610442856779
+        },
+        "5": {
+          "input_shape": [
+            1,
+            5,
+            2048
+          ],
+          "output_shape": [
+            1,
+            5,
+            11008
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.03125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.03125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.03125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.03125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.03125
+            }
+          ],
+          "median_cuda_ms": 0.1984716796875,
+          "samples_ms": [
+            0.20033023834228517,
+            0.1987379264831543,
+            0.26046464920043944,
+            0.19783552169799803,
+            0.19898880004882813,
+            0.19389312744140624,
+            0.1982054328918457,
+            0.19529983520507813,
+            0.2403059196472168,
+            0.19386367797851561
+          ],
+          "latency_ratio_vs_m1": 2.8810642650119114
+        }
+      }
+    },
+    "model.layers.35.mlp.down_proj": {
+      "module_class": "Linear4bit",
+      "captured_m1_input_shape": [
+        1,
+        1,
+        11008
+      ],
+      "input_dtype": "torch.bfloat16",
+      "m_shapes": {
+        "1": {
+          "input_shape": [
+            1,
+            1,
+            11008
+          ],
+          "output_shape": [
+            1,
+            1,
+            2048
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.0733945608139038,
+          "samples_ms": [
+            0.07387775897979737,
+            0.07569407939910888,
+            0.07376895904541016,
+            0.07327744007110595,
+            0.07327744007110595,
+            0.07335936069488526,
+            0.07213056087493896,
+            0.07262207984924317,
+            0.07342976093292236,
+            0.07576576232910157
+          ],
+          "latency_ratio_vs_m1": 1.0
+        },
+        "2": {
+          "input_shape": [
+            1,
+            2,
+            11008
+          ],
+          "output_shape": [
+            1,
+            2,
+            2048
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.09048064231872559,
+          "samples_ms": [
+            0.09074560165405274,
+            0.1490841579437256,
+            0.08921088218688965,
+            0.09011199951171875,
+            0.0901529598236084,
+            0.09043968200683594,
+            0.09169919967651367,
+            0.09052160263061523,
+            0.09043968200683594,
+            0.13262847900390626
+          ],
+          "latency_ratio_vs_m1": 1.2327976530596667
+        },
+        "3": {
+          "input_shape": [
+            1,
+            3,
+            11008
+          ],
+          "output_shape": [
+            1,
+            3,
+            2048
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            },
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 0.12087296009063721,
+          "samples_ms": [
+            0.11944064140319824,
+            0.11857919692993164,
+            0.12184063911437988,
+            0.12075008392333984,
+            0.12660736083984375,
+            0.12099583625793457,
+            0.12062720298767089,
+            0.1217740821838379,
+            0.12046591758728027,
+            0.16309120178222655
+          ],
+          "latency_ratio_vs_m1": 1.6468926137063162
+        },
+        "5": {
+          "input_shape": [
+            1,
+            5,
+            11008
+          ],
+          "output_shape": [
+            1,
+            5,
+            2048
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.03125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.03125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.03125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.03125
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.03125
+            }
+          ],
+          "median_cuda_ms": 0.21682175636291506,
+          "samples_ms": [
+            0.2166783905029297,
+            0.2172774314880371,
+            0.2787737655639648,
+            0.2157619285583496,
+            0.2169651222229004,
+            0.25432064056396486,
+            0.21204992294311523,
+            0.25571712493896487,
+            0.21172224044799803,
+            0.21389312744140626
+          ],
+          "latency_ratio_vs_m1": 2.9541937979938226
+        }
+      }
+    },
+    "lm_head": {
+      "module_class": "Linear",
+      "captured_m1_input_shape": [
+        1,
+        1,
+        2048
+      ],
+      "input_dtype": "torch.bfloat16",
+      "m_shapes": {
+        "1": {
+          "input_shape": [
+            1,
+            1,
+            2048
+          ],
+          "output_shape": [
+            1,
+            1,
+            151936
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": true,
+              "max_abs_diff": 0.0
+            }
+          ],
+          "median_cuda_ms": 3.6121395874023436,
+          "samples_ms": [
+            3.6210137939453126,
+            3.5986227416992187,
+            3.607674865722656,
+            3.62925048828125,
+            3.554959411621094,
+            3.6166043090820312,
+            3.6660391235351564,
+            3.602472839355469,
+            3.6035494995117188,
+            3.621601257324219
+          ],
+          "latency_ratio_vs_m1": 1.0
+        },
+        "2": {
+          "input_shape": [
+            1,
+            2,
+            2048
+          ],
+          "output_shape": [
+            1,
+            2,
+            151936
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0625
+            }
+          ],
+          "median_cuda_ms": 3.658700714111328,
+          "samples_ms": [
+            3.6307723999023436,
+            3.6979098510742188,
+            3.628773193359375,
+            3.6958209228515626,
+            3.6301925659179686,
+            3.67328125,
+            3.644120178222656,
+            3.6753408813476565,
+            3.625164794921875,
+            3.6924609375
+          ],
+          "latency_ratio_vs_m1": 1.0128901792365308
+        },
+        "3": {
+          "input_shape": [
+            1,
+            3,
+            2048
+          ],
+          "output_shape": [
+            1,
+            3,
+            151936
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0625
+            }
+          ],
+          "median_cuda_ms": 3.6613696289062503,
+          "samples_ms": [
+            3.67504638671875,
+            3.6472845458984375,
+            3.6759552001953124,
+            3.629178771972656,
+            3.6941824340820313,
+            3.6281549072265626,
+            3.6332363891601562,
+            3.7010226440429688,
+            3.677388916015625,
+            3.64769287109375
+          ],
+          "latency_ratio_vs_m1": 1.0136290528958518
+        },
+        "5": {
+          "input_shape": [
+            1,
+            5,
+            2048
+          ],
+          "output_shape": [
+            1,
+            5,
+            151936
+          ],
+          "rows_vs_singleton": [
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0625
+            },
+            {
+              "bitwise_equal_to_m1": false,
+              "max_abs_diff": 0.0625
+            }
+          ],
+          "median_cuda_ms": 3.6816314697265624,
+          "samples_ms": [
+            3.7000408935546876,
+            3.6510104370117187,
+            3.7158502197265624,
+            3.6514202880859377,
+            3.7156915283203125,
+            3.6464190673828125,
+            3.6526898193359374,
+            3.6646490478515625,
+            3.6986138916015623,
+            3.707166748046875
+          ],
+          "latency_ratio_vs_m1": 1.0192384266008374
+        }
+      }
+    }
+  },
+  "caveat": "Repeated copies of real singleton activations screen row-count dispatch; block rows with distinct activations and full-model propagation need separate audits.",
+  "source_sha256": "scripts/benchmark_bnb_linear_shape_invariance.py:9fff4b549c3d3e6fb3a0216db287e66853afa50cd18c53652ce2a2995b0b62a4"
+}

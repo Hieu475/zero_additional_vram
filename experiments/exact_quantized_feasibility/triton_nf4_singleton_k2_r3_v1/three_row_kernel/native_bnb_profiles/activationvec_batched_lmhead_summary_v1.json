@@ -1,0 +1,50 @@
+{
+  "schema": "zassd-activationvec-batched-lmhead-summary-v1",
+  "classification": "same-process paired LM-head A/B; two prompts, one session each, four paired rounds",
+  "all_batched_runs_exact_to_singleton": true,
+  "prompt_count": 2,
+  "geomean_batched_over_rowwise": 0.9937875966227873,
+  "interpretation": "The batched LM head preserved B1 tokens and KV state on both prompts but produced no consistent or material latency gain: it was slower on high-acceptance /116 and effectively tied on low-acceptance /123. Not for integration based on current evidence.",
+  "rows": [
+    {
+      "prompt_id": "HumanEval/116",
+      "artifact": "activationvec_batched_lmhead_humaneval116_64_s1_v1.json",
+      "max_new_tokens": 64,
+      "timing_rounds": 4,
+      "batched_matches_singleton_tokens": true,
+      "batched_state_mismatches": [],
+      "accepted_draft_tokens": 28,
+      "draft_tokens": 32,
+      "batched_over_rowwise": 0.9871734437395105,
+      "rowwise_speedup_vs_bnb": 1.2898408268308277,
+      "batched_speedup_vs_bnb": 1.263961050331795,
+      "rowwise_speedup_vs_singleton": 1.530835901576994,
+      "batched_speedup_vs_singleton": 1.5066964150894546
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "artifact": "activationvec_batched_lmhead_humaneval123_64_s1_v1.json",
+      "max_new_tokens": 64,
+      "timing_rounds": 4,
+      "batched_matches_singleton_tokens": true,
+      "batched_state_mismatches": [],
+      "accepted_draft_tokens": 2,
+      "draft_tokens": 26,
+      "batched_over_rowwise": 1.0004460649388187,
+      "rowwise_speedup_vs_bnb": 0.8103577236550885,
+      "batched_speedup_vs_bnb": 0.8092169542731624,
+      "rowwise_speedup_vs_singleton": 0.966578657767343,
+      "batched_speedup_vs_singleton": 0.9700248671705091
+    }
+  ],
+  "scope_limits": [
+    "Two development prompts on one GPU, one process per prompt.",
+    "Small same-process paired deltas are descriptive; no general performance claim.",
+    "Full-logit equivalence is not established; exactness evidence here is token/KV.",
+    "GSM8K held-out indices 300-349 unused."
+  ],
+  "manifest": "activationvec_batched_lmhead_manifest.json",
+  "manifest_sha256": "d484b466af2271a0abccc0f1b4914b367c1b50eeb6f60b9fafad3d0845da1065",
+  "source": "scripts/audit_activationvec_batched_lmhead_paired_ab.py",
+  "source_sha256": "f07d2d58b532e2e52fa1afd1996a800ec927d6a40403266414e5ea7cde062ac5"
+}

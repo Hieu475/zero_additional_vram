@@ -1,0 +1,89 @@
+{
+  "status": "diagnostic cache primitive timing under pinned B1 runtime; not end-to-end policy cost",
+  "reference_contract_id": "ca155f567ba080347f765335e8999b0256abafe87c88c0263ac38344b2b2ca27",
+  "prompt_id": "cnndm_000",
+  "prompt_tokens": 397,
+  "generated_tokens": 256,
+  "cache_active_length": 652,
+  "cache_capacity": 2048,
+  "repeats": 8,
+  "results": [
+    {
+      "active_length": 397,
+      "checkpoint_bytes": 14635008,
+      "zero_copy_fork": {
+        "median_ms": 0.011144000382046215,
+        "p95_ms": 0.01164800050901249,
+        "min_ms": 0.010693001968320459
+      },
+      "logical_crop_and_length_restore": {
+        "median_ms": 0.005339999916031957,
+        "p95_ms": 0.005647998477797955,
+        "min_ms": 0.005211997631704435
+      },
+      "restore_from_existing_checkpoint": {
+        "median_ms": 0.3919710015907185,
+        "p95_ms": 0.4058279992023017,
+        "min_ms": 0.3865059989038855
+      },
+      "checkpoint_plus_restore": {
+        "median_ms": 0.8951255003921688,
+        "p95_ms": 1.1924699974770192,
+        "min_ms": 0.8666270005051047
+      }
+    },
+    {
+      "active_length": 461,
+      "checkpoint_bytes": 16994304,
+      "zero_copy_fork": {
+        "median_ms": 0.011316999007249251,
+        "p95_ms": 0.011964002624154091,
+        "min_ms": 0.010509000276215374
+      },
+      "logical_crop_and_length_restore": {
+        "median_ms": 0.0055535001592943445,
+        "p95_ms": 0.0058010009524878114,
+        "min_ms": 0.005328998668119311
+      },
+      "restore_from_existing_checkpoint": {
+        "median_ms": 0.39349500002572313,
+        "p95_ms": 0.4184079989499878,
+        "min_ms": 0.3855639988614712
+      },
+      "checkpoint_plus_restore": {
+        "median_ms": 0.8713419993000571,
+        "p95_ms": 1.07609900078387,
+        "min_ms": 0.865776000864571
+      }
+    },
+    {
+      "active_length": 652,
+      "checkpoint_bytes": 24035328,
+      "zero_copy_fork": {
+        "median_ms": 0.01131200224335771,
+        "p95_ms": 0.011717998859239742,
+        "min_ms": 0.011005999112967402
+      },
+      "logical_crop_and_length_restore": {
+        "median_ms": 0.0054439988161902875,
+        "p95_ms": 0.005592999514192343,
+        "min_ms": 0.005298999894876033
+      },
+      "restore_from_existing_checkpoint": {
+        "median_ms": 0.4407775013532955,
+        "p95_ms": 0.4436210001586005,
+        "min_ms": 0.43854999967152253
+      },
+      "checkpoint_plus_restore": {
+        "median_ms": 0.8971934985311236,
+        "p95_ms": 1.1934940011997242,
+        "min_ms": 0.8901260007405654
+      }
+    }
+  ],
+  "limitations": [
+    "Checkpointing clones active KV tensors; this may not match a production checkpoint design.",
+    "Zero-copy fork and logical crop timings are host-side metadata operations.",
+    "No selector, synchronization policy, allocator pressure or full decode replay is included."
+  ]
+}

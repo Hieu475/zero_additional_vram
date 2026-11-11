@@ -1,0 +1,380 @@
+{
+  "schema": "zassd-activationvec-k2r3-phase-timing-summary-v1",
+  "classification": "three selected development prompts; same-process paired phase diagnostics",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "schedule": {
+    "k": 2,
+    "ngram_size": 3,
+    "physical_rows": 3,
+    "attention": "bnb_rowwise",
+    "fallback": "native BNB M=1 on no-proposal cycles"
+  },
+  "candidate": "default streaming .cs activation-vectorized K2/R3 block fallback",
+  "prompt_count": 3,
+  "process_count": 3,
+  "all_runs_exact_to_b1_and_timed_tokens": true,
+  "aggregate_equal_prompt_geomean": {
+    "end_to_end_speedup_vs_original_bnb": 1.2758510054650891,
+    "decode_only_speedup_vs_original_bnb": 1.2805686544185073
+  },
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/50",
+      "prompt_length": 86,
+      "max_new_tokens": 256,
+      "acceptance_rate": 0.7912087912087912,
+      "mean_cycles": 111,
+      "mean_no_proposal_fallback_cycles": 20,
+      "exact_to_b1": true,
+      "artifacts": [
+        {
+          "path": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_nf4_phase_ab_humaneval050_256_v1.json",
+          "sha256": "2a04bf263a43829bed17e8b34f434cd4941f808c1d34e7d0e3c2aecf00f34007"
+        }
+      ],
+      "paired_rounds": [
+        {
+          "round": 0,
+          "block_over_bnb_end_to_end": 1.5811848928108696,
+          "block_over_bnb_decode_only": 1.590002865958103,
+          "block_vs_bnb_decode_tokens_per_s": {
+            "block": 65.55402360169835,
+            "bnb": 41.22887134684304
+          },
+          "block_phase_shares_of_post_prefill_wall": {
+            "draft": 0.0009732939315971465,
+            "verify": 0.9930596172786914,
+            "unattributed": 0.005967088789711498
+          },
+          "prefill_s": {
+            "block": 0.05974311199679505,
+            "bnb": 0.06002569000702351
+          },
+          "block_total_s": 3.9649191169883125,
+          "bnb_total_s": 6.2692702089989325,
+          "block_decode_wall_s": 3.9051760049915174,
+          "bnb_decode_s": 6.209241040007328
+        },
+        {
+          "round": 1,
+          "block_over_bnb_end_to_end": 1.558753702520001,
+          "block_over_bnb_decode_only": 1.567375788412064,
+          "block_vs_bnb_decode_tokens_per_s": {
+            "block": 63.76305279757556,
+            "bnb": 40.68140727258205
+          },
+          "block_phase_shares_of_post_prefill_wall": {
+            "draft": 0.0010028154715006538,
+            "verify": 0.9909752026569719,
+            "unattributed": 0.008021981871527388
+          },
+          "prefill_s": {
+            "block": 0.059758502000477165,
+            "bnb": 0.058528331996058114
+          },
+          "block_total_s": 4.0746227339986945,
+          "bnb_total_s": 6.351333272992633,
+          "block_decode_wall_s": 4.014864231998217,
+          "bnb_decode_s": 6.292800990995602
+        },
+        {
+          "round": 2,
+          "block_over_bnb_end_to_end": 1.5656067347271905,
+          "block_over_bnb_decode_only": 1.5738640046112558,
+          "block_vs_bnb_decode_tokens_per_s": {
+            "block": 64.63823701516608,
+            "bnb": 41.06977275405172
+          },
+          "block_phase_shares_of_post_prefill_wall": {
+            "draft": 0.001001321786983837,
+            "verify": 0.9912846527930118,
+            "unattributed": 0.0077140254200043805
+          },
+          "prefill_s": {
+            "block": 0.05844826600514352,
+            "bnb": 0.05880105000687763
+          },
+          "block_total_s": 4.018952323996928,
+          "bnb_total_s": 6.292098824997083,
+          "block_decode_wall_s": 3.960504057991784,
+          "bnb_decode_s": 6.233294776990078
+        },
+        {
+          "round": 3,
+          "block_over_bnb_end_to_end": 1.5314373559937469,
+          "block_over_bnb_decode_only": 1.5387609467534478,
+          "block_vs_bnb_decode_tokens_per_s": {
+            "block": 63.97804935514283,
+            "bnb": 41.57764043214563
+          },
+          "block_phase_shares_of_post_prefill_wall": {
+            "draft": 0.0010134593103764058,
+            "verify": 0.9920260488416786,
+            "unattributed": 0.006960491847945062
+          },
+          "prefill_s": {
+            "block": 0.05842712499725167,
+            "bnb": 0.060170069002197124
+          },
+          "block_total_s": 4.059799511000165,
+          "bnb_total_s": 6.217328628990799,
+          "block_decode_wall_s": 4.001372386002913,
+          "bnb_decode_s": 6.157155560998945
+        }
+      ],
+      "geomean_block_over_bnb_end_to_end": 1.5591414516421316,
+      "geomean_block_over_bnb_decode_only": 1.5673910040860226,
+      "mean_block_phase_shares": {
+        "draft": 0.0009977226251145109,
+        "verify": 0.9918363803925885,
+        "unattributed": 0.007165896982297082
+      },
+      "mean_prefill_s": {
+        "block": 0.05909425124991685,
+        "bnb": 0.059381285253039096
+      }
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "prompt_length": 227,
+      "max_new_tokens": 256,
+      "acceptance_rate": 0.375,
+      "mean_cycles": 193,
+      "mean_no_proposal_fallback_cycles": 109,
+      "exact_to_b1": true,
+      "artifacts": [
+        {
+          "path": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_nf4_phase_ab_humaneval123_256_v1.json",
+          "sha256": "07db1c71278ef98617d1dae59ad236168b051d858253d137511819d88f496d93"
+        }
+      ],
+      "paired_rounds": [
+        {
+          "round": 0,
+          "block_over_bnb_end_to_end": 1.0823058158515027,
+          "block_over_bnb_decode_only": 1.083371167384536,
+          "block_vs_bnb_decode_tokens_per_s": {
+            "block": 42.92794223542479,
+            "bnb": 39.6244090001592
+          },
+          "block_phase_shares_of_post_prefill_wall": {
+            "draft": 0.0017861305647384766,
+            "verify": 0.9915742832649355,
+            "unattributed": 0.006639586170326016
+          },
+          "prefill_s": {
+            "block": 0.0994198080006754,
+            "bnb": 0.10124481600360014
+          },
+          "block_total_s": 6.062901555997087,
+          "bnb_total_s": 6.561913614990772,
+          "block_decode_wall_s": 5.963481747996411,
+          "bnb_decode_s": 6.460664183003246
+        },
+        {
+          "round": 1,
+          "block_over_bnb_end_to_end": 1.0977435093406942,
+          "block_over_bnb_decode_only": 1.0990797578540994,
+          "block_vs_bnb_decode_tokens_per_s": {
+            "block": 44.08574525561393,
+            "bnb": 40.111506867972196
+          },
+          "block_phase_shares_of_post_prefill_wall": {
+            "draft": 0.0017649049510324677,
+            "verify": 0.991348922472635,
+            "unattributed": 0.006886172576332613
+          },
+          "prefill_s": {
+            "block": 0.09788349800510332,
+            "bnb": 0.09968715300783515
+          },
+          "block_total_s": 5.9047491530072875,
+          "bnb_total_s": 6.481900056998711,
+          "block_decode_wall_s": 5.806865655002184,
+          "bnb_decode_s": 6.382208497991087
+        },
+        {
+          "round": 2,
+          "block_over_bnb_end_to_end": 1.0966747112454982,
+          "block_over_bnb_decode_only": 1.0981309526673808,
+          "block_vs_bnb_decode_tokens_per_s": {
+            "block": 43.80179495735907,
+            "bnb": 39.887587952023104
+          },
+          "block_phase_shares_of_post_prefill_wall": {
+            "draft": 0.0017722478146695916,
+            "verify": 0.9905523544040947,
+            "unattributed": 0.007675397781235687
+          },
+          "prefill_s": {
+            "block": 0.09877734800102189,
+            "bnb": 0.09981253399746493
+          },
+          "block_total_s": 5.9432866940042,
+          "bnb_total_s": 6.517852218996268,
+          "block_decode_wall_s": 5.8445093460031785,
+          "bnb_decode_s": 6.418036615999881
+        },
+        {
+          "round": 3,
+          "block_over_bnb_end_to_end": 1.1183950930201068,
+          "block_over_bnb_decode_only": 1.1204599916274534,
+          "block_vs_bnb_decode_tokens_per_s": {
+            "block": 44.64995404381586,
+            "bnb": 39.84966386792838
+          },
+          "block_phase_shares_of_post_prefill_wall": {
+            "draft": 0.0016530267693526965,
+            "verify": 0.9916813593456497,
+            "unattributed": 0.006665613884997633
+          },
+          "prefill_s": {
+            "block": 0.09973369000363164,
+            "bnb": 0.09969992999685928
+          },
+          "block_total_s": 5.833222233995912,
+          "bnb_total_s": 6.523847122996813,
+          "block_decode_wall_s": 5.73348854399228,
+          "bnb_decode_s": 6.42414452599769
+        }
+      ],
+      "geomean_block_over_bnb_end_to_end": 1.0987047143424786,
+      "geomean_block_over_bnb_decode_only": 1.1001812580795665,
+      "mean_block_phase_shares": {
+        "draft": 0.001744077524948308,
+        "verify": 0.9912892298718288,
+        "unattributed": 0.006966692603222987
+      },
+      "mean_prefill_s": {
+        "block": 0.09895358600260806,
+        "bnb": 0.10011110825143987
+      }
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "prompt_length": 262,
+      "max_new_tokens": 256,
+      "acceptance_rate": 0.5833333333333334,
+      "mean_cycles": 178,
+      "mean_no_proposal_fallback_cycles": 112,
+      "exact_to_b1": true,
+      "artifacts": [
+        {
+          "path": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/native_bnb_profiles/activationvec_nf4_phase_ab_cnndm003_256_v1.json",
+          "sha256": "e1ca5a8b412f3b79658938c371e386f477b493effdef912d98b4d54f965921c7"
+        }
+      ],
+      "paired_rounds": [
+        {
+          "round": 0,
+          "block_over_bnb_end_to_end": 1.2022675848702258,
+          "block_over_bnb_decode_only": 1.2075333840742744,
+          "block_vs_bnb_decode_tokens_per_s": {
+            "block": 50.161102432204984,
+            "bnb": 41.540137186898356
+          },
+          "block_phase_shares_of_post_prefill_wall": {
+            "draft": 0.0017928980856434934,
+            "verify": 0.9925255785899958,
+            "unattributed": 0.0056815233243607275
+          },
+          "prefill_s": {
+            "block": 0.13574575299571734,
+            "bnb": 0.1363250439899275
+          },
+          "block_total_s": 5.239301847002935,
+          "bnb_total_s": 6.299042778002331,
+          "block_decode_wall_s": 5.103556094007217,
+          "bnb_decode_s": 6.162714361009421
+        },
+        {
+          "round": 1,
+          "block_over_bnb_end_to_end": 1.210729670271474,
+          "block_over_bnb_decode_only": 1.216257880418917,
+          "block_vs_bnb_decode_tokens_per_s": {
+            "block": 50.27379265560991,
+            "bnb": 41.334813500483996
+          },
+          "block_phase_shares_of_post_prefill_wall": {
+            "draft": 0.001867341078654823,
+            "verify": 0.9917745382512293,
+            "unattributed": 0.0063581206701158535
+          },
+          "prefill_s": {
+            "block": 0.13585894700372592,
+            "bnb": 0.1363335409987485
+          },
+          "block_total_s": 5.227975266010617,
+          "bnb_total_s": 6.329664770004456,
+          "block_decode_wall_s": 5.092116319006891,
+          "bnb_decode_s": 6.1933266010019
+        },
+        {
+          "round": 2,
+          "block_over_bnb_end_to_end": 1.1901731887102058,
+          "block_over_bnb_decode_only": 1.1949598008865185,
+          "block_vs_bnb_decode_tokens_per_s": {
+            "block": 49.76396346597877,
+            "bnb": 41.64488498195488
+          },
+          "block_phase_shares_of_post_prefill_wall": {
+            "draft": 0.0018955173103383852,
+            "verify": 0.9911333169051337,
+            "unattributed": 0.006971165784527868
+          },
+          "prefill_s": {
+            "block": 0.13608003499393817,
+            "bnb": 0.13733128800231498
+          },
+          "block_total_s": 5.280364817997906,
+          "bnb_total_s": 6.284548632989754,
+          "block_decode_wall_s": 5.144284783003968,
+          "bnb_decode_s": 6.147213520001969
+        },
+        {
+          "round": 3,
+          "block_over_bnb_end_to_end": 1.247024577012066,
+          "block_over_bnb_decode_only": 1.2531121082222616,
+          "block_vs_bnb_decode_tokens_per_s": {
+            "block": 50.13621911837691,
+            "bnb": 40.00936451687718
+          },
+          "block_phase_shares_of_post_prefill_wall": {
+            "draft": 0.0019042736940434579,
+            "verify": 0.9909909215357857,
+            "unattributed": 0.007104804770170816
+          },
+          "prefill_s": {
+            "block": 0.13450851300149225,
+            "bnb": 0.13664742099354044
+          },
+          "block_total_s": 5.240597573996638,
+          "bnb_total_s": 6.535153973003617,
+          "block_decode_wall_s": 5.106089060995146,
+          "bnb_decode_s": 6.398502027994255
+        }
+      ],
+      "geomean_block_over_bnb_end_to_end": 1.2123649569075317,
+      "geomean_block_over_bnb_decode_only": 1.217774873264349,
+      "mean_block_phase_shares": {
+        "draft": 0.0018650075421700399,
+        "verify": 0.9916060888205361,
+        "unattributed": 0.006528903637293816
+      },
+      "mean_prefill_s": {
+        "block": 0.13554831199871842,
+        "bnb": 0.13665932349613286
+      }
+    }
+  ],
+  "limitations": [
+    "one process per prompt and four paired rounds",
+    "one GPU",
+    "three selected development prompts",
+    "decode wall is total minus prefill and includes bookkeeping",
+    "unattributed phase includes any timer residual and is not a named kernel cost",
+    "original-BNB comparison is latency/token only, not KV identity",
+    "GSM8K held-out indices 300-349 excluded"
+  ]
+}

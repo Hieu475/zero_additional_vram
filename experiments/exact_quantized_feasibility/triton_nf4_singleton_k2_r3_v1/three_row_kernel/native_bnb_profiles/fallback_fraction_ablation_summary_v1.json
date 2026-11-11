@@ -1,0 +1,203 @@
+{
+  "schema": "zassd-fallback-fraction-ablation-summary-v1",
+  "classification": "three selected development prompt clusters, two independent processes each; exploratory paired ablation",
+  "runtime_scope": "Qwen/Qwen2.5-3B-Instruct NF4, RTX 4050 Laptop GPU, K=2/R=3, 64 tokens, four paired timing rounds/process",
+  "modes": {
+    "activationvec": "0% fallback",
+    "fallback_every_other": "50% of empty-proposal cycles",
+    "fallback_all": "100% of empty-proposal cycles"
+  },
+  "prompt_count": 3,
+  "independent_processes": 6,
+  "all_runs_exact_to_b1_singleton": true,
+  "timed_token_match_singleton": true,
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/112",
+      "independent_processes": 2,
+      "prompt_geomean_speedups": {
+        "half_fallback_vs_activationvec": 1.0391393587557105,
+        "full_fallback_vs_activationvec": 1.0742052906935724,
+        "full_fallback_vs_half_fallback": 1.0360030984605966
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_fraction_ablation_humaneval112_64_v1.json",
+          "no_proposal_cycles": 19,
+          "fallback_forwards": {
+            "activationvec": 0,
+            "fallback_every_other": 9,
+            "fallback_all": 19
+          },
+          "ratio_medians": {
+            "activationvec_over_fallback_every_other_latency": 0.9601295905135143,
+            "activationvec_over_fallback_all_latency": 0.927246324753302,
+            "fallback_every_other_over_activationvec_latency": 1.041597701298309,
+            "fallback_every_other_over_fallback_all_latency": 0.9657100990669939,
+            "fallback_all_over_activationvec_latency": 1.0784695451323405,
+            "fallback_all_over_fallback_every_other_latency": 1.0355227653085999
+          },
+          "timing_rounds": 4
+        },
+        {
+          "artifact": "fallback_fraction_ablation_humaneval112_64_rep2_v1.json",
+          "no_proposal_cycles": 19,
+          "fallback_forwards": {
+            "activationvec": 0,
+            "fallback_every_other": 9,
+            "fallback_all": 19
+          },
+          "ratio_medians": {
+            "activationvec_over_fallback_every_other_latency": 0.9646142260867112,
+            "activationvec_over_fallback_all_latency": 0.9346291374451788,
+            "fallback_every_other_over_activationvec_latency": 1.036686818307384,
+            "fallback_every_other_over_fallback_all_latency": 0.9648121079731087,
+            "fallback_all_over_activationvec_latency": 1.0699578970609351,
+            "fallback_all_over_fallback_every_other_latency": 1.0364836544178706
+          },
+          "timing_rounds": 4
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "independent_processes": 2,
+      "prompt_geomean_speedups": {
+        "half_fallback_vs_activationvec": 1.064792444088745,
+        "full_fallback_vs_activationvec": 1.1379886376859358,
+        "full_fallback_vs_half_fallback": 1.0674276221838068
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_fraction_ablation_humaneval123_64_v1.json",
+          "no_proposal_cycles": 48,
+          "fallback_forwards": {
+            "activationvec": 0,
+            "fallback_every_other": 24,
+            "fallback_all": 48
+          },
+          "ratio_medians": {
+            "activationvec_over_fallback_every_other_latency": 0.945521629941982,
+            "activationvec_over_fallback_all_latency": 0.8784598924774789,
+            "fallback_every_other_over_activationvec_latency": 1.0576173776936166,
+            "fallback_every_other_over_fallback_all_latency": 0.9305475971719994,
+            "fallback_all_over_activationvec_latency": 1.1383617003989939,
+            "fallback_all_over_fallback_every_other_latency": 1.0746546781907798
+          },
+          "timing_rounds": 4
+        },
+        {
+          "artifact": "fallback_fraction_ablation_humaneval123_64_rep2_v1.json",
+          "no_proposal_cycles": 48,
+          "fallback_forwards": {
+            "activationvec": 0,
+            "fallback_every_other": 24,
+            "fallback_all": 48
+          },
+          "ratio_medians": {
+            "activationvec_over_fallback_every_other_latency": 0.9328221289949746,
+            "activationvec_over_fallback_all_latency": 0.8790315549927588,
+            "fallback_every_other_over_activationvec_latency": 1.0720161874240035,
+            "fallback_every_other_over_fallback_all_latency": 0.9431745242446679,
+            "fallback_all_over_activationvec_latency": 1.1376156972326021,
+            "fallback_all_over_fallback_every_other_latency": 1.0602491681506472
+          },
+          "timing_rounds": 4
+        }
+      ]
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "independent_processes": 2,
+      "prompt_geomean_speedups": {
+        "half_fallback_vs_activationvec": 1.0463254997405127,
+        "full_fallback_vs_activationvec": 1.103037119673842,
+        "full_fallback_vs_half_fallback": 1.0518566206380908
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_fraction_ablation_cnndm003_64_v1.json",
+          "no_proposal_cycles": 36,
+          "fallback_forwards": {
+            "activationvec": 0,
+            "fallback_every_other": 18,
+            "fallback_all": 36
+          },
+          "ratio_medians": {
+            "activationvec_over_fallback_every_other_latency": 0.9501778848590562,
+            "activationvec_over_fallback_all_latency": 0.9038127695274867,
+            "fallback_every_other_over_activationvec_latency": 1.0524345230420358,
+            "fallback_every_other_over_fallback_all_latency": 0.9487819254351014,
+            "fallback_all_over_activationvec_latency": 1.106446579801906,
+            "fallback_all_over_fallback_every_other_latency": 1.0540346442645743
+          },
+          "timing_rounds": 4
+        },
+        {
+          "artifact": "fallback_fraction_ablation_cnndm003_64_rep2_v1.json",
+          "no_proposal_cycles": 36,
+          "fallback_forwards": {
+            "activationvec": 0,
+            "fallback_every_other": 18,
+            "fallback_all": 36
+          },
+          "ratio_medians": {
+            "activationvec_over_fallback_every_other_latency": 0.9614358504818459,
+            "activationvec_over_fallback_all_latency": 0.9093931159171127,
+            "fallback_every_other_over_activationvec_latency": 1.0402519372347745,
+            "fallback_every_other_over_fallback_all_latency": 0.9526797772885955,
+            "fallback_all_over_activationvec_latency": 1.0996381656276593,
+            "fallback_all_over_fallback_every_other_latency": 1.0496830976102767
+          },
+          "timing_rounds": 4
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "half_fallback_vs_activationvec": {
+      "geomean_across_prompts": 1.0500303569295717,
+      "prompt_cluster_bootstrap_95pct": [
+        1.0391393587557105,
+        1.064792444088745
+      ],
+      "prompt_min": 1.0391393587557105,
+      "prompt_max": 1.064792444088745
+    },
+    "full_fallback_vs_activationvec": {
+      "geomean_across_prompts": 1.1047697652253319,
+      "prompt_cluster_bootstrap_95pct": [
+        1.0742052906935724,
+        1.1379886376859358
+      ],
+      "prompt_min": 1.0742052906935724,
+      "prompt_max": 1.1379886376859358
+    },
+    "full_fallback_vs_half_fallback": {
+      "geomean_across_prompts": 1.0516841904176195,
+      "prompt_cluster_bootstrap_95pct": [
+        1.0360030984605966,
+        1.0674276221838068
+      ],
+      "prompt_min": 1.0360030984605966,
+      "prompt_max": 1.0674276221838068
+    }
+  },
+  "input_sha256": {
+    "fallback_fraction_ablation_humaneval112_64_v1.json": "96ad5e71d959d7dbbb7325dd0b1ecce123e7e845d45393fc4afe9c6002b1d743",
+    "fallback_fraction_ablation_humaneval112_64_rep2_v1.json": "a5ffd224b88455dbd6f4af91018c6c5c0b79610911ecd53f8d0462e6f2d2c375",
+    "fallback_fraction_ablation_humaneval123_64_v1.json": "640463716e259770b82781cfd889989cb68fd837bff62ad8955d058a21cce73e",
+    "fallback_fraction_ablation_humaneval123_64_rep2_v1.json": "615e355e2fd5e78f34b4e7d1816c7ec7c27e28b3b36de1853d4fd8016fb42542",
+    "fallback_fraction_ablation_cnndm003_64_v1.json": "3d26370dbd2528950876f0a01a6d1a272ba5a89ab4c4cb8e6b153f238d6664bd",
+    "fallback_fraction_ablation_cnndm003_64_rep2_v1.json": "554e9347f78be188de32a359c7339b0fb4cc2ea91564443e7ca8716b37f52872"
+  },
+  "heldout_used": false,
+  "limits": [
+    "Only three selected prompt clusters on one model and one GPU.",
+    "Prompt-cluster bootstrap is descriptive and does not establish population performance.",
+    "Original-BNB comparison omitted; this ablation isolates fallback schedule contribution.",
+    "GSM8K held-out indices 300-349 excluded."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_activationvec_fallback_fraction_ablation.py",
+  "source_sha256": "d824a712b186458ffdc909ca8f0ddfcc51679985a28d2bd288ab1bf2efad29ac"
+}

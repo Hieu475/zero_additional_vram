@@ -1,0 +1,324 @@
+\chapter{Phân tích và thiết kế hệ thống}
+
+\section{Yêu cầu và ràng buộc thiết kế}
+\subsection*{Bối cảnh thiết kế}
+Hệ thống hướng tới suy luận batch nhỏ trên GPU laptop có VRAM hạn chế. Cấu hình benchmark chính sử dụng NVIDIA GeForce RTX 4050 Laptop GPU và Qwen2.5-3B-Instruct NF4. Các phương pháp cần so sánh gồm vanilla, layer-skip, Prompt Lookup Decoding (PLD) và router. Mục tiêu là tránh nạp thêm trọng số draft, đồng thời đo riêng tốc độ, bộ nhớ và độ khớp đầu ra. Thiết kế không giả định speculative decoding luôn nhanh hơn vanilla; trong NF4, tính đúng đắn phải được xác nhận theo cấu hình đo vì kiểm chứng theo lô có thể gây sai khác số học.
+
+\subsection{Yêu cầu chức năng}
+Bảng~\ref{tab:design-functional} tóm tắt các thao tác hệ thống cần hỗ trợ.
+\begin{table}[H]
+\centering
+\caption{Yêu cầu chức năng của hệ thống}\label{tab:design-functional}
+\begin{tabularx}{\textwidth}{@{}p{0.9cm}p{3.0cm}X@{}}
+\toprule
+\textbf{Mã} & \textbf{Thành phần} & \textbf{Yêu cầu} \\
+\midrule
+FR1 & Model/backend & Nạp model và chọn quantization/backend. \\
+FR2 & Vanilla & Sinh tuần tự làm baseline. \\
+FR3 & Layer-skip & Tạo draft bằng tập lớp rút gọn của target. \\
+FR4 & PLD & Draft từ n-gram; fallback khi lookup miss. \\
+FR5 & Verification & Xử lý acceptance, correction/bonus, EOS và token budget. \\
+FR6 & KV cache & Quản lý cache chuẩn, commit/rollback và vị trí hợp lệ. \\
+FR7 & Router & Chọn phương thức giải mã và horizon. \\
+FR8 & Metrics & Ghi latency, TPS, VRAM và độ khớp đầu ra. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Yêu cầu phi chức năng và ràng buộc}
+Về phi chức năng, hệ thống cần đúng đắn (đối chiếu token ID, kiểm tra độ dài và vị trí cache sau verify và rollback), tiết kiệm bộ nhớ (không nạp draft weights; báo cáo peak VRAM), đo hiệu năng bằng wall-clock toàn cycle, tái lập được (lưu commit, backend, cấu hình sinh, hash prompt, warmup), chẩn đoán được (vị trí divergence cùng vết logits/KV) và mô-đun hóa (tách model, draft, verifier, cache, router, profiler). Năm ràng buộc định hình thiết kế: (C1) VRAM hữu hạn nên không nạp draft riêng và giới hạn cache theo độ dài chuỗi; (C2) draft vẫn cần target kiểm chứng, layer-skip cần forward còn PLD cần lookup; (C3) logical length, causal mask và vị trí RoPE phải đồng bộ; (C4) cache speculative chưa xác minh không được thành cache chuẩn; (C5) sai khác số học phải được đo riêng theo precision, kernel và chế độ thực thi.
+
+Phạm vi kết luận được quy định trong Chương 1 và Chương 5, không xem là ràng buộc kiến trúc. Thiết kế ưu tiên ba nguyên tắc: không nạp thêm trọng số draft, cách ly cache target chuẩn khỏi token chưa xác minh, và đo hiệu năng bằng thời gian toàn chu kỳ. Kiến trúc tổng thể đáp ứng các nguyên tắc này được trình bày ở mục tiếp theo.
+
+\section{Kiến trúc tổng thể}
+\noindent Hình~\ref{fig:system-architecture} minh họa các nhánh xử lý: mũi tên xanh là luồng điều khiển, mũi tên liền đen là dữ liệu, nét đứt là tài nguyên dùng chung và nét chấm là đo lường.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    mainbox/.style={draw, rounded corners=2pt, align=center, text width=2.35cm,
+                    minimum height=0.9cm, inner sep=4pt, font=\small},
+    branchbox/.style={draw, rounded corners=2pt, align=center, text width=2.55cm,
+                      minimum height=0.9cm, inner sep=4pt, font=\small},
+    supportbox/.style={draw, rounded corners=2pt, align=center, text width=2.8cm,
+                       minimum height=0.85cm, inner sep=4pt, font=\footnotesize},
+    data/.style={->, thick},
+    control/.style={->, very thick, blue!65!black},
+    shared/.style={<->, dashed, thick, gray!70!black},
+    observe/.style={->, dotted, thick}
+]
+    % Shared input and router, then two visibly separate execution branches.
+    \node[mainbox] (input) at (0.7,0) {Prompt / token\\history};
+    \node[mainbox] (router) at (3.5,0) {Router /\\Controller};
+    \node[branchbox] (vanilla) at (6.7,1.35) {Vanilla\\autoregressive};
+    \node[branchbox] (draft) at (6.7,-1.35) {Draft provider\\PLD hoặc layer-skip};
+    \node[mainbox] (target) at (10.0,0) {Target\\forward / verifier};
+    \node[mainbox] (output) at (13.0,0) {Output token\\đã xác nhận};
+
+    % Supporting services are shown beside/below the decode paths.
+    \node[supportbox] (adapter) at (6.7,-4.15)
+      {Model adapter / backend\\Target và draft dùng chung trọng số};
+    \node[supportbox] (cache) at (10.0,-3.7)
+      {KV manager\\State cho draft/verify\\Commit / rollback};
+    \node[supportbox] (metrics) at (13.0,-2.75)
+      {Profiler\\Latency / VRAM / fidelity};
+
+    \draw[data] (input.east) -- (router.west);
+    \draw[control] (router.east) -- ++(0.35,0) |- (vanilla.west);
+    \draw[control] (router.east) -- ++(0.35,0) |- (draft.west);
+    \draw[data] (vanilla.east) -- (8.7,1.35) -- (8.7,0.45) -- (target.north west);
+    \draw[data] (draft.east) -- (8.7,-1.35) -- (8.7,-0.45) -- (target.south west);
+    \draw[data] (target.east) -- (output.west);
+
+    \draw[shared] (adapter.north) -- (draft.south);
+    \draw[shared] (adapter.north east) |- (target.south east);
+    \draw[shared] (cache.north west) |- (draft.south east);
+    \draw[shared] (cache.north) -- (target.south);
+    \draw[observe] (output.south) -- (metrics.north);
+
+\end{tikzpicture}
+\caption{Vanilla đi thẳng tới target; draft speculative phải qua bước xác minh.}
+\label{fig:system-architecture}
+\end{figure}
+
+\subsection{Các thành phần chính}
+Prompt/tokenizer chuẩn hóa đầu vào và đặt điều kiện dừng. Các thành phần giải mã còn lại được rút gọn trong Bảng~\ref{tab:architecture-components}; các luồng trao đổi thể hiện ở Hình~\ref{fig:system-architecture}.
+\begin{table}[H]
+\centering
+\caption{Các thành phần chính của kiến trúc}\label{tab:architecture-components}
+\begin{tabularx}{0.92\textwidth}{@{}p{3.4cm}X@{}}
+\toprule
+\textbf{Thành phần} & \textbf{Trách nhiệm chính} \\
+\midrule
+Model adapter & Thống nhất lời gọi model/backend và target forward. \\
+Router/controller & Chọn hành động giải mã và horizon. \\
+Draft provider & Tạo candidates bằng PLD hoặc layer-skip. \\
+Target verifier & Xác minh candidates và quyết định token được giữ. \\
+KV manager & Quản lý cache chuẩn/tạm, commit và rollback. \\
+Profiler & Ghi latency, acceptance, bộ nhớ và diagnostics. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Luồng điều khiển và dữ liệu}
+Model adapter là lớp dùng chung giữa draft layer-skip và target verifier: layer-skip điều khiển tập lớp được thực thi trong lượt tạo ứng viên, còn verifier gọi target đầy đủ. PLD lấy candidates từ token history, không cần lượt forward draft. Router đứng trước mỗi hành động decode và chọn phương thức cần chạy; trong trường hợp vanilla, không có candidate draft và hệ thống phát token theo đường target autoregressive. Cả layer-skip và PLD đều chuyển ứng viên cho verifier trước khi cập nhật chuỗi chuẩn.
+
+KV cache manager được dùng xuyên suốt các khối. Cache chuẩn phản ánh tiền tố đã xác minh; cache draft là trạng thái tạm phục vụ tính tiếp ứng viên. Sau verify, manager giữ/commit phần hợp lệ và rollback phần còn lại. Profiler quan sát các pha mà không thay đổi quyết định token: nó ghi thời gian và metrics để so sánh phương pháp trên cùng workload.
+
+Ở mức kiến trúc, một lượt chạy đi qua các bước sau:
+\begin{enumerate}
+    \item Tokenizer mã hóa prompt; model adapter chạy prefill và khởi tạo KV cache target chuẩn.
+    \item Router chọn vanilla, PLD hoặc layer-skip cùng horizon tối đa cho chu kỳ hiện tại.
+    \item Nếu chọn vanilla, target phát token kế tiếp trực tiếp. Nếu chọn PLD, bộ tra cứu lấy continuation từ n-gram phù hợp. Nếu chọn layer-skip, model adapter chạy đường draft với tập lớp đã cấu hình và cache draft tạm.
+    \item Khi có candidates, target verifier xử lý chúng theo giao thức giải mã đang dùng; phần hợp lệ được giữ, phần bị từ chối bị loại bỏ và token hiệu chỉnh của target được đưa vào chuỗi.
+    \item KV cache manager cập nhật trạng thái chuẩn. Profiler ghi thời gian, token phát/được chấp nhận và bộ nhớ; chu kỳ lặp lại đến EOS hoặc giới hạn sinh.
+\end{enumerate}
+
+Ranh giới chính giữa các thành phần là chuỗi token cùng trạng thái cache đi kèm. Router chỉ quyết định hành động; draft provider chỉ đề xuất token; verifier là thành phần quyết định token nào được chấp nhận; cache manager bảo đảm các forward tiếp theo bắt đầu từ trạng thái tương ứng với chuỗi đã xác nhận. Chi tiết từng bước draft--verify và các bất biến của cache được trình bày ở mục 3.3 và 3.4.
+
+\section{Quy trình giải mã suy đoán}
+Mỗi lần chạy bắt đầu bằng prefill prompt để tạo canonical target KV. Sau đó, hệ thống lặp chu kỳ cho đến khi sinh EOS hoặc đạt ngân sách đầu ra. Nếu router chọn vanilla, target phát token kế tiếp trực tiếp. Với hành động speculative, draft provider tạo candidates; target verifier kiểm tra chúng; cuối cùng hệ thống cập nhật token history và cache theo phần được chấp nhận. Thuật toán~\ref{alg:zassd-decode} mô tả luồng điều khiển tổng quát, không giả định batched NF4 luôn cho sequence identity với vanilla.
+
+\begin{algorithm}[H]
+\caption{Chu kỳ giải mã của ZASSD}\label{alg:zassd-decode}
+\footnotesize
+\begin{algorithmic}[1]
+\Require Target $M$, prompt $x$, giới hạn sinh $B$, chính sách router $\pi$
+\Ensure Chuỗi đầu ra $y$; cache target chuẩn $C_{\mathrm{tgt}}$
+\State $C_{\mathrm{tgt}}\gets\Call{Prefill}{M,x}$; $y\gets\emptyset$
+\State $p\gets$ token kế tiếp từ logits prefill; $stop\gets\mathrm{false}$ \Comment{$p$ đang pending, chưa có trong KV}
+\While{$|y|<B$ and not $stop$}
+    \If{$p=\mathrm{EOS}$}
+        \State append EOS to $y$; $stop\gets\mathrm{true}$ \Comment{Không chạy cycle sau EOS}
+    \Else
+    \State Đồng bộ trạng thái logic: $C_{\mathrm{tgt}}$ ứng với $x\Vert y$; giữ $p$ làm token đầu vào kế tiếp
+    \State $r\gets B-|y|$; $a,K\gets\pi(x\Vert y\Vert p,C_{\mathrm{tgt}})$
+    \If{$a=\mathrm{vanilla}$ or $K=0$ or $r=1$}
+        \State $q\gets\Call{TargetForward}{M,p,C_{\mathrm{tgt}}}$ \Comment{Forward này đưa $p$ vào KV}
+        \State append $p$ to $y$; $C_{\mathrm{tgt}}\gets\Call{Commit}{C_{\mathrm{tgt}},p}$; $p\gets q$
+    \Else
+        \State $K\gets\min(K,r-1)$ \Comment{Chừa tối đa một token cho correction/bonus pending}
+        \State $d\gets\Call{Draft}{a,x\Vert y,p,K,C_{\mathrm{tgt}}}$
+        \If{$d=\emptyset$}
+            \State $q\gets\Call{TargetForward}{M,p,C_{\mathrm{tgt}}}$
+            \State append $p$ to $y$; $C_{\mathrm{tgt}}\gets\Call{Commit}{C_{\mathrm{tgt}},p}$; $p\gets q$
+        \Else
+            \State $V\gets\Call{TargetVerify}{M,[p]\Vert d,C_{\mathrm{tgt}}}$
+            \State $(A,p')\gets\Call{Resolve}{V,d}$ \Comment{$A$ là prefix draft được chấp nhận; $p'$ là correction/bonus}
+            \State $E\gets[p]\Vert A$; cắt $E$ tại EOS hoặc khi đủ ngân sách còn lại
+            \State append $E$ to $y$; commit KV chỉ cho các token đã được target xử lý trong $E$
+            \State rollback mọi suffix dự thảo sau điểm commit
+            \If{$\mathrm{EOS}\in E$ or $|y|=B$}
+                \State $stop\gets\mathrm{true}$
+            \Else
+                \State $p\gets p'$ \Comment{Correction/bonus pending, được xử lý ở cycle tiếp theo}
+            \EndIf
+        \EndIf
+    \EndIf
+    \State Ghi token phát ra, token pending, thời gian các pha và logical KV length
+    \EndIf
+\EndWhile
+\State \Return $(y,C_{\mathrm{tgt}})$
+\end{algorithmic}
+\normalsize
+\end{algorithm}
+
+Trong thuật toán, $y$ là các token đã append vào output buffer; $p$ là token kế tiếp do target chọn nhưng đang pending, chưa thuộc $y$ và chưa có KV tương ứng. Vì vậy, cache chuẩn $C_{\mathrm{tgt}}$ đại diện cho $x\Vert y$, còn ngữ cảnh logic dùng để chọn hành động có thể gồm $x\Vert y\Vert p$. Khi chọn vanilla, forward kế tiếp nhận $p$ làm đầu vào; khi chọn speculative, $p$ được ghép trước draft candidates trong target verification. Việc đồng bộ token pending với cache được gộp vào forward hoặc verify đó, không đòi một forward riêng. Correction/bonus $p'$ được chọn ở cuối cycle nhưng chỉ được append và tính vào $y$ trong cycle tiếp theo, nếu còn ngân sách. EOS được tính là một token đầu ra: nếu $p=\mathrm{EOS}$ và còn chỗ, EOS được append rồi quá trình dừng; nếu EOS xuất hiện trong prefix được chấp nhận, phần sau EOS không được phát.
+
+Đặt $r=B-|y|$ là số vị trí đầu ra còn lại tại đầu cycle. Giới hạn $K\le r-1$ bảo đảm tối đa $1+K$ token trong $[p]\Vert A$ không vượt ngân sách. Chẳng hạn, nếu $r=4$, $K=2$ và cả $d_1,d_2$ được chấp nhận, cycle hiện tại append $p,d_1,d_2$; token bonus $p'$ vẫn pending và chưa thuộc cache chuẩn. Cycle kế tiếp xử lý rồi append $p'$ vào vị trí còn lại. Vì vậy, $p'$ không được tính vào số token emitted của cycle đã chọn nó.
+
+\section{Chia sẻ KV cache và các bất biến}
+Gọi $P=x\Vert y$ là prompt cùng các token đã append và commit; $p$ là token kế tiếp do target chọn nhưng đang pending. Cache target chuẩn đại diện cho $P$, chưa chứa $p$. Ở đầu cycle, $p$ được xử lý cùng forward vanilla hoặc cùng lượt target verification với draft candidates. Sau khi chấp nhận $d_1,\ldots,d_j$, cache chuẩn giữ phần target đã xử lý đến hết prefix $[p,d_1,\ldots,d_j]$; KV của suffix bị từ chối bị crop/rollback. Correction hoặc bonus $p'$ chỉ trở thành token pending cho cycle tiếp theo; nó chưa có KV chuẩn cho đến khi được đưa vào forward target.
+
+\begin{table}[H]
+\centering
+\caption{Các bất biến của KV cache}\label{tab:kv-invariants}
+\begin{tabularx}{0.92\textwidth}{@{}p{3.4cm}X@{}}
+\toprule
+\textbf{Bất biến} & \textbf{Ý nghĩa} \\
+\midrule
+Prefix correctness & Cache chuẩn đại diện đúng prefix token đã được target xác minh. \\
+Position consistency & Cache length, vị trí token, causal mask và RoPE position đồng bộ. \\
+Rollback isolation & Suffix speculative bị từ chối không còn active trong cache chuẩn. \\
+Draft isolation & Cache draft tạm không làm thay đổi logical state chuẩn. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Runtime kiểm tra các bất biến bằng logical-length/position checks sau commit và rollback, so sánh tensor KV/logits với reference theo tolerance đã đặt, và replay token trajectory trên cùng prefix. Đây là ba mức đo riêng; logical consistency không tự chứng minh numerical equivalence hay sequence identity. Backend static có thể chia sẻ buffer vật lý nhưng phải duy trì logical length chuẩn và draft độc lập.
+
+Ba tiêu chí này có quan hệ nhưng không thay thế cho nhau:
+\begin{table}[H]
+\centering
+\caption{Phân biệt ba mức đúng đắn cần đánh giá}\label{tab:kv-correctness-levels}
+\small
+\begin{tabular}{p{3.2cm} p{10.8cm}}
+\toprule
+\textbf{Thuộc tính} & \textbf{Ý nghĩa} \\
+\midrule
+Logical consistency & Cache chỉ đánh dấu active những vị trí và lịch sử token hợp lệ theo quy trình commit/rollback. \\
+Numerical equivalence & KV/logits sai khác reference không quá ngưỡng số học đã định. \\
+Sequence identity & Toàn bộ output token IDs trùng với vanilla trên cùng prompt và cấu hình giải mã. \\
+\bottomrule
+\end{tabular}
+\end{table}
+Logical consistency không bảo đảm numerical equivalence hay sequence identity; hai tiêu chí này cần đo riêng.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    scale=0.93,transform shape,
+    tok/.style={draw,rounded corners=2pt,minimum width=0.88cm,minimum height=0.68cm,align=center,font=\small},
+    prefixtok/.style={tok,fill=gray!15},
+    accepted/.style={tok,fill=green!18,draw=green!50!black},
+    rejected/.style={tok,fill=red!12,draw=red!65!black},
+    pending/.style={tok,fill=orange!22,draw=orange!70!black},
+    transition/.style={->,very thick}
+]
+    \node[font=\small\bfseries] at (6.2,3.0) {Trước verification};
+    \node[font=\footnotesize] at (3.1,2.55) {Canonical KV};
+    \node[prefixtok] at (2.0,2.05) {$P_1$};
+    \node[prefixtok] at (3.1,2.05) {$P_2$};
+    \node[prefixtok] at (4.2,2.05) {$P_3$};
+    \node[font=\footnotesize] at (5.3,2.55) {Pending $p$};
+    \node[pending] at (5.3,2.05) {$p$};
+    \node[font=\footnotesize] at (8.3,2.55) {Draft candidates};
+    \node[tok] at (7.2,2.05) {$d_1$};
+    \node[tok] at (8.3,2.05) {$d_2$};
+    \node[tok] at (9.4,2.05) {$d_3$};
+
+    \draw[transition] (7.4,1.55) -- (7.4,0.8);
+    \node[font=\footnotesize,align=center] at (11.3,1.15)
+      {Target xử lý $p$; giữ $d_1,d_2$; loại $d_3$};
+    \draw[gray!50] (0.8,0.45) -- (13.8,0.45);
+
+    \node[font=\small\bfseries] at (6.2,0.05) {Sau verification};
+    \node[anchor=east,font=\small] at (1.15,-0.8) {Active canonical KV};
+    \node[prefixtok] at (2.0,-0.8) {$P_1$};
+    \node[prefixtok] at (3.1,-0.8) {$P_2$};
+    \node[prefixtok] at (4.2,-0.8) {$P_3$};
+    \node[prefixtok] at (5.3,-0.8) {$p$};
+    \node[accepted] at (6.4,-0.8) {$d_1$};
+    \node[accepted] at (7.5,-0.8) {$d_2$};
+
+    \node[anchor=east,font=\small] at (1.15,-1.8) {Discarded};
+    \node[rejected] (drop) at (2.0,-1.8) {$d_3$};
+    \draw[red!75!black,thick] ($(drop.south west)+(0.08,0.08)$) -- ($(drop.north east)+(-0.08,-0.08)$);
+    \node[anchor=west,font=\footnotesize] at (2.65,-1.8) {ngoài active KV};
+    \node[anchor=east,font=\small] at (1.15,-2.7) {Pending output};
+    \node[pending] at (2.0,-2.7) {$c$};
+    \node[anchor=west,font=\footnotesize] at (2.65,-2.7) {chưa có KV target; token kế tiếp};
+
+    \node[font=\footnotesize,align=center] at (6.2,-3.5)
+      {Xám: prefix đã có trong KV \quad Xanh: accepted \quad Đỏ: rejected \quad Cam: pending};
+\end{tikzpicture}
+\caption{Trạng thái KV trước và sau verification: target xử lý pending input $p$, chấp nhận $d_1,d_2$, từ chối $d_3$ và chọn correction $c$. Sau commit/rollback, active KV chứa $P\Vert p\Vert d_1\Vert d_2$; $c$ được xử lý ở forward target kế tiếp.}
+\label{fig:kv-commit-rollback}
+\end{figure}
+Trong Hình~\ref{fig:kv-commit-rollback}, $P=x\Vert y$ là prefix chuẩn trước cycle; $p$ là token pending đầu vào, chưa có trong KV lúc bắt đầu verification. Target xử lý $p$, chấp nhận $d_1,d_2$ và loại $d_3$. Ký hiệu $c$ trong hình chính là token pending $p'$ của thuật toán. Trạng thái sau verify là:
+\begin{align*}
+    H_{\mathrm{logical}} &= P\Vert p\Vert d_1\Vert d_2\Vert c \quad (c\text{ đang pending}),\\
+    C_{\mathrm{tgt}} &= \mathrm{KV}_{\mathrm{target}}(P\Vert p\Vert d_1\Vert d_2).
+\end{align*}
+Trong đó $H_{\mathrm{logical}}$ gồm lịch sử đã commit cùng token kế tiếp đã được chọn; $c$ chưa được đưa vào KV chuẩn cho đến khi target xử lý nó ở forward kế tiếp.
+
+\section{Mô hình chi phí và điều kiện hòa vốn}
+Ranh giới cycle trong công thức khớp với một vòng lặp giải mã của implementation. $N_{\mathrm{emit}}$ là số token được append vào output buffer trong vòng đó, sau khi áp dụng EOS và giới hạn token còn lại; đây là emitted count được ghi cho cycle. Token pending $p$ cũ được tính khi vòng hiện tại append nó; correction/bonus $p'$ mới chỉ được tính trong vòng sau nếu được append. $T_{\mathrm{cycle}}$ là wall-clock của chính vòng lặp ấy, từ lúc bắt đầu xử lý hành động đến khi sẵn sàng bắt đầu vòng tiếp theo; nó gồm chi phí draft hoặc lookup, verify/forward target, cập nhật cache, điều phối và đồng bộ cần thiết. Vì vậy, forward xử lý $p$ cũ và tạo prediction $p'$ mới nằm trong cùng khoảng thời gian, còn $N_{\mathrm{emit}}$ chỉ đếm các token append trong khoảng đó. $T_v$ là latency trung bình trên mỗi token của vanilla, đo trên cùng model, backend, prompt/workload, thiết bị, thiết lập warmup và chế độ sinh với phương pháp cần so sánh. Speedup throughput dài hạn được ước lượng:
+\begin{equation}
+    S \approx \frac{\mathbb{E}[N_{\mathrm{emit}}]T_v}
+    {\mathbb{E}[T_{\mathrm{cycle}}]}.
+\end{equation}
+Để phân rã thời gian, các mốc pha phải dùng khoảng đo không chồng lấn và tổng thời lượng các khoảng khớp với wall-clock cycle. Nếu profiler ghi các pha lồng nhau hoặc bất đồng bộ, không cộng trực tiếp các số đó; dùng wall-clock cycle làm mẫu số, còn pha chồng lấn báo cáo riêng để chẩn đoán. Khi đó, một phân rã không chồng lấn có thể viết:
+\begin{equation}
+    T_{\mathrm{cycle}}=T_{\mathrm{draft}}+T_{\mathrm{verify}}+T_{\mathrm{cache}}
+    +T_{\mathrm{lookup}}+T_{\mathrm{control}}+T_{\mathrm{sync}},
+\end{equation}
+Trong Hình~\ref{fig:cost-breakdown}, $T_{\mathrm{other}}=T_{\mathrm{control}}+T_{\mathrm{sync}}$. Hình nhóm các pha để diễn giải chi phí, không phải kết quả profiling.
+Một số thành phần có thể bằng không hoặc không áp dụng cho hành động cụ thể; không cộng lại chi phí đã nằm trong một khoảng đo bao hàm khác. Trong profiling, tốc độ dự đoán của hành động $a$ tại quan sát $z_t$ được ước lượng theo cùng tỷ số token phát ra trên thời gian chu kỳ:
+\begin{equation}
+    \widehat{\mathrm{TPS}}(a\mid z_t)=
+    \frac{\widehat{\mathbb{E}}[N_{\mathrm{emit}}\mid a,z_t]}
+         {\widehat{\mathbb{E}}[T_{\mathrm{cycle}}\mid a,z_t]}.
+    \label{eq:router-tps}
+\end{equation}
+Đây là mô hình dự đoán dùng cho router; nó không bảo đảm dự báo chính xác ngoài cohort hiệu chuẩn. Chương 5 báo cáo phép đo thực nghiệm thay vì coi công thức xấp xỉ là kết quả hiệu năng.
+
+\begin{samepage}
+Điều kiện hòa vốn theo kỳ vọng so với vanilla là:
+\begin{equation}
+    \mathbb{E}[T_{\mathrm{cycle}}]
+    < \mathbb{E}[N_{\mathrm{emit}}]T_v.
+\end{equation}
+Với layer-skip, $T_{\mathrm{draft}}$ là forward qua các lớp không bị bỏ và có thể tương đối lớn; với PLD, forward draft được thay bằng lookup cost nhưng số candidates phụ thuộc vào n-gram match của workload. $T_{\mathrm{verify}}$ phụ thuộc horizon $K$, chiều dài ngữ cảnh và backend/kernel. Điều kiện hòa vốn là mô hình throughput dài hạn theo kỳ vọng, không bảo đảm speedup cho từng prompt hoặc từng cycle; acceptance rate cao riêng lẻ cũng không chứng minh đạt hòa vốn.
+\end{samepage}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    cost/.style={draw,rounded corners=2pt,align=center,text width=2.35cm,minimum height=0.9cm,font=\small},
+    plus/.style={font=\large\bfseries}
+]
+    \node[cost] (draftcost) at (1.8,0) {Draft / lookup\\$T_{\mathrm{draft}}+T_{\mathrm{lookup}}$};
+    \node[cost] (verifycost) at (5.2,0) {Target verification\\$T_{\mathrm{verify}}$};
+    \node[cost] (cachecost) at (8.6,0) {KV / cache update\\$T_{\mathrm{cache}}$};
+    \node[cost] (othercost) at (12.0,0) {Điều khiển và sync\\$T_{\mathrm{other}}$};
+    \node[plus] at (3.5,0) {$+$};
+    \node[plus] at (6.9,0) {$+$};
+    \node[plus] at (10.3,0) {$+$};
+\end{tikzpicture}
+\caption{Các thành phần thời gian khái niệm trong một speculative cycle.}
+\label{fig:cost-breakdown}
+\end{figure}
+
+\section{Thiết kế bộ định tuyến}
+Tại chu kỳ $t$, router triển khai chọn giữa vanilla, PLD và layer-skip, kèm horizon ứng viên. Router dùng ước lượng throughput tại Công thức~\eqref{eq:router-tps} để so sánh các phương án.
+Trong code hiện tại, quyết định không phải argmax thuần trên mọi hành động: router dùng cost estimates, baseline vanilla, confidence/acceptance EMA hoặc predictor nếu được cấp, n-gram match và một margin ưu tiên PLD; các gate có thể chọn vanilla khi dự đoán layer-skip không vượt baseline. Quy tắc tổng quát có thể mô tả:
+\begin{equation}
+    a_t\in\{\mathrm{vanilla},\mathrm{PLD},\mathrm{layer\mbox{-}skip}\},\qquad
+    a_t=\operatorname{Policy}_{\mathrm{implemented}}(z_t)
+\end{equation}
+trong đó $z_t$ gồm thông tin mà nhánh triển khai nhận được ở thời điểm gọi: entropy target, logit margin nếu bật, lịch sử/đầu ra dò PLD, thống kê acceptance gần đây, cost profile và latency tracker tùy cấu hình.
+
+Với đường hybrid router dùng trong CLI, entropy, match length, số candidates, acceptance EMA/predictor và latency draft/verify từ cost profile hoặc latency tracker tham gia ước lượng. Telemetry GPU không phải tín hiệu của router; acceptance và thời gian là dự báo, không bảo đảm cho cycle kế tiếp.
+
+Router chọn vanilla khi PLD miss và layer-skip bị gate. Khi có PLD hit, chính sách so throughput PLD với layer-skip có margin ưu tiên PLD; ở PLD-only mode, PLD phải đạt vanilla gate.

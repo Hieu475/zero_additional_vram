@@ -1,0 +1,259 @@
+{
+  "status": "experimental packed-byte K256 K1/R2; paired finite diagnostic, not universal proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "strategy": "triton_nf4_group_scale_packed_k256",
+  "k": 1,
+  "physical_rows": 2,
+  "max_new_tokens": 32,
+  "attention": "padded",
+  "model_dtype": "float16",
+  "sessions_per_prompt": 3,
+  "reference_contract_id": "2dd35565577e8c0e2bc4f6b1dd6c4ef1e257dba15bcd488a8cfea0ecabb7ca67",
+  "records": [
+    {
+      "prompt_id": "cnndm001",
+      "pilot_session": 0,
+      "session_index": 1,
+      "method_order": [
+        "b1_reference",
+        "b1_block",
+        "original_greedy"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.1798454689997016,
+        "b1_block": 1.1141586500016274,
+        "original_bnb": 0.9749064010029542
+      },
+      "latency_ratio_block_over_singleton": 0.9443259132454314,
+      "latency_ratio_block_over_bnb": 1.1428365316459248,
+      "speedup_singleton_over_block": 1.058956432280069,
+      "speedup_bnb_over_block": 0.8750157807431915,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 27,
+      "block_target_rows": 36,
+      "draft_tokens": 9,
+      "accepted_draft_tokens": 4,
+      "cycle_count": 27,
+      "cycle_component_s": {
+        "draft": 0.0015746490098536015,
+        "verify": 0.9248362630096381,
+        "commit": 0.0033396259968867525
+      }
+    },
+    {
+      "prompt_id": "cnndm001",
+      "pilot_session": 1,
+      "session_index": 2,
+      "method_order": [
+        "b1_block",
+        "original_greedy",
+        "b1_reference"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.0961232269983157,
+        "b1_block": 1.1085423580007046,
+        "original_bnb": 0.9069191670059809
+      },
+      "latency_ratio_block_over_singleton": 1.0113300500313256,
+      "latency_ratio_block_over_bnb": 1.222316605856224,
+      "speedup_singleton_over_block": 0.9887968818577332,
+      "speedup_bnb_over_block": 0.8181186406278979,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 27,
+      "block_target_rows": 36,
+      "draft_tokens": 9,
+      "accepted_draft_tokens": 4,
+      "cycle_count": 27,
+      "cycle_component_s": {
+        "draft": 0.0017039010126609355,
+        "verify": 0.9089992730005179,
+        "commit": 0.0034547440009191632
+      }
+    },
+    {
+      "prompt_id": "cnndm001",
+      "pilot_session": 2,
+      "session_index": 3,
+      "method_order": [
+        "original_greedy",
+        "b1_reference",
+        "b1_block"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.036609300004784,
+        "b1_block": 1.1036656130017946,
+        "original_bnb": 0.8259941680007614
+      },
+      "latency_ratio_block_over_singleton": 1.0646881259860403,
+      "latency_ratio_block_over_bnb": 1.3361663505120258,
+      "speedup_singleton_over_block": 0.9392421833143573,
+      "speedup_bnb_over_block": 0.7484098066208559,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 27,
+      "block_target_rows": 36,
+      "draft_tokens": 9,
+      "accepted_draft_tokens": 4,
+      "cycle_count": 27,
+      "cycle_component_s": {
+        "draft": 0.0015650029890821315,
+        "verify": 0.9081599520068266,
+        "commit": 0.005033081994042732
+      }
+    },
+    {
+      "prompt_id": "cnndm002",
+      "pilot_session": 0,
+      "session_index": 0,
+      "method_order": [
+        "original_greedy",
+        "b1_reference",
+        "b1_block"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.109023195996997,
+        "b1_block": 1.1216873719968135,
+        "original_bnb": 0.9249700469954405
+      },
+      "latency_ratio_block_over_singleton": 1.0114192165191203,
+      "latency_ratio_block_over_bnb": 1.2126742651184927,
+      "speedup_singleton_over_block": 0.9887097097498103,
+      "speedup_bnb_over_block": 0.8246237499748443,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 29,
+      "block_target_rows": 35,
+      "draft_tokens": 6,
+      "accepted_draft_tokens": 2,
+      "cycle_count": 29,
+      "cycle_component_s": {
+        "draft": 0.0018026300313067622,
+        "verify": 0.929598561990133,
+        "commit": 0.002467552010784857
+      }
+    },
+    {
+      "prompt_id": "cnndm002",
+      "pilot_session": 1,
+      "session_index": 2,
+      "method_order": [
+        "b1_block",
+        "original_greedy",
+        "b1_reference"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.0635808430015459,
+        "b1_block": 1.1203353230011999,
+        "original_bnb": 0.8612199269991834
+      },
+      "latency_ratio_block_over_singleton": 1.0533616982414673,
+      "latency_ratio_block_over_bnb": 1.3008701817953432,
+      "speedup_singleton_over_block": 0.9493415240647615,
+      "speedup_bnb_over_block": 0.7687162131888445,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 29,
+      "block_target_rows": 35,
+      "draft_tokens": 6,
+      "accepted_draft_tokens": 2,
+      "cycle_count": 29,
+      "cycle_component_s": {
+        "draft": 0.0016763220337452367,
+        "verify": 0.918595177019597,
+        "commit": 0.004197198002657387
+      }
+    },
+    {
+      "prompt_id": "cnndm002",
+      "pilot_session": 2,
+      "session_index": 3,
+      "method_order": [
+        "original_greedy",
+        "b1_reference",
+        "b1_block"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.0388006060020416,
+        "b1_block": 1.0662495349970413,
+        "original_bnb": 0.8330757250005263
+      },
+      "latency_ratio_block_over_singleton": 1.026423674414901,
+      "latency_ratio_block_over_bnb": 1.2798950959666575,
+      "speedup_singleton_over_block": 0.9742565618140449,
+      "speedup_bnb_over_block": 0.7813140335886176,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 29,
+      "block_target_rows": 35,
+      "draft_tokens": 6,
+      "accepted_draft_tokens": 2,
+      "cycle_count": 29,
+      "cycle_component_s": {
+        "draft": 0.0015976669892552309,
+        "verify": 0.8767331879789708,
+        "commit": 0.0009300550009356812
+      }
+    }
+  ],
+  "pooled_descriptive_summary": {
+    "latency_ratio_block_over_singleton": {
+      "geometric_mean": 1.0178382534455732,
+      "median": 1.0189214454670106,
+      "range": [
+        0.9443259132454314,
+        1.0646881259860403
+      ],
+      "paired_log_t_95ci_tcrit_df5": [
+        0.9735783386827873,
+        1.0641102713714794
+      ]
+    },
+    "latency_ratio_block_over_bnb": {
+      "geometric_mean": 1.2474700913845174,
+      "median": 1.2511058509114408,
+      "range": [
+        1.1428365316459248,
+        1.3361663505120258
+      ],
+      "paired_log_t_95ci_tcrit_df5": [
+        1.1755190919591858,
+        1.3238250569842103
+      ]
+    },
+    "token_match_b1_all": true,
+    "token_match_bnb_all": true,
+    "state_match_all": true,
+    "shared_kv_prefixes_each": [
+      32
+    ],
+    "mean_block_target_rows": 35.5,
+    "mean_accepted_draft_tokens": 3,
+    "acceptance_rate": 0.4,
+    "mean_cycle_component_s": {
+      "draft": 0.001653362010983983,
+      "verify": 0.9111537358342806,
+      "commit": 0.0032370428343710955
+    },
+    "mean_cycle_count": 28
+  }
+}

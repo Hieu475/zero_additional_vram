@@ -1,0 +1,130 @@
+{
+  "schema": "zassd-bnb-fused-nf4-triton-prototype-summary-v2",
+  "classification": "fused NF4 prototype is exact on selected operator shapes but slower than or tied with BNB; not integrated",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "triton": "3.6.0",
+    "bitsandbytes": "0.50.0"
+  },
+  "prompt_id": "HumanEval/112",
+  "cached_lut_global_loads": [
+    {
+      "artifact": "fused_nf4_gate_l0_he112_v9_global_lut.json",
+      "projection": "gate_proj",
+      "input_shape": [
+        3,
+        2048
+      ],
+      "output_shape": [
+        3,
+        11008
+      ],
+      "exact_elements": 33024,
+      "total_elements": 33024,
+      "bitwise_exact": true,
+      "best_configuration": {
+        "output_tile": 16,
+        "num_warps": 8
+      },
+      "bnb_operator_ms": 0.1477537505561486,
+      "triton_fused_operator_ms": 0.1810245170227943,
+      "triton_over_bnb_speedup": 0.8162085058210303
+    },
+    {
+      "artifact": "fused_nf4_down_l0_he112_v1.json",
+      "projection": "down_proj",
+      "input_shape": [
+        3,
+        11008
+      ],
+      "output_shape": [
+        3,
+        2048
+      ],
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "bitwise_exact": true,
+      "best_configuration": {
+        "output_tile": 8,
+        "num_warps": 8
+      },
+      "bnb_operator_ms": 0.13950925145763904,
+      "triton_fused_operator_ms": 0.1594717436366611,
+      "triton_over_bnb_speedup": 0.8748211330497243
+    },
+    {
+      "artifact": "fused_nf4_q_l0_he112_v1.json",
+      "projection": "q_proj",
+      "input_shape": [
+        3,
+        2048
+      ],
+      "output_shape": [
+        3,
+        2048
+      ],
+      "exact_elements": 6144,
+      "total_elements": 6144,
+      "bitwise_exact": true,
+      "best_configuration": {
+        "output_tile": 8,
+        "num_warps": 8
+      },
+      "bnb_operator_ms": 0.042735760364292275,
+      "triton_fused_operator_ms": 0.04277369462079921,
+      "triton_over_bnb_speedup": 0.9991131405214528
+    }
+  ],
+  "aggregate": {
+    "exact_elements": 45312,
+    "total_elements": 45312,
+    "bitwise_exact": true
+  },
+  "physical_lane_shfl_lut": [
+    {
+      "artifact": "fused_nf4_gate_l0_he112_v8_laneid_shfl.json",
+      "projection": "gate_proj",
+      "exact_configuration": {
+        "output_tile": 8,
+        "num_warps": 8
+      },
+      "exact_operator_ms": 0.18859555489487118,
+      "bnb_operator_ms": 0.14715136927882516,
+      "triton_over_bnb_speedup": 0.7802483433973391,
+      "incorrect_configurations": 3
+    },
+    {
+      "artifact": "fused_nf4_q_l0_he112_v2_laneid_shfl.json",
+      "projection": "q_proj",
+      "exact_configuration": {
+        "output_tile": 8,
+        "num_warps": 8
+      },
+      "exact_operator_ms": 0.04358291512323638,
+      "bnb_operator_ms": 0.041055185562473236,
+      "triton_over_bnb_speedup": 0.9420018244852219,
+      "incorrect_configurations": 3
+    }
+  ],
+  "failed_experiment": {
+    "method": "load LUT once and index with tl.gather",
+    "result": "Triton 3.6.0 compilation failed in OptimizeThreadLocality with GatherLoweringHelper(op).isWarpLocal() assertion; no output or timing claim."
+  },
+  "interpretation": [
+    "The fused cached-LUT prototype remains operator-exact on gate_proj, down_proj (including a partial final 1024-K group), and q_proj, but it does not beat BNB in these measurements.",
+    "The physical-lane shfl lookup is exact only for some tile/warp layouts and was slower on both checked projections; configurations with output_tile != num_warps often produced wrong values.",
+    "The codebook-gather approach is unsupported by the current Triton lowering path for this tensor layout.",
+    "The validated arithmetic is useful as a diagnostic operator reference. For a performant B2 path, retain native BNB SIMT M=3 and optimize verification/runtime/state handling unless a new exact lookup layout yields a measured win."
+  ],
+  "source_sha256": "50fca2adc3adc867485c9d3b2929feea0b92a8d6376a7edeee7462bad83a526f",
+  "limits": [
+    "Selected layer-0 projections from one prompt, one GPU, pinned model and libraries.",
+    "Operator timings are one-run diagnostics, not paired confidence intervals or end-to-end latency.",
+    "No whole-model integration or KV/state benchmark from the Triton prototype.",
+    "GSM8K held-out indices 300-349 remain unused."
+  ]
+}

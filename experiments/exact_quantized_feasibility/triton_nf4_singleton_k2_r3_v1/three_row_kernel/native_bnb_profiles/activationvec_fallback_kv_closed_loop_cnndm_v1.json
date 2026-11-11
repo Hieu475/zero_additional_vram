@@ -1,0 +1,74 @@
+{
+  "schema": "zassd-activationvec-fallback-kv-closed-loop-v1",
+  "classification": "development-only per-step KV/token audit; finite evidence, not a proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "benchmark": "data/benchmarks/cnndm_eval.jsonl",
+  "max_new_tokens": 64,
+  "per_prompt": [
+    {
+      "prompt_id": "cnndm_002",
+      "fallback_on_empty": true,
+      "tokens_match": true,
+      "observed_prefixes": 55,
+      "kv_mismatch_prefixes": [],
+      "unknown_prefixes": [],
+      "kv_prefixes_equal": true,
+      "fallback_cycles": 41,
+      "block_cycles": 13,
+      "accepted_draft_tokens": 9,
+      "draft_tokens": 26
+    },
+    {
+      "prompt_id": "cnndm_002",
+      "fallback_on_empty": false,
+      "tokens_match": true,
+      "observed_prefixes": 55,
+      "kv_mismatch_prefixes": [],
+      "unknown_prefixes": [],
+      "kv_prefixes_equal": true,
+      "fallback_cycles": 0,
+      "block_cycles": 54,
+      "accepted_draft_tokens": 9,
+      "draft_tokens": 26
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "fallback_on_empty": true,
+      "tokens_match": true,
+      "observed_prefixes": 54,
+      "kv_mismatch_prefixes": [],
+      "unknown_prefixes": [],
+      "kv_prefixes_equal": true,
+      "fallback_cycles": 36,
+      "block_cycles": 17,
+      "accepted_draft_tokens": 10,
+      "draft_tokens": 34
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "fallback_on_empty": false,
+      "tokens_match": true,
+      "observed_prefixes": 54,
+      "kv_mismatch_prefixes": [],
+      "unknown_prefixes": [],
+      "kv_prefixes_equal": true,
+      "fallback_cycles": 0,
+      "block_cycles": 53,
+      "accepted_draft_tokens": 10,
+      "draft_tokens": 34
+    }
+  ],
+  "all_passed": true,
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/audit_activationvec_fallback_kv_closed_loop.py",
+  "source_sha256": "d64babb0ddfb988021f1f1a43b2a1ce342779a9def70277bba572a36c0ac05f5",
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "scope_limits": [
+    "Development prompts only; GSM8K held-out indices 300-349 excluded.",
+    "KV compared at non-terminal committed prefixes; reference is original BNB greedy."
+  ]
+}

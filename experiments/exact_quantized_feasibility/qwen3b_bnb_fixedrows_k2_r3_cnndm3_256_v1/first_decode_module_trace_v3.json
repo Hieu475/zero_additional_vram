@@ -1,0 +1,258 @@
+{
+  "status": "single-transition module-output trace; finite diagnostic, not proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "physical_rows": 3,
+  "attention_strategy": "padded",
+  "quantized_linear_strategy": "fixed_rows",
+  "saved_run": "experiments/exact_quantized_feasibility/qwen3b_bnb_fixedrows_k2_r3_cnndm3_256_v1",
+  "details": [
+    {
+      "prompt_id": "cnndm_000",
+      "forced_bnb_token_index": 0,
+      "prefill_logits_and_kv_equal": true,
+      "first_module_input_difference": {
+        "module": "model.layers.0.self_attn.o_proj",
+        "reference_hash": "a1ddaa50d920df4c41a459efe250c3cb92d313e69869227d8ec8aba7cc037131",
+        "fixed_row_hash": "d15aaf6f80f588b20a8b3f9965e1a504e3003e80c8f0cec667ae7c9503d51d8b",
+        "tensor_shape": [
+          1,
+          1,
+          2048
+        ],
+        "tensor_dtype": "torch.bfloat16",
+        "tensor_bitwise_equal": false,
+        "tensor_max_abs_diff": 0.0009765625
+      },
+      "first_module_output_difference": {
+        "module": "model.layers.0.self_attn.o_proj",
+        "reference_hash": "6e32c7b49f6bd532eb8df4c1a36c34c101e5a96487234095a33d8e3f3a836070",
+        "fixed_row_hash": "9ec74013958d225b248b7a46b0849c53dd4a777dc0b1a6a098156d190dcb6551",
+        "tensor_shape": [
+          1,
+          1,
+          2048
+        ],
+        "tensor_dtype": "torch.bfloat16",
+        "tensor_bitwise_equal": false,
+        "tensor_max_abs_diff": 0.001953125
+      },
+      "first_sdpa_output_difference": {
+        "call_index": 0,
+        "reference_query_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "fixed_row_query_shape": [
+          1,
+          16,
+          3,
+          128
+        ],
+        "reference_key_shape": [
+          1,
+          2,
+          398,
+          128
+        ],
+        "fixed_row_key_shape": [
+          1,
+          16,
+          400,
+          128
+        ],
+        "reference_mask_shape": null,
+        "fixed_row_mask_shape": [
+          1,
+          1,
+          3,
+          400
+        ],
+        "reference_is_causal": false,
+        "fixed_row_is_causal": false,
+        "output_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "output_bitwise_equal": false,
+        "output_max_abs_diff": 2.51953125
+      },
+      "sdpa_call_count_reference": 36,
+      "sdpa_call_count_fixed_row": 36,
+      "module_events_reference": 474,
+      "module_events_fixed_row": 474,
+      "final_logits_equal": false,
+      "final_logits_max_abs_diff": 0.28125,
+      "kv_equal_after_first_decode": false
+    },
+    {
+      "prompt_id": "cnndm_001",
+      "forced_bnb_token_index": 0,
+      "prefill_logits_and_kv_equal": true,
+      "first_module_input_difference": {
+        "module": "model.layers.0.self_attn.o_proj",
+        "reference_hash": "f3488dd13b861345545e4ef18f5b84d01e53c7698ff548bb52c0c2cfab69b583",
+        "fixed_row_hash": "5aaebdde24e5fc4859025fd88aa5c52b3d53641c7e10874bb0f37acbaefc1a07",
+        "tensor_shape": [
+          1,
+          1,
+          2048
+        ],
+        "tensor_dtype": "torch.bfloat16",
+        "tensor_bitwise_equal": false,
+        "tensor_max_abs_diff": 0.000244140625
+      },
+      "first_module_output_difference": {
+        "module": "model.layers.0.self_attn.o_proj",
+        "reference_hash": "7a00be9c41e434921c5699c7f5f0a3b5ebe5ce12e28c683e1bc9774a47876d28",
+        "fixed_row_hash": "ac91a2b56bb5dbd2e1979295d41cd36028c44def3ad0e63cb50c63ea5ceabfa4",
+        "tensor_shape": [
+          1,
+          1,
+          2048
+        ],
+        "tensor_dtype": "torch.bfloat16",
+        "tensor_bitwise_equal": false,
+        "tensor_max_abs_diff": 0.001953125
+      },
+      "first_sdpa_output_difference": {
+        "call_index": 0,
+        "reference_query_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "fixed_row_query_shape": [
+          1,
+          16,
+          3,
+          128
+        ],
+        "reference_key_shape": [
+          1,
+          2,
+          399,
+          128
+        ],
+        "fixed_row_key_shape": [
+          1,
+          16,
+          401,
+          128
+        ],
+        "reference_mask_shape": null,
+        "fixed_row_mask_shape": [
+          1,
+          1,
+          3,
+          401
+        ],
+        "reference_is_causal": false,
+        "fixed_row_is_causal": false,
+        "output_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "output_bitwise_equal": false,
+        "output_max_abs_diff": 1.1796875
+      },
+      "sdpa_call_count_reference": 36,
+      "sdpa_call_count_fixed_row": 36,
+      "module_events_reference": 474,
+      "module_events_fixed_row": 474,
+      "final_logits_equal": false,
+      "final_logits_max_abs_diff": 0.25,
+      "kv_equal_after_first_decode": false
+    },
+    {
+      "prompt_id": "cnndm_002",
+      "forced_bnb_token_index": 0,
+      "prefill_logits_and_kv_equal": true,
+      "first_module_input_difference": {
+        "module": "model.layers.0.self_attn.o_proj",
+        "reference_hash": "eae63926f6e6029644e7bb23fa7f0781600a1a4f883cbce8139852c81896727c",
+        "fixed_row_hash": "89b9fc0e99c550a78ab23a08205c7fc136c97fc310b80e9abba9ed45799499bf",
+        "tensor_shape": [
+          1,
+          1,
+          2048
+        ],
+        "tensor_dtype": "torch.bfloat16",
+        "tensor_bitwise_equal": false,
+        "tensor_max_abs_diff": 0.00048828125
+      },
+      "first_module_output_difference": {
+        "module": "model.layers.0.self_attn.o_proj",
+        "reference_hash": "1e5209bfa25f11993e54d3d58df61758fcbeb90d7180b486bf46258ac154ca60",
+        "fixed_row_hash": "9fb2b61cdd5e74e8c40ed2f482b6106c1a7fb21c158f20c92685f1efd955406e",
+        "tensor_shape": [
+          1,
+          1,
+          2048
+        ],
+        "tensor_dtype": "torch.bfloat16",
+        "tensor_bitwise_equal": false,
+        "tensor_max_abs_diff": 0.001953125
+      },
+      "first_sdpa_output_difference": {
+        "call_index": 0,
+        "reference_query_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "fixed_row_query_shape": [
+          1,
+          16,
+          3,
+          128
+        ],
+        "reference_key_shape": [
+          1,
+          2,
+          420,
+          128
+        ],
+        "fixed_row_key_shape": [
+          1,
+          16,
+          422,
+          128
+        ],
+        "reference_mask_shape": null,
+        "fixed_row_mask_shape": [
+          1,
+          1,
+          3,
+          422
+        ],
+        "reference_is_causal": false,
+        "fixed_row_is_causal": false,
+        "output_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "output_bitwise_equal": false,
+        "output_max_abs_diff": 2.65576171875
+      },
+      "sdpa_call_count_reference": 36,
+      "sdpa_call_count_fixed_row": 36,
+      "module_events_reference": 474,
+      "module_events_fixed_row": 474,
+      "final_logits_equal": false,
+      "final_logits_max_abs_diff": 0.25,
+      "kv_equal_after_first_decode": false
+    }
+  ]
+}

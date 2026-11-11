@@ -1,0 +1,178 @@
+{
+  "status": "compiled specialization inspection; not a correctness proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "backend_metadata": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa",
+    "model_dtype": "torch.float16"
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "target": 89,
+  "kernel_source_sha256": "7ec90b1012f6b69163328657aeea698287f3645d66b3eaf4de30bd227c84defa",
+  "audit_script_sha256": "dac449f2f47ce6ebe90369881d07576fe04b64b5a71d926290fd6d495667d0c0",
+  "physical_rows": 5,
+  "specializations": [
+    {
+      "layer": "model.layers.0.self_attn.q_proj",
+      "input_shape": [
+        1,
+        5,
+        2048
+      ],
+      "output_shape": [
+        1,
+        5,
+        2048
+      ],
+      "input_features": 2048,
+      "output_features": 2048,
+      "weight_quant_type": "nf4",
+      "weight_quant_blocksize": 64,
+      "nested_quantization": true,
+      "launch_grid": [
+        5,
+        128
+      ],
+      "tile": {
+        "block_n": 16,
+        "block_k": 128,
+        "num_warps": 4
+      },
+      "compiler_options": {
+        "enable_fp_fusion": false,
+        "num_stages": 3
+      },
+      "registers": 70,
+      "shared_memory_bytes": 256,
+      "ptx_instruction_line_count": 529,
+      "sass_instruction_count": 406,
+      "sass_instruction_counts": {
+        "FFMA": 0,
+        "FADD": 36,
+        "FMUL": 48,
+        "SHFL_family": 3,
+        "BAR_SYNC_family": 5,
+        "HMMA_family": 0
+      },
+      "ptx_sha256": "878ff99ea2657f161f14d52cb42a332280e28c27fa150c86100634bf83292a00",
+      "cubin_sha256": "8f22479e890ca47f504443eae3b79b7174c98ebf173e1a0c287f08083fe66ab9",
+      "sass_status": "cuobjdump --dump-sass succeeded",
+      "artifacts": {
+        "ptx": "q_proj_sm89.ptx",
+        "cubin": "q_proj_sm89.cubin",
+        "sass": "q_proj_sm89.sass.txt"
+      }
+    },
+    {
+      "layer": "model.layers.0.mlp.gate_proj",
+      "input_shape": [
+        1,
+        5,
+        2048
+      ],
+      "output_shape": [
+        1,
+        5,
+        11008
+      ],
+      "input_features": 2048,
+      "output_features": 11008,
+      "weight_quant_type": "nf4",
+      "weight_quant_blocksize": 64,
+      "nested_quantization": true,
+      "launch_grid": [
+        5,
+        688
+      ],
+      "tile": {
+        "block_n": 16,
+        "block_k": 128,
+        "num_warps": 4
+      },
+      "compiler_options": {
+        "enable_fp_fusion": false,
+        "num_stages": 3
+      },
+      "registers": 70,
+      "shared_memory_bytes": 256,
+      "ptx_instruction_line_count": 521,
+      "sass_instruction_count": 399,
+      "sass_instruction_counts": {
+        "FFMA": 0,
+        "FADD": 35,
+        "FMUL": 48,
+        "SHFL_family": 3,
+        "BAR_SYNC_family": 5,
+        "HMMA_family": 0
+      },
+      "ptx_sha256": "ec5109eea6a259d4da93a844139f39a223b27f18217daf29731bfae4c09455f6",
+      "cubin_sha256": "ce32356f3cf60ae6ff2449189da4cfb5f923d3b9214fe12f994e5b9f6ce9a083",
+      "sass_status": "cuobjdump --dump-sass succeeded",
+      "artifacts": {
+        "ptx": "gate_proj_sm89.ptx",
+        "cubin": "gate_proj_sm89.cubin",
+        "sass": "gate_proj_sm89.sass.txt"
+      }
+    },
+    {
+      "layer": "model.layers.0.mlp.down_proj",
+      "input_shape": [
+        1,
+        5,
+        11008
+      ],
+      "output_shape": [
+        1,
+        5,
+        2048
+      ],
+      "input_features": 11008,
+      "output_features": 2048,
+      "weight_quant_type": "nf4",
+      "weight_quant_blocksize": 64,
+      "nested_quantization": true,
+      "launch_grid": [
+        5,
+        128
+      ],
+      "tile": {
+        "block_n": 16,
+        "block_k": 128,
+        "num_warps": 4
+      },
+      "compiler_options": {
+        "enable_fp_fusion": false,
+        "num_stages": 3
+      },
+      "registers": 72,
+      "shared_memory_bytes": 256,
+      "ptx_instruction_line_count": 608,
+      "sass_instruction_count": 465,
+      "sass_instruction_counts": {
+        "FFMA": 0,
+        "FADD": 35,
+        "FMUL": 48,
+        "SHFL_family": 3,
+        "BAR_SYNC_family": 5,
+        "HMMA_family": 0
+      },
+      "ptx_sha256": "c71c3961eba02410e551a11585f441b6305b626816ac0c19c9e5b750bef91e01",
+      "cubin_sha256": "d3fe4e2232149101fc7c977d495eb0a196be30bcd1d52ac5956c5583db6cca0a",
+      "sass_status": "cuobjdump --dump-sass succeeded",
+      "artifacts": {
+        "ptx": "down_proj_sm89.ptx",
+        "cubin": "down_proj_sm89.cubin",
+        "sass": "down_proj_sm89.sass.txt"
+      }
+    }
+  ]
+}

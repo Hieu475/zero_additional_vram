@@ -1,0 +1,202 @@
+{
+  "status": "finite operator-only split-K experiment; split schedules define new B1 arithmetic references",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "block_n": 16,
+  "block_k": 256,
+  "num_warps": 1,
+  "split_parts": [
+    2,
+    4,
+    8
+  ],
+  "iterations_per_sample": 10,
+  "rounds_per_m": 3,
+  "results": {
+    "q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "correctness": {
+        "reference_k256_w1_m1_rowwise_singleton_equal": true,
+        "split2_k256_w1_m1_rowwise_singleton_equal": true,
+        "split4_k256_w1_m1_rowwise_singleton_equal": true,
+        "split8_k256_w1_m1_rowwise_singleton_equal": true,
+        "reference_k256_w1_m2_rowwise_singleton_equal": true,
+        "split2_k256_w1_m2_rowwise_singleton_equal": true,
+        "split4_k256_w1_m2_rowwise_singleton_equal": true,
+        "split8_k256_w1_m2_rowwise_singleton_equal": true
+      },
+      "latency_by_m": {
+        "1": {
+          "median_cuda_ms": {
+            "reference_k256_w1": 0.02751680016517639,
+            "split2_k256_w1": 0.04177919924259186,
+            "split4_k256_w1": 0.04136959910392761,
+            "split8_k256_w1": 0.04126720130443573
+          },
+          "ratio_vs_reference": {
+            "reference_k256_w1": 1.0,
+            "split2_k256_w1": 1.51831604662613,
+            "split4_k256_w1": 1.5034305898795053,
+            "split8_k256_w1": 1.499709306922286
+          },
+          "samples_ms": {
+            "reference_k256_w1": [
+              0.05614079833030701,
+              0.02751680016517639,
+              0.026624000072479247
+            ],
+            "split2_k256_w1": [
+              0.04534400105476379,
+              0.04147199988365173,
+              0.04177919924259186
+            ],
+            "split4_k256_w1": [
+              0.04229120016098022,
+              0.04126720130443573,
+              0.04136959910392761
+            ],
+            "split8_k256_w1": [
+              0.04126720130443573,
+              0.042393600940704344,
+              0.04083200097084046
+            ]
+          }
+        },
+        "2": {
+          "median_cuda_ms": {
+            "reference_k256_w1": 0.031020799279212953,
+            "split2_k256_w1": 0.042905598878860474,
+            "split4_k256_w1": 0.04371840059757233,
+            "split8_k256_w1": 0.044249600172042845
+          },
+          "ratio_vs_reference": {
+            "reference_k256_w1": 1.0,
+            "split2_k256_w1": 1.3831235775930355,
+            "split4_k256_w1": 1.409325407900371,
+            "split8_k256_w1": 1.4264493888039345
+          },
+          "samples_ms": {
+            "reference_k256_w1": [
+              0.03136959969997406,
+              0.029388800263404846,
+              0.031020799279212953
+            ],
+            "split2_k256_w1": [
+              0.04371840059757233,
+              0.042905598878860474,
+              0.03996480107307434
+            ],
+            "split4_k256_w1": [
+              0.043952000141143796,
+              0.04371840059757233,
+              0.04086720049381256
+            ],
+            "split8_k256_w1": [
+              0.044249600172042845,
+              0.04946880042552948,
+              0.0419840008020401
+            ]
+          }
+        }
+      }
+    },
+    "down_proj": {
+      "in_features": 11008,
+      "out_features": 2048,
+      "correctness": {
+        "reference_k256_w1_m1_rowwise_singleton_equal": true,
+        "split2_k256_w1_m1_rowwise_singleton_equal": true,
+        "split4_k256_w1_m1_rowwise_singleton_equal": true,
+        "split8_k256_w1_m1_rowwise_singleton_equal": true,
+        "reference_k256_w1_m2_rowwise_singleton_equal": true,
+        "split2_k256_w1_m2_rowwise_singleton_equal": true,
+        "split4_k256_w1_m2_rowwise_singleton_equal": true,
+        "split8_k256_w1_m2_rowwise_singleton_equal": true
+      },
+      "latency_by_m": {
+        "1": {
+          "median_cuda_ms": {
+            "reference_k256_w1": 0.11959999799728394,
+            "split2_k256_w1": 0.11702719926834107,
+            "split4_k256_w1": 0.09853439927101135,
+            "split8_k256_w1": 0.09277439713478089
+          },
+          "ratio_vs_reference": {
+            "reference_k256_w1": 1.0,
+            "split2_k256_w1": 0.9784883045817334,
+            "split4_k256_w1": 0.8238662284363,
+            "split8_k256_w1": 0.7757056746513303
+          },
+          "samples_ms": {
+            "reference_k256_w1": [
+              0.12103359699249268,
+              0.11959999799728394,
+              0.11878399848937989
+            ],
+            "split2_k256_w1": [
+              0.11776000261306763,
+              0.11691839694976806,
+              0.11702719926834107
+            ],
+            "split4_k256_w1": [
+              0.09881920218467713,
+              0.09853439927101135,
+              0.0984063982963562
+            ],
+            "split8_k256_w1": [
+              0.09308159947395325,
+              0.09277439713478089,
+              0.09277439713478089
+            ]
+          }
+        },
+        "2": {
+          "median_cuda_ms": {
+            "reference_k256_w1": 0.12008639574050903,
+            "split2_k256_w1": 0.1183743953704834,
+            "split4_k256_w1": 0.09941120147705078,
+            "split8_k256_w1": 0.0936959981918335
+          },
+          "ratio_vs_reference": {
+            "reference_k256_w1": 1.0,
+            "split2_k256_w1": 0.9857435943558084,
+            "split4_k256_w1": 0.8278306702773007,
+            "split8_k256_w1": 0.7802382410935064
+          },
+          "samples_ms": {
+            "reference_k256_w1": [
+              0.12091200351715088,
+              0.12008639574050903,
+              0.11900479793548584
+            ],
+            "split2_k256_w1": [
+              0.11868159770965576,
+              0.11816320419311524,
+              0.1183743953704834
+            ],
+            "split4_k256_w1": [
+              0.09943040013313294,
+              0.09941120147705078,
+              0.09932799935340882
+            ],
+            "split8_k256_w1": [
+              0.0936959981918335,
+              0.09389439821243287,
+              0.09359359741210938
+            ]
+          }
+        }
+      }
+    }
+  }
+}

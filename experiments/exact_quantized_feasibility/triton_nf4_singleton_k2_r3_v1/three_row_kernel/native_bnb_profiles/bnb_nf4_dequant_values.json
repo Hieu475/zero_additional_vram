@@ -1,0 +1,95 @@
+{
+  "schema": "zassd-bnb-nf4-dequant-values-audit-v1",
+  "classification": "finite sampled dequantization-value audit; no GEMM/reduction or decoder check",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "seed": 9217,
+  "source_sha256": "46b5cdf3f8900e7f9bcc0e439698e1c4703d7fa23447fe20f3e41017fe4b9df8",
+  "results": {
+    "q_proj": {
+      "weight_shape": [
+        2048,
+        2048
+      ],
+      "weight_dtype": "torch.bfloat16",
+      "nested_quantization": true,
+      "sample_count": 65536,
+      "reconstruction_fp32_vs_bnb": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.0008574128150939941,
+        "mean_abs_diff": 3.8496618799399585e-05
+      },
+      "reconstruction_cast_to_bnb_dtype_vs_bnb": {
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0,
+        "mean_abs_diff": 0.0
+      }
+    },
+    "gate_proj": {
+      "weight_shape": [
+        11008,
+        2048
+      ],
+      "weight_dtype": "torch.bfloat16",
+      "nested_quantization": true,
+      "sample_count": 65536,
+      "reconstruction_fp32_vs_bnb": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.0004642307758331299,
+        "mean_abs_diff": 2.8455058782128617e-05
+      },
+      "reconstruction_cast_to_bnb_dtype_vs_bnb": {
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0,
+        "mean_abs_diff": 0.0
+      }
+    },
+    "up_proj": {
+      "weight_shape": [
+        11008,
+        2048
+      ],
+      "weight_dtype": "torch.bfloat16",
+      "nested_quantization": true,
+      "sample_count": 65536,
+      "reconstruction_fp32_vs_bnb": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.00024370849132537842,
+        "mean_abs_diff": 2.520902307878714e-05
+      },
+      "reconstruction_cast_to_bnb_dtype_vs_bnb": {
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0,
+        "mean_abs_diff": 0.0
+      }
+    },
+    "down_proj": {
+      "weight_shape": [
+        2048,
+        11008
+      ],
+      "weight_dtype": "torch.bfloat16",
+      "nested_quantization": true,
+      "sample_count": 65536,
+      "reconstruction_fp32_vs_bnb": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.00046116113662719727,
+        "mean_abs_diff": 2.6830217393580824e-05
+      },
+      "reconstruction_cast_to_bnb_dtype_vs_bnb": {
+        "bitwise_equal": true,
+        "max_abs_diff": 0.0,
+        "mean_abs_diff": 0.0
+      }
+    }
+  },
+  "limits": [
+    "Samples values from four layer-0 quantized matrices; not an exhaustive full-weight comparison.",
+    "Does not test GEMM reduction order, output rounding after accumulation, or full-model state.",
+    "Held-out GSM8K indices 300-349 were not used."
+  ]
+}

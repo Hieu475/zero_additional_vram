@@ -1,0 +1,88 @@
+\chapter{Hiện thực chương trình}
+
+Chương này mô tả cách các thành phần thiết kế ở Chương~3 được tổ chức và gọi trong mã nguồn ZASSD. Trọng tâm là ranh giới giữa decoder, target verifier, cache và backend; chương không lặp lại mô hình draft--verify hay trình bày kết quả tốc độ. Các cấu hình và số liệu benchmark được báo cáo ở Chương~5.
+
+\paragraph{Lưu ý về phiên bản mã nguồn.} Các Chương~3--5 mô tả hệ thống ZASSD ở giai đoạn đầu của đồ án (vanilla, layer-skip, PLD, router và lớp ứng dụng). Sau đó kho mã được tập trung lại vào giải mã exact trên NF4 (Chương~6): các thành phần layer-skip, router, ứng dụng và dữ liệu thực nghiệm của giai đoạn đầu đã được gỡ khỏi nhánh làm việc hiện tại. Bản nguyên vẹn của hệ thống mô tả ở đây nằm tại git tag \texttt{evidence-pre-cleanup} (commit \texttt{06cf0d7}); cấu trúc thư mục bên dưới là của bản đó.
+
+\section{Môi trường và tổ chức mã nguồn}
+
+ZASSD được cài đặt bằng Python, dùng PyTorch và giao diện mô hình causal language model của Hugging Face Transformers. Cấu hình thực nghiệm chính là Qwen2.5-3B-Instruct trên NVIDIA GeForce RTX 4050 Laptop GPU. Tệp kiểm tra môi trường trong repository ghi nhận Python~3.12.13, PyTorch~2.11.0+cu128, CUDA runtime~12.8 và Transformers~5.14.1; GPU có 6141~MiB bộ nhớ báo cáo bởi driver. Các phiên profiling dùng NVIDIA Nsight Systems và Nsight Compute.
+
+\begin{table}[H]
+\centering
+\caption{Môi trường triển khai và công nghệ sử dụng}
+\label{tab:implementation-environment}
+\begin{tabularx}{0.96\textwidth}{@{}p{3.5cm}X@{}}
+\toprule
+\textbf{Thành phần} & \textbf{Cấu hình hoặc vai trò} \\
+\midrule
+Ngôn ngữ & Python~3.12.13. \\
+Framework & PyTorch~2.11.0+cu128; Transformers~5.14.1. \\
+Mô hình chính & Qwen2.5-3B-Instruct; revision được ghi trong manifest của từng phép đo khi có áp dụng. \\
+GPU & NVIDIA GeForce RTX 4050 Laptop GPU; 6141~MiB theo thông tin thiết bị. \\
+Driver NVIDIA & 595.99.02 theo manifest của một phép đo cụ thể. \\
+Quantization & bitsandbytes NF4 trong đường benchmark CLI; HQQ W4A16 + GemLite trong đường kiểm chứng backend riêng. \\
+Profiling & NVIDIA Nsight Systems để xem timeline CUDA/NVTX; Nsight Compute để khảo sát kernel. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Ví dụ provenance của một phép đo trong manifest \path{tradeoff_n25_r1/environment.json}: model revision bắt đầu bằng \texttt{aa8e7253}, commit mã bắt đầu bằng \texttt{6c3ddf7f}, NVIDIA driver \texttt{595.99.02}. Mã SHA đầy đủ được lưu trong manifest; các giá trị trên chỉ mô tả artifact này.
+
+Các package được chia theo nhiệm vụ thay vì đặt toàn bộ logic trong CLI: \texttt{decoding/} (vanilla, speculative, xác minh, n-gram), \texttt{baselines/} (PLD), \texttt{cache/}, \texttt{models/}, \texttt{layer\_selection/}, \texttt{routing/}, \texttt{profiling/}, \texttt{backends/}, \texttt{controllers/}, \texttt{app/} và \texttt{utils/}; script benchmark và dữ liệu thực nghiệm nằm ngoài package chính.
+
+\section{Hiện thực các phương pháp giải mã}
+
+\subsection{Vanilla Decoding}
+Đường baseline thực hiện prefill toàn bộ prompt, lấy argmax hoặc lấy mẫu từ logits cuối, rồi đưa token vừa chọn vào lượt forward kế tiếp cùng KV cache. Sinh dừng khi gặp EOS hoặc đủ \texttt{max\_new\_tokens}. Trong benchmark CLI, hàm \texttt{run\_vanilla} dùng \texttt{TargetKVCache} dạng static và đồng bộ CUDA trước/sau khoảng đo. Module \path{src/zassd/decoding/vanilla.py} cung cấp hàm sinh và các trường đo như số token, thời gian token đầu, TPOT, throughput và peak VRAM cho các luồng gọi khác.
+
+Vanilla là baseline cùng target model và prompt. Khi chạy benchmark một phương pháp suy đoán, CLI cũng đo vanilla trên cùng danh sách prompt để tính throughput tương đối; warmup được chạy trước phần đo và không tính vào kết quả.
+
+\subsection{Layer-Skip Self-Speculative Decoding}
+Trong \path{src/zassd/decoding/speculative.py}, hàm \texttt{self\_speculative\_generate} điều khiển prefill và các cycle. Ở pha draft, \texttt{LayerManager} nhận danh sách chỉ số lớp cần bỏ qua. Thay vì xóa layer khỏi \texttt{ModuleList}, manager tạm thay \texttt{forward} của từng lớp được chọn bằng ánh xạ identity, giữ nguyên thứ tự và chỉ số lớp của mô hình. Sau lượt tạo candidates, các hàm gốc được phục hồi. Cách làm này tránh nạp thêm checkpoint draft và giữ các chỉ số lớp tương thích với cache của mô hình.
+
+Danh sách lớp có thể đến từ preset của CLI hoặc được truyền trực tiếp cho API. Bộ chọn trong \path{src/zassd/layer_selection/} hỗ trợ chiến lược static, random, empirical và CKA; CLI hiện khai báo các preset \texttt{mid\_12}, \texttt{mid\_10}, \texttt{mid\_8}, \texttt{empirical\_6/8/10}, \texttt{cka\_75} và \texttt{cka\_50}. Các thí nghiệm riêng có thể dùng danh sách lớp khác; vì vậy tên preset không thay thế cho việc lưu chính xác chỉ số lớp trong manifest.
+
+Việc thay \texttt{forward} chỉ diễn ra trong context draft của \texttt{LayerManager.skip\_layers}; khối \texttt{finally} gọi \texttt{restore\_layers} kể cả khi phần sinh draft phát sinh ngoại lệ. Lượt target verification chạy sau khi context kết thúc, do đó dùng lại các hàm \texttt{forward} gốc. Các lớp bị bỏ qua không tự cập nhật KV trong draft; những lớp còn hoạt động vẫn dùng chỉ số lớp và vị trí logic của cache gốc. Điều này chỉ bảo toàn cách định vị cache, không chứng minh KV của draft tương đương với KV target. Hàm identity hiện trả lại \texttt{hidden\_states} (hoặc tuple có các phần phụ là \texttt{None}), nên phụ thuộc vào kiểu đầu ra của kiến trúc đang hỗ trợ; không thể áp dụng mặc nhiên cho layer có side effect hoặc yêu cầu đầu ra cache/attention riêng.
+
+Draft layer-skip bắt đầu từ token pending và cache draft tạm, sinh tối đa \(K\) ứng viên, sau đó chuyển quyền quyết định sang target đầy đủ. Chỉ target verifier xác định token nào được giữ. Phần này mô tả luồng thực thi; acceptance, fidelity và tốc độ theo từng cấu hình được dành cho Chương~5.
+
+\subsection{Prompt Lookup Decoding}
+PLD được hiện thực trong \path{src/zassd/baselines/prompt_lookup.py}; thao tác khớp n-gram nằm trong \path{src/zassd/decoding/ngram.py}. Bộ tìm kiếm thử hậu tố lịch sử với độ dài từ \texttt{ngram\_size} giảm dần đến 2 token. Khi có nhiều match ở cùng độ dài, mã chọn continuation của lần xuất hiện gần nhất. Nguồn tra cứu có thể là toàn bộ history, prompt, hoặc prompt kết hợp phần đã sinh; cấu hình mặc định của API dùng history. Số token continuation trả về bị giới hạn bởi horizon yêu cầu.
+
+Nếu lookup miss hoặc không có token continuation, vòng sinh chuyển sang bước vanilla cho token kế tiếp. Nếu tìm thấy candidates, target xác minh chúng theo thứ tự và PLD dùng cùng quy trình commit/crop cache như đường speculative. Confidence do hàm tra cứu trả về được tạo từ độ dài match, số lần lặp và mức đồng thuận continuation; đây là heuristic cho router, không phải xác suất acceptance đã hiệu chuẩn. Module cũng có chế độ buộc miss để làm đối chứng và chế độ sequential verification dành cho kiểm tra greedy; chế độ sequential không nhận temperature khác 0.
+
+\subsection{Target Verification}
+Verifier greedy trong \path{src/zassd/decoding/verification.py} so sánh từng candidate với argmax của target tại vị trí tương ứng. Các candidate trùng khớp liên tiếp tạo thành accepted prefix. Tại sai khác đầu tiên, candidate đó và phần suffix sau nó bị từ chối, còn token argmax của target trở thành correction. Nếu tất cả \(K\) candidate được chấp nhận, argmax ở vị trí kế tiếp là bonus token. Với speculative decoder, các logits được lấy từ forward target qua token pending đầu vào cùng candidates; vì vậy target đồng thời xử lý token pending trước khi xác minh dãy draft.
+
+Phần token được append vào output trong cycle được phân biệt với correction/bonus đang pending. Token pending được đưa vào KV và chuỗi output ở forward/verification tiếp theo nếu ngân sách còn. Khi cycle chạm EOS hoặc hết ngân sách, thuật toán dừng mà không phát thêm token vượt giới hạn. Các kiểm tra numerical trace, cache replay và margin fallback là chế độ chẩn đoán tùy chọn; chúng không được xem như chi phí mặc định của lượt benchmark thông thường.
+
+\section{Hiện thực KV cache và chọn lớp}
+
+\path{src/zassd/cache/kv_cache.py} cung cấp \texttt{TargetKVCache} với hai lựa chọn: static cache tự cấp phát và \texttt{DynamicCache} của Transformers. Static cache cấp buffer key/value theo lớp ở lần cập nhật đầu, sau đó chép trạng thái mới vào lát cắt kế tiếp và theo dõi \texttt{seq\_len} logic. Khi reject, \texttt{crop} giảm độ dài active; dữ liệu nằm sau độ dài này không còn được coi là prefix hợp lệ. Dynamic cache tăng theo cơ chế của Transformers và cũng hỗ trợ crop về prefix cần giữ.
+
+Draft cache được tạo từ canonical target cache qua \texttt{fork\_ephemeral\_draft\_kv}. Với static cache, các tensor key/value nền được chia sẻ nhưng đối tượng cache draft giữ độ dài logic riêng. Với cache động, các layer cache draft khởi đầu bằng tham chiếu tới tensor prefix; cập nhật và crop được quản lý tách khỏi trạng thái độ dài canonical. Sau target verification, cache chuẩn được crop tới độ dài prefix cộng với token đầu vào đã xử lý và accepted prefix. Nhờ vậy, rejected suffix không còn active trong các forward tiếp theo.
+
+Trong static cache, draft chia sẻ các buffer key/value đã cấp phát, nhưng chỉ được ghi từ vị trí \texttt{seq\_len} trở đi; prefix có chỉ số nhỏ hơn độ dài canonical được dùng chung như vùng chỉ đọc. Target verification sau đó ghi KV target vào các vị trí ứng viên tương ứng. Suffix bị ghi thử có thể vẫn còn dữ liệu vật lý sau rollback, nhưng \texttt{crop} chỉ hạ logical length để các vị trí đó không còn thuộc active prefix; thao tác này không giải phóng buffer GPU đã cấp phát. Hai kiểm tra tương ứng trong \path{tests/test_kv_cache_invariants.py} là \path{test_static_invariant_2_draft_writes_do_not_mutate_prefix} (so sánh K/V prefix trước và sau draft write) và \path{test_static_invariant_3_target_verification_and_rollback} (kiểm tra logical length sau rollback).
+
+Không nạp draft weights, chia sẻ buffer KV và giảm tổng VRAM là ba thuộc tính khác nhau: target weights, cache chuẩn, activation và workspace kernel vẫn tiêu thụ VRAM, nên peak VRAM được đo riêng.
+
+
+\section{Router, backend và giao diện chạy}
+
+\path{src/zassd/routing/hybrid_router.py} nhận history, token pending, horizon và entropy rồi chọn giữa vanilla, PLD và layer-skip theo chính sách ở Mục~3.6: dò PLD để lấy candidates, ước lượng throughput từ acceptance EMA và cost profile (đây là dự báo, không phải acceptance đã biết), rồi áp dụng các gate fallback về vanilla và margin ưu tiên PLD. Nhánh PLD được xét trước gate so sánh với vanilla nên PLD vẫn có thể được chọn dù throughput dự đoán thấp hơn baseline; \path{tests/test_hybrid_router.py} ghi nhận đúng trường hợp này. Đối tượng \texttt{SpeculativeMetrics} ghi tổng token, thời gian prefill/draft/verify/cache, acceptance, số cycle và peak VRAM; tùy chọn NVTX đánh dấu các vùng thời gian cho Nsight Systems.
+
+Đường CLI chính nạp causal LM qua Transformers với lượng tử hóa 4-bit NF4 bằng bitsandbytes (tính toán FP16); \texttt{--no-quantize} nạp FP16. Module \path{src/zassd/backends/base.py} có thêm loader cho HQQ~W4A16 + GemLite, hiện chỉ được gọi trong script kiểm chứng backend riêng. Đổi backend có thể đổi kernel, phép tính KV/logits và kết quả token, nên hai cấu hình này được xem là riêng biệt và không giả định sequence identity giữa chúng.
+
+Entry point \texttt{zassd} được khai báo trong \path{pyproject.toml}; hai lệnh dưới đây chạy vanilla và PLD trên cùng prompt, mỗi lệnh ghi một tệp JSON:
+
+\begin{verbatim}
+zassd benchmark --model Qwen/Qwen2.5-3B-Instruct \
+  --method vanilla --prompt "Explain how a cache works." \
+  --max-new-tokens 32 --output results/vanilla.json
+zassd benchmark --model Qwen/Qwen2.5-3B-Instruct \
+  --method prompt_lookup --k 4 \
+  --prompt "Explain how a cache works." \
+  --max-new-tokens 32 --output results/pld.json
+\end{verbatim}
+

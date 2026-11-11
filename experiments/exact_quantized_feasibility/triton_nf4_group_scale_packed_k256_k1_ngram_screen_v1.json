@@ -1,0 +1,97 @@
+{
+  "status": "one independent process per prompt and n-gram setting; finite development screen, not a policy selection",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "strategy": "triton_nf4_group_scale_packed_k256",
+  "k": 1,
+  "physical_rows": 2,
+  "max_new_tokens": 32,
+  "attention": "padded",
+  "prompts": [
+    "cnndm001",
+    "cnndm002"
+  ],
+  "reference_contract_id": "2dd35565577e8c0e2bc4f6b1dd6c4ef1e257dba15bcd488a8cfea0ecabb7ca67",
+  "records": [
+    {
+      "prompt_id": "cnndm001",
+      "ngram_size": 2,
+      "contract_id": "2dd35565577e8c0e2bc4f6b1dd6c4ef1e257dba15bcd488a8cfea0ecabb7ca67",
+      "latency_s": {
+        "block": 1.0978841119940626,
+        "b1_singleton": 1.0557867829993484,
+        "original_bnb": 0.851765780003916
+      },
+      "latency_ratio_block_over_singleton": 1.0398729456293452,
+      "latency_ratio_block_over_bnb": 1.288950715992623,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "state_match": true,
+      "target_forwards": 27,
+      "target_rows": 36,
+      "draft_tokens": 9,
+      "accepted_draft_tokens": 4
+    },
+    {
+      "prompt_id": "cnndm002",
+      "ngram_size": 2,
+      "contract_id": "2dd35565577e8c0e2bc4f6b1dd6c4ef1e257dba15bcd488a8cfea0ecabb7ca67",
+      "latency_s": {
+        "block": 1.1480734860015218,
+        "b1_singleton": 1.114950253002462,
+        "original_bnb": 0.9222516829977394
+      },
+      "latency_ratio_block_over_singleton": 1.0297082608931312,
+      "latency_ratio_block_over_bnb": 1.2448591931757265,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "state_match": true,
+      "target_forwards": 29,
+      "target_rows": 35,
+      "draft_tokens": 6,
+      "accepted_draft_tokens": 2
+    },
+    {
+      "prompt_id": "cnndm001",
+      "ngram_size": 4,
+      "contract_id": "2dd35565577e8c0e2bc4f6b1dd6c4ef1e257dba15bcd488a8cfea0ecabb7ca67",
+      "latency_s": {
+        "block": 1.1018545140032074,
+        "b1_singleton": 1.1557636270008516,
+        "original_bnb": 0.8909740610033623
+      },
+      "latency_ratio_block_over_singleton": 0.9533562817359674,
+      "latency_ratio_block_over_bnb": 1.2366852888650475,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "state_match": true,
+      "target_forwards": 27,
+      "target_rows": 36,
+      "draft_tokens": 9,
+      "accepted_draft_tokens": 4
+    },
+    {
+      "prompt_id": "cnndm002",
+      "ngram_size": 4,
+      "contract_id": "2dd35565577e8c0e2bc4f6b1dd6c4ef1e257dba15bcd488a8cfea0ecabb7ca67",
+      "latency_s": {
+        "block": 1.215122355002677,
+        "b1_singleton": 1.1863355890018283,
+        "original_bnb": 0.9594568280008389
+      },
+      "latency_ratio_block_over_singleton": 1.024265280640421,
+      "latency_ratio_block_over_bnb": 1.2664690265788745,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "state_match": true,
+      "target_forwards": 29,
+      "target_rows": 35,
+      "draft_tokens": 6,
+      "accepted_draft_tokens": 2
+    }
+  ],
+  "conclusion": "n=2 and n=4 matched B1 and BNB tokens and all 32 KV prefixes on both prompts. Acceptance was unchanged from n=3: 4/9 on cnndm001 and 2/6 on cnndm002. Single-run latency varies by prompt; no n-gram choice is justified."
+}

@@ -1,0 +1,123 @@
+{
+  "status": "finite M=1 operator screen; the singleton kernel is an isolated B1 reference optimization prototype",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "block_n": 16,
+  "block_k": 256,
+  "num_warps": 1,
+  "iterations_per_sample": 24,
+  "alternating_rounds": 7,
+  "results": {
+    "q_proj": {
+      "shape": {
+        "in_features": 2048,
+        "out_features": 2048
+      },
+      "correctness": {
+        "one_row_equals_two_row_kernel": true,
+        "one_row_equals_bnb_singleton": false,
+        "one_row_vs_two_row_max_abs": 0.0,
+        "one_row_vs_bnb_max_abs": 0.0234375
+      },
+      "median_cuda_ms": {
+        "bnb_singleton": 0.025779999792575836,
+        "packed_two_row_kernel_m1": 0.025286667048931122,
+        "packed_one_row_kernel": 0.02325333406527837
+      },
+      "ratio_vs_packed_one_row": {
+        "bnb_singleton": 1.1086582130633154,
+        "packed_two_row_kernel_m1": 1.0874426427601582,
+        "packed_one_row_kernel": 1.0
+      },
+      "samples_ms": {
+        "bnb_singleton": [
+          0.033973333736260734,
+          0.02661599963903427,
+          0.02746933450301488,
+          0.022301333645979565,
+          0.02461999903122584,
+          0.025779999792575836,
+          0.024149333437283833
+        ],
+        "packed_two_row_kernel_m1": [
+          0.03033600002527237,
+          0.024519999821980793,
+          0.02569333215554555,
+          0.02641066660483678,
+          0.025286667048931122,
+          0.024158666531244915,
+          0.024149333437283833
+        ],
+        "packed_one_row_kernel": [
+          0.0249493345618248,
+          0.02325333406527837,
+          0.028029332558314007,
+          0.022698665658632915,
+          0.022756000359853108,
+          0.022600000103314716,
+          0.023899999757607777
+        ]
+      }
+    },
+    "down_proj": {
+      "shape": {
+        "in_features": 11008,
+        "out_features": 2048
+      },
+      "correctness": {
+        "one_row_equals_two_row_kernel": true,
+        "one_row_equals_bnb_singleton": false,
+        "one_row_vs_two_row_max_abs": 0.0,
+        "one_row_vs_bnb_max_abs": 0.0166015625
+      },
+      "median_cuda_ms": {
+        "bnb_singleton": 0.059263999263445534,
+        "packed_two_row_kernel_m1": 0.12120266755421956,
+        "packed_one_row_kernel": 0.10257066289583842
+      },
+      "ratio_vs_packed_one_row": {
+        "bnb_singleton": 0.5777870356909826,
+        "packed_two_row_kernel_m1": 1.1816504264704044,
+        "packed_one_row_kernel": 1.0
+      },
+      "samples_ms": {
+        "bnb_singleton": [
+          0.0616013358036677,
+          0.06169599791367849,
+          0.05845333139101664,
+          0.058334668477376304,
+          0.05938399831453959,
+          0.059263999263445534,
+          0.058880001306533813
+        ],
+        "packed_two_row_kernel_m1": [
+          0.12198000152905782,
+          0.12091333667437236,
+          0.16500000158945718,
+          0.12249599893887837,
+          0.12120266755421956,
+          0.1205400029818217,
+          0.12078133225440979
+        ],
+        "packed_one_row_kernel": [
+          0.10858666896820068,
+          0.10227200388908386,
+          0.10278133551279704,
+          0.10257066289583842,
+          0.10222933689753215,
+          0.102100004752477,
+          0.1086293359597524
+        ]
+      }
+    }
+  }
+}

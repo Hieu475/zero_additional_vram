@@ -1,0 +1,176 @@
+{
+  "classification": "development-only descriptive multisession result; not certification; timing rounds are nested within two prompts",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "configuration": {
+    "K": 2,
+    "R": 3,
+    "physical_rows": 3,
+    "max_new_tokens": 128,
+    "quantized_linear_strategy": "triton_nf4_fixed_three_rows_group_scale_packed"
+  },
+  "sample_scope": {
+    "prompts": [
+      "HumanEval/112",
+      "HumanEval/114"
+    ],
+    "independent_sessions": 4,
+    "paired_timing_rounds": 6,
+    "held_out_used": false
+  },
+  "correctness_vs_b1": {
+    "token_match_sessions": 4,
+    "sessions": 4,
+    "state_prefixes_matched": 512,
+    "state_prefixes_expected": 512
+  },
+  "performance": {
+    "geomean_speedup_vs_b1_singleton": 1.750437726179883,
+    "range_speedup_vs_b1_singleton": [
+      1.2216418078546654,
+      2.593138912511063
+    ],
+    "geomean_speedup_vs_original_bnb": 1.5690983373352236,
+    "range_speedup_vs_original_bnb": [
+      1.0455900095573372,
+      2.2945105763990132
+    ],
+    "bnb_token_match_timing_rounds": 3,
+    "timing_rounds": 6,
+    "acceptance_over_unique_sessions": {
+      "accepted_draft_tokens": 218,
+      "draft_tokens": 312,
+      "rate": 0.6987179487179487
+    }
+  },
+  "prompt_clusters": {
+    "HumanEval/112": {
+      "sessions": [
+        32,
+        34
+      ],
+      "geomean_speedup_vs_b1_singleton": 2.4727588501640567,
+      "geomean_speedup_vs_original_bnb": 2.231483729789862,
+      "bnb_token_match_rounds": 0,
+      "paired_rounds": 3
+    },
+    "HumanEval/114": {
+      "sessions": [
+        33,
+        35
+      ],
+      "geomean_speedup_vs_b1_singleton": 1.2391148587054954,
+      "geomean_speedup_vs_original_bnb": 1.1033329794701283,
+      "bnb_token_match_rounds": 3,
+      "paired_rounds": 3
+    }
+  },
+  "runs": [
+    {
+      "artifact": "actual_fixed_three_rows_humaneval112_128.json",
+      "prompt_id": "HumanEval/112",
+      "session": 32,
+      "generated_tokens": 128,
+      "token_match_b1": true,
+      "state_prefixes_matched": 128,
+      "fixed_three_row_strategy": true,
+      "paired_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1_singleton": 2.438897584014312,
+          "speedup_vs_original_bnb": 2.1706749704505977,
+          "block_matches_bnb": false,
+          "accepted_draft_tokens": 81,
+          "draft_tokens": 83
+        }
+      ],
+      "geomean_speedup_vs_b1": 2.438897584014312,
+      "geomean_speedup_vs_bnb": 2.1706749704505977
+    },
+    {
+      "artifact": "actual_fixed_three_rows_humaneval112_128_s34.json",
+      "prompt_id": "HumanEval/112",
+      "session": 34,
+      "generated_tokens": 128,
+      "token_match_b1": true,
+      "state_prefixes_matched": 128,
+      "fixed_three_row_strategy": true,
+      "paired_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1_singleton": 2.3907047752273463,
+          "speedup_vs_original_bnb": 2.2309832597370143,
+          "block_matches_bnb": false,
+          "accepted_draft_tokens": 81,
+          "draft_tokens": 83
+        },
+        {
+          "round": 1,
+          "speedup_vs_b1_singleton": 2.593138912511063,
+          "speedup_vs_original_bnb": 2.2945105763990132,
+          "block_matches_bnb": false,
+          "accepted_draft_tokens": 81,
+          "draft_tokens": 83
+        }
+      ],
+      "geomean_speedup_vs_b1": 2.4898653740650407,
+      "geomean_speedup_vs_bnb": 2.2625239634611
+    },
+    {
+      "artifact": "actual_fixed_three_rows_humaneval114_128.json",
+      "prompt_id": "HumanEval/114",
+      "session": 33,
+      "generated_tokens": 128,
+      "token_match_b1": true,
+      "state_prefixes_matched": 128,
+      "fixed_three_row_strategy": true,
+      "paired_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1_singleton": 1.2216418078546654,
+          "speedup_vs_original_bnb": 1.0455900095573372,
+          "block_matches_bnb": true,
+          "accepted_draft_tokens": 28,
+          "draft_tokens": 73
+        }
+      ],
+      "geomean_speedup_vs_b1": 1.2216418078546654,
+      "geomean_speedup_vs_bnb": 1.0455900095573372
+    },
+    {
+      "artifact": "actual_fixed_three_rows_humaneval114_128_s35.json",
+      "prompt_id": "HumanEval/114",
+      "session": 35,
+      "generated_tokens": 128,
+      "token_match_b1": true,
+      "state_prefixes_matched": 128,
+      "fixed_three_row_strategy": true,
+      "paired_rounds": [
+        {
+          "round": 0,
+          "speedup_vs_b1_singleton": 1.26701688436357,
+          "speedup_vs_original_bnb": 1.1895461546001693,
+          "block_matches_bnb": true,
+          "accepted_draft_tokens": 28,
+          "draft_tokens": 73
+        },
+        {
+          "round": 1,
+          "speedup_vs_b1_singleton": 1.229159961099899,
+          "speedup_vs_original_bnb": 1.0798839263636415,
+          "block_matches_bnb": true,
+          "accepted_draft_tokens": 28,
+          "draft_tokens": 73
+        }
+      ],
+      "geomean_speedup_vs_b1": 1.2479448803121238,
+      "geomean_speedup_vs_bnb": 1.1333895058718348
+    }
+  ],
+  "limitations": [
+    "Only two fixed development prompts on one GPU; do not interpret paired rounds as independent prompts or infer workload-general confidence intervals.",
+    "Exactness is empirical relative to the pinned experimental B1 singleton path; no formal operator or whole-sequence proof exists.",
+    "BNB token identity is prompt-dependent; speedup does not establish B2 fidelity.",
+    "No held-out GSM8K examples were used."
+  ]
+}

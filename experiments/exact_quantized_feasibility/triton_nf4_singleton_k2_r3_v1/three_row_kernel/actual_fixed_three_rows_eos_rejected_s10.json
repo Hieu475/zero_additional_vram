@@ -1,0 +1,204 @@
+{
+  "status": "experimental K=2/R=3 singleton optimization; no product runtime integration",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "eos_draft_reject",
+  "prompt_sha256": "912a1d023d20abd34f4f684003fde43e45dddb112968d83103703970879cee7c",
+  "input_prompt_characters": 291,
+  "input_prompt_tokens": 55,
+  "session": 10,
+  "experiment_manifest": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/capability_gate_smoke_experiment_manifest.json",
+  "manifest_preflight": "passed",
+  "base_b1_reference_contract": {
+    "contract_id": "94e5bc95080bbaa4496160ed803de0f21b25d1a89a2211540880a292f27c691b",
+    "model_state_sha256": "c6212d37bd02338c60536b1ca674b3e0c76fbcd810ba5df8e8e28b0e16f4f6cf",
+    "verified_source_count": 16
+  },
+  "parameters": {
+    "k": 2,
+    "ngram_size": 3,
+    "physical_rows": 3,
+    "max_new_tokens": 16,
+    "block_k": 32,
+    "attention_strategy": "triton_batched",
+    "quantized_linear_strategy": "triton_nf4_fixed_three_rows_group_scale_packed",
+    "singleton_nf4_kernel": "fixed-three-row kernel with one real row",
+    "block_nf4_kernel": "experimental fixed-three-row packed NF4 kernel",
+    "timing_rounds": 1
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "reference": {
+    "token_ids": [
+      3925,
+      55892,
+      151645
+    ],
+    "state_prefixes": 3
+  },
+  "block": {
+    "token_ids": [
+      3925,
+      55892,
+      151645
+    ],
+    "state_prefixes": 3
+  },
+  "token_match": true,
+  "shared_state_prefixes": 3,
+  "all_shared_states_equal": true,
+  "same_prefix_domain": true,
+  "state_mismatches": [],
+  "memory_telemetry": {
+    "scope": "per-method decode call after model load; peak includes persistent model allocations",
+    "incremental_peak_allocated_bytes": "peak_allocated_bytes minus allocated baseline immediately before the call",
+    "reserved_memory_note": "allocator-reserved values can remain cached and are not equivalent to live tensor bytes"
+  },
+  "timing": {
+    "paired_rounds": [
+      {
+        "round": 0,
+        "method_order": [
+          "original_bnb_greedy",
+          "optimized_b1_singleton",
+          "optimized_b1_block"
+        ],
+        "methods": {
+          "original_bnb_greedy": {
+            "token_ids": [
+              3925,
+              55892,
+              151645
+            ],
+            "total_s": 0.10325107100015884,
+            "prefill_s": 0.05104923199996847,
+            "decode_s": 0.0521985999998833,
+            "memory": {
+              "baseline_allocated_bytes": 2074558976,
+              "peak_allocated_bytes": 2167078400,
+              "incremental_peak_allocated_bytes": 92519424,
+              "baseline_reserved_bytes": 2206203904,
+              "peak_reserved_bytes": 2206203904,
+              "incremental_peak_reserved_bytes": 0
+            }
+          },
+          "optimized_b1_singleton": {
+            "token_ids": [
+              3925,
+              55892,
+              151645
+            ],
+            "total_s": 0.10918278100007228,
+            "prefill_s": 0.05108143500001461,
+            "verify_s": 0.05782662999990862,
+            "accepted_draft_tokens": 0,
+            "draft_tokens": 1,
+            "memory": {
+              "baseline_allocated_bytes": 2074558976,
+              "peak_allocated_bytes": 2094973952,
+              "incremental_peak_allocated_bytes": 20414976,
+              "baseline_reserved_bytes": 2206203904,
+              "peak_reserved_bytes": 2206203904,
+              "incremental_peak_reserved_bytes": 0
+            }
+          },
+          "optimized_b1_block": {
+            "token_ids": [
+              3925,
+              55892,
+              151645
+            ],
+            "total_s": 0.11014045100000658,
+            "prefill_s": 0.050844039999901725,
+            "verify_s": 0.05573821400048473,
+            "accepted_draft_tokens": 0,
+            "draft_tokens": 1,
+            "memory": {
+              "baseline_allocated_bytes": 2074558976,
+              "peak_allocated_bytes": 2095886336,
+              "incremental_peak_allocated_bytes": 21327360,
+              "baseline_reserved_bytes": 2206203904,
+              "peak_reserved_bytes": 2206203904,
+              "incremental_peak_reserved_bytes": 0
+            }
+          }
+        },
+        "block_matches_singleton": true,
+        "block_matches_original_bnb": true
+      }
+    ],
+    "geometric_mean_speedup_vs_optimized_b1_singleton": 0.9913050110904826,
+    "geometric_mean_speedup_vs_original_bnb": 0.9374491393734412,
+    "speedup_vs_b1_samples": [
+      0.9913050110904826
+    ],
+    "speedup_vs_bnb_samples": [
+      0.9374491393734412
+    ]
+  },
+  "limitations": [
+    "Finite development-only closed loop; singleton and block use the fixed-three-row kernel at M=1 and M>1 respectively.",
+    "Not yet pinned by a live B1 reference contract; no BNB state-equivalence claim.",
+    "Held-out GSM8K indices 300-349 were not used."
+  ],
+  "terminal_branch_audit": {
+    "eos_token_id": 151645,
+    "block_terminal_eos": true,
+    "cycle_trace": [
+      {
+        "output_start": 0,
+        "pending": 3925,
+        "draft_tokens": [
+          151645
+        ],
+        "accepted": 0,
+        "rejected_at": 0,
+        "emitted_tokens": [
+          3925
+        ],
+        "draft_s": 2.524900037315092e-05,
+        "verify_s": 0.02843895700016219,
+        "commit_s": 4.990899969925522e-05,
+        "cycle_s": 0.0285864180000317,
+        "cache_len_after": 56,
+        "next_pending": 55892
+      },
+      {
+        "output_start": 1,
+        "pending": 55892,
+        "draft_tokens": [],
+        "accepted": 0,
+        "rejected_at": null,
+        "emitted_tokens": [
+          55892
+        ],
+        "draft_s": 1.5070000245032134e-05,
+        "verify_s": 0.02729925700032254,
+        "commit_s": 6.0756000038963975e-05,
+        "cycle_s": 0.027393297999878996,
+        "cache_len_after": 57,
+        "next_pending": 151645
+      }
+    ],
+    "eos_draft_events": [
+      {
+        "cycle_index": 0,
+        "draft_tokens": [
+          151645
+        ],
+        "eos_candidate_index": 0,
+        "accepted": 0,
+        "rejected_at": 0,
+        "accepted_eos_candidate": false,
+        "rejected_eos_candidate": true,
+        "emitted_tokens": [
+          3925
+        ]
+      }
+    ],
+    "accepted_eos_candidate_seen": false,
+    "rejected_eos_candidate_seen": true,
+    "trace_runner_sha256": "8a67def78869e1756df81f51626234a11a91925300f1624c6eee263486bf9a4b"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "title": "num_stages screening for N=16/K=256/one-warp packed NF4",
+  "status": "rejected as a performance tuning knob; no whole-model strategy added",
+  "rowwise_singleton_equality": "All stage=1/2/3 M=1/2 checks passed for q_proj and down_proj.",
+  "event_medians_m2_ms": {
+    "q_proj": {"stage1": 0.024713, "stage2": 0.024849, "stage3": 0.024849},
+    "down_proj": {"stage1": 0.117180, "stage2": 0.117248, "stage3": 0.117180}
+  },
+  "ncu_stage1_vs_stage3": {
+    "q_proj": {
+      "stage1": {"duration_us": 25.57, "registers_per_thread": 168, "theoretical_occupancy_pct": 25.0, "achieved_occupancy_pct": 12.29, "local_memory_sectors": 0},
+      "stage3": {"duration_us": 25.18, "registers_per_thread": 168, "theoretical_occupancy_pct": 25.0, "achieved_occupancy_pct": 11.86, "local_memory_sectors": 0}
+    },
+    "down_proj": {
+      "stage1": {"duration_us": 125.70, "registers_per_thread": 166, "theoretical_occupancy_pct": 25.0, "achieved_occupancy_pct": 12.15, "local_memory_sectors": 0},
+      "stage3": {"duration_us": 124.83, "registers_per_thread": 166, "theoretical_occupancy_pct": 25.0, "achieved_occupancy_pct": 12.12, "local_memory_sectors": 0}
+    }
+  },
+  "decision": "num_stages=1 did not reduce registers, improve latency, or meaningfully change occupancy; do not add it to the runtime strategy.",
+  "limits": [
+    "Finite operator measurement on one RTX 4050.",
+    "NCU durations are one profiled launch, not benchmark latency.",
+    "No whole-model equivalence or speed test was run for stage=1 because the operator screen showed no benefit."
+  ],
+  "artifacts": {
+    "operator_benchmark": "pipeline_stage_benchmark.json",
+    "q_proj_stage1_ncu": "pipeline_stage_ncu/q_proj_stage1.ncu-rep",
+    "down_proj_stage1_ncu": "pipeline_stage_ncu/down_proj_stage1.ncu-rep",
+    "q_proj_stage3_ncu": "q_proj_warps1.ncu-rep",
+    "down_proj_stage3_ncu": "down_proj_warps1.ncu-rep"
+  }
+}

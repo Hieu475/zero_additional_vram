@@ -1,0 +1,117 @@
+{
+  "profile_kind": "single_launch_ncu_basic",
+  "comparison_note": "Compared descriptively with separate historical four-warp captures; not a controlled A/B. NCU report timing is diagnostic, not an operator benchmark.",
+  "contract_id": "61f0c8f15fbc91b9ce86dd35da55360940accdc59642d1fe9faff985a2019bee",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "cuda": "12.8",
+  "torch": "2.11.0+cu128",
+  "triton": "3.6.0",
+  "launches": {
+    "q_proj": {
+      "report": "q_proj.ncu-rep",
+      "metadata": "q_proj_metadata.json",
+      "input_shape": [
+        1,
+        2,
+        2048
+      ],
+      "output_shape": [
+        1,
+        2,
+        2048
+      ],
+      "warmups": 3,
+      "metrics": {
+        "gpu__time_duration.avg": {
+          "value": 28.256,
+          "unit": "us"
+        },
+        "launch__registers_per_thread": {
+          "value": 168.0,
+          "unit": "register/thread"
+        },
+        "launch__registers_per_thread_allocated": {
+          "value": 168.0,
+          "unit": "register/thread"
+        },
+        "sm__warps_active.avg.pct_of_peak_sustained_active": {
+          "value": 12.026207,
+          "unit": "%"
+        },
+        "sm__throughput.avg.pct_of_peak_sustained_elapsed": {
+          "value": 46.845505,
+          "unit": "%"
+        },
+        "l1tex__throughput.avg.pct_of_peak_sustained_active": {
+          "value": 35.532176,
+          "unit": "%"
+        },
+        "launch__grid_size": {
+          "value": 128.0,
+          "unit": ""
+        },
+        "launch__block_size": {
+          "value": 32.0,
+          "unit": ""
+        },
+        "launch__shared_mem_per_block": {
+          "value": 3.072,
+          "unit": "Kbyte/block"
+        }
+      }
+    },
+    "down_proj": {
+      "report": "down_proj.ncu-rep",
+      "metadata": "down_proj_metadata.json",
+      "input_shape": [
+        1,
+        2,
+        11008
+      ],
+      "output_shape": [
+        1,
+        2,
+        2048
+      ],
+      "warmups": 3,
+      "metrics": {
+        "gpu__time_duration.avg": {
+          "value": 139.392,
+          "unit": "us"
+        },
+        "launch__registers_per_thread": {
+          "value": 167.0,
+          "unit": "register/thread"
+        },
+        "launch__registers_per_thread_allocated": {
+          "value": 168.0,
+          "unit": "register/thread"
+        },
+        "sm__warps_active.avg.pct_of_peak_sustained_active": {
+          "value": 12.328995,
+          "unit": "%"
+        },
+        "sm__throughput.avg.pct_of_peak_sustained_elapsed": {
+          "value": 50.69047,
+          "unit": "%"
+        },
+        "l1tex__throughput.avg.pct_of_peak_sustained_active": {
+          "value": 36.889038,
+          "unit": "%"
+        },
+        "launch__grid_size": {
+          "value": 128.0,
+          "unit": ""
+        },
+        "launch__block_size": {
+          "value": 32.0,
+          "unit": ""
+        },
+        "launch__shared_mem_per_block": {
+          "value": 3.072,
+          "unit": "Kbyte/block"
+        }
+      }
+    }
+  }
+}

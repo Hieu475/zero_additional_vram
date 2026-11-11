@@ -1,0 +1,264 @@
+{
+  "status": "single-transition module-output trace; finite diagnostic, not proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "physical_rows": 5,
+  "attention_strategy": "bnb_rowwise",
+  "quantized_linear_strategy": "fixed_rows",
+  "saved_run": "experiments/exact_quantized_feasibility/qwen3b_bnb_fixedrows_k2_r3_cnndm3_256_v1",
+  "details": [
+    {
+      "prompt_id": "cnndm_000",
+      "forced_bnb_token_index": 0,
+      "warmup_tokens_exact": 0,
+      "prefill_logits_and_kv_equal": true,
+      "first_module_input_difference": {
+        "module": "model.layers.0.self_attn.o_proj",
+        "reference_hash": "a1ddaa50d920df4c41a459efe250c3cb92d313e69869227d8ec8aba7cc037131",
+        "fixed_row_hash": "663bad5a04d76940dc9ab44cc28edcdd0c994a35a8f82bce6c8cc11694072ed0",
+        "tensor_shape": [
+          1,
+          1,
+          2048
+        ],
+        "tensor_dtype": "torch.bfloat16",
+        "tensor_bitwise_equal": false,
+        "tensor_max_abs_diff": 0.00390625
+      },
+      "first_module_output_difference": {
+        "module": "model.layers.0.self_attn.q_proj",
+        "reference_hash": "1f2a7a991d9087d855d0ec0fd47d96cc53f4914a7890731e61f9e7eb977bd5f4",
+        "fixed_row_hash": "383a924ea8e303a1cba8305788e2a73115a02933c2ff5ab70a5f178c58267b63"
+      },
+      "first_sdpa_output_difference": {
+        "call_index": 0,
+        "reference_query_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "fixed_row_query_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "reference_key_shape": [
+          1,
+          2,
+          398,
+          128
+        ],
+        "fixed_row_key_shape": [
+          1,
+          2,
+          398,
+          128
+        ],
+        "reference_mask_shape": null,
+        "fixed_row_mask_shape": null,
+        "reference_is_causal": false,
+        "fixed_row_is_causal": false,
+        "reference_enable_gqa": true,
+        "fixed_row_enable_gqa": true,
+        "reference_output_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "fixed_row_output_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "compared_real_row_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "output_bitwise_equal": false,
+        "output_max_abs_diff": 0.00390625
+      },
+      "sdpa_call_count_reference": 36,
+      "sdpa_call_count_fixed_row": 36,
+      "module_events_reference": 474,
+      "module_events_fixed_row": 474,
+      "final_logits_equal": false,
+      "final_logits_max_abs_diff": 0.25,
+      "kv_equal_after_first_decode": false
+    },
+    {
+      "prompt_id": "cnndm_001",
+      "forced_bnb_token_index": 0,
+      "warmup_tokens_exact": 0,
+      "prefill_logits_and_kv_equal": true,
+      "first_module_input_difference": {
+        "module": "model.layers.0.self_attn.o_proj",
+        "reference_hash": "f3488dd13b861345545e4ef18f5b84d01e53c7698ff548bb52c0c2cfab69b583",
+        "fixed_row_hash": "1641505cf558d1022203387e083e1a3d9b4b3ca9792c8623ea288c2ada1a1a6e",
+        "tensor_shape": [
+          1,
+          1,
+          2048
+        ],
+        "tensor_dtype": "torch.bfloat16",
+        "tensor_bitwise_equal": false,
+        "tensor_max_abs_diff": 0.00390625
+      },
+      "first_module_output_difference": {
+        "module": "model.layers.0.self_attn.q_proj",
+        "reference_hash": "565c534bbf9967a91ec09d6b84fb5fab058d9f95be44c4ff5edf7c85bcc11893",
+        "fixed_row_hash": "d9bd3975532764439b4cdd1c877cef2152b7459587422b745a57e051a1065479"
+      },
+      "first_sdpa_output_difference": {
+        "call_index": 0,
+        "reference_query_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "fixed_row_query_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "reference_key_shape": [
+          1,
+          2,
+          399,
+          128
+        ],
+        "fixed_row_key_shape": [
+          1,
+          2,
+          399,
+          128
+        ],
+        "reference_mask_shape": null,
+        "fixed_row_mask_shape": null,
+        "reference_is_causal": false,
+        "fixed_row_is_causal": false,
+        "reference_enable_gqa": true,
+        "fixed_row_enable_gqa": true,
+        "reference_output_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "fixed_row_output_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "compared_real_row_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "output_bitwise_equal": false,
+        "output_max_abs_diff": 0.00390625
+      },
+      "sdpa_call_count_reference": 36,
+      "sdpa_call_count_fixed_row": 36,
+      "module_events_reference": 474,
+      "module_events_fixed_row": 474,
+      "final_logits_equal": false,
+      "final_logits_max_abs_diff": 0.25,
+      "kv_equal_after_first_decode": false
+    },
+    {
+      "prompt_id": "cnndm_002",
+      "forced_bnb_token_index": 0,
+      "warmup_tokens_exact": 0,
+      "prefill_logits_and_kv_equal": true,
+      "first_module_input_difference": {
+        "module": "model.layers.0.self_attn.o_proj",
+        "reference_hash": "eae63926f6e6029644e7bb23fa7f0781600a1a4f883cbce8139852c81896727c",
+        "fixed_row_hash": "060481ca882155bc382c77b0f101e5d5fb1ef2aa31646af36dc485cd84970175",
+        "tensor_shape": [
+          1,
+          1,
+          2048
+        ],
+        "tensor_dtype": "torch.bfloat16",
+        "tensor_bitwise_equal": false,
+        "tensor_max_abs_diff": 0.00390625
+      },
+      "first_module_output_difference": {
+        "module": "model.layers.0.self_attn.q_proj",
+        "reference_hash": "1f2a7a991d9087d855d0ec0fd47d96cc53f4914a7890731e61f9e7eb977bd5f4",
+        "fixed_row_hash": "383a924ea8e303a1cba8305788e2a73115a02933c2ff5ab70a5f178c58267b63"
+      },
+      "first_sdpa_output_difference": {
+        "call_index": 0,
+        "reference_query_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "fixed_row_query_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "reference_key_shape": [
+          1,
+          2,
+          420,
+          128
+        ],
+        "fixed_row_key_shape": [
+          1,
+          2,
+          420,
+          128
+        ],
+        "reference_mask_shape": null,
+        "fixed_row_mask_shape": null,
+        "reference_is_causal": false,
+        "fixed_row_is_causal": false,
+        "reference_enable_gqa": true,
+        "fixed_row_enable_gqa": true,
+        "reference_output_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "fixed_row_output_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "compared_real_row_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "output_bitwise_equal": false,
+        "output_max_abs_diff": 0.00390625
+      },
+      "sdpa_call_count_reference": 36,
+      "sdpa_call_count_fixed_row": 36,
+      "module_events_reference": 474,
+      "module_events_fixed_row": 474,
+      "final_logits_equal": false,
+      "final_logits_max_abs_diff": 0.3125,
+      "kv_equal_after_first_decode": false
+    }
+  ]
+}

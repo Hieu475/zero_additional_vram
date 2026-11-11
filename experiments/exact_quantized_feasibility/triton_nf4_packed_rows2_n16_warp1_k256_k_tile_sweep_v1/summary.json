@@ -1,0 +1,22 @@
+{
+  "title": "N=16/warp=1 packed NF4 K-tile screen",
+  "status": "no-go for changing the current K=256 reference",
+  "configuration": "Qwen2.5-3B NF4; RTX 4050 Laptop GPU; Triton 3.6.0; q_proj 2048x2048 and down_proj 2048x11008; M=1/2; 30 calls/sample; 7 alternating-order rounds",
+  "correctness": "K=64/128/256 all passed finite rowwise singleton equality at M=1/2 for both projections; each K tile remains a distinct arithmetic schedule.",
+  "latency_ratio_to_k256": {
+    "q_proj_m1": {"k64": 1.038, "k128": 0.978, "k256": 1.0},
+    "q_proj_m2": {"k64": 1.006, "k128": 1.010, "k256": 1.0},
+    "down_proj_m1": {"k64": 1.103, "k128": 1.060, "k256": 1.0},
+    "down_proj_m2": {"k64": 1.136, "k128": 1.052, "k256": 1.0}
+  },
+  "decision": "K=128 is essentially tied for q_proj M=2 but slower on down_proj; K=64 is slower. Retain K=256. No new contract or whole-model run is justified.",
+  "limitations": [
+    "Finite operator-only data on one GPU and two linear layers.",
+    "CUDA-event medians do not establish end-to-end speedup or statistical significance.",
+    "No held-out GSM8K data was used."
+  ],
+  "artifacts": {
+    "operator_benchmark": "operator_benchmark.json",
+    "benchmark_script": "../../../scripts/benchmark_nf4_packed_rows2_warp1_blockk.py"
+  }
+}

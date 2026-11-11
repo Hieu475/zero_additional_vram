@@ -1,0 +1,303 @@
+{
+  "status": "diagnostic multi-session B1 pilot; not a universal proof or held-out evaluation",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "max_new_tokens": 256,
+  "attention_strategy": "padded",
+  "prompt_count": 1,
+  "prompt_hashes": {
+    "b1_long_context_cnndm_002_prompt/cnndm_002": "1c8f7c17bc44f6a95f6ed57c0c242c05a2524f91178ef385fc15fd9b9872dad4"
+  },
+  "by_k": {
+    "2": {
+      "physical_rows": 3,
+      "attention_strategy": "padded",
+      "sessions": [
+        {
+          "session_index": 0,
+          "cohort_start_index": 0,
+          "directory": "experiments/exact_quantized_feasibility/b1_cycle_long_cnndm002_k2_s0_v1"
+        },
+        {
+          "session_index": 1,
+          "cohort_start_index": 0,
+          "directory": "experiments/exact_quantized_feasibility/b1_cycle_long_cnndm002_k2_s1_v1"
+        }
+      ],
+      "pairs": [
+        {
+          "session_index": 0,
+          "cohort_start_index": 0,
+          "task": "b1_long_context_cnndm_002_prompt",
+          "id": "cnndm_002",
+          "input_token_ids_sha256": "1c8f7c17bc44f6a95f6ed57c0c242c05a2524f91178ef385fc15fd9b9872dad4",
+          "method_order": [
+            "original_greedy",
+            "b1_reference",
+            "b1_block"
+          ],
+          "block_matches_b1": true,
+          "all_shared_states_equal": true,
+          "block_matches_original_bnb": false,
+          "speedup_vs_original_bnb": 1.0163538220546966,
+          "speedup_vs_b1_singleton": 1.328397924084073,
+          "shared_frontier_count": 193,
+          "block_total_s": 7.330761004999658,
+          "original_total_s": 7.450646966000932,
+          "b1_singleton_total_s": 9.73816770099802
+        },
+        {
+          "session_index": 1,
+          "cohort_start_index": 0,
+          "task": "b1_long_context_cnndm_002_prompt",
+          "id": "cnndm_002",
+          "input_token_ids_sha256": "1c8f7c17bc44f6a95f6ed57c0c242c05a2524f91178ef385fc15fd9b9872dad4",
+          "method_order": [
+            "b1_reference",
+            "b1_block",
+            "original_greedy"
+          ],
+          "block_matches_b1": true,
+          "all_shared_states_equal": true,
+          "block_matches_original_bnb": false,
+          "speedup_vs_original_bnb": 0.9887134826219635,
+          "speedup_vs_b1_singleton": 1.4232062327174815,
+          "shared_frontier_count": 193,
+          "block_total_s": 6.9879429020002135,
+          "original_total_s": 6.909073363000061,
+          "b1_singleton_total_s": 9.945283892000589
+        }
+      ],
+      "summary": {
+        "n_paired_prompt_rounds": 2,
+        "n_repeat_rounds": 2,
+        "n_prompt_cohorts": 1,
+        "n_unique_prompts": 1,
+        "exact_vs_b1": 2,
+        "exact_vs_original_bnb": 0,
+        "mean_speedup_vs_original_bnb": 1.0025336523383301,
+        "geometric_mean_speedup_vs_original_bnb": 1.0024383906155243,
+        "median_speedup_vs_original_bnb": 1.0025336523383301,
+        "min_speedup_vs_original_bnb": 0.9887134826219635,
+        "max_speedup_vs_original_bnb": 1.0163538220546966,
+        "mean_speedup_vs_b1_singleton": 1.3758020784007772,
+        "all_shared_frontier_states_equal": true
+      },
+      "by_prompt": {
+        "b1_long_context_cnndm_002_prompt/cnndm_002": {
+          "n_rounds": 2,
+          "ratios": [
+            1.0163538220546966,
+            0.9887134826219635
+          ],
+          "mean_ratio": 1.0025336523383301
+        }
+      }
+    },
+    "4": {
+      "physical_rows": 5,
+      "attention_strategy": "padded",
+      "sessions": [
+        {
+          "session_index": 0,
+          "cohort_start_index": 0,
+          "directory": "experiments/exact_quantized_feasibility/b1_cycle_long_cnndm002_k4_r5_s0_v1"
+        },
+        {
+          "session_index": 1,
+          "cohort_start_index": 0,
+          "directory": "experiments/exact_quantized_feasibility/b1_cycle_long_cnndm002_k4_r5_s1_v1"
+        }
+      ],
+      "pairs": [
+        {
+          "session_index": 0,
+          "cohort_start_index": 0,
+          "task": "b1_long_context_cnndm_002_prompt",
+          "id": "cnndm_002",
+          "input_token_ids_sha256": "1c8f7c17bc44f6a95f6ed57c0c242c05a2524f91178ef385fc15fd9b9872dad4",
+          "method_order": [
+            "original_greedy",
+            "b1_reference",
+            "b1_block"
+          ],
+          "block_matches_b1": true,
+          "all_shared_states_equal": true,
+          "block_matches_original_bnb": false,
+          "speedup_vs_original_bnb": 1.0184225266358056,
+          "speedup_vs_b1_singleton": 1.5703056381818183,
+          "shared_frontier_count": 163,
+          "block_total_s": 7.287381023001217,
+          "original_total_s": 7.421632994002721,
+          "b1_singleton_total_s": 11.443415507997997
+        },
+        {
+          "session_index": 1,
+          "cohort_start_index": 0,
+          "task": "b1_long_context_cnndm_002_prompt",
+          "id": "cnndm_002",
+          "input_token_ids_sha256": "1c8f7c17bc44f6a95f6ed57c0c242c05a2524f91178ef385fc15fd9b9872dad4",
+          "method_order": [
+            "b1_reference",
+            "b1_block",
+            "original_greedy"
+          ],
+          "block_matches_b1": true,
+          "all_shared_states_equal": true,
+          "block_matches_original_bnb": false,
+          "speedup_vs_original_bnb": 0.9725555986204845,
+          "speedup_vs_b1_singleton": 1.588448450357129,
+          "shared_frontier_count": 163,
+          "block_total_s": 7.3482773850009835,
+          "original_total_s": 7.1466083109989995,
+          "b1_singleton_total_s": 11.672359824999148
+        }
+      ],
+      "summary": {
+        "n_paired_prompt_rounds": 2,
+        "n_repeat_rounds": 2,
+        "n_prompt_cohorts": 1,
+        "n_unique_prompts": 1,
+        "exact_vs_b1": 2,
+        "exact_vs_original_bnb": 0,
+        "mean_speedup_vs_original_bnb": 0.995489062628145,
+        "geometric_mean_speedup_vs_original_bnb": 0.9952248640588076,
+        "median_speedup_vs_original_bnb": 0.995489062628145,
+        "min_speedup_vs_original_bnb": 0.9725555986204845,
+        "max_speedup_vs_original_bnb": 1.0184225266358056,
+        "mean_speedup_vs_b1_singleton": 1.5793770442694737,
+        "all_shared_frontier_states_equal": true
+      },
+      "by_prompt": {
+        "b1_long_context_cnndm_002_prompt/cnndm_002": {
+          "n_rounds": 2,
+          "ratios": [
+            1.0184225266358056,
+            0.9725555986204845
+          ],
+          "mean_ratio": 0.995489062628145
+        }
+      }
+    },
+    "8": {
+      "physical_rows": 9,
+      "attention_strategy": "padded",
+      "sessions": [
+        {
+          "session_index": 0,
+          "cohort_start_index": 0,
+          "directory": "experiments/exact_quantized_feasibility/b1_cycle_long_cnndm002_k8_r9_s0_v1"
+        },
+        {
+          "session_index": 1,
+          "cohort_start_index": 0,
+          "directory": "experiments/exact_quantized_feasibility/b1_cycle_long_cnndm002_k8_r9_s1_v1"
+        }
+      ],
+      "pairs": [
+        {
+          "session_index": 0,
+          "cohort_start_index": 0,
+          "task": "b1_long_context_cnndm_002_prompt",
+          "id": "cnndm_002",
+          "input_token_ids_sha256": "1c8f7c17bc44f6a95f6ed57c0c242c05a2524f91178ef385fc15fd9b9872dad4",
+          "method_order": [
+            "original_greedy",
+            "b1_reference",
+            "b1_block"
+          ],
+          "block_matches_b1": true,
+          "all_shared_states_equal": true,
+          "block_matches_original_bnb": false,
+          "speedup_vs_original_bnb": 0.9912789248860592,
+          "speedup_vs_b1_singleton": 1.639111105186734,
+          "shared_frontier_count": 157,
+          "block_total_s": 7.103983532997518,
+          "original_total_s": 7.042029158998048,
+          "b1_singleton_total_s": 11.64421829999992
+        },
+        {
+          "session_index": 1,
+          "cohort_start_index": 0,
+          "task": "b1_long_context_cnndm_002_prompt",
+          "id": "cnndm_002",
+          "input_token_ids_sha256": "1c8f7c17bc44f6a95f6ed57c0c242c05a2524f91178ef385fc15fd9b9872dad4",
+          "method_order": [
+            "b1_reference",
+            "b1_block",
+            "original_greedy"
+          ],
+          "block_matches_b1": true,
+          "all_shared_states_equal": true,
+          "block_matches_original_bnb": false,
+          "speedup_vs_original_bnb": 0.9907331734756964,
+          "speedup_vs_b1_singleton": 1.662762683915238,
+          "shared_frontier_count": 157,
+          "block_total_s": 7.20023578999826,
+          "original_total_s": 7.133512453998264,
+          "b1_singleton_total_s": 11.972283387000061
+        }
+      ],
+      "summary": {
+        "n_paired_prompt_rounds": 2,
+        "n_repeat_rounds": 2,
+        "n_prompt_cohorts": 1,
+        "n_unique_prompts": 1,
+        "exact_vs_b1": 2,
+        "exact_vs_original_bnb": 0,
+        "mean_speedup_vs_original_bnb": 0.9910060491808779,
+        "geometric_mean_speedup_vs_original_bnb": 0.991006011612413,
+        "median_speedup_vs_original_bnb": 0.9910060491808779,
+        "min_speedup_vs_original_bnb": 0.9907331734756964,
+        "max_speedup_vs_original_bnb": 0.9912789248860592,
+        "mean_speedup_vs_b1_singleton": 1.650936894550986,
+        "all_shared_frontier_states_equal": true
+      },
+      "by_prompt": {
+        "b1_long_context_cnndm_002_prompt/cnndm_002": {
+          "n_rounds": 2,
+          "ratios": [
+            0.9912789248860592,
+            0.9907331734756964
+          ],
+          "mean_ratio": 0.9910060491808779
+        }
+      }
+    }
+  },
+  "paired_k_comparisons": {
+    "K2_over_K4": {
+      "paired_session_prompt_count": 2,
+      "ratio_definition": "K_right latency / K_left latency; >1 favors K_left",
+      "mean_ratio": 1.0228238224845696,
+      "ratios": [
+        0.9940824722059748,
+        1.0515651727631645
+      ]
+    },
+    "K2_over_K8": {
+      "paired_session_prompt_count": 2,
+      "ratio_definition": "K_right latency / K_left latency; >1 favors K_left",
+      "mean_ratio": 0.9997224155765755,
+      "ratios": [
+        0.9690649481210101,
+        1.030379883032141
+      ]
+    },
+    "K4_over_K8": {
+      "paired_session_prompt_count": 2,
+      "ratio_definition": "K_right latency / K_left latency; >1 favors K_left",
+      "mean_ratio": 0.9773435587252599,
+      "ratios": [
+        0.9748335527640396,
+        0.9798535646864801
+      ]
+    }
+  },
+  "limitations": [
+    "Previously used development prompts; no held-out claim.",
+    "Process sessions share the same GPU and software environment.",
+    "Latency ratios are descriptive; the sample is too small for strong confidence claims.",
+    "Exactness here means measured B1 token output and equality of KV hashes at shared cycle frontiers."
+  ]
+}

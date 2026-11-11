@@ -1,0 +1,36 @@
+{
+  "schema": "zassd-activationvec-nf4-m3-ncu-input-v1",
+  "classification": "single actual-activation M=3 kernel profile; diagnostic only",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "prompt_id": "cnndm_003",
+  "prompt_sha256": "baea8efa9760531deacd4b71b497fe768b9b4c9445fecba57b015e44b57e9f51",
+  "projection": "down_proj",
+  "input_shape": [
+    3,
+    11008
+  ],
+  "output_shape": [
+    3,
+    2048
+  ],
+  "launch": {
+    "out_tile": 8,
+    "num_warps": 8,
+    "warmup_launches": 2,
+    "profiled_matching_launch_index": 3
+  },
+  "bitwise_equal_to_native_bnb_m3": true,
+  "exact_elements": 6144,
+  "total_elements": 6144,
+  "max_abs_diff": 0.0,
+  "runner_sha256": "e08c6c4b3bc34c4559d6768e185b257f68b7c38dbe583839dae81cdd0c713bbc",
+  "kernel_source_sha256": "322da0c917025d9879761fce33b1b5c29880badd41fb79f14b0978e4ac4a4c7a",
+  "heldout_used": false,
+  "limits": [
+    "One prompt, one layer-0 projection and one RTX 4050 toolchain.",
+    "Nsight instrumentation is not a latency benchmark.",
+    "GSM8K held-out indices 300-349 excluded."
+  ]
+}

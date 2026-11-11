@@ -1,0 +1,120 @@
+{
+  "status": "single-transition module-output trace; finite diagnostic, not proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "physical_rows": 3,
+  "attention_strategy": "bnb_rowwise",
+  "quantized_linear_strategy": "fixed_rows",
+  "saved_run": "experiments/exact_quantized_feasibility/qwen3b_bnb_fixedrows_k2_r3_cnndm3_256_v1",
+  "details": [
+    {
+      "prompt_id": "cnndm_000",
+      "forced_bnb_token_index": 61,
+      "warmup_tokens_exact": 61,
+      "prefill_logits_and_kv_equal": true,
+      "first_module_input_difference": null,
+      "first_module_output_difference": null,
+      "first_sdpa_output_difference": null,
+      "sdpa_call_count_reference": 36,
+      "sdpa_call_count_fixed_row": 36,
+      "module_events_reference": 474,
+      "module_events_fixed_row": 474,
+      "final_logits_equal": true,
+      "final_logits_max_abs_diff": 0.0,
+      "kv_equal_after_first_decode": true
+    },
+    {
+      "prompt_id": "cnndm_001",
+      "forced_bnb_token_index": 61,
+      "warmup_tokens_exact": 61,
+      "prefill_logits_and_kv_equal": true,
+      "first_module_input_difference": {
+        "module": "model.layers.33.mlp",
+        "reference_hash": "c2e1508869276740d9af4d570cb2d04b0376883e2362431e9958e83d1cc13270",
+        "fixed_row_hash": "abcf7a61ed2fbbec89f650fd0529b9c0121f3cf970dcfff146f2959c51f22e84"
+      },
+      "first_module_output_difference": {
+        "module": "model.layers.33.post_attention_layernorm",
+        "reference_hash": "4d9d460c83fa71cc0bbfab473fb0774add924898a50f64284f83f3f726c8d29d",
+        "fixed_row_hash": "f059a94bb49a1d0a1fd8b6c8456c0436ff9c5854ae3256258554a5db6f9f0424"
+      },
+      "first_sdpa_output_difference": {
+        "call_index": 34,
+        "reference_query_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "fixed_row_query_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "reference_key_shape": [
+          1,
+          2,
+          460,
+          128
+        ],
+        "fixed_row_key_shape": [
+          1,
+          2,
+          460,
+          128
+        ],
+        "reference_mask_shape": null,
+        "fixed_row_mask_shape": null,
+        "reference_is_causal": false,
+        "fixed_row_is_causal": false,
+        "reference_enable_gqa": true,
+        "fixed_row_enable_gqa": true,
+        "reference_output_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "fixed_row_output_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "compared_real_row_shape": [
+          1,
+          16,
+          1,
+          128
+        ],
+        "output_bitwise_equal": false,
+        "output_max_abs_diff": 0.03125
+      },
+      "sdpa_call_count_reference": 36,
+      "sdpa_call_count_fixed_row": 36,
+      "module_events_reference": 474,
+      "module_events_fixed_row": 474,
+      "final_logits_equal": false,
+      "final_logits_max_abs_diff": 0.125,
+      "kv_equal_after_first_decode": false
+    },
+    {
+      "prompt_id": "cnndm_002",
+      "forced_bnb_token_index": 61,
+      "warmup_tokens_exact": 61,
+      "prefill_logits_and_kv_equal": true,
+      "first_module_input_difference": null,
+      "first_module_output_difference": null,
+      "first_sdpa_output_difference": null,
+      "sdpa_call_count_reference": 36,
+      "sdpa_call_count_fixed_row": 36,
+      "module_events_reference": 474,
+      "module_events_fixed_row": 474,
+      "final_logits_equal": true,
+      "final_logits_max_abs_diff": 0.0,
+      "kv_equal_after_first_decode": true
+    }
+  ]
+}

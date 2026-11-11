@@ -1,0 +1,11 @@
+{
+  "cohort_manifest": "experiments/exact_quantized_feasibility/frozen_gsm8k_ext50.json",
+  "status": "invalid_as_genuinely_unseen_heldout",
+  "reason": "All 50 selected IDs occur in earlier project benchmark artifacts. The manifest is retained as an immutable record of the attempted reservation, but these prompts must not be labeled newly held out.",
+  "prior_artifacts": {
+    "experiments/16_hybrid_roofline/standard_suite_gsm8k_ext150.json": 50,
+    "experiments/16_hybrid_roofline/standard_suite_gsm8k_N200.json": 50
+  },
+  "selected_ids": 50,
+  "required_next_step": "Acquire or construct a new prompt cohort not appearing in prior result artifacts, then freeze its IDs and hashes before model evaluation."
+}

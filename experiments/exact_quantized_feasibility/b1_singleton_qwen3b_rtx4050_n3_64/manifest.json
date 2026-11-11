@@ -1,0 +1,38 @@
+{
+  "status": "diagnostic; singleton target schedule, no batched 4-bit kernel",
+  "reference": "same model object, static KV, prompt prefill, singleton token forward",
+  "git_commit": "6465f4dc67eb15d8fb2be46606424d78539b6831",
+  "git_dirty": true,
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "backend": "hf_bnb_nf4",
+  "backend_metadata": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "device": "cuda:0",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "transformers": "5.14.1",
+  "bitsandbytes": "0.50.0",
+  "python": "3.12.13",
+  "k": 4,
+  "max_new_tokens": 64,
+  "capacity": 2048,
+  "per_task": 1,
+  "inputs": {
+    "gsm8k": {
+      "path": "data/benchmarks/gsm8k_eval.jsonl",
+      "sha256": "a267e7a2e196949177bff46c9c2d9d50c39c66724b8fd0b868f7a042b7b1b0f6"
+    },
+    "humaneval": {
+      "path": "data/benchmarks/humaneval_eval.jsonl",
+      "sha256": "3d5d2f3f5d6ce32547732cb27b9d483f177be4e6dcd82bd98a10610e3af5db04"
+    },
+    "cnndm": {
+      "path": "data/benchmarks/cnndm_eval.jsonl",
+      "sha256": "11b5e9db9851878491854f6e166c513aa0ed6668d635ccb49d97592032d02096"
+    }
+  }
+}

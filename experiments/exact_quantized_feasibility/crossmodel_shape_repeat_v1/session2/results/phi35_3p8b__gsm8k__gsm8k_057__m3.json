@@ -1,0 +1,61 @@
+{
+  "status": "completed",
+  "scope": "single-prefix shape diagnostic; not full-sequence exactness or a universal guarantee",
+  "protocol_sha256": "9f833c6baff42e8edcac90ab629499af308e8cc47598a8975140f1f1fa3a60a2",
+  "cohort_sha256": "01610458c693cb12d715bb0474ede6d354e1dee33c599d2cc08e7d805546ff08",
+  "model": "microsoft/Phi-3.5-mini-instruct",
+  "revision": "2fe192450127e6a83f7441aef6e3ca586c338b77",
+  "family": "Phi3",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "gsm8k_057",
+  "task": "gsm8k",
+  "prompt_sha256": "08b78a955d65a516d71029ff129278b6417030e46ee9ee427c64050e4588e306",
+  "prompt_token_count": 84,
+  "prompt_token_ids_sha256": "2f7d80ef79ce019c1c0d718022bf66f979a7682cc989f966de847520c0392f97",
+  "M": 3,
+  "candidate_ids": [
+    13,
+    13,
+    13
+  ],
+  "candidate_length": 3,
+  "linear_singleton_counts": {
+    "patched_modules": 129,
+    "split_forward_calls": 129,
+    "single_row_kernel_calls": 387
+  },
+  "ordinary_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.1875,
+    "kv_value_max_abs": 0.1875,
+    "first_kv_different_layer": 1
+  },
+  "singleton_linear_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.1875,
+    "kv_value_max_abs": 0.1875,
+    "first_kv_different_layer": 1
+  },
+  "model_manifest": "experiments/exact_quantized_feasibility/crossmodel_shape_repeat_v1/session2/manifests/phi35_3p8b.json"
+}

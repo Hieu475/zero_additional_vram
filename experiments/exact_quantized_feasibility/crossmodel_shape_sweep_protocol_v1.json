@@ -1,0 +1,177 @@
+{
+  "schema": "crossmodel-shape-sweep-protocol-v1",
+  "status": "locked before execution; development-only finite precision diagnostic",
+  "research_question": "Does changing verify sequence shape under BNB NF4 alter logits, candidate-row argmaxes, or active KV across model families, tasks, prompt lengths, and M?",
+  "claim_boundary": "This protocol tests shape sensitivity in the declared model/runtime matrix. It cannot prove a statement for all language models or all runtimes. It does not test multi-cycle generated-output equivalence or B1 correctness outside Qwen2.",
+  "models": [
+    {
+      "slug": "qwen25_0p5b",
+      "id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "family": "Qwen2"
+    },
+    {
+      "slug": "qwen25_1p5b",
+      "id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "family": "Qwen2"
+    },
+    {
+      "slug": "qwen25_3b",
+      "id": "Qwen/Qwen2.5-3B-Instruct",
+      "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "family": "Qwen2"
+    },
+    {
+      "slug": "llama32_1b",
+      "id": "unsloth/Llama-3.2-1B-Instruct",
+      "revision": "5a8abab4a5d6f164389b1079fb721cfab8d7126c",
+      "family": "Llama"
+    },
+    {
+      "slug": "llama32_3b",
+      "id": "unsloth/Llama-3.2-3B-Instruct",
+      "revision": "006f5dcd1393c3add266de40994ba96225e9689d",
+      "family": "Llama"
+    },
+    {
+      "slug": "phi35_3p8b",
+      "id": "microsoft/Phi-3.5-mini-instruct",
+      "revision": "2fe192450127e6a83f7441aef6e3ca586c338b77",
+      "family": "Phi3"
+    },
+    {
+      "slug": "olmo2_1b",
+      "id": "allenai/OLMo-2-0425-1B-Instruct",
+      "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+      "family": "OLMo2"
+    }
+  ],
+  "architecture_family_count": 4,
+  "checkpoint_count": 7,
+  "backend": {
+    "name": "hf_bnb_nf4",
+    "quantization": "NF4",
+    "double_quant": true,
+    "compute_dtype": "float16",
+    "attention": "sdpa",
+    "device": "cuda:0"
+  },
+  "runtime_expected": {
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0"
+  },
+  "prompts": [
+    {
+      "task": "gsm8k",
+      "id": "gsm8k_010",
+      "source_file": "data/benchmarks/gsm8k_eval.jsonl",
+      "source_row_index": 10,
+      "prompt_chars": 312,
+      "prompt_sha256": "409bd038a80a87144b4001492904dbb498fcdad398c735d35fea025c2c951e87"
+    },
+    {
+      "task": "gsm8k",
+      "id": "gsm8k_020",
+      "source_file": "data/benchmarks/gsm8k_eval.jsonl",
+      "source_row_index": 20,
+      "prompt_chars": 286,
+      "prompt_sha256": "17e603a1db9f658e38c4646262209297a43e458b4beee69e326d03f813a554ed"
+    },
+    {
+      "task": "gsm8k",
+      "id": "gsm8k_040",
+      "source_file": "data/benchmarks/gsm8k_eval.jsonl",
+      "source_row_index": 40,
+      "prompt_chars": 211,
+      "prompt_sha256": "878fd7f023d650c2d68a72db18362f0eeaf1facd6578a5f5a3707e0732a63938"
+    },
+    {
+      "task": "humaneval",
+      "id": "HumanEval/10",
+      "source_file": "data/benchmarks/humaneval_eval.jsonl",
+      "source_row_index": 10,
+      "prompt_chars": 580,
+      "prompt_sha256": "60e80406bde04ba96808271e9ba8fd58129b6e8570d3ef23a2eb4c8a79370913"
+    },
+    {
+      "task": "humaneval",
+      "id": "HumanEval/20",
+      "source_file": "data/benchmarks/humaneval_eval.jsonl",
+      "source_row_index": 20,
+      "prompt_chars": 451,
+      "prompt_sha256": "881d52f394307cce02e432bc6342c93bfe0f6652b203f0bf1a0fc365ed87c594"
+    },
+    {
+      "task": "humaneval",
+      "id": "HumanEval/40",
+      "source_file": "data/benchmarks/humaneval_eval.jsonl",
+      "source_row_index": 40,
+      "prompt_chars": 484,
+      "prompt_sha256": "9d88f259a8dff048e25628589b4c2a1b4fb22419540df1e34d2d731216ae41dc"
+    },
+    {
+      "task": "cnndm",
+      "id": "cnndm_010",
+      "source_file": "data/benchmarks/cnndm_eval.jsonl",
+      "source_row_index": 10,
+      "prompt_chars": 777,
+      "prompt_sha256": "3e35ce560b569d0e96706b0147fa30afcd1d9143198a9a5849c9fd44ae9170c6"
+    },
+    {
+      "task": "cnndm",
+      "id": "cnndm_020",
+      "source_file": "data/benchmarks/cnndm_eval.jsonl",
+      "source_row_index": 20,
+      "prompt_chars": 1768,
+      "prompt_sha256": "b3170873d897f1df312194935515d47a1b041b78e172bef9fcbcc3db736d1981"
+    },
+    {
+      "task": "cnndm",
+      "id": "cnndm_040",
+      "source_file": "data/benchmarks/cnndm_eval.jsonl",
+      "source_row_index": 40,
+      "prompt_chars": 1645,
+      "prompt_sha256": "3fab323bb299d3aedf9c6d562f432271cb66c0b7fcaa51be6ecd4ab8f1c4075f"
+    }
+  ],
+  "cohort_file": "experiments/exact_quantized_feasibility/crossmodel_shape_cohort_v1.jsonl",
+  "cohort_sha256": "12f1b072d375bdcbc819a24d125e73b3307ed0d37a802d6f0e377e193aaf48e3",
+  "source_file_sha256": {
+    "data/benchmarks/gsm8k_eval.jsonl": "a267e7a2e196949177bff46c9c2d9d50c39c66724b8fd0b868f7a042b7b1b0f6",
+    "data/benchmarks/humaneval_eval.jsonl": "3d5d2f3f5d6ce32547732cb27b9d483f177be4e6dcd82bd98a10610e3af5db04",
+    "data/benchmarks/cnndm_eval.jsonl": "11b5e9db9851878491854f6e166c513aa0ed6668d635ccb49d97592032d02096"
+  },
+  "M_values": [
+    3,
+    5,
+    9
+  ],
+  "candidate_rows": "M",
+  "prefix_protocol": "For each model/prompt, prefill independently, build the model’s own greedy candidate continuation from the singleton path, then compare sequential vs ordinary batched vs singleton-linear batched on the same fixed candidate inputs.",
+  "metrics": [
+    "per-row max absolute logit difference",
+    "per-row argmax equality and first mismatching candidate row",
+    "active KV key/value max absolute error",
+    "first KV layer with a difference",
+    "same metrics after singleton-linear intervention",
+    "prompt token count and token-ID hash"
+  ],
+  "execution_plan": {
+    "configuration_count": 189,
+    "repeat_sessions": 1,
+    "session_order": "fixed; no policy tuning or prompt replacement based on results",
+    "failures": "Record load errors, unsupported architecture, or OOM as outcomes; do not silently drop or substitute models/prompts."
+  },
+  "decision_rules": [
+    "Report each model family and checkpoint separately before any aggregate.",
+    "A shape-sensitivity signal requires nonzero logit or active-KV difference; report token-row argmax flips separately.",
+    "Do not call candidate-row argmax agreement a full-sequence exactness rate.",
+    "If a configuration is unsupported or fails, count it as unsupported/failure, not a pass.",
+    "Do not use GSM8K test indices 300–349."
+  ],
+  "prior_exposure_audit": "Selected IDs were absent from existing experiments/exact_quantized_feasibility artifacts at protocol creation; they remain development benchmark rows, not a held-out cohort."
+}

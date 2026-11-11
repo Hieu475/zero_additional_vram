@@ -1,0 +1,65 @@
+{
+  "scope": "single-prefix diagnostic; no exactness guarantee and no production timing",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "backend": "hf_bnb_nf4",
+  "backend_metadata": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "cnndm_001",
+  "prompt_token_ids_sha256": "a1b4994af4d84227e8feb7a8d929a91328403df9861255707069675b7cca02db",
+  "prompt_length": 395,
+  "candidate_ids": [
+    362,
+    62490,
+    5679,
+    304,
+    6652
+  ],
+  "candidate_length": 5,
+  "capacity": 407,
+  "linear_singleton_counts": {
+    "patched_modules": 113,
+    "split_forward_calls": 113,
+    "single_row_kernel_calls": 565
+  },
+  "ordinary_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.125,
+      0.125,
+      0.125,
+      0.142578125,
+      0.1875
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.125,
+    "kv_value_max_abs": 0.0263671875,
+    "first_kv_different_layer": 0
+  },
+  "singleton_linear_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.125,
+      0.125,
+      0.1875,
+      0.25,
+      0.1875
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.125,
+    "kv_value_max_abs": 0.03125,
+    "first_kv_different_layer": 1
+  }
+}

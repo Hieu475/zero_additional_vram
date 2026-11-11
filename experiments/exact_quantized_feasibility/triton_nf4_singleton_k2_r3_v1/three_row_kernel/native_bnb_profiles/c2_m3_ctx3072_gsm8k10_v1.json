@@ -1,0 +1,130 @@
+{
+  "schema": "zassd-op-shape-sensitivity-v1",
+  "prompts": [
+    "gsm8k_000",
+    "gsm8k_001",
+    "gsm8k_002",
+    "gsm8k_003",
+    "gsm8k_004",
+    "gsm8k_005",
+    "gsm8k_006",
+    "gsm8k_007",
+    "gsm8k_008",
+    "gsm8k_009"
+  ],
+  "steps": 48,
+  "block_size": 3,
+  "context_len": 3072,
+  "per_op_class": {
+    "linear4bit_down_proj": {
+      "calls": 5760,
+      "calls_with_mismatch": 0,
+      "elements": 35389440,
+      "mismatches": 0,
+      "max_abs_diff": 0.0,
+      "mismatch_rate": 0.0,
+      "call_mismatch_rate": 0.0
+    },
+    "linear4bit_gate_proj": {
+      "calls": 5760,
+      "calls_with_mismatch": 0,
+      "elements": 190218240,
+      "mismatches": 0,
+      "max_abs_diff": 0.0,
+      "mismatch_rate": 0.0,
+      "call_mismatch_rate": 0.0
+    },
+    "linear4bit_k_proj": {
+      "calls": 5760,
+      "calls_with_mismatch": 0,
+      "elements": 4423680,
+      "mismatches": 0,
+      "max_abs_diff": 0.0,
+      "mismatch_rate": 0.0,
+      "call_mismatch_rate": 0.0
+    },
+    "linear4bit_o_proj": {
+      "calls": 5760,
+      "calls_with_mismatch": 0,
+      "elements": 35389440,
+      "mismatches": 0,
+      "max_abs_diff": 0.0,
+      "mismatch_rate": 0.0,
+      "call_mismatch_rate": 0.0
+    },
+    "linear4bit_q_proj": {
+      "calls": 5760,
+      "calls_with_mismatch": 0,
+      "elements": 35389440,
+      "mismatches": 0,
+      "max_abs_diff": 0.0,
+      "mismatch_rate": 0.0,
+      "call_mismatch_rate": 0.0
+    },
+    "linear4bit_up_proj": {
+      "calls": 5760,
+      "calls_with_mismatch": 0,
+      "elements": 190218240,
+      "mismatches": 0,
+      "max_abs_diff": 0.0,
+      "mismatch_rate": 0.0,
+      "call_mismatch_rate": 0.0
+    },
+    "linear4bit_v_proj": {
+      "calls": 5760,
+      "calls_with_mismatch": 0,
+      "elements": 4423680,
+      "mismatches": 0,
+      "max_abs_diff": 0.0,
+      "mismatch_rate": 0.0,
+      "call_mismatch_rate": 0.0
+    },
+    "lm_head": {
+      "calls": 160,
+      "calls_with_mismatch": 160,
+      "elements": 72929280,
+      "mismatches": 127692,
+      "max_abs_diff": 0.125,
+      "mismatch_rate": 0.0017509016954507161,
+      "call_mismatch_rate": 1.0
+    },
+    "rmsnorm_final": {
+      "calls": 160,
+      "calls_with_mismatch": 0,
+      "elements": 983040,
+      "mismatches": 0,
+      "max_abs_diff": 0.0,
+      "mismatch_rate": 0.0,
+      "call_mismatch_rate": 0.0
+    },
+    "rmsnorm_layer": {
+      "calls": 11520,
+      "calls_with_mismatch": 6,
+      "elements": 70778880,
+      "mismatches": 84,
+      "max_abs_diff": 0.0078125,
+      "mismatch_rate": 1.1867947048611111e-06,
+      "call_mismatch_rate": 0.0005208333333333333
+    },
+    "sdpa_attention": {
+      "calls": 5760,
+      "calls_with_mismatch": 5760,
+      "elements": 35389440,
+      "mismatches": 6845048,
+      "max_abs_diff": 0.0625,
+      "mismatch_rate": 0.19342063621238426,
+      "call_mismatch_rate": 1.0
+    }
+  },
+  "end_to_end": {
+    "rows": 480,
+    "logits_not_bitwise": 480,
+    "argmax_flips": 1,
+    "margins_of_flips": [
+      0.0
+    ],
+    "median_max_abs_logit_diff": 0.21875,
+    "max_max_abs_logit_diff": 1.03125,
+    "fraction_rows_margin_below_median_diff": 0.03333333333333333
+  }
+}

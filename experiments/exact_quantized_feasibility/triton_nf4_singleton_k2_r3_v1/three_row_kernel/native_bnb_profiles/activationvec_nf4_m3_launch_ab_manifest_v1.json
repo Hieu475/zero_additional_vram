@@ -1,0 +1,57 @@
+{
+  "schema": "zassd-activationvec-no-proposal-fallback-manifest-v1",
+  "classification": "same-process paired default-versus-tuned NF4 M=3 launch experiment with B1 no-proposal fallback; source-pinned; development only",
+  "model": {
+    "id": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "triton": "3.6.0",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "schedule": {
+    "k": 2,
+    "ngram_size": 3,
+    "physical_rows": 3,
+    "attention": "bnb_rowwise",
+    "fallback": "original module forwards with one real input row, only when no draft proposal exists"
+  },
+  "source_sha256": {
+    "scripts/audit_activationvec_no_proposal_fallback.py": "0bf77b5febfeadb99c1448fb7fbc2f2b97e6e788e794ac57c1bf1ebd8a783b48",
+    "scripts/benchmark_bnb_nf4_activationvec_closed_loop.py": "01a40bc6aa59a2d1bf7b8cdce40b038881a7ff8396bde4a78809d6352de89d99",
+    "scripts/audit_bnb_nf4_activationvec_block_integration.py": "2446bb9abffab98e9879abeef1e4b30541a7906363158b45c800bd80f8b67022",
+    "scripts/audit_bnb_nf4_gate_reduction_orders.py": "ba9751d19c02c4e704aad64622173908d5f811203d5674c9449c0337da64cae5",
+    "scripts/audit_triton_b1_closed_loop.py": "69ffa08de5a9620baefee7526653085f390b72eddac0c5f94e22ddd4baf51e4a",
+    "scripts/run_strong_baseline_comparison.py": "d887583863e9d4889170a664bfa1ca9f9a6bf6fc0b1f4b09631f62170714a238",
+    "src/zassd/decoding/b1_exact.py": "e19b4e6440697fc96e6e6e7b1902da843fa45b8cae0e62700c4ac331f99b0d63",
+    "src/zassd/certification/fixed_row_dispatch.py": "22bfa87d6ba25ff0f7f0da5e09359557984e5e8f3daa71b7f44c3362bd4225a9",
+    "src/zassd/certification/qwen2_padded.py": "a87cf46e83cbd6741e7c9465c358b0988e160516f66820a8e77ce74d7265c4c5",
+    "src/zassd/cache/kv_cache.py": "a56a3ad4ee163e7456e236515e8848173face82426b0fe3c0e7489b170ed3934",
+    "scripts/summarize_activationvec_no_proposal_fallback.py": "04d92d4557e9df79571d30a2770ff18fa69a7cca381b3e767b329121c593d96e",
+    "scripts/summarize_activationvec_no_proposal_fallback_cnndm.py": "9efe2e400e13632ca8f06f870354d7e000ccd266b4cbfa946acdea5844b2fe4a",
+    "scripts/summarize_activationvec_no_proposal_fallback_cnndm_256.py": "cf8055978c39de9a9f1ab27d022c4075c82d0f236bdf61c0aa5b65b011ad4c4d",
+    "scripts/summarize_activationvec_no_proposal_fallback_humaneval_256.py": "e44d00df9e1991689ca43f2dbd9f49f4762d38d670bbf30b6f00e865180702ee",
+    "scripts/analyze_activationvec_fallback_prompt_dependence.py": "c6900aacba978d970e059d307fd6c0fe8a846cfb9179c979ad48773158cc1b60",
+    "scripts/benchmark_activationvec_nf4_m3_launch_ab.py": "e0c01f58acb643aa72be43e0dbaa055bd52057f12b9903762d7084066d3fa609",
+    "scripts/tune_activationvec_nf4_m3_launch.py": "180e562bfccf53d15d0c742538ef114c92b88b3353f792ce04e6996a70578d38"
+  },
+  "heldout_policy": "GSM8K held-out indices 300-349 excluded.",
+  "launch_ab": {
+    "default": {
+      "out_tile": 8,
+      "num_warps": 8
+    },
+    "tuned": {
+      "wide_mlp_out_tile": 4,
+      "wide_mlp_num_warps": 4,
+      "other_out_tile": 8,
+      "other_num_warps": 8
+    },
+    "selector": "in_features == 11008 or out_features == 11008"
+  }
+}

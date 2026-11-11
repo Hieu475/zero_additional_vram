@@ -1,0 +1,101 @@
+{
+  "schema": "zassd-fallback-k-sweep-summary-512-v1",
+  "classification": "two selected prompts, one process each, four paired rounds; descriptive K sweep",
+  "scope": "Qwen2.5-3B-Instruct NF4, RTX 4050 Laptop GPU, 512 tokens, physical_rows=3, native BNB fallback on every empty-proposal cycle",
+  "ratio_definition": "speedup = baseline latency / candidate latency; >1 means candidate faster",
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/123",
+      "empty_proposal_cycles": {
+        "k1": 173,
+        "k2": 173
+      },
+      "original_bnb_token_matches": {
+        "k1_fallback_all": 4,
+        "k2_fallback_all": 4
+      },
+      "k1_vs_k2": {
+        "k1_fallback_all": {
+          "speedup_vs_bnb_geomean": 0.9065003451662158,
+          "latency_s_median": 13.898724882499664,
+          "decode_s_median": 13.80307930399431,
+          "cycles_median": 432.0,
+          "draft_tokens_median": 259.0,
+          "accepted_tokens_median": 79.0,
+          "acceptance_fraction": 0.305019305019305,
+          "target_rows_median": 691.0
+        },
+        "k2_fallback_all": {
+          "speedup_vs_bnb_geomean": 0.9693325169119227,
+          "latency_s_median": 12.983559475003858,
+          "decode_s_median": 12.88579209400632,
+          "cycles_median": 409.0,
+          "draft_tokens_median": 471.0,
+          "accepted_tokens_median": 102.0,
+          "acceptance_fraction": 0.21656050955414013,
+          "target_rows_median": 880.0
+        }
+      },
+      "k2_speedup_over_k1": 1.07146869720648,
+      "artifact": "fallback_k_sweep_HumanEval123_512_v1.json"
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "empty_proposal_cycles": {
+        "k1": 169,
+        "k2": 169
+      },
+      "original_bnb_token_matches": {
+        "k1_fallback_all": 4,
+        "k2_fallback_all": 4
+      },
+      "k1_vs_k2": {
+        "k1_fallback_all": {
+          "speedup_vs_bnb_geomean": 1.0780858478495083,
+          "latency_s_median": 11.530170011501468,
+          "decode_s_median": 11.472566883501713,
+          "cycles_median": 369.0,
+          "draft_tokens_median": 200.0,
+          "accepted_tokens_median": 142.0,
+          "acceptance_fraction": 0.71,
+          "target_rows_median": 569.0
+        },
+        "k2_fallback_all": {
+          "speedup_vs_bnb_geomean": 1.2834485226788386,
+          "latency_s_median": 9.699832936999883,
+          "decode_s_median": 9.643236218500533,
+          "cycles_median": 321.0,
+          "draft_tokens_median": 304.0,
+          "accepted_tokens_median": 190.0,
+          "acceptance_fraction": 0.625,
+          "target_rows_median": 625.0
+        }
+      },
+      "k2_speedup_over_k1": 1.1860671880422022,
+      "artifact": "fallback_k_sweep_HumanEval114_512_v1.json"
+    }
+  ],
+  "prompt_count": 2,
+  "process_count": 2,
+  "all_k_values_exact_to_b1_token_and_kv": true,
+  "all_timed_tokens_match_b1": true,
+  "all_timed_tokens_match_original_bnb": true,
+  "geomean_across_two_prompts": {
+    "k1_vs_bnb": 0.9885773582246317,
+    "k2_vs_bnb": 1.1153871017790942,
+    "k2_speedup_over_k1": 1.127312673915685
+  },
+  "input_sha256": {
+    "fallback_k_sweep_HumanEval123_512_v1.json": "49e08a3e5d86e81c67f4c3767797403d29a7eb7ee184702549e18c69d7dc24cc",
+    "fallback_k_sweep_HumanEval114_512_v1.json": "a5aa35626bd41bf27eba2f6325eaeb16145bf4f2cbb67ee0100fa1d829b30109"
+  },
+  "manifest_sha256": "5e08c5dbc7b949ef2fc47b8d83827e52aa91b85fc666c8507891bba665f11a81",
+  "heldout_used": false,
+  "limits": [
+    "Only two selected prompts and one process per prompt; descriptive evidence, no population claim.",
+    "Original-BNB comparison is token/latency only; no original-BNB KV identity claim.",
+    "GSM8K held-out indices 300-349 excluded."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_activationvec_k_sweep_512.py",
+  "source_sha256": "2ffed1b3be9efe2fb758c3f57ddd303e99a6cae6bdff67a3b1fae4442bec8905"
+}

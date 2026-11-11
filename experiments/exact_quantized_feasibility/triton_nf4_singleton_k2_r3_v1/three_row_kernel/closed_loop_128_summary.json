@@ -1,0 +1,74 @@
+{
+  "schema": "zassd-nf4-fixed-three-rows-closed-loop-summary-v1",
+  "scope": "K2/R3 fixed-three-row packed NF4 closed-loop development screen; separate from the pairwise B1 manifest/reference",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "generated_tokens": 128,
+  "prompt_count": 2,
+  "process_runs": 4,
+  "paired_timing_pairs": 8,
+  "profiles": {
+    "HumanEval/112": {
+      "sessions": [
+        1,
+        2
+      ],
+      "run_artifacts": [
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/closed_loop_humaneval112_128_s1.json",
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/closed_loop_humaneval112_128_s2.json"
+      ],
+      "all_runs_match_b1_tokens_and_state": true,
+      "shared_state_prefixes": 256,
+      "geomean_speedup_vs_b1_singleton": 1.941828108732242,
+      "geomean_speedup_vs_original_bnb": 1.7765889171225357,
+      "bnb_token_match_rounds": 0,
+      "timing_pairs": 4,
+      "accepted_draft_tokens": 324,
+      "proposed_draft_tokens": 332
+    },
+    "HumanEval/114": {
+      "sessions": [
+        0,
+        1
+      ],
+      "run_artifacts": [
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/closed_loop_humaneval114_128_s0.json",
+        "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/closed_loop_humaneval114_128_s1.json"
+      ],
+      "all_runs_match_b1_tokens_and_state": true,
+      "shared_state_prefixes": 256,
+      "geomean_speedup_vs_b1_singleton": 1.1292814242077893,
+      "geomean_speedup_vs_original_bnb": 1.0131013482888,
+      "bnb_token_match_rounds": 4,
+      "timing_pairs": 4,
+      "accepted_draft_tokens": 112,
+      "proposed_draft_tokens": 292
+    }
+  },
+  "aggregate": {
+    "all_runs_match_b1_tokens_and_state": true,
+    "shared_state_prefixes": 512,
+    "geomean_speedup_vs_b1_singleton": 1.480834363524788,
+    "descriptive_paired_log_t_95_ci_vs_b1": [
+      1.1617022995114483,
+      1.887635423565979
+    ],
+    "geomean_speedup_vs_original_bnb": 1.3415903351216347,
+    "descriptive_paired_log_t_95_ci_vs_bnb": [
+      1.042225074968775,
+      1.7269442757800704
+    ],
+    "bnb_token_match_rounds": 4,
+    "total_timing_rounds": 8,
+    "acceptance": {
+      "accepted_draft_tokens": 436,
+      "proposed_draft_tokens": 624
+    }
+  },
+  "limits": [
+    "Only two HumanEval development prompts, two process sessions each, and one RTX 4050.",
+    "Confidence intervals describe paired rounds within these two fixed prompts, not generalization over prompts.",
+    "B1 state identity is finite empirical evidence; original BNB token equality is reported separately.",
+    "No held-out GSM8K data were used."
+  ]
+}

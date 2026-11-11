@@ -1,0 +1,28 @@
+{
+  "kernel_symbol": "_Z14gemm_4bit_simtI6__halfLi3EEvPKT_PKhPKfS5_S7_S7_PS1_S3_iiiii",
+  "demangled": "gemm_4bit_simt<__half, 3>",
+  "architecture": "sm_89",
+  "disassembler": "CUDA nvdisasm 13.2.86",
+  "library_sha256": "d1a039f3caee90f95a7e46e95a8f4c9714ba57084b17d340d5b6710be70f224a",
+  "extracted_cubin_sha256": "43399b81d4f51faed89b956964f4a93c05bd37fe01df6d7fb03f19eb525c066a",
+  "sass_counts": {
+    "M1": {
+      "instructions": 938,
+      "HMUL2": 44,
+      "HADD2_F32": 33,
+      "FADD_FTZ": 41,
+      "SHFL_all": 37,
+      "FFMA_FTZ": 1
+    },
+    "M3": {
+      "instructions": 1248,
+      "HMUL2": 76,
+      "HADD2_F32": 97,
+      "FADD_FTZ": 124,
+      "SHFL_all": 47,
+      "FFMA_FTZ": 1
+    }
+  },
+  "observed_sequence": "The disassembly contains packed HMUL2 operations, HADD2.F32 conversions of half lanes, FADD.FTZ accumulation, SHFL.DOWN warp reductions, then FP16 output conversion/store. One FFMA.FTZ is present in each template and appears in scaling/dequant setup; the product/accumulation path contains HMUL2 and FADD, not an FFMA dot-product chain.",
+  "interpretation": "This supports testing FP16-rounded products followed by FP32 accumulation. M=1 and M=3 are distinct compiled templates with different instruction counts and layout, even though prior actual-input checks found row outputs invariant between them."
+}

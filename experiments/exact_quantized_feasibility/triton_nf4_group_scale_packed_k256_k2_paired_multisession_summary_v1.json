@@ -1,0 +1,251 @@
+{
+  "status": "experimental packed-byte K256 K2/R3; paired finite diagnostic, not universal proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "strategy": "triton_nf4_group_scale_packed_k256",
+  "k": 2,
+  "physical_rows": 3,
+  "max_new_tokens": 32,
+  "attention": "padded",
+  "model_dtype": "float16",
+  "sessions_per_prompt": 3,
+  "reference_contract_id": "4a190f8ae92791462997c64f06fa2857e9abf5e6f96d2ed7fdeac433c212088f",
+  "records": [
+    {
+      "prompt_id": "cnndm001",
+      "pilot_session": 0,
+      "session_index": 1,
+      "method_order": [
+        "b1_reference",
+        "b1_block",
+        "original_greedy"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.1642865839967271,
+        "b1_block": 1.2028046979976352,
+        "original_bnb": 0.9321865520032588
+      },
+      "latency_ratio_block_over_singleton": 1.033083017987448,
+      "latency_ratio_block_over_bnb": 1.2903047093018247,
+      "speedup_singleton_over_block": 0.9679764187278026,
+      "speedup_bnb_over_block": 0.7750107341242622,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 26,
+      "block_target_rows": 42,
+      "draft_tokens": 16,
+      "accepted_draft_tokens": 5
+    },
+    {
+      "prompt_id": "cnndm001",
+      "pilot_session": 1,
+      "session_index": 2,
+      "method_order": [
+        "b1_block",
+        "original_greedy",
+        "b1_reference"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.0958753659942886,
+        "b1_block": 1.1811996570031624,
+        "original_bnb": 0.8600951039989013
+      },
+      "latency_ratio_block_over_singleton": 1.0778594844418818,
+      "latency_ratio_block_over_bnb": 1.3733361014512544,
+      "speedup_singleton_over_block": 0.9277647174184327,
+      "speedup_bnb_over_block": 0.7281538721244301,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 26,
+      "block_target_rows": 42,
+      "draft_tokens": 16,
+      "accepted_draft_tokens": 5
+    },
+    {
+      "prompt_id": "cnndm001",
+      "pilot_session": 2,
+      "session_index": 3,
+      "method_order": [
+        "original_greedy",
+        "b1_reference",
+        "b1_block"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.0398201450007036,
+        "b1_block": 1.1155198790002032,
+        "original_bnb": 0.8406028690005769
+      },
+      "latency_ratio_block_over_singleton": 1.0728007957563164,
+      "latency_ratio_block_over_bnb": 1.3270474324296384,
+      "speedup_singleton_over_block": 0.9321395024646748,
+      "speedup_bnb_over_block": 0.7535525675741219,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 26,
+      "block_target_rows": 42,
+      "draft_tokens": 16,
+      "accepted_draft_tokens": 5
+    },
+    {
+      "prompt_id": "cnndm002",
+      "pilot_session": 0,
+      "session_index": 0,
+      "method_order": [
+        "original_greedy",
+        "b1_reference",
+        "b1_block"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.0587762180002755,
+        "b1_block": 1.1955469500026084,
+        "original_bnb": 0.8596380579983816
+      },
+      "latency_ratio_block_over_singleton": 1.1291781300685555,
+      "latency_ratio_block_over_bnb": 1.3907561896298213,
+      "speedup_singleton_over_block": 0.8855998653988165,
+      "speedup_bnb_over_block": 0.7190332909941396,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 29,
+      "block_target_rows": 41,
+      "draft_tokens": 12,
+      "accepted_draft_tokens": 2
+    },
+    {
+      "prompt_id": "cnndm002",
+      "pilot_session": 1,
+      "session_index": 2,
+      "method_order": [
+        "b1_block",
+        "original_greedy",
+        "b1_reference"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.1480576329995529,
+        "b1_block": 1.2819580240029609,
+        "original_bnb": 0.9289371569975629
+      },
+      "latency_ratio_block_over_singleton": 1.1166321159797212,
+      "latency_ratio_block_over_bnb": 1.3800266404956867,
+      "speedup_singleton_over_block": 0.8955500971979573,
+      "speedup_bnb_over_block": 0.7246236925113371,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 29,
+      "block_target_rows": 41,
+      "draft_tokens": 12,
+      "accepted_draft_tokens": 2
+    },
+    {
+      "prompt_id": "cnndm002",
+      "pilot_session": 2,
+      "session_index": 3,
+      "method_order": [
+        "original_greedy",
+        "b1_reference",
+        "b1_block"
+      ],
+      "latency_s": {
+        "b1_singleton": 1.0665218099966296,
+        "b1_block": 1.1888568460053648,
+        "original_bnb": 0.8793390519931563
+      },
+      "latency_ratio_block_over_singleton": 1.1147046735116666,
+      "latency_ratio_block_over_bnb": 1.351989136966724,
+      "speedup_singleton_over_block": 0.8970985981871672,
+      "speedup_bnb_over_block": 0.7396509133524292,
+      "token_match_b1": true,
+      "token_match_bnb": true,
+      "shared_kv_prefixes": 32,
+      "all_shared_kv_states_equal": true,
+      "singleton_target_forwards": 31,
+      "block_target_forwards": 29,
+      "block_target_rows": 41,
+      "draft_tokens": 12,
+      "accepted_draft_tokens": 2
+    }
+  ],
+  "pooled_descriptive_summary": {
+    "latency_ratio_block_over_singleton": {
+      "geometric_mean": 1.090204930923317,
+      "median": 1.0962820789767742,
+      "range": [
+        1.033083017987448,
+        1.1291781300685555
+      ],
+      "paired_log_t_95ci_tcrit_df5": [
+        1.052625633538514,
+        1.1291258292980069
+      ]
+    },
+    "latency_ratio_block_over_bnb": {
+      "geometric_mean": 1.3517961539744325,
+      "median": 1.3626626192089892,
+      "range": [
+        1.2903047093018247,
+        1.3907561896298213
+      ],
+      "paired_log_t_95ci_tcrit_df5": [
+        1.3122936415619957,
+        1.39248776647657
+      ]
+    }
+  },
+  "per_prompt_summary": {
+    "cnndm001": {
+      "latency_ratio_block_over_singleton": {
+        "geometric_mean": 1.061057254616046,
+        "range": [
+          1.033083017987448,
+          1.0778594844418818
+        ]
+      },
+      "latency_ratio_block_over_bnb": {
+        "geometric_mean": 1.3297965085757981,
+        "range": [
+          1.2903047093018247,
+          1.3733361014512544
+        ]
+      },
+      "draft_acceptance": {
+        "draft_tokens": 48,
+        "accepted_draft_tokens": 15
+      }
+    },
+    "cnndm002": {
+      "latency_ratio_block_over_singleton": {
+        "geometric_mean": 1.120153305807802,
+        "range": [
+          1.1147046735116666,
+          1.1291781300685555
+        ]
+      },
+      "latency_ratio_block_over_bnb": {
+        "geometric_mean": 1.3741597531017349,
+        "range": [
+          1.351989136966724,
+          1.3907561896298213
+        ]
+      },
+      "draft_acceptance": {
+        "draft_tokens": 36,
+        "accepted_draft_tokens": 6
+      }
+    }
+  },
+  "interval_note": "Paired log-ratio t intervals are diagnostic only: six sessions across two fixed development prompts."
+}

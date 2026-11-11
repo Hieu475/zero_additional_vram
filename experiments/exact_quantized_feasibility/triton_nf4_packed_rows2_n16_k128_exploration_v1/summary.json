@@ -1,0 +1,42 @@
+{
+  "title": "N=16 packed NF4 block_k=128 versus block_k=256 screening",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "device": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "environment": "Conda env ai; torch 2.11.0+cu128; Triton 3.6.0; bitsandbytes 0.50.0",
+  "result": "K128 lowers register use and raises theoretical occupancy, but is slower for M=2 in both projections; not integrated into runtime.",
+  "shape_invariance": "For both schedules and both projections, M=1 and M=2 outputs were bitwise equal row-by-row to separate calls of that same schedule on each singleton row.",
+  "paired_cuda_event_medians_ms": {
+    "q_proj_2048x2048": {
+      "M1": {"K128": 0.030618, "K256": 0.031027, "K128_over_K256": 0.987},
+      "M2": {"K128": 0.031159, "K256": 0.025338, "K128_over_K256": 1.230}
+    },
+    "down_proj_11008x2048": {
+      "M1": {"K128": 0.152102, "K256": 0.114074, "K128_over_K256": 1.333},
+      "M2": {"K128": 0.155172, "K256": 0.114443, "K128_over_K256": 1.356}
+    }
+  },
+  "ncu_single_launch_metrics": {
+    "q_proj": {
+      "K128": {"duration_us": 34.46, "registers_per_thread": 48, "theoretical_occupancy_pct": 83.33, "achieved_occupancy_pct": 50.43},
+      "K256": {"duration_us": 27.07, "registers_per_thread": 64, "theoretical_occupancy_pct": 66.67, "achieved_occupancy_pct": 48.14}
+    },
+    "down_proj": {
+      "K128": {"duration_us": 178.34, "registers_per_thread": 56, "theoretical_occupancy_pct": 75.0, "achieved_occupancy_pct": 49.46},
+      "K256": {"duration_us": 131.04, "registers_per_thread": 72, "theoretical_occupancy_pct": 58.33, "achieved_occupancy_pct": 46.06}
+    }
+  },
+  "artifacts": {
+    "operator_benchmark": "operator_benchmark.json",
+    "q_proj_k128_ncu": "q_proj_k128.ncu-rep",
+    "down_proj_k128_ncu": "down_proj_k128.ncu-rep",
+    "q_proj_k256_ncu": "../ncu_nf4_rows2_n16_v1/q_proj.ncu-rep",
+    "down_proj_k256_ncu": "../ncu_nf4_rows2_n16_v1/down_proj.ncu-rep"
+  },
+  "limits": [
+    "The CUDA-event sample has five rounds per M and projection; q_proj M=1 had two warm-up/clock outliers, so its near-parity median should not be read as a stable speedup.",
+    "Nsight durations are single profiled launches, not benchmark latencies.",
+    "K128 changes the arithmetic/reduction chunk schedule and would require a separate B1 reference contract if pursued further.",
+    "These operator probes do not establish whole-model token or KV equivalence under K128."
+  ]
+}

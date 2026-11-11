@@ -1,0 +1,666 @@
+{
+  "schema": "zassd-nf4-fixed-three-rows-vs-bnb-operator-audit-v1",
+  "classification": "operator-only finite comparison; no runtime dispatch or reference changed",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "triton": "3.6.0",
+  "bitsandbytes": "0.50.0",
+  "seed": 78139,
+  "source_sha256": "e7c9c973a83dbcb7582c9e0215243df4678acae9073cf50e4ac6cbe28e334d21",
+  "input_protocol": "One synthetic M=3 FP16 activation tensor per first-layer projection; identical tensor passed to BNB and Triton.",
+  "limits": [
+    "One synthetic activation tensor per first-layer module; real layer activations and other layers are not covered.",
+    "Operator-only latency; no decoder, KV-state, or end-to-end benchmark.",
+    "Finite single-GPU evidence, not a proof across inputs, prompts, runtimes, or hardware.",
+    "Held-out GSM8K indices 300-349 were not used."
+  ],
+  "results": {
+    "q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "physical_rows": 3,
+      "same_input_output_comparison": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.0078125,
+        "mean_abs_diff": 0.0005269624525681138,
+        "reference_dtype": "torch.float16",
+        "candidate_dtype": "torch.float16",
+        "shape": [
+          1,
+          3,
+          2048
+        ]
+      },
+      "bnb_m3_vs_bnb_m1_rows": {
+        "all_rows_bitwise_equal": true,
+        "rows": [
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          }
+        ]
+      },
+      "triton_m3_vs_its_m1_rows": {
+        "all_rows_bitwise_equal": true,
+        "rows": [
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          }
+        ]
+      },
+      "timing": {
+        "iterations_per_round": 20,
+        "alternating_rounds": 7,
+        "samples_ms": {
+          "bnb_m3": [
+            0.02687999904155731,
+            0.026940798759460448,
+            0.025286400318145753,
+            0.02594879865646362,
+            0.024691200256347655,
+            0.02590399980545044,
+            0.02462719976902008
+          ],
+          "triton_m3": [
+            0.02805759906768799,
+            0.025441598892211915,
+            0.026675200462341307,
+            0.024934400618076325,
+            0.026121601462364197,
+            0.024883200228214265,
+            0.026060798764228822
+          ]
+        },
+        "median_ms": {
+          "bnb_m3": 0.02590399980545044,
+          "triton_m3": 0.026060798764228822
+        },
+        "triton_over_bnb_latency_ratio": 1.0060530790594506
+      }
+    },
+    "o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "physical_rows": 3,
+      "same_input_output_comparison": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.00390625,
+        "mean_abs_diff": 0.00032092255423776805,
+        "reference_dtype": "torch.float16",
+        "candidate_dtype": "torch.float16",
+        "shape": [
+          1,
+          3,
+          2048
+        ]
+      },
+      "bnb_m3_vs_bnb_m1_rows": {
+        "all_rows_bitwise_equal": true,
+        "rows": [
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          }
+        ]
+      },
+      "triton_m3_vs_its_m1_rows": {
+        "all_rows_bitwise_equal": true,
+        "rows": [
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          }
+        ]
+      },
+      "timing": {
+        "iterations_per_round": 20,
+        "alternating_rounds": 7,
+        "samples_ms": {
+          "bnb_m3": [
+            0.025497600436210632,
+            0.025548800826072693,
+            0.02452480047941208,
+            0.025187200307846068,
+            0.024481600522994994,
+            0.025446400046348572,
+            0.02447360008955002
+          ],
+          "triton_m3": [
+            0.026123198866844177,
+            0.0247296005487442,
+            0.025231999158859254,
+            0.024564799666404725,
+            0.025747200846672057,
+            0.02462719976902008,
+            0.025286400318145753
+          ]
+        },
+        "median_ms": {
+          "bnb_m3": 0.025187200307846068,
+          "triton_m3": 0.025231999158859254
+        },
+        "triton_over_bnb_latency_ratio": 1.001778635595288
+      }
+    },
+    "gate_proj": {
+      "in_features": 2048,
+      "out_features": 11008,
+      "physical_rows": 3,
+      "same_input_output_comparison": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.00390625,
+        "mean_abs_diff": 0.0004076288896612823,
+        "reference_dtype": "torch.float16",
+        "candidate_dtype": "torch.float16",
+        "shape": [
+          1,
+          3,
+          11008
+        ]
+      },
+      "bnb_m3_vs_bnb_m1_rows": {
+        "all_rows_bitwise_equal": true,
+        "rows": [
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              11008
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              11008
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              11008
+            ]
+          }
+        ]
+      },
+      "triton_m3_vs_its_m1_rows": {
+        "all_rows_bitwise_equal": true,
+        "rows": [
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              11008
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              11008
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              11008
+            ]
+          }
+        ]
+      },
+      "timing": {
+        "iterations_per_round": 20,
+        "alternating_rounds": 7,
+        "samples_ms": {
+          "bnb_m3": [
+            0.11459200382232666,
+            0.11489280462265014,
+            0.11611839532852172,
+            0.11452000141143799,
+            0.11401599645614624,
+            0.11464639902114868,
+            0.11407359838485717
+          ],
+          "triton_m3": [
+            0.10115360021591187,
+            0.1007200002670288,
+            0.10122400522232056,
+            0.10060640573501586,
+            0.10130720138549805,
+            0.10062559843063354,
+            0.10142079591751099
+          ]
+        },
+        "median_ms": {
+          "bnb_m3": 0.11459200382232666,
+          "triton_m3": 0.10115360021591187
+        },
+        "triton_over_bnb_latency_ratio": 0.8827282606275839
+      }
+    },
+    "up_proj": {
+      "in_features": 2048,
+      "out_features": 11008,
+      "physical_rows": 3,
+      "same_input_output_comparison": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.00390625,
+        "mean_abs_diff": 0.00035714672412723303,
+        "reference_dtype": "torch.float16",
+        "candidate_dtype": "torch.float16",
+        "shape": [
+          1,
+          3,
+          11008
+        ]
+      },
+      "bnb_m3_vs_bnb_m1_rows": {
+        "all_rows_bitwise_equal": true,
+        "rows": [
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              11008
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              11008
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              11008
+            ]
+          }
+        ]
+      },
+      "triton_m3_vs_its_m1_rows": {
+        "all_rows_bitwise_equal": true,
+        "rows": [
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              11008
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              11008
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              11008
+            ]
+          }
+        ]
+      },
+      "timing": {
+        "iterations_per_round": 20,
+        "alternating_rounds": 7,
+        "samples_ms": {
+          "bnb_m3": [
+            0.1144320011138916,
+            0.11504640579223632,
+            0.11453440189361572,
+            0.11545599699020385,
+            0.11479040384292602,
+            0.1156607985496521,
+            0.11504640579223632
+          ],
+          "triton_m3": [
+            0.10106879472732544,
+            0.10096640586853027,
+            0.10135840177536011,
+            0.10183680057525635,
+            0.10183680057525635,
+            0.1013759970664978,
+            0.10203039646148682
+          ]
+        },
+        "median_ms": {
+          "bnb_m3": 0.11504640579223632,
+          "triton_m3": 0.1013759970664978
+        },
+        "triton_over_bnb_latency_ratio": 0.8811748300035894
+      }
+    },
+    "down_proj": {
+      "in_features": 11008,
+      "out_features": 2048,
+      "physical_rows": 3,
+      "same_input_output_comparison": {
+        "bitwise_equal": false,
+        "max_abs_diff": 0.0078125,
+        "mean_abs_diff": 0.0008964524604380131,
+        "reference_dtype": "torch.float16",
+        "candidate_dtype": "torch.float16",
+        "shape": [
+          1,
+          3,
+          2048
+        ]
+      },
+      "bnb_m3_vs_bnb_m1_rows": {
+        "all_rows_bitwise_equal": true,
+        "rows": [
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          }
+        ]
+      },
+      "triton_m3_vs_its_m1_rows": {
+        "all_rows_bitwise_equal": true,
+        "rows": [
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          },
+          {
+            "bitwise_equal": true,
+            "max_abs_diff": 0.0,
+            "mean_abs_diff": 0.0,
+            "reference_dtype": "torch.float16",
+            "candidate_dtype": "torch.float16",
+            "shape": [
+              1,
+              1,
+              2048
+            ]
+          }
+        ]
+      },
+      "timing": {
+        "iterations_per_round": 20,
+        "alternating_rounds": 7,
+        "samples_ms": {
+          "bnb_m3": [
+            0.11339839696884155,
+            0.1176576018333435,
+            0.11395679712295533,
+            0.11535359621047973,
+            0.11658240556716919,
+            0.11453440189361572,
+            0.11340320110321045
+          ],
+          "triton_m3": [
+            0.1212928056716919,
+            0.12646399736404418,
+            0.12313599586486816,
+            0.12093440294265748,
+            0.12317759990692138,
+            0.12119040489196778,
+            0.12200959920883178
+          ]
+        },
+        "median_ms": {
+          "bnb_m3": 0.11453440189361572,
+          "triton_m3": 0.12200959920883178
+        },
+        "triton_over_bnb_latency_ratio": 1.06526595670495
+      }
+    }
+  }
+}

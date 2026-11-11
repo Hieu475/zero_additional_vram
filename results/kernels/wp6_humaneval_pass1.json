@@ -1,0 +1,914 @@
+{
+  "schema": "zassd-humaneval-passk-v1",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "max_new": 384,
+  "prompts": 100,
+  "pass_stock": 61,
+  "pass_inv": 61,
+  "discordant_stock_only": 3,
+  "discordant_inv_only": 3,
+  "identical_tokens": 72,
+  "identical_completion": 74,
+  "per_prompt": [
+    {
+      "id": "HumanEval/0",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False\n\n",
+      "completion_inv": "    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False\n\n"
+    },
+    {
+      "id": "HumanEval/1",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    paren_string = paren_string.replace(\" \", \"\")\n    paren_groups = []\n    current_group = \"\"\n    for char in paren_string:\n        if char == \"(\":\n            current_group += char\n        elif char == \")\":\n            current_group += char\n            paren_groups.append(current_group)\n            current_group = \"\"\n    return paren_groups\n\n",
+      "completion_inv": "    paren_string = paren_string.replace(\" \", \"\")\n    paren_groups = []\n    open_bracket = 0\n    close_bracket = 0\n    for char in paren_string:\n        if char == \"(\":\n            open_bracket += 1\n        else:\n            close_bracket += 1\n        if open_bracket == close_bracket:\n            paren_groups.append(paren_string[open_bracket:close_bracket + 1])\n            open_bracket = 0\n            close_bracket = 0\n    return paren_groups\n\n"
+    },
+    {
+      "id": "HumanEval/2",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return number - int(number)\n",
+      "completion_inv": "    return number - int(number)\n"
+    },
+    {
+      "id": "HumanEval/3",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False\n\n",
+      "completion_inv": "    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False\n\n"
+    },
+    {
+      "id": "HumanEval/4",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    mean = sum(numbers) / len(numbers)\n    return sum(abs(x - mean) for x in numbers) / len(numbers)",
+      "completion_inv": "    mean = sum(numbers) / len(numbers)\n    return sum(abs(x - mean) for x in numbers) / len(numbers)"
+    },
+    {
+      "id": "HumanEval/5",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    result = []\n    for i in range(len(numbers)):\n        result.append(numbers[i])\n        if i < len(numbers) - 1:\n            result.append(delimeter)\n    return result\n\n",
+      "completion_inv": "    result = []\n    for i in range(len(numbers)):\n        result.append(numbers[i])\n        if i < len(numbers) - 1:\n            result.append(delimeter)\n    return result\n\n"
+    },
+    {
+      "id": "HumanEval/6",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    stack = []\n    max_depth = 0\n    for i, char in enumerate(paren_string):\n        if char == '(':\n            stack.append(i)\n        elif char == ')':\n            if stack:\n                max_depth = max(max_depth, i - stack.pop())\n    return [max_depth] * len(paren_string.split())\n\n",
+      "completion_inv": "    stack = []\n    max_depth = 0\n    for i, char in enumerate(paren_string):\n        if char == '(':\n            stack.append(i)\n        elif char == ')':\n            if stack:\n                max_depth = max(max_depth, i - stack.pop())\n    return [max_depth] * len(paren_string.split())\n\n"
+    },
+    {
+      "id": "HumanEval/7",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return [s for s in strings if substring in s]",
+      "completion_inv": "    return [s for s in strings if substring in s]"
+    },
+    {
+      "id": "HumanEval/8",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    if not numbers:\n        return 0, 1\n    else:\n        total_sum = 0\n        total_product = 1\n        for number in numbers:\n            total_sum += number\n            total_product *= number\n        return total_sum, total_product\n",
+      "completion_inv": "    if not numbers:\n        return 0, 1\n    else:\n        total_sum = 0\n        total_product = 1\n        for num in numbers:\n            total_sum += num\n            total_product *= num\n        return total_sum, total_product\n"
+    },
+    {
+      "id": "HumanEval/9",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    result = []\n    max_so_far = numbers[0]\n    for i in range(len(numbers)):\n        if numbers[i] > max_so_far:\n            max_so_far = numbers[i]\n        result.append(max_so_far)\n    return result\n\n",
+      "completion_inv": "    rolling_max = []\n    max_so_far = numbers[0]\n    for i in range(len(numbers)):\n        if numbers[i] > max_so_far:\n            max_so_far = numbers[i]\n        rolling_max.append(max_so_far)\n    return rolling_max\n\n"
+    },
+    {
+      "id": "HumanEval/10",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": true,
+      "completion_stock": "    if not string:\n        return ''\n    for i in range(1, len(string) + 1):\n        if is_palindrome(string[:i]):\n            return string + string[i:][::-1]\n    return string + string[:1][::-1]\n\n",
+      "completion_inv": "    if not string:\n        return ''\n    for i in range(len(string)):\n        if is_palindrome(string[i:]):\n            return string + string[:i][::-1]\n    return string + string[::-1]\n\n"
+    },
+    {
+      "id": "HumanEval/11",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return ''.join(str(int(a[i]) ^ int(b[i])) for i in range(len(a)))\n\n",
+      "completion_inv": "    return ''.join(str(int(a[i]) ^ int(b[i])) for i in range(len(a)))\n\n"
+    },
+    {
+      "id": "HumanEval/12",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    if not strings:\n        return None\n    return max(strings, key=len)",
+      "completion_inv": "    if not strings:\n        return None\n    return max(strings, key=len)"
+    },
+    {
+      "id": "HumanEval/13",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    while b != 0:\n        a, b = b, a % b\n    return a\n",
+      "completion_inv": "    while b != 0:\n        a, b = b, a % b\n    return a\n"
+    },
+    {
+      "id": "HumanEval/14",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return [string[:i] for i in range(1, len(string) + 1)]\n\n",
+      "completion_inv": "    return [string[:i] for i in range(1, len(string) + 1)]\n\n"
+    },
+    {
+      "id": "HumanEval/15",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return ' '.join(str(i) for i in range(n+1))\n",
+      "completion_inv": "    return ' '.join(str(i) for i in range(n+1))\n"
+    },
+    {
+      "id": "HumanEval/16",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return len(set(string.lower()))\n\n# Test cases",
+      "completion_inv": "    return len(set(string.lower()))\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/17",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return [4 if note == 'o' else 2 if note == 'o|' else 1 for note in music_string.split()]",
+      "completion_inv": "    return [4 if note == 'o' else 2 if note == 'o|' else 1 for note in music_string.split()]"
+    },
+    {
+      "id": "HumanEval/18",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    count = 0\n    start = 0\n    while start < len(string):\n        position = string.find(substring, start)\n        if position != -1:\n            count += 1\n            start = position + 1\n        else:\n            break\n    return count\n\n# Test cases",
+      "completion_inv": "    count = 0\n    start = 0\n    while start < len(string):\n        pos = string.find(substring, start)\n        if pos != -1:\n            count += 1\n            start = pos + 1\n        else:\n            break\n    return count\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/19",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # TODO: Implement this function\n    # Note: Do not change the existing lines of code above\n    pass\n\n",
+      "completion_inv": "    # Your code here\n    pass\n\n"
+    },
+    {
+      "id": "HumanEval/20",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    numbers.sort()\n    return numbers[0], numbers[1]\n\n",
+      "completion_inv": "    numbers.sort()\n    return numbers[0], numbers[1]\n\n"
+    },
+    {
+      "id": "HumanEval/21",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    min_num = min(numbers)\n    max_num = max(numbers)\n    return [(x - min_num) / (max_num - min_num) for x in numbers]\n\n",
+      "completion_inv": "    min_num = min(numbers)\n    max_num = max(numbers)\n    return [(x - min_num) / (max_num - min_num) for x in numbers]\n\n"
+    },
+    {
+      "id": "HumanEval/22",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return [value for value in values if isinstance(value, int)]\n\n",
+      "completion_inv": "    return [value for value in values if isinstance(value, int)]\n\n"
+    },
+    {
+      "id": "HumanEval/23",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return len(string)\n",
+      "completion_inv": "    return len(string)\n"
+    },
+    {
+      "id": "HumanEval/24",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    for i in range(n-1, 0, -1):\n        if n % i == 0:\n            return i\n    return 1\n",
+      "completion_inv": "    for i in range(n-1, 0, -1):\n        if n % i == 0:\n            return i\n    return 1\n"
+    },
+    {
+      "id": "HumanEval/25",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    factors = []\n    for i in range(2, n + 1):\n        while n % i == 0:\n            factors.append(i)\n            n //= i\n    return factors\n\n",
+      "completion_inv": "    factors = []\n    for i in range(2, n + 1):\n        while n % i == 0:\n            factors.append(i)\n            n //= i\n    return factors\n\n"
+    },
+    {
+      "id": "HumanEval/26",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Your code here\n    pass\n\n",
+      "completion_inv": "    # Your code here\n    pass\n\n"
+    },
+    {
+      "id": "HumanEval/27",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return string.swapcase()\n\n# Check function to verify the correctness of the solution",
+      "completion_inv": "    return string.swapcase()\n\n# Check function to verify the correctness of the solution"
+    },
+    {
+      "id": "HumanEval/28",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return ''.join(strings)\n\n",
+      "completion_inv": "    return ''.join(strings)\n\n"
+    },
+    {
+      "id": "HumanEval/29",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return [s for s in strings if s.startswith(prefix)]\n\n",
+      "completion_inv": "    return [s for s in strings if s.startswith(prefix)]\n\n"
+    },
+    {
+      "id": "HumanEval/30",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return [x for x in l if x > 0]\n",
+      "completion_inv": "    return [x for x in l if x > 0]\n"
+    },
+    {
+      "id": "HumanEval/31",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    \"*** YOUR CODE HERE ***\"\n    if n < 2:\n        return False\n    for i in range(2, n):\n        if n % i == 0:\n            return False\n    return True\n",
+      "completion_inv": "    \"*** YOUR CODE HERE ***\"\n    if n < 2:\n        return False\n    for i in range(2, n):\n        if n % i == 0:\n            return False\n    return True\n"
+    },
+    {
+      "id": "HumanEval/32",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    assert len(xs) % 2 == 0, \"len(xs) must be even\"\n    assert xs[-1] != 0, \"largest non zero coefficient must exist\"\n    assert xs[0] != 0, \"first coefficient must be non zero\"\n    assert xs[1] != 0, \"second coefficient must be non zero\"\n    assert xs[0] * xs[1] < 0, \"first and second coefficient must have opposite signs\"\n    assert xs[0] * xs[-1] < 0, \"first and last coefficient must have opposite signs\"\n    assert xs[1] * xs[-1] < 0, \"second and last coefficient must have opposite signs\"\n    assert xs[0] * xs[1] * xs[-1] > 0, \"first, second and last coefficient must have same sign\"\n    assert xs[0] * xs[1] * xs[-1] * xs[-2] < 0, \"first, second, last and second last coefficient must have opposite signs\"\n    assert xs[0] * xs[1] * xs[-1] * xs[-2] * xs[-3] > 0, \"first, second, last, second last and third last coefficient must have same sign\"\n    assert xs[0] * xs[1] * xs[-1] * xs[-2] * xs[-3] * xs[-4] < 0, \"first, second, last, second last, third last and fourth last coefficient must have opposite signs\"\n    assert xs[0] * xs[1] * xs[-1] * xs[-2] * xs[-3] * xs[-4] * xs[-5] > 0, \"first, second, last, second last, third last and fourth last coefficient must have",
+      "completion_inv": "    assert len(xs) % 2 == 0\n    assert xs[-1] != 0\n    assert xs[0] != 0\n    assert xs[1] != 0\n    assert xs[0] * xs[1] < 0\n    assert xs[0] * xs[1] * xs[2] < 0\n    assert xs[0] * xs[1] * xs[2] * xs[3] < 0\n    assert xs[0] * xs[1] * xs[2] * xs[3] * xs[4] < 0\n    assert xs[0] * xs[1] * xs[2] * xs[3] * xs[4] * xs[5] < 0\n    assert xs[0] * xs[1] * xs[2] * xs[3] * xs[4] * xs[5] * xs[6] < 0\n    assert xs[0] * xs[1] * xs[2] * xs[3] * xs[4] * xs[5] * xs[6] * xs[7] < 0\n    assert xs[0] * xs[1] * xs[2] * xs[3] * xs[4] * xs[5] * xs[6] * xs[7] * xs[8] < 0\n    assert xs[0] * xs[1] * xs[2] * xs[3] * xs[4] * xs[5] * xs[6] * xs[7] * xs[8] * xs[9] < 0\n    assert xs[0] * xs[1] * xs[2] * xs[3] * xs[4] *"
+    },
+    {
+      "id": "HumanEval/33",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    l3 = []\n    l2 = []\n    l1 = []\n    for i in range(len(l)):\n        if i % 3 == 0:\n            l3.append(l[i])\n        elif i % 3 == 1:\n            l2.append(l[i])\n        else:\n            l1.append(l[i])\n    l2.sort()\n    for i in range(len(l2)):\n        l1[i] = l2[i]\n    return l1 + l3 + l1\n",
+      "completion_inv": "    l3 = []\n    l2 = []\n    l1 = []\n    for i in range(len(l)):\n        if i % 3 == 0:\n            l3.append(l[i])\n        elif i % 3 == 1:\n            l2.append(l[i])\n        else:\n            l1.append(l[i])\n    l2.sort()\n    for i in range(len(l2)):\n        l1[i] = l2[i]\n    return l1 + l3 + l1\n"
+    },
+    {
+      "id": "HumanEval/34",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return sorted(set(l))\n",
+      "completion_inv": "    return sorted(set(l))\n"
+    },
+    {
+      "id": "HumanEval/35",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return max(l)\n",
+      "completion_inv": "    return max(l)\n"
+    },
+    {
+      "id": "HumanEval/36",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return sum(str(i).count('7') for i in range(1, n) if i % 11 == 0 or i % 13 == 0)\n",
+      "completion_inv": "    count = 0\n    for i in range(1, n):\n        if i % 11 == 0 or i % 13 == 0:\n            count += str(i).count('7')\n    return count\n"
+    },
+    {
+      "id": "HumanEval/37",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    even = [l[i] for i in range(1, len(l), 2)]\n    even.sort()\n    for i in range(1, len(l), 2):\n        l[i] = even.pop(0)\n    return l\n",
+      "completion_inv": "    even = [l[i] for i in range(1, len(l), 2)]\n    even.sort()\n    for i in range(1, len(l), 2):\n        l[i] = even.pop(0)\n    return l\n"
+    },
+    {
+      "id": "HumanEval/38",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": true,
+      "pass_inv": false,
+      "completion_stock": "    # split string to groups. Each of length 3.\n    groups = [s[(3 * i):min((3 * i + 3), len(s))] for i in range((len(s) + 2) // 3)]\n    # cycle elements in each group. Unless group has fewer elements than 3.\n    groups = [(group[-1] + group[:-1]) if len(group) == 3 else group for group in groups]\n    return \"\".join(groups)\n\n\n# Test the functions",
+      "completion_inv": "    # split string to groups. Each of length 3.\n    groups = [s[(3 * i):min((3 * i + 3), len(s))] for i in range((len(s) + 2) // 3)]\n    # cycle elements in each group. Unless group has fewer elements than 3.\n    groups = [(group[1:] + group[0]) if len(group) == 3 else group for group in groups]\n    return \"\".join(groups)\n\n\n# Test the functions"
+    },
+    {
+      "id": "HumanEval/39",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Your code here\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint: use the is_prime function\n    # Hint: use the is_fibonacci function\n    # Hint:",
+      "completion_inv": "    i = 0\n    while True:\n        if is_prime(fib(i)):\n            if i == n:\n                return fib(i)\n        i += 1\n"
+    },
+    {
+      "id": "HumanEval/40",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    return len(l) >= 3 and sum(l) == 0 and len(set(l)) == len(l)\n\n# Test cases",
+      "completion_inv": "    return len(l) >= 3 and sum(l) == 0 and len(set(l)) == len(l)\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/41",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    return n\n\n# Test the function",
+      "completion_inv": "    return n\n\n# Example usage"
+    },
+    {
+      "id": "HumanEval/42",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return [x + 1 for x in l]\n",
+      "completion_inv": "    return [x + 1 for x in l]\n"
+    },
+    {
+      "id": "HumanEval/43",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    seen = set()\n    for num in l:\n        if -num in seen:\n            return True\n        seen.add(num)\n    return False\n\n# Test cases",
+      "completion_inv": "    seen = set()\n    for num in l:\n        if -num in seen:\n            return True\n        seen.add(num)\n    return False\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/44",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    if base < 2 or base > 9:\n        raise ValueError(\"Base must be between 2 and 9\")\n    if x < 0:\n        raise ValueError(\"Number must be positive\")\n    if x < base:\n        return str(x)\n    else:\n        return change_base(x // base, base) + str(x % base)\n",
+      "completion_inv": "    if base < 2 or base > 9:\n        raise ValueError(\"Base must be between 2 and 9\")\n    if x < 0:\n        raise ValueError(\"Number must be positive\")\n    if x < base:\n        return str(x)\n    else:\n        return change_base(x // base, base) + str(x % base)\n"
+    },
+    {
+      "id": "HumanEval/45",
+      "identical_tokens": false,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return 0.5 * a * h\n",
+      "completion_inv": "    return 0.5 * a * h\n"
+    },
+    {
+      "id": "HumanEval/46",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    if n == 0 or n == 1:\n        return 0\n    elif n == 2:\n        return 2\n    elif n == 3:\n        return 0\n    else:\n        a = 0\n        b = 0\n        c = 2\n        d = 0\n        for i in range(4, n+1):\n            a = b\n            b = c\n            c = d\n            d = a + b + c + d\n        return d\n",
+      "completion_inv": "    if n == 0 or n == 1:\n        return 0\n    elif n == 2:\n        return 2\n    elif n == 3:\n        return 0\n    else:\n        a, b, c, d = 0, 0, 2, 0\n        for i in range(4, n+1):\n            d = a + b + c + d\n            a, b, c = b, c, d\n        return d\n"
+    },
+    {
+      "id": "HumanEval/47",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    l.sort()\n    if len(l) % 2 == 0:\n        return (l[len(l) // 2] + l[len(l) // 2 - 1]) / 2\n    else:\n        return l[len(l) // 2]\n",
+      "completion_inv": "    l.sort()\n    if len(l) % 2 == 0:\n        return (l[len(l) // 2] + l[len(l) // 2 - 1]) / 2\n    else:\n        return l[len(l) // 2]\n"
+    },
+    {
+      "id": "HumanEval/48",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return text == text[::-1]\n",
+      "completion_inv": "    return text == text[::-1]\n"
+    },
+    {
+      "id": "HumanEval/49",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    return pow(n, 2, p)\n",
+      "completion_inv": "    return pow(n, 2, p)\n"
+    },
+    {
+      "id": "HumanEval/50",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    return \"\".pytho.join([chr(((ord(ch) - 5 - ord(\"a\")) % 26) + ord(\"a\")) for ch in s])\n\n",
+      "completion_inv": "    return \"\".pytho.join([chr(((ord(ch) - 5 - ord(\"a\")) % 26) + ord(\"a\")) for ch in s])\n\n"
+    },
+    {
+      "id": "HumanEval/51",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return ''.join([c for c in text if c not in 'aeiouAEIOU'])\n\n# Test cases",
+      "completion_inv": "    return ''.join([c for c in text if c not in 'aeiouAEIOU'])\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/52",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    for i in l:\n        if i >= t:\n            return False\n    return True\n",
+      "completion_inv": "    for i in l:\n        if i >= t:\n            return False\n    return True\n"
+    },
+    {
+      "id": "HumanEval/53",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return x + y\n",
+      "completion_inv": "    return x + y\n"
+    },
+    {
+      "id": "HumanEval/54",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    return sorted(s0) == sorted(s1)\n\n# Check function to verify the correctness of the solution",
+      "completion_inv": "    return sorted(s0) == sorted(s1)\n\n# Check function to verify the correctness of the solution"
+    },
+    {
+      "id": "HumanEval/55",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    if n == 0:\n        return 0\n    elif n == 1:\n        return 1\n    else:\n        return fib(n-1) + fib(n-2)\n",
+      "completion_inv": "    if n == 0:\n        return 0\n    elif n == 1:\n        return 1\n    else:\n        return fib(n-1) + fib(n-2)\n"
+    },
+    {
+      "id": "HumanEval/56",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    stack = []\n    for bracket in brackets:\n        if bracket == \"<\":\n            stack.append(bracket)\n        else:\n            if not stack:\n                return False\n            stack.pop()\n    return not stack\n",
+      "completion_inv": "    stack = []\n    for bracket in brackets:\n        if bracket == \"<\":\n            stack.append(bracket)\n        else:\n            if not stack:\n                return False\n            stack.pop()\n    return not stack\n"
+    },
+    {
+      "id": "HumanEval/57",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return l == sorted(l) or l == sorted(l, reverse=True)\n",
+      "completion_inv": "    return all(l[i] <= l[i+1] for i in range(len(l)-1)) or all(l[i] >= l[i+1] for i in range(len(l)-1))\n"
+    },
+    {
+      "id": "HumanEval/58",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return sorted(list(set(l1) & set(l2)))\n",
+      "completion_inv": "    return sorted(list(set(l1) & set(l2)))\n"
+    },
+    {
+      "id": "HumanEval/59",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    i = 2\n    while i * i <= n:\n        if n % i:\n            i += 1\n        else:\n            n //= i\n    return n\n\n# Test the function",
+      "completion_inv": "    i = 2\n    while i * i <= n:\n        if n % i:\n            i += 1\n        else:\n            n //= i\n    return n\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/60",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return sum(range(1, n+1))\n",
+      "completion_inv": "    return sum(range(1, n+1))\n"
+    },
+    {
+      "id": "HumanEval/61",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    stack = []\n    for bracket in brackets:\n        if bracket == \"(\":\n            stack.append(bracket)\n        else:\n            if not stack:\n                return False\n            stack.pop()\n    return not stack\n",
+      "completion_inv": "    stack = []\n    for bracket in brackets:\n        if bracket == \"(\":\n            stack.append(bracket)\n        else:\n            if not stack or stack[-1] != \"(\":\n                return False\n            stack.pop()\n    return not stack\n"
+    },
+    {
+      "id": "HumanEval/62",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return [i * xs[i] for i in range(1, len(xs))]\n",
+      "completion_inv": "    return [i * xs[i] for i in range(1, len(xs))]\n"
+    },
+    {
+      "id": "HumanEval/63",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    if n == 0 or n == 1:\n        return 0\n    if n == 2:\n        return 1\n    a, b, c = 0, 0, 1\n    for _ in range(3, n + 1):\n        a, b, c = b, c, a + b + c\n    return c\n",
+      "completion_inv": "    if n == 0 or n == 1:\n        return 0\n    if n == 2:\n        return 1\n    a, b, c = 0, 0, 1\n    for _ in range(3, n + 1):\n        a, b, c = b, c, a + b + c\n    return c\n"
+    },
+    {
+      "id": "HumanEval/64",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    return 0\n",
+      "completion_inv": "    return 0\n"
+    },
+    {
+      "id": "HumanEval/65",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    if shift > len(str(x)):\n        return str(x)[::-1]\n    else:\n        return str(x)[-shift:] + str(x)[:-shift]\n\n# Test the function",
+      "completion_inv": "    if shift > len(str(x)):\n        return str(x)[::-1]\n    else:\n        return str(x)[-shift:] + str(x)[:-shift]\n\n# Test the function"
+    },
+    {
+      "id": "HumanEval/66",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": true,
+      "pass_inv": false,
+      "completion_stock": "    return sum([ord(i) for i in s if i.isupper()])",
+      "completion_inv": "    # Your code\n    # return digitSum(s)"
+    },
+    {
+      "id": "HumanEval/67",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    return n - int(s.split(\" \")[0].split(\" and \")[0]) - int(s.split(\" \")[0].split(\" and \")[1])\n\n# Test the function",
+      "completion_inv": "    return n - int(s.split(\" and \")[0].split()[0]) - int(s.split(\" and \")[0].split()[2])\n\n# Test the function"
+    },
+    {
+      "id": "HumanEval/68",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    # Write your code here\n    if not arr:\n        return []\n    smallest_even = float('inf')\n    smallest_even_index = -1\n    for i, node in enumerate(arr):\n        if node % 2 == 0 and node < smallest_even:\n            smallest_even = node\n            smallest_even_index = i\n    if smallest_even_index == -1:\n        return []\n    return [smallest_even, smallest_even_index]",
+      "completion_inv": "    # Write your code here\n    if not arr:\n        return []\n    smallest_even = float('inf')\n    smallest_even_index = -1\n    for i, node in enumerate(arr):\n        if node % 2 == 0 and node < smallest_even:\n            smallest_even = node\n            smallest_even_index = i\n    if smallest_even_index == -1:\n        return []\n    return [smallest_even, smallest_even_index]"
+    },
+    {
+      "id": "HumanEval/69",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": true,
+      "completion_stock": "    # Your code here\n    # 1. Create a dictionary to store the frequency of each integer\n    # 2. Iterate through the list and update the frequency of each integer\n    # 3. Iterate through the dictionary and find the integer with the highest frequency that meets the condition\n    # 4. If no such integer exists, return -1\n    # 5. Otherwise, return the integer\n    # 6. Time complexity: O(n) where n is the length of the list\n    # 7. Space complexity: O(n) where n is the length of the list\n    frequency = {}\n    for num in lst:\n        if num in frequency:\n            frequency[num] += 1\n        else:\n            frequency[num] = 1\n    \n    for num in frequency:\n        if frequency[num] >= num and frequency[num] > 0:\n            return num\n    return -1\n\n# Test cases",
+      "completion_inv": "    # Your code here\n    # 1. Create a dictionary to store the frequency of each integer\n    frequency = {}\n    for num in lst:\n        if num in frequency:\n            frequency[num] += 1\n        else:\n            frequency[num] = 1\n    \n    # 2. Iterate through the frequency dictionary\n    for num in sorted(frequency.keys(), reverse=True):\n        if frequency[num] >= num:\n            return num\n    return -1\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/70",
+      "identical_tokens": false,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    sorted_lst = []\n    while lst:\n        min_val = min(lst)\n        max_val = max(lst)\n        sorted_lst.append(min_val)\n        lst.remove(min_val)\n        if lst:\n            sorted_lst.append(max_val)\n            lst.remove(max_val)\n    return sorted_lst\n",
+      "completion_inv": "    sorted_lst = []\n    while lst:\n        min_val = min(lst)\n        max_val = max(lst)\n        sorted_lst.append(min_val)\n        lst.remove(min_val)\n        if lst:\n            sorted_lst.append(max_val)\n            lst.remove(max_val)\n    return sorted_lst\n"
+    },
+    {
+      "id": "HumanEval/71",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    if a + b > c and a + c > b and b + c > a:\n        p = (a + b + c) / 2\n        area = (p * (p - a) * (p - b) * (p - c)) ** 0.5\n        return round(area, 2)\n    else:\n        return -1\n\n# Check function",
+      "completion_inv": "    if a + b > c and a + c > b and b + c > a:\n        p = (a + b + c) / 2\n        area = (p * (p - a) * (p - b) * (p - c)) ** 0.5\n        return round(area, 2)\n    else:\n        return -1\n\n# Check function"
+    },
+    {
+      "id": "HumanEval/72",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    # Code Here\n    if sum(q) > w:\n        return False\n    if q == q[::-1]:\n        return True\n    else:\n        return False\n\n# PROBLEM 2",
+      "completion_inv": "    # Code Here\n    if sum(q) > w:\n        return False\n    if q == q[::-1]:\n        return True\n    else:\n        return False\n\n# PROBLEM 4"
+    },
+    {
+      "id": "HumanEval/73",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    # Initialize the count of changes needed\n    changes_needed = 0\n\n    # Initialize two pointers, one at the start and one at the end of the array\n    left = 0\n    right = len(arr) - 1\n\n    # Iterate while the left pointer is less than the right pointer\n    while left < right:\n        # If the elements at the left and right pointers are not equal, increment the changes_needed\n        if arr[left] != arr[right]:\n            changes_needed += 1\n        # Move the left pointer to the right\n        left += 1\n        # Move the right pointer to the left\n        right -= 1\n\n    # If the array is already palindromic, return 0\n    if changes_needed == 0:\n        return 0\n\n    # If the array is not palindromic, return the changes_needed\n    return changes_needed\n\n# Test the function",
+      "completion_inv": "    # Initialize the count of changes needed\n    changes_needed = 0\n\n    # Initialize two pointers, one at the start and one at the end of the array\n    left = 0\n    right = len(arr) - 1\n\n    # Iterate while the left pointer is less than the right pointer\n    while left < right:\n        # If the elements at the left and right pointers are not equal, increment the changes_needed\n        if arr[left] != arr[right]:\n            changes_needed += 1\n        # Move the left pointer to the right\n        left += 1\n        # Move the right pointer to the left\n        right -= 1\n\n    # If the array is already palindromic, return 0\n    if changes_needed == 0:\n        return 0\n\n    # If the array is not palindromic, return the changes_needed\n    return changes_needed\n\n# Test the function"
+    },
+    {
+      "id": "HumanEval/74",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Code Here\n    if len(lst1) < len(lst2):\n        return lst1\n    elif len(lst1) > len(lst2):\n        return lst2\n    else:\n        return lst1\n\n# Check",
+      "completion_inv": "    # Code Here\n    if len(lst1) < len(lst2):\n        return lst1\n    elif len(lst1) > len(lst2):\n        return lst2\n    else:\n        return lst1\n\n# Check"
+    },
+    {
+      "id": "HumanEval/75",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Your code here\n    return False\n\n# Check",
+      "completion_inv": "    # Your code here\n    return False\n\n# Check"
+    },
+    {
+      "id": "HumanEval/76",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Your code here\n    if x == 1:\n        return True\n    if n == 1:\n        return False\n    if x % n == 0:\n        return True\n    else:\n        return False\n\n# Check your solution",
+      "completion_inv": "    # Your code here\n    return x == n ** int(math.log(x) / math.log(n))\n"
+    },
+    {
+      "id": "HumanEval/77",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Implement your code here\n    return a >= 0 and a == round(a ** (1/3)) ** 3\n\n# Test cases",
+      "completion_inv": "    # Implement your code here\n    return a >= 0 and a == round(a ** (1/3)) ** 3\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/78",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": true,
+      "completion_stock": "    # your code here\n    hex_to_decimal = {'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15}\n    primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]\n    count = 0\n    for digit in num:\n        if digit in hex_to_decimal:\n            digit = hex_to_decimal[digit]\n        if digit in primes:\n            count += 1\n    return count\n\n# Test cases",
+      "completion_inv": "    # your code here\n    hex_digits = {'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15}\n    prime_hex_digits = {'2', '3', '5', '7', 'B', 'D'}\n    count = 0\n    for digit in num:\n        if digit in prime_hex_digits:\n            count += 1\n        elif digit in hex_digits:\n            digit = hex_digits[digit]\n            if digit in prime_hex_digits:\n                count += 1\n    return count\n\n# print(hex_key(\"AB\")) # 1\n# print(hex_key(\"1077E\")) # 2\n# print(hex_key(\"ABED1A33\")) # 4\n# print(hex_key(\"123456789ABCDEF0\")) # 6\n# print(hex_key(\"2020\")) # 2\n\n# 1. Write a function that takes a string and returns a string with the \n# first letter of each word capitalized. \n# The first letter of the string should not be capitalized.\n# Examples:\n# capitalize(\"hello\") \u279e \"Hello\"\n# capitalize(\"hello HELLO\") \u279e \"Hello hello\"\n# capitalize(\"HELLO\") \u279e \"HELLO\"\n# capitalize(\"HELLO HELLO\") \u279e \"HELLO HELLO\"\n# capitalize(\"\") \u279e \"\"\n# \n# def capitalize(string):\n#     \"\"\"Write a function that takes a string and returns a string with the \n#     first letter of each word capitalized. \n#     The first letter of the string should not be capitalized.\n#     Examples:\n#     capitalize(\"hello\") \u279e \"Hello\"\n#     capitalize(\"hello HELLO\") \u279e \""
+    },
+    {
+      "id": "HumanEval/79",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    binary = bin(decimal)[2:]\n    return \"db\" + binary + \"db\"\n\n# Test cases",
+      "completion_inv": "    binary = bin(decimal)[2:]\n    return \"db\" + binary + \"db\"\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/80",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    if len(s) < 3:\n        return False\n    for i in range(len(s) - 2):\n        if s[i] == s[i + 1] or s[i] == s[i + 2] or s[i + 1] == s[i + 2]:\n            return False\n    return True\n",
+      "completion_inv": "    if len(s) < 3:\n        return False\n    for i in range(len(s) - 2):\n        if s[i] == s[i + 1] or s[i] == s[i + 2] or s[i + 1] == s[i + 2]:\n            return False\n    return True\n"
+    },
+    {
+      "id": "HumanEval/81",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    letter_grade = []\n    for grade in grades:\n        if grade >= 4.0:\n            letter_grade.append('A+')\n        elif grade >= 3.7:\n            letter_grade.append('A')\n        elif grade >= 3.3:\n            letter_grade.append('A-')\n        elif grade >= 3.0:\n            letter_grade.append('B+')\n        elif grade >= 2.7:\n            letter_grade.appendml('B')\n        elif grade >= 2.3:\n            letter_grade.append('B-')\n        elif grade >= 2.0:\n            letter_grade.append('C+')\n        elif grade >= 1.7:\n            letter_grade.append('C')\n        elif grade >= 1.3:\n            letter_grade.append('C-')\n        elif grade >= 1.0:\n            letter_grade.append('D+')\n        elif grade >= 0.7:\n            letter_grade.append('D')\n        else:\n            letter_grade.append('E')\n    return letter_grade\n\n# Test the function",
+      "completion_inv": "    letter_grade = []\n    for grade in grades:\n        if grade >= 4.0:\n            letter_grade.append('A+')\n        elif grade >= 3.7:\n            letter_grade.append('A')\n        elif grade >= 3.3:\n            letter_grade.append('A-')\n        elif grade >= 3.0:\n            letter_grade.append('B+')\n        elif grade >= 2.7:\n            letter_grade.append\u624b\u638c\n            letter_grade.append('B')\n        elif grade >= 2.3:\n            letter_grade.append('B-')\n        elif grade >= 2.0:\n            letter_grade.append('C+')\n        elif grade >= 1.7:\n            letter_grade.append('C')\n        elif grade >= 1.3:\n            letter_grade.append('C-')\n        elif grade >= 1.0:\n            letter_grade.append('D+')\n        elif grade >= 0.7:\n            letter_grade.append('D')\n        elif grade >= 0.0:\n            letter_grade.append('D-')\n        else:\n            letter_grade.append('E')\n    return letter_grade\n\n# Example usage"
+    },
+    {
+      "id": "HumanEval/82",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": true,
+      "pass_inv": false,
+      "completion_stock": "    # Check if the length of the string is a prime number\n    if len(string) < 2:\n        return False\n    for i in range(2, int(len(string) ** 0.5) + 1):\n        if len(string) % i == 0:\n            return False\n    return True\n\n# Problem 2",
+      "completion_inv": "    # Check if the length of the string is a prime number\n    if len(string) in [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 253, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 39"
+    },
+    {
+      "id": "HumanEval/83",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Initialize the count to 0\n    count = 0\n    \n    # Iterate over the range of n\n    for i in range(1, n+1):\n        # If the number starts or ends with 1, increment the count\n        if str(i).startswith('1') or str(i).endswith('1'):\n            count += 1\n    \n    # Return the count\n    return count\n\n# Example usage",
+      "completion_inv": "    # Initialize the count to 0\n    count = 0\n    \n    # Iterate over the range of n\n    for i in range(1, n+1):\n        # If the number starts or ends with 1, increment the count\n        if str(i).startswith('1') or str(i).endswith('1'):\n            count += 1\n    \n    # Return the count\n    return count\n\n# Example usage"
+    },
+    {
+      "id": "HumanEval/84",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Your code here\n    # Convert N to binary\n    binary = bin(N)[2:]\n    # Calculate the sum of the binary digits\n    sum_binary = sum(int(digit) for digit in binary)\n    # Convert the sum back to binary\n    binary_sum = bin(sum_binary)[2:]\n    return binary_sum\n\n# Test cases",
+      "completion_inv": "    # Your code here\n    # Convert N to binary\n    binary = bin(N)[2:]\n    # Calculate the sum of the binary digits\n    sum_binary = sum(int(digit) for digit in binary)\n    # Convert the sum back to binary\n    binary_sum = bin(sum_binary)[2:]\n    return binary_sum\n\n# Example test cases"
+    },
+    {
+      "id": "HumanEval/85",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # your code here\n    sum = 0\n    for i in range(1, len(lst), 2):\n        sum += lst[i]\n    return sum\n\n# print(add([4, 2, 6, 7]))\n\n\n# 10. Write a function that takes a list of integers and returns the sum of all the even numbers in the list.",
+      "completion_inv": "    # your code here\n    sum = 0\n    for i in range(1, len(lst), 2):\n        sum += lst[i]\n    return sum\n\n# print(add([4, 2, 6, 7]))\n\n\n# 10. Write a function that takes a list of integers and returns the sum of all the even numbers in the list."
+    },
+    {
+      "id": "HumanEval/86",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    return ' '.join(sorted(s.split()))\n\n\n# Test cases",
+      "completion_inv": "    return ' '.join(sorted(s.split()))\n\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/87",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Your code here\n    pass\n\n# Test cases",
+      "completion_inv": "    # Your code here\n    pass\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/88",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    if not array:\n        return array\n\n    sum_of_first_last = array[0] + array[-1]\n\n    if sum_of_first_last % 2 == 0:\n        array.sort(reverse=True)\n    else:\n        array.sort()\n\n    return array\n\n# Check function to verify the correctness of the solution",
+      "completion_inv": "    if not array:\n        return array\n\n    sum_of_first_last = array[0] + array[-1]\n\n    if sum_of_first_last % 2 == 0:\n        array.sort(reverse=True)\n    else:\n        array.sort()\n\n    return array\n\n# Check function to verify the correctness of the solution"
+    },
+    {
+      "id": "HumanEval/89",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Your code here\n    pass\n\n# Test Cases",
+      "completion_inv": "    # Your code here\n    pass\n\n# Test Cases"
+    },
+    {
+      "id": "HumanEval/90",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    return sorted(set(lst))[1] if len(lst) > 1 else None",
+      "completion_inv": "    return sorted(set(lst))[1] if len(lst) > 1 else None"
+    },
+    {
+      "id": "HumanEval/91",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    boredom_count = 0\n    for sentence in S.split():\n        if sentence.startswith(\"I\"):\n            boredom_count += 1\n    return boredom_count\n\n# Test the function",
+      "completion_inv": "    boredom_count = 0\n    for sentence in S.split():\n        if sentence.startswith(\"I\"):\n            boredom_count += 1\n    return boredom_count\n\n# Test the function"
+    },
+    {
+      "id": "HumanEval/92",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Code Here\n    if x + y == z or y + z == x or z + x == y:\n        if x == int(x) and y == int(y) and z == int(z):\n            return True\n        else:\n            return False\n    else:\n        return False\n",
+      "completion_inv": "    # Code Here\n    if x + y == z or y + z == x or z + x == y:\n        if x == int(x) and y == int(y) and z == int(z):\n            return True\n        else:\n            return False\n    else:\n        return False\n"
+    },
+    {
+      "id": "HumanEval/93",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Your code here\n    pass\n\n# 10",
+      "completion_inv": "    # Your code here\n    pass\n\n# 11"
+    },
+    {
+      "id": "HumanEval/94",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    # Your code here\n    pass\n",
+      "completion_inv": "    # Your code here\n    pass\n"
+    },
+    {
+      "id": "HumanEval/95",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    if not dict:\n        return False\n    keys = dict.keys()\n    if all(isinstance(key, str) and key.islower() for key in keys):\n        return True\n    elif all(isinstance(key, str) and key.isupper() for key in keys):\n        return True\n    else:\n        return False\n\n# Check function with provided data points",
+      "completion_inv": "    if not dict:\n        return False\n    keys = dict.keys()\n    if all(isinstance(key, str) and key.islower() for key in keys):\n        return True\n    elif all(isinstance(key, str) and key.isupper() for key in keys):\n        return True\n    else:\n        return False\n\n# Check function with provided data points"
+    },
+    {
+      "id": "HumanEval/96",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    primes = []\n    for i in range(2, n):\n        is_prime = True\n        for j in range(2, i):\n            if i % j == 0:\n                is_prime = False\n                break\n        if is_prime:\n            primes.append(i)\n    return primes\n\n# Test cases",
+      "completion_inv": "    primes = []\n    for i in range(2, n):\n        is_prime = True\n        for j in range(2, i):\n            if i % j == 0:\n                is_prime = False\n                break\n        if is_prime:\n            primes.append(i)\n    return primes\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/97",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    return (a%10)*(b%1ml)",
+      "completion_inv": "    return (a%10)*(b%1ml)"
+    },
+    {
+      "id": "HumanEval/98",
+      "identical_tokens": true,
+      "identical_completion": true,
+      "pass_stock": true,
+      "pass_inv": true,
+      "completion_stock": "    return sum(1 for i in range(0, len(s), 2) if s[i] in 'AEIOU')\n\n# Test cases",
+      "completion_inv": "    return sum(1 for i in range(0, len(s), 2) if s[i] in 'AEIOU')\n\n# Test cases"
+    },
+    {
+      "id": "HumanEval/99",
+      "identical_tokens": false,
+      "identical_completion": false,
+      "pass_stock": false,
+      "pass_inv": false,
+      "completion_stock": "    return int(value) if value[-1] in '02468' else int(value) + 1 if value[-1] in '579' else int(value)\n\n# Test cases",
+      "completion_inv": "    return int(value) if value[-1] in '02468' else int(value) + 1 if value[-1] in '579' else int(value)\n\n# Test the function"
+    }
+  ]
+}

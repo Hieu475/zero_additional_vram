@@ -1,0 +1,120 @@
+{
+  "n_prompts": 3,
+  "methods": {
+    "vanilla": {
+      "exact_sequences": 3,
+      "n_sequences": 3,
+      "mean_paired_latency_ratio_vanilla_over_method": 1.0,
+      "mean_paired_latency_ratio_on_exact_sequences": 1.0
+    },
+    "pld_batched": {
+      "exact_sequences": 3,
+      "n_sequences": 3,
+      "mean_paired_latency_ratio_vanilla_over_method": 0.8951455014925163,
+      "mean_paired_latency_ratio_on_exact_sequences": 0.8951455014925163
+    },
+    "pld_sequential": {
+      "exact_sequences": 3,
+      "n_sequences": 3,
+      "mean_paired_latency_ratio_vanilla_over_method": 0.7669263305257235,
+      "mean_paired_latency_ratio_on_exact_sequences": 0.7669263305257235
+    },
+    "margin_guard": {
+      "exact_sequences": 3,
+      "n_sequences": 3,
+      "mean_paired_latency_ratio_vanilla_over_method": 0.18391720845014722,
+      "mean_paired_latency_ratio_on_exact_sequences": 0.18391720845014722
+    }
+  },
+  "by_task": {
+    "cnndm": {
+      "vanilla": {
+        "exact": 1,
+        "n": 1,
+        "mean_latency_ratio": 1.0
+      },
+      "pld_batched": {
+        "exact": 1,
+        "n": 1,
+        "mean_latency_ratio": 1.1877243417383174
+      },
+      "pld_sequential": {
+        "exact": 1,
+        "n": 1,
+        "mean_latency_ratio": 0.3458186393339554
+      },
+      "margin_guard": {
+        "exact": 1,
+        "n": 1,
+        "mean_latency_ratio": 0.1036835811137113
+      }
+    },
+    "gsm8k": {
+      "vanilla": {
+        "exact": 1,
+        "n": 1,
+        "mean_latency_ratio": 1.0
+      },
+      "pld_batched": {
+        "exact": 1,
+        "n": 1,
+        "mean_latency_ratio": 1.1520332224110876
+      },
+      "pld_sequential": {
+        "exact": 1,
+        "n": 1,
+        "mean_latency_ratio": 0.9772620507698347
+      },
+      "margin_guard": {
+        "exact": 1,
+        "n": 1,
+        "mean_latency_ratio": 0.13972136211873018
+      }
+    },
+    "humaneval": {
+      "vanilla": {
+        "exact": 1,
+        "n": 1,
+        "mean_latency_ratio": 1.0
+      },
+      "pld_batched": {
+        "exact": 1,
+        "n": 1,
+        "mean_latency_ratio": 0.3456789403281437
+      },
+      "pld_sequential": {
+        "exact": 1,
+        "n": 1,
+        "mean_latency_ratio": 0.9776983014733802
+      },
+      "margin_guard": {
+        "exact": 1,
+        "n": 1,
+        "mean_latency_ratio": 0.3083466821180002
+      }
+    }
+  },
+  "guard_cost_screen": {
+    "mean_replay_fraction_all": 0.7895891450026884,
+    "mean_free_restore_latency_ratio_all": 0.8559239157638375,
+    "mean_free_restore_latency_ratio_exact_only": 0.8559239157638375,
+    "exact_guard_prompts_with_free_restore_ratio_above_one": 0,
+    "exact_guard_prompts": 3
+  },
+  "prompt_hindsight_oracle": {
+    "mean_latency_ratio": 1.113252521383135,
+    "selected_method_counts": {
+      "vanilla": 1,
+      "pld_batched": 2,
+      "pld_sequential": 0,
+      "margin_guard": 0
+    },
+    "scope": "best observed exact whole-prompt method chosen with hindsight; not an executable policy or cycle-level oracle"
+  },
+  "limitations": [
+    "Previously used diagnostic prompts; no held-out claim.",
+    "Single process session and one GPU; ratios are descriptive.",
+    "Free restoration changes a measured cost only, not the actual decoding trajectory; it is not an exact algorithm.",
+    "An inexact method's latency ratio is not an exact-decoding speedup."
+  ]
+}

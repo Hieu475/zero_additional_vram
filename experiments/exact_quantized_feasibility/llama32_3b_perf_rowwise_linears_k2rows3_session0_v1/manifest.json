@@ -1,0 +1,103 @@
+{
+  "manifest_schema": "b1-fixed-row-v2",
+  "status": "experimental; finite diagnostic, not a proof",
+  "reference": "greedy singleton under the same architecture-specific fixed-row operator schedule",
+  "second_baseline": "original BNB greedy, for compatibility measurement only",
+  "model": "unsloth/Llama-3.2-3B-Instruct",
+  "revision": "006f5dcd1393c3add266de40994ba96225e9689d",
+  "model_dtype_override": "config",
+  "reuse_linear_padding_buffer": false,
+  "quantized_linear_strategy": "rowwise",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "git_commit": "6465f4dc67eb15d8fb2be46606424d78539b6831",
+  "python": "3.12.13",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "transformers": "5.14.1",
+  "bitsandbytes": "0.50.0",
+  "k": 2,
+  "physical_rows": 3,
+  "attention_strategy": "rowwise",
+  "ngram_size": 3,
+  "reference_schedule": "llama_fixed_row_rowwise_singleton",
+  "cache_backend": "StaticPreallocatedKVCache",
+  "greedy_tie_rule": "torch.argmax_first_index",
+  "max_new_tokens": 64,
+  "capacity": 1024,
+  "per_task": 3,
+  "start_index": 0,
+  "session_index": 0,
+  "prompt_file": "experiments/exact_quantized_feasibility/llama32_1b_adapter_validation_cohort_v1.jsonl",
+  "eos_token_id": 128009,
+  "audit_state": true,
+  "state_audit_granularity": "every_output_prefix",
+  "input_hashes": {
+    "experiments/exact_quantized_feasibility/llama32_1b_adapter_validation_cohort_v1.jsonl": "eec4835644ced88df64498ac18729d0dd4c74ac37928897ba81a1495a9b11e45"
+  },
+  "runtime_identity": {
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "index": 0,
+      "compute_capability": [
+        8,
+        9
+      ],
+      "total_memory_bytes": 6053232640,
+      "driver": {
+        "version": "595.99.02",
+        "compute_capability": "8.9",
+        "uuid": "GPU-794ce37a-f7d3-5b6e-8858-75c2d14741f5"
+      }
+    },
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "transformers": "5.14.1",
+    "bitsandbytes": "0.50.0",
+    "model_type": "llama",
+    "model_config_sha256": "7eea8d54db95c0bca7345c359883f1a7b47904a9a616c59b5b4dee53c43e5030",
+    "model_attention_implementation": "sdpa",
+    "tokenizer": {
+      "class": "TokenizersBackend",
+      "name_or_path": "unsloth/Llama-3.2-3B-Instruct",
+      "length": 128256,
+      "vocab_size": 128000,
+      "vocab_sha256": "eb58f0e94d29822ac1c2055c2f72e0cdb162119e0db3bc23729e6d2bf4174edf",
+      "special_tokens_map": {
+        "bos_token": "<|begin_of_text|>",
+        "eos_token": "<|eot_id|>",
+        "pad_token": "<|finetune_right_pad_id|>"
+      },
+      "bos_token_id": 128000,
+      "eos_token_id": 128009,
+      "pad_token_id": 128004,
+      "chat_template_sha256": "5816fce10444e03c2e9ee1ef8a4a1ea61ae7e69e438613f3b17b69d0426223a4"
+    },
+    "backend_flags": {
+      "float32_matmul_precision": "highest",
+      "cuda_matmul_allow_tf32": false,
+      "cudnn_allow_tf32": true,
+      "cudnn_deterministic": false,
+      "deterministic_algorithms": false,
+      "flash_sdp_enabled": true,
+      "mem_efficient_sdp_enabled": true,
+      "math_sdp_enabled": true
+    },
+    "source_sha256": {
+      "src/zassd/certification/llama_padded.py": "47a948f5efef30b687ed165cc605bdc886928a57d06185b472b56a3357d1bfd8",
+      "src/zassd/certification/fixed_row_dispatch.py": "a0307e2d18f342800d64f8f6e84f82767c7260adaabd916d917ef04eec245c23",
+      "src/zassd/certification/model_capabilities.py": "be34dab0aeb0a2a9fb25f203f4d5b79d8f604779d0d57a8a07b238ea77fb54bc",
+      "src/zassd/decoding/b1_exact.py": "e19b4e6440697fc96e6e6e7b1902da843fa45b8cae0e62700c4ac331f99b0d63",
+      "src/zassd/decoding/ngram.py": "0976856395ce1a293e767c84fd6b1dc6d8f277b57f0674e806896cc3913d4713",
+      "src/zassd/cache/kv_cache.py": "a56a3ad4ee163e7456e236515e8848173face82426b0fe3c0e7489b170ed3934",
+      "src/zassd/backends/base.py": "00c77e4731ef61cda25d4393d865b1f21b7422689870d680529aa79165df9ef6",
+      "scripts/run_b1_block_pilot.py": "646e626950a239aa79fd60e15d945f657e2fb1037a9d0d688934bb361bceccca"
+    },
+    "quantized_state_sha256": "0aeb5ae0f4b46ebe5ccf7fb1f11e1b15003f9a1b8a937b00e0b78a459c6ce434"
+  },
+  "contract_id": "cd86677d57495572294dff6583bfd99421b2eef2b29ddded3cdbcad6ad7eab84"
+}

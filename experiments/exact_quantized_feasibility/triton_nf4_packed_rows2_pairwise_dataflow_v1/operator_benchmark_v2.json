@@ -1,0 +1,173 @@
+{
+  "status": "finite operator-only dataflow experiment; pairwise reduction is a separate B1 arithmetic schedule",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "torch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "bitsandbytes": "0.50.0",
+  "triton": "3.6.0",
+  "block_n": 16,
+  "block_k": 256,
+  "num_warps": 1,
+  "iterations_per_sample": 30,
+  "rounds_per_m": 7,
+  "results": {
+    "q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "correctness": {
+        "interleaved_w1_m1_rowwise_singleton_equal": true,
+        "pairwise_w1_m1_rowwise_singleton_equal": true,
+        "interleaved_w1_m2_rowwise_singleton_equal": true,
+        "pairwise_w1_m2_rowwise_singleton_equal": true
+      },
+      "cross_schedule_difference": {
+        "1": {
+          "bitwise_equal_to_interleaved": false,
+          "max_abs_difference": 0.00048828125
+        },
+        "2": {
+          "bitwise_equal_to_interleaved": false,
+          "max_abs_difference": 0.00048828125
+        }
+      },
+      "latency_by_m": {
+        "1": {
+          "median_cuda_ms": {
+            "interleaved_w1": 0.02481493353843689,
+            "pairwise_w1": 0.02535146673520406
+          },
+          "pairwise_over_interleaved_ratio": 1.0216213835888825,
+          "samples_ms": {
+            "interleaved_w1": [
+              0.030485333998998006,
+              0.0293503999710083,
+              0.026138667265574136,
+              0.02481493353843689,
+              0.022894932826360067,
+              0.02463253339131673,
+              0.024256000916163128
+            ],
+            "pairwise_w1": [
+              0.0265557328859965,
+              0.026726400852203368,
+              0.027986133098602296,
+              0.024439465999603272,
+              0.02429866592089335,
+              0.025156267484029136,
+              0.02535146673520406
+            ]
+          }
+        },
+        "2": {
+          "median_cuda_ms": {
+            "interleaved_w1": 0.025190399090449015,
+            "pairwise_w1": 0.025600000222524007
+          },
+          "pairwise_over_interleaved_ratio": 1.0162602081294652,
+          "samples_ms": {
+            "interleaved_w1": [
+              0.027128533522288004,
+              0.025361067056655882,
+              0.025190399090449015,
+              0.024501333634058636,
+              0.024098134040832518,
+              0.025286400318145753,
+              0.024392533302307128
+            ],
+            "pairwise_w1": [
+              0.02590293288230896,
+              0.025452800591786704,
+              0.025600000222524007,
+              0.024780799945195515,
+              0.0260426660378774,
+              0.02731200059254964,
+              0.02461013396581014
+            ]
+          }
+        }
+      }
+    },
+    "down_proj": {
+      "in_features": 11008,
+      "out_features": 2048,
+      "correctness": {
+        "interleaved_w1_m1_rowwise_singleton_equal": true,
+        "pairwise_w1_m1_rowwise_singleton_equal": true,
+        "interleaved_w1_m2_rowwise_singleton_equal": true,
+        "pairwise_w1_m2_rowwise_singleton_equal": true
+      },
+      "cross_schedule_difference": {
+        "1": {
+          "bitwise_equal_to_interleaved": false,
+          "max_abs_difference": 3.814697265625e-06
+        },
+        "2": {
+          "bitwise_equal_to_interleaved": false,
+          "max_abs_difference": 0.001953125
+        }
+      },
+      "latency_by_m": {
+        "1": {
+          "median_cuda_ms": {
+            "interleaved_w1": 0.10891626675923666,
+            "pairwise_w1": 0.11267413298288981
+          },
+          "pairwise_over_interleaved_ratio": 1.034502341435922,
+          "samples_ms": {
+            "interleaved_w1": [
+              0.10917759736378987,
+              0.10912213325500489,
+              0.1090218702952067,
+              0.10891626675923666,
+              0.1083679993947347,
+              0.10806186993916829,
+              0.10814507007598877
+            ],
+            "pairwise_w1": [
+              0.1127072016398112,
+              0.11331093311309814,
+              0.11257387002309163,
+              0.11267413298288981,
+              0.1124351978302002,
+              0.11240106423695882,
+              0.11267413298288981
+            ]
+          }
+        },
+        "2": {
+          "median_cuda_ms": {
+            "interleaved_w1": 0.11717973550160726,
+            "pairwise_w1": 0.1231872002283732
+          },
+          "pairwise_over_interleaved_ratio": 1.0512670958084176,
+          "samples_ms": {
+            "interleaved_w1": [
+              0.11817066669464112,
+              0.1173408031463623,
+              0.11717973550160726,
+              0.11731200218200684,
+              0.11714560190836588,
+              0.11714560190836588,
+              0.11717653274536133
+            ],
+            "pairwise_w1": [
+              0.12336533069610596,
+              0.1231872002283732,
+              0.12335786819458008,
+              0.1231872002283732,
+              0.12309226989746094,
+              0.12308479944864908,
+              0.1229482650756836
+            ]
+          }
+        }
+      }
+    }
+  }
+}

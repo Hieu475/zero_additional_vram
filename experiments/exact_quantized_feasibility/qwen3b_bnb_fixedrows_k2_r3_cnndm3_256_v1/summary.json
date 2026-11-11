@@ -1,0 +1,59 @@
+{
+  "title": "Qwen2.5-3B BNB fixed-row K2/R3 budget sensitivity",
+  "status": "finite B1 development result; B1 exactness passed, B2 token identity did not hold at 256 tokens",
+  "protocol": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "linear_schedule": "BNB NF4 Linear4bit padded to physical_rows=3",
+    "attention": "padded SDPA",
+    "K": 2,
+    "physical_rows": 3,
+    "prompts": ["cnndm_000", "cnndm_001", "cnndm_002"],
+    "sessions": 3,
+    "heldout_gsm8k_used": false
+  },
+  "budget_64": {
+    "runs": 9,
+    "token_matches": {"b1": "9/9", "original_bnb": "9/9"},
+    "shared_kv_prefixes": 576,
+    "all_shared_states_equal": true,
+    "speedup_vs_b1": {
+      "geometric_mean": 1.22353,
+      "run_level_diagnostic_95_interval": [1.12608, 1.32940],
+      "by_prompt": {"cnndm_000": 1.35253, "cnndm_001": 1.18001, "cnndm_002": 1.14765}
+    },
+    "speedup_vs_original_bnb": {
+      "geometric_mean": 0.90837,
+      "run_level_diagnostic_95_interval": [0.82714, 0.99757],
+      "by_prompt": {"cnndm_000": 1.01725, "cnndm_001": 0.87102, "cnndm_002": 0.84592}
+    },
+    "raw_sessions": ["../qwen3b_bnb_fixedrows_k2_r3_cnndm3_v1/session0", "../qwen3b_bnb_fixedrows_k2_r3_cnndm3_v1/session1", "../qwen3b_bnb_fixedrows_k2_r3_cnndm3_v1/session2"]
+  },
+  "budget_256": {
+    "runs": 9,
+    "token_matches": {"b1": "9/9", "original_bnb": "0/9"},
+    "shared_kv_prefixes": 2304,
+    "all_shared_states_equal": true,
+    "speedup_vs_b1": {
+      "geometric_mean": 1.39659,
+      "run_level_diagnostic_95_interval": [1.35064, 1.44410],
+      "prompt_level_diagnostic_95_interval_n3": [1.30083, 1.49939],
+      "by_prompt": {"cnndm_000": 1.42750, "cnndm_001": 1.41127, "cnndm_002": 1.35213}
+    },
+    "speedup_vs_original_bnb": {
+      "geometric_mean": 1.02395,
+      "run_level_diagnostic_95_interval": [0.99305, 1.05582],
+      "prompt_level_diagnostic_95_interval_n3": [0.95145, 1.10198],
+      "by_prompt": {"cnndm_000": 1.04394, "cnndm_001": 1.03911, "cnndm_002": 0.98969}
+    },
+    "raw_sessions": ["session0", "session1", "session2"]
+  },
+  "decision": "K2/R3 padded BNB is a strong long-generation B1 candidate: it exceeded 1.15x B1 speedup in every prompt-level aggregate at 64 and 256 tokens. The 256-token BNB-relative point estimate was 1.024x, but both intervals include 1 and all BNB token sequences diverged. Keep the workload horizon explicit; do not claim B2 equivalence or general BNB speedup.",
+  "limitations": [
+    "Three previously used CNN/DailyMail development prompts on one RTX 4050 and one pinned software/model revision.",
+    "Repeated sessions reuse the same prompts; prompt-level intervals use only three prompt units.",
+    "The BNB-relative 256-token estimate is inconclusive and the token trajectory differs from original BNB.",
+    "Finite state hashes do not prove all-input equivalence."
+  ]
+}

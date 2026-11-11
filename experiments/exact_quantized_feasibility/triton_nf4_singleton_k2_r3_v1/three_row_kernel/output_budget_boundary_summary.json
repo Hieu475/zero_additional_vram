@@ -1,0 +1,2382 @@
+{
+  "status": "complete; finite development-only output-budget boundary audit",
+  "contract": "K=2/R=3 experimental fixed-row singleton reference (B1)",
+  "scope": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "benchmark": "HumanEval development prompts",
+    "budgets_tested": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "held_out_gsm8k_300_349_used": false
+  },
+  "aggregate": {
+    "cases": 14,
+    "token_match_cases": 14,
+    "matched_state_prefixes": 288,
+    "required_state_prefixes": 288,
+    "timing_claim": "none; one timing round per case and boundary behavior was the purpose"
+  },
+  "interpretation": [
+    "HumanEval/114 budget=1 ends by emitting the precomputed pending token; no verification cycle is needed.",
+    "HumanEval/114 budgets=2-4 enter verification with proposals; the first proposal is rejected, then the pending/correction handoff supplies the remaining tokens.",
+    "HumanEval/112 budgets=2-4 have no draft proposals in the observed cycles; emitted tokens come from the pending-token path.",
+    "At HumanEval/114 budget=46, the final cycle has one available non-EOS proposal; it is accepted and the budget ends after pending plus that proposal. At budget=47, both non-EOS proposals are present and accepted, and the output cap ends exactly after the full-accept cycle.",
+    "These neighboring cap=46/47 runs exercise accepted non-EOS proposal handling at the cap. They are the same prompt and session and provide finite branch evidence, not a proof across all states.",
+    "Finite matching is empirical evidence against the experimental singleton reference only; it is not a proof or an original-BNB equivalence claim.",
+    "Cross-prompt replication on HumanEval/112, session 22: cap 8 accepted the one proposal that fit before the cap; cap 9 accepted both non-EOS proposals and ended exactly after full acceptance. Both runs matched every B1 state prefix. A separate 64-token trace on this prompt/session contained 19 full-accept cycles; only the first cap boundary was rerun at caps 8/9.",
+    "Partial-accept/reject boundary on HumanEval/114, session 11: cap 52 limits the final verify window to one proposal and accepts it; cap 53 presents two proposals, accepts the first, rejects the second, and leaves correction token 1308 pending; cap 54 repeats that reject and emits 1308 in the following no-draft cycle. All three outputs match B1 through the requested cap."
+  ],
+  "cases": [
+    {
+      "prompt_id": "HumanEval/112",
+      "max_new_tokens": 2,
+      "artifact": "budget_humaneval112_2.json",
+      "token_match": true,
+      "shared_state_prefixes": 2,
+      "generated_token_ids": [
+        262,
+        671
+      ],
+      "cycles": 1,
+      "cycle_branches": [
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 671
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 0.981934754971331,
+      "speedup_vs_original_bnb": 0.980268308604492
+    },
+    {
+      "prompt_id": "HumanEval/112",
+      "max_new_tokens": 3,
+      "artifact": "budget_humaneval112_3.json",
+      "token_match": true,
+      "shared_state_prefixes": 3,
+      "generated_token_ids": [
+        262,
+        671,
+        697
+      ],
+      "cycles": 2,
+      "cycle_branches": [
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 697
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 1.0085746850782855,
+      "speedup_vs_original_bnb": 0.9889012038702368
+    },
+    {
+      "prompt_id": "HumanEval/112",
+      "max_new_tokens": 4,
+      "artifact": "budget_humaneval112_4.json",
+      "token_match": true,
+      "shared_state_prefixes": 4,
+      "generated_token_ids": [
+        262,
+        671,
+        697,
+        2038
+      ],
+      "cycles": 3,
+      "cycle_branches": [
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 697
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2038
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 0.9895675255648162,
+      "speedup_vs_original_bnb": 0.9505949016614502
+    },
+    {
+      "prompt_id": "HumanEval/112",
+      "max_new_tokens": 8,
+      "artifact": "budget_humaneval112_8_before_full_accept.json",
+      "token_match": true,
+      "shared_state_prefixes": 8,
+      "generated_token_ids": [
+        262,
+        671,
+        697,
+        2038,
+        198,
+        262,
+        671,
+        697
+      ],
+      "cycles": 7,
+      "cycle_branches": [
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 697
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2038
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 1,
+          "accepted": 1,
+          "rejected_at": null,
+          "emitted_count": 2,
+          "next_pending": 2038
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 0.9569528628925167,
+      "speedup_vs_original_bnb": 0.8998242274145783
+    },
+    {
+      "prompt_id": "HumanEval/112",
+      "max_new_tokens": 9,
+      "artifact": "budget_humaneval112_9_full_accept.json",
+      "token_match": true,
+      "shared_state_prefixes": 9,
+      "generated_token_ids": [
+        262,
+        671,
+        697,
+        2038,
+        198,
+        262,
+        671,
+        697,
+        2038
+      ],
+      "cycles": 7,
+      "cycle_branches": [
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 697
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2038
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 2,
+          "accepted": 2,
+          "rejected_at": null,
+          "emitted_count": 3,
+          "next_pending": 198
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 1.0187839178472964,
+      "speedup_vs_original_bnb": 0.9629051808161765
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 1,
+      "artifact": "budget_humaneval114_1.json",
+      "token_match": true,
+      "shared_state_prefixes": 1,
+      "generated_token_ids": [
+        262
+      ],
+      "cycles": 0,
+      "cycle_branches": [],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 0.9722775160734609,
+      "speedup_vs_original_bnb": 0.9884214332169877
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 2,
+      "artifact": "budget_humaneval114_2.json",
+      "token_match": true,
+      "shared_state_prefixes": 2,
+      "generated_token_ids": [
+        262,
+        671
+      ],
+      "cycles": 1,
+      "cycle_branches": [
+        {
+          "draft_count": 1,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 671
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 0.928099498776051,
+      "speedup_vs_original_bnb": 0.9074137685337262
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 3,
+      "artifact": "budget_humaneval114_3.json",
+      "token_match": true,
+      "shared_state_prefixes": 3,
+      "generated_token_ids": [
+        262,
+        671,
+        4615
+      ],
+      "cycles": 2,
+      "cycle_branches": [
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 4615
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 0.9304302883107255,
+      "speedup_vs_original_bnb": 0.8731782943836071
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 4,
+      "artifact": "budget_humaneval114_4.json",
+      "token_match": true,
+      "shared_state_prefixes": 4,
+      "generated_token_ids": [
+        262,
+        671,
+        4615,
+        2038
+      ],
+      "cycles": 3,
+      "cycle_branches": [
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 4615
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2038
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 0.9138407710848512,
+      "speedup_vs_original_bnb": 0.8784590269321402
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 46,
+      "artifact": "budget_humaneval114_46_before_full_accept.json",
+      "token_match": true,
+      "shared_state_prefixes": 46,
+      "generated_token_ids": [
+        262,
+        671,
+        4615,
+        2038,
+        1588,
+        198,
+        262,
+        1308,
+        10160,
+        284,
+        2224,
+        492,
+        13573,
+        1305,
+        262,
+        1482,
+        10160,
+        284,
+        220,
+        15,
+        198,
+        262,
+        369,
+        1629,
+        304,
+        10307,
+        510,
+        286,
+        1482,
+        10160,
+        1421,
+        1629,
+        198,
+        286,
+        421,
+        1482,
+        10160,
+        861,
+        220,
+        15,
+        510,
+        310,
+        1482,
+        10160,
+        284,
+        220
+      ],
+      "cycles": 45,
+      "cycle_branches": [
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 4615
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2038
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1588
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1308
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2224
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 492
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 13573
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1305
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 220
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 15
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 369
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1629
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 304
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10307
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 510
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1421
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1629
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 421
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 861
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 220
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 15
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 510
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 310
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 1,
+          "accepted": 1,
+          "rejected_at": null,
+          "emitted_count": 2,
+          "next_pending": 15
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 0.9210233017937677,
+      "speedup_vs_original_bnb": 0.8187474876712673
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 47,
+      "artifact": "budget_humaneval114_47_full_accept.json",
+      "token_match": true,
+      "shared_state_prefixes": 47,
+      "generated_token_ids": [
+        262,
+        671,
+        4615,
+        2038,
+        1588,
+        198,
+        262,
+        1308,
+        10160,
+        284,
+        2224,
+        492,
+        13573,
+        1305,
+        262,
+        1482,
+        10160,
+        284,
+        220,
+        15,
+        198,
+        262,
+        369,
+        1629,
+        304,
+        10307,
+        510,
+        286,
+        1482,
+        10160,
+        1421,
+        1629,
+        198,
+        286,
+        421,
+        1482,
+        10160,
+        861,
+        220,
+        15,
+        510,
+        310,
+        1482,
+        10160,
+        284,
+        220,
+        15
+      ],
+      "cycles": 45,
+      "cycle_branches": [
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 4615
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2038
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1588
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1308
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2224
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 492
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 13573
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1305
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 220
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 15
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 369
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1629
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 304
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10307
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 510
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1421
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1629
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 421
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 861
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 220
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 15
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 510
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 310
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 2,
+          "accepted": 2,
+          "rejected_at": null,
+          "emitted_count": 3,
+          "next_pending": 198
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 0.9361375333815005,
+      "speedup_vs_original_bnb": 0.8313237375727457
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 52,
+      "artifact": "budget_humaneval114_52_partial_reject.json",
+      "token_match": true,
+      "shared_state_prefixes": 52,
+      "generated_token_ids": [
+        262,
+        671,
+        4615,
+        2038,
+        1588,
+        198,
+        262,
+        1308,
+        10160,
+        284,
+        2224,
+        492,
+        13573,
+        1305,
+        262,
+        1482,
+        10160,
+        284,
+        220,
+        15,
+        198,
+        262,
+        369,
+        1629,
+        304,
+        10307,
+        510,
+        286,
+        1482,
+        10160,
+        1421,
+        1629,
+        198,
+        286,
+        421,
+        1482,
+        10160,
+        861,
+        220,
+        15,
+        510,
+        310,
+        1482,
+        10160,
+        284,
+        220,
+        15,
+        198,
+        286,
+        1308,
+        10160,
+        284
+      ],
+      "cycles": 49,
+      "cycle_branches": [
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 4615
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2038
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1588
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1308
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2224
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 492
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 13573
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1305
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 220
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 15
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 369
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1629
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 304
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10307
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 510
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1421
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1629
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 421
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 861
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 220
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 15
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 510
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 310
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 2,
+          "accepted": 2,
+          "rejected_at": null,
+          "emitted_count": 3,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1308
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 1,
+          "accepted": 1,
+          "rejected_at": null,
+          "emitted_count": 2,
+          "next_pending": 1308
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 0.9582011343532447,
+      "speedup_vs_original_bnb": 0.8613548577145995
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 53,
+      "artifact": "budget_humaneval114_53_correction.json",
+      "token_match": true,
+      "shared_state_prefixes": 53,
+      "generated_token_ids": [
+        262,
+        671,
+        4615,
+        2038,
+        1588,
+        198,
+        262,
+        1308,
+        10160,
+        284,
+        2224,
+        492,
+        13573,
+        1305,
+        262,
+        1482,
+        10160,
+        284,
+        220,
+        15,
+        198,
+        262,
+        369,
+        1629,
+        304,
+        10307,
+        510,
+        286,
+        1482,
+        10160,
+        1421,
+        1629,
+        198,
+        286,
+        421,
+        1482,
+        10160,
+        861,
+        220,
+        15,
+        510,
+        310,
+        1482,
+        10160,
+        284,
+        220,
+        15,
+        198,
+        286,
+        1308,
+        10160,
+        284,
+        1308
+      ],
+      "cycles": 49,
+      "cycle_branches": [
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 4615
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2038
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1588
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1308
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2224
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 492
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 13573
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1305
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 220
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 15
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 369
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1629
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 304
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10307
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 510
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1421
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1629
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 421
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 861
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 220
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 15
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 510
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 310
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 2,
+          "accepted": 2,
+          "rejected_at": null,
+          "emitted_count": 3,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1308
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 1,
+          "rejected_at": 1,
+          "emitted_count": 2,
+          "next_pending": 1308
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 0.9692431248241529,
+      "speedup_vs_original_bnb": 0.8419239510382844
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "max_new_tokens": 54,
+      "artifact": "budget_humaneval114_54_correction_emitted.json",
+      "token_match": true,
+      "shared_state_prefixes": 54,
+      "generated_token_ids": [
+        262,
+        671,
+        4615,
+        2038,
+        1588,
+        198,
+        262,
+        1308,
+        10160,
+        284,
+        2224,
+        492,
+        13573,
+        1305,
+        262,
+        1482,
+        10160,
+        284,
+        220,
+        15,
+        198,
+        262,
+        369,
+        1629,
+        304,
+        10307,
+        510,
+        286,
+        1482,
+        10160,
+        1421,
+        1629,
+        198,
+        286,
+        421,
+        1482,
+        10160,
+        861,
+        220,
+        15,
+        510,
+        310,
+        1482,
+        10160,
+        284,
+        220,
+        15,
+        198,
+        286,
+        1308,
+        10160,
+        284,
+        1308,
+        14146
+      ],
+      "cycles": 50,
+      "cycle_branches": [
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 671
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 4615
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2038
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1588
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1308
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 2224
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 492
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 13573
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1305
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 220
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 15
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 262
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 369
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1629
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 304
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10307
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 510
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1421
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1629
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 421
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 861
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 220
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 15
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 510
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 310
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 1482
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 284
+        },
+        {
+          "draft_count": 2,
+          "accepted": 2,
+          "rejected_at": null,
+          "emitted_count": 3,
+          "next_pending": 198
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 286
+        },
+        {
+          "draft_count": 2,
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_count": 1,
+          "next_pending": 1308
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 10160
+        },
+        {
+          "draft_count": 2,
+          "accepted": 1,
+          "rejected_at": 1,
+          "emitted_count": 2,
+          "next_pending": 1308
+        },
+        {
+          "draft_count": 0,
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_count": 1,
+          "next_pending": 14146
+        }
+      ],
+      "block_matches_original_bnb": null,
+      "speedup_vs_b1_singleton": 0.960704393094276,
+      "speedup_vs_original_bnb": 0.8622184356919065
+    }
+  ],
+  "scouting_trace": "budget_humaneval112_64_trace.json",
+  "cache_transaction_boundary_summary": "cache_boundary_summary.json"
+}

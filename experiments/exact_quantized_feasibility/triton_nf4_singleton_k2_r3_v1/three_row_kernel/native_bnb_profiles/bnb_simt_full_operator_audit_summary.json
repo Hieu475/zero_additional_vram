@@ -1,0 +1,80 @@
+{
+  "schema": "zassd-bnb-simt-full-operator-audit-summary-v1",
+  "classification": "three-prompt finite operator audit; reconstructed arithmetic matches BNB M=3 and BNB M=1 row calls for every Linear4bit module on captured activations; not a universal numerical proof or speed result",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "runtime": {
+    "python": "3.12.13",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "upstream_source": {
+    "version": "bitsandbytes 0.50.0",
+    "tag_commit": "c5d481b",
+    "simt_kernel": "https://github.com/bitsandbytes-foundation/bitsandbytes/blob/0.50.0/csrc/gemm_4bit_simt.cu",
+    "dispatch": "https://github.com/bitsandbytes-foundation/bitsandbytes/blob/0.50.0/csrc/gemm_4bit.cu"
+  },
+  "arithmetic_contract_tested": "For CUDA FP16 SIMT: round NF4 LUT centroid to FP16; round nested scale to FP16; half2 multiply and round reconstructed weight to FP16; half2 activation-weight product rounded to FP16; convert products to FP32; accumulate pairs serially per lane; warp down-shuffle sum offsets 16,8,4,2,1; add optional FP16 bias in FP32; cast output to FP16 then wrapper dtype.",
+  "per_prompt": [
+    {
+      "prompt_id": "HumanEval/112",
+      "artifact": "bnb_simt_all_linear4bit_humaneval112_m1check.json",
+      "modules": 252,
+      "candidate_m3_exact_elements": 3096576,
+      "candidate_m3_total_elements": 3096576,
+      "candidate_matches_bnb_m3": true,
+      "bnb_m1_vs_m3_exact_elements": 3096576,
+      "bnb_m1_vs_m3_total_elements": 3096576,
+      "bnb_m1_matches_bnb_m3": true
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "artifact": "bnb_simt_all_linear4bit_humaneval114_m1check.json",
+      "modules": 252,
+      "candidate_m3_exact_elements": 3096576,
+      "candidate_m3_total_elements": 3096576,
+      "candidate_matches_bnb_m3": true,
+      "bnb_m1_vs_m3_exact_elements": 3096576,
+      "bnb_m1_vs_m3_total_elements": 3096576,
+      "bnb_m1_matches_bnb_m3": true
+    },
+    {
+      "prompt_id": "cnndm_005",
+      "artifact": "bnb_simt_all_linear4bit_cnndm005_m1check.json",
+      "modules": 252,
+      "candidate_m3_exact_elements": 3096576,
+      "candidate_m3_total_elements": 3096576,
+      "candidate_matches_bnb_m3": true,
+      "bnb_m1_vs_m3_exact_elements": 3096576,
+      "bnb_m1_vs_m3_total_elements": 3096576,
+      "bnb_m1_matches_bnb_m3": true
+    }
+  ],
+  "aggregate": {
+    "prompt_count": 3,
+    "linear4bit_modules_per_prompt": 252,
+    "candidate_m3_exact_elements": 9289728,
+    "candidate_m3_total_elements": 9289728,
+    "candidate_m3_exact": true,
+    "bnb_m1_vs_m3_exact_elements": 9289728,
+    "bnb_m1_vs_m3_total_elements": 9289728,
+    "bnb_m1_vs_m3_exact": true
+  },
+  "interpretation": [
+    "The previously unresolved BNB/Triton linear mismatch was caused by staged FP16 rounding in the BNB SIMT path: both centroid and scale are rounded before their half2 multiply, then activation products are rounded before FP32 accumulation.",
+    "The reconstructed operator schedule matched all captured BNB M=3 outputs and all per-row BNB M=1 outputs across 252 modules and three prompts.",
+    "This supports B2 quantized-linear operator feasibility for this model revision, BNB version, FP16 compute path, and SM89. It does not establish whole-model exactness for arbitrary inputs, nor prove normalization/attention/KV behavior, nor provide a fast fused implementation."
+  ],
+  "source_sha256": {
+    "scripts/audit_bnb_nf4_gate_reduction_orders.py": "ba9751d19c02c4e704aad64622173908d5f811203d5674c9449c0337da64cae5",
+    "scripts/audit_bnb_nf4_simt_gate_up_layers.py": "2499bb269b8b4297000e108336705f54e96f2edee0820f0f41fa1b7611becddd"
+  },
+  "limits": [
+    "Three prompts (two HumanEval and one CNN/DailyMail), one forced M=3 block per prompt, one GPU and fixed software/model versions.",
+    "Finite captured activations; not a proof for all inputs or all CUDA/compiler/toolchain combinations.",
+    "The audit kernel consumes materialized FP16 weights; timings are excluded and this is not the optimized fused kernel.",
+    "GSM8K held-out indices 300-349 were not used."
+  ]
+}

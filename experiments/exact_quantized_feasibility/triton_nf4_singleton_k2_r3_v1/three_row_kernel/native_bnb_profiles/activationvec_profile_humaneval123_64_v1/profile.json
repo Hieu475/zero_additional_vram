@@ -1,0 +1,1247 @@
+{
+  "schema": "zassd-activationvec-closed-loop-operator-profile-v1",
+  "classification": "operator profiler; diagnostic only, not a benchmark result",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "HumanEval/123",
+  "prompt_sha256": "517b9458e64b1285c8fed0636622367f2fbdd313e8f23027250740cd7588f9e3",
+  "prompt_tokens": 227,
+  "max_new_tokens": 64,
+  "k": 2,
+  "ngram_size": 3,
+  "physical_rows": 3,
+  "attention_strategy": "bnb_rowwise",
+  "output_tokens": 64,
+  "block_total_ms": 3374.719766998169,
+  "prefill_ms": 98.60690300047281,
+  "draft_ms": 2.2650209975836333,
+  "verify_ms": 3256.4885409956332,
+  "cycles": 61,
+  "draft_tokens": 26,
+  "accepted_draft_tokens": 2,
+  "target_forwards": 61,
+  "target_rows": 87,
+  "peak_vram_mb": 2157.612032,
+  "token_state_scope": "experimental B1 singleton schedule; profiler output must be checked against unprofiled benchmark artifacts",
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "triton": "3.6.0",
+    "bitsandbytes": "0.50.0",
+    "transformers": "5.14.1",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "top_self_cuda": [
+    {
+      "key": "void gemm_4bit_simt<__half, 3>(__half const*, unsigned char const*, float const*, unsigned char const*, float const*, float const*, __half*, __half const*, int, int, int, int, int)",
+      "input_shapes": "[]",
+      "calls": 12096,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 709439.2159999965,
+      "cuda_time_us": 709439.2159999965,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "bitsandbytes::gemm_4bit",
+      "input_shapes": "[[1, 3, 2048], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]",
+      "calls": 3456,
+      "self_cpu_time_us": 63161.771000009816,
+      "cpu_time_us": 82602.53600000104,
+      "self_cuda_time_us": 400023.4539999957,
+      "cuda_time_us": 400138.96199999563,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::mm",
+      "input_shapes": "[[1, 2048], [2048, 151936]]",
+      "calls": 87,
+      "self_cpu_time_us": 2719.2969999985653,
+      "cpu_time_us": 3154.581999999704,
+      "self_cuda_time_us": 304887.09699999995,
+      "cuda_time_us": 304887.09699999995,
+      "self_cuda_memory_bytes": 26459136
+    },
+    {
+      "key": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)",
+      "input_shapes": "[]",
+      "calls": 87,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 304887.09699999995,
+      "cuda_time_us": 304887.09699999995,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "bitsandbytes::gemm_4bit",
+      "input_shapes": "[[1, 3, 11008], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]",
+      "calls": 1728,
+      "self_cpu_time_us": 27429.266000008385,
+      "cpu_time_us": 36208.49400000158,
+      "self_cuda_time_us": 197693.40500000163,
+      "cuda_time_us": 197693.40500000163,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "_fused_nf4_m3_kernel",
+      "input_shapes": "[]",
+      "calls": 3276,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 146159.0569999958,
+      "cuda_time_us": 146159.0569999958,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "bitsandbytes::gemm_4bit",
+      "input_shapes": "[[1, 3, 2048], [2097152, 1], [], [256], [], [], [2048], [65536], [256], []]",
+      "calls": 1728,
+      "self_cpu_time_us": 35865.23799999867,
+      "cpu_time_us": 45555.19000000312,
+      "self_cuda_time_us": 44658.221000006044,
+      "cuda_time_us": 44658.221000006044,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "bitsandbytes::gemm_4bit",
+      "input_shapes": "[[1, 3, 2048], [2097152, 1], [], [256], [], [], [], [65536], [256], []]",
+      "calls": 1728,
+      "self_cpu_time_us": 36377.546000005095,
+      "cpu_time_us": 46384.669000004884,
+      "self_cuda_time_us": 44233.52999999811,
+      "cuda_time_us": 44233.52999999811,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "bitsandbytes::gemm_4bit",
+      "input_shapes": "[[1, 227, 2048], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]",
+      "calls": 72,
+      "self_cpu_time_us": 1517.3399999999892,
+      "cpu_time_us": 1953.289999999979,
+      "self_cuda_time_us": 41269.034000000014,
+      "cuda_time_us": 41269.034000000014,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void gemm_4bit_sm80_m16n8k16<__half, 128, 128, 64>(__half const*, unsigned char const*, float const*, unsigned char const*, float const*, float const*, __half*, __half const*, int, int, int, int, int)",
+      "input_shapes": "[]",
+      "calls": 72,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 41269.034000000014,
+      "cuda_time_us": 41269.034000000014,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+      "input_shapes": "[]",
+      "calls": 15624,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 32589.002000004675,
+      "cuda_time_us": 32589.002000004675,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#10}::operator()() const::{lambda(c10::Half)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+      "input_shapes": "[]",
+      "calls": 15624,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 30772.97000001747,
+      "cuda_time_us": 30772.97000001747,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[1, 3, 2048], [1, 3, 2048], []]",
+      "calls": 15552,
+      "self_cpu_time_us": 36950.09700001453,
+      "cpu_time_us": 80262.5800000171,
+      "self_cuda_time_us": 29043.9049999977,
+      "cuda_time_us": 29049.631999997888,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[1, 1, 2048], [1, 1, 2048], []]",
+      "calls": 23070,
+      "self_cpu_time_us": 47934.87999999893,
+      "cpu_time_us": 118776.22900000538,
+      "self_cuda_time_us": 26391.26600001818,
+      "cuda_time_us": 26393.026000017955,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "bitsandbytes::gemm_4bit",
+      "input_shapes": "[[1, 3, 2048], [262144, 1], [], [32], [], [], [256], [8192], [256], []]",
+      "calls": 3456,
+      "self_cpu_time_us": 57862.510999994876,
+      "cpu_time_us": 76355.75799999863,
+      "self_cuda_time_us": 22830.605999994965,
+      "cuda_time_us": 22837.19799999491,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1})",
+      "input_shapes": "[]",
+      "calls": 11196,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 21351.874000025113,
+      "cuda_time_us": 21351.874000025113,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::mm",
+      "input_shapes": "[[227, 11008], [11008, 2048]]",
+      "calls": 36,
+      "self_cpu_time_us": 556.7229999999945,
+      "cpu_time_us": 809.0740000000096,
+      "self_cuda_time_us": 16916.622999999978,
+      "cuda_time_us": 16916.622999999978,
+      "self_cuda_memory_bytes": 33472512
+    },
+    {
+      "key": "ampere_fp16_s1688gemm_fp16_256x64_ldg8_f2f_stages_32x1_tn",
+      "input_shapes": "[]",
+      "calls": 36,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 16889.07599999995,
+      "cuda_time_us": 16889.07599999995,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::cat",
+      "input_shapes": "[[], []]",
+      "calls": 11236,
+      "self_cpu_time_us": 58656.50000001091,
+      "cpu_time_us": 115105.20700000439,
+      "self_cuda_time_us": 16369.453999994119,
+      "cuda_time_us": 16369.453999994119,
+      "self_cuda_memory_bytes": 117544448
+    },
+    {
+      "key": "void pytorch_flash::flash_fwd_splitkv_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, false, false, false, false, true, false, true, false>(pytorch_flash::Flash_fwd_params)",
+      "input_shapes": "[]",
+      "calls": 3132,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 15266.557000005909,
+      "cuda_time_us": 15266.557000005909,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "Memcpy DtoD (Device -> Device)",
+      "input_shapes": "[]",
+      "calls": 17376,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 14894.543999995687,
+      "cuda_time_us": 14894.543999995687,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1})",
+      "input_shapes": "[]",
+      "calls": 9001,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 14157.736000013094,
+      "cuda_time_us": 14157.736000013094,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void kDequantizeBlockwise<__half, 512, 64, 8, 2>(float*, unsigned char*, float*, __half*, int, int)",
+      "input_shapes": "[]",
+      "calls": 180,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 13783.735999999983,
+      "cuda_time_us": 13783.735999999983,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::MeanOps<float, float, float, float>, unsigned int, float, 4, 4> >(at::native::ReduceOp<float, at::native::MeanOps<float, float, float, float>, unsigned int, float, 4, 4>)",
+      "input_shapes": "[]",
+      "calls": 6424,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 12558.332000006054,
+      "cuda_time_us": 12558.332000006054,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+      "input_shapes": "[]",
+      "calls": 6486,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 12492.698999997998,
+      "cuda_time_us": 12492.698999997998,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::mean",
+      "input_shapes": "[[1, 1, 2048], [], [], []]",
+      "calls": 6351,
+      "self_cpu_time_us": 36563.72999998226,
+      "cpu_time_us": 51214.18399999,
+      "self_cuda_time_us": 12253.982000006014,
+      "cuda_time_us": 12253.982000006014,
+      "self_cuda_memory_bytes": 3251712
+    },
+    {
+      "key": "bitsandbytes::gemm_4bit",
+      "input_shapes": "[[1, 227, 11008], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]",
+      "calls": 36,
+      "self_cpu_time_us": 861.5810000000365,
+      "cpu_time_us": 2674.7150000000347,
+      "self_cuda_time_us": 11147.576000000032,
+      "cuda_time_us": 28234.424,
+      "self_cuda_memory_bytes": -1774190592
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[1, 3, 11008], [1, 3, 11008], []]",
+      "calls": 5184,
+      "self_cpu_time_us": 12684.243999986298,
+      "cpu_time_us": 25924.377999991906,
+      "self_cuda_time_us": 9911.283000007941,
+      "cuda_time_us": 9911.283000007941,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::(anonymous namespace)::CatArrayBatchedCopy<at::native::(anonymous namespace)::OpaqueType<2u>, unsigned int, 4, 64, 64>(at::native::(anonymous namespace)::OpaqueType<2u>*, at::native::(anonymous namespace)::CatArrInputTensorMetadata<at::native::(anonymous namespace)::OpaqueType<2u>, unsigned int, 64, 64>, at::native::(anonymous namespace)::TensorSizeStride<unsigned int, 4u>, int, unsigned int)",
+      "input_shapes": "[]",
+      "calls": 4464,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 9754.056999988105,
+      "cuda_time_us": 9754.056999988105,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul> >(int, at::native::FillFunctor<c10::BFloat16>, std::array<char*, 1ul>)",
+      "input_shapes": "[]",
+      "calls": 12096,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 9352.148999982455,
+      "cuda_time_us": 9352.148999982455,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::vectorized_elementwise_kernel<4, at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> >, std::array<char*, 3ul> >(int, at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> >, std::array<char*, 3ul>)",
+      "input_shapes": "[]",
+      "calls": 8583,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 9188.235999996861,
+      "cuda_time_us": 9188.235999996861,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1})",
+      "input_shapes": "[]",
+      "calls": 6424,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 8319.901999983416,
+      "cuda_time_us": 8319.901999983416,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[3, 2048], [3, 2048], []]",
+      "calls": 4212,
+      "self_cpu_time_us": 9822.767999997057,
+      "cpu_time_us": 20542.46999999952,
+      "self_cuda_time_us": 7973.500000008295,
+      "cuda_time_us": 7973.500000008295,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::mul",
+      "input_shapes": "[[1, 1, 2048], [1, 1, 1]]",
+      "calls": 6351,
+      "self_cpu_time_us": 25263.53199999666,
+      "cpu_time_us": 40775.25700000902,
+      "self_cuda_time_us": 7873.8389999834035,
+      "cuda_time_us": 7875.086999983541,
+      "self_cuda_memory_bytes": 52027392
+    },
+    {
+      "key": "aten::fill_",
+      "input_shapes": "[[1, 3, 2048], []]",
+      "calls": 10368,
+      "self_cpu_time_us": 23141.37699997623,
+      "cpu_time_us": 49297.72799997288,
+      "self_cuda_time_us": 7838.914999985602,
+      "cuda_time_us": 7838.914999985602,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctor_add<c10::BFloat16>, std::array<char*, 3ul> >(int, at::native::CUDAFunctor_add<c10::BFloat16>, std::array<char*, 3ul>)",
+      "input_shapes": "[]",
+      "calls": 7920,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 7614.479999985444,
+      "cuda_time_us": 7614.479999985444,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::mul",
+      "input_shapes": "[[2048], [1, 1, 2048]]",
+      "calls": 6351,
+      "self_cpu_time_us": 21820.794999984937,
+      "cpu_time_us": 35862.462999986485,
+      "self_cuda_time_us": 6463.619999985021,
+      "cuda_time_us": 6463.619999985021,
+      "self_cuda_memory_bytes": 26013696
+    },
+    {
+      "key": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::neg_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#9}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::neg_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#9}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::neg_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#9}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::neg_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#9}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1})",
+      "input_shapes": "[]",
+      "calls": 4464,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 6383.1530000001,
+      "cuda_time_us": 6383.1530000001,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::vectorized_elementwise_kernel<4, at::native::rsqrt_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::rsqrt_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>)",
+      "input_shapes": "[]",
+      "calls": 6424,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 6273.6450000020795,
+      "cuda_time_us": 6273.6450000020795,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::rsqrt",
+      "input_shapes": "[[1, 1, 1]]",
+      "calls": 6351,
+      "self_cpu_time_us": 20386.366000009395,
+      "cpu_time_us": 34518.70500000261,
+      "self_cuda_time_us": 6190.0990000020975,
+      "cuda_time_us": 6190.0990000020975,
+      "self_cuda_memory_bytes": 3251712
+    },
+    {
+      "key": "void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::pow_tensor_scalar_kernel_impl<float, float>(at::TensorIteratorBase&, float)::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::(anonymous namespace)::pow_tensor_scalar_kernel_impl<float, float>(at::TensorIteratorBase&, float)::{lambda(float)#1}, std::array<char*, 2ul>)",
+      "input_shapes": "[]",
+      "calls": 6424,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 6050.173000000954,
+      "cuda_time_us": 6050.173000000954,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::vectorized_elementwise_kernel<4, at::native::bfloat16_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::bfloat16_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda(float)#1}, std::array<char*, 2ul>)",
+      "input_shapes": "[]",
+      "calls": 6548,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 6009.490000021113,
+      "cuda_time_us": 6009.490000021113,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[1, 3, 256], [1, 3, 256], []]",
+      "calls": 3456,
+      "self_cpu_time_us": 8609.635999996128,
+      "cpu_time_us": 17180.35399999839,
+      "self_cuda_time_us": 5840.849000006885,
+      "cuda_time_us": 5840.849000006885,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::pow",
+      "input_shapes": "[[1, 1, 2048], []]",
+      "calls": 6351,
+      "self_cpu_time_us": 35844.521999998615,
+      "cpu_time_us": 54020.8139999876,
+      "self_cuda_time_us": 5781.588000000935,
+      "cuda_time_us": 5781.588000000935,
+      "self_cuda_memory_bytes": 52027392
+    },
+    {
+      "key": "void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<float>, std::array<char*, 2ul> >(int, at::native::CUDAFunctorOnSelf_add<float>, std::array<char*, 2ul>)",
+      "input_shapes": "[]",
+      "calls": 6424,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 5712.318000008594,
+      "cuda_time_us": 5712.318000008594,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::mul",
+      "input_shapes": "[[1, 16, 1, 128], [1, 1, 1, 128]]",
+      "calls": 3456,
+      "self_cpu_time_us": 15953.089000011038,
+      "cpu_time_us": 25552.91100000887,
+      "self_cuda_time_us": 5645.001000000193,
+      "cuda_time_us": 5646.601000000286,
+      "self_cuda_memory_bytes": 14155776
+    },
+    {
+      "key": "aten::add",
+      "input_shapes": "[[1, 1, 1], [], []]",
+      "calls": 6351,
+      "self_cpu_time_us": 25655.05800000293,
+      "cpu_time_us": 39660.960999990944,
+      "self_cuda_time_us": 5635.3580000085785,
+      "cuda_time_us": 5635.3580000085785,
+      "self_cuda_memory_bytes": 3251712
+    },
+    {
+      "key": "void pytorch_flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 2, true>(pytorch_flash::Flash_fwd_params)",
+      "input_shapes": "[]",
+      "calls": 1872,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 4707.672999999719,
+      "cuda_time_us": 4707.672999999719,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[1, 2, 1, 128], [1, 2, 1, 128], []]",
+      "calls": 3456,
+      "self_cpu_time_us": 9430.325000003213,
+      "cpu_time_us": 18794.64800001192,
+      "self_cuda_time_us": 4372.809000004461,
+      "cuda_time_us": 4374.121000004379,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::mul",
+      "input_shapes": "[[1, 2, 1, 128], [1, 1, 1, 128]]",
+      "calls": 3456,
+      "self_cpu_time_us": 11245.371000002575,
+      "cpu_time_us": 18541.32400000788,
+      "self_cuda_time_us": 4330.8260000057635,
+      "cuda_time_us": 4330.8260000057635,
+      "self_cuda_memory_bytes": 1769472
+    },
+    {
+      "key": "aten::mm",
+      "input_shapes": "[[227, 2048], [2048, 151936]]",
+      "calls": 1,
+      "self_cpu_time_us": 24.80799999998999,
+      "cpu_time_us": 29.243000000002212,
+      "self_cuda_time_us": 4124.414999999994,
+      "cuda_time_us": 4124.414999999994,
+      "self_cuda_memory_bytes": 69206016
+    },
+    {
+      "key": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_tn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_tn_align8::Params)",
+      "input_shapes": "[]",
+      "calls": 1,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 4124.414999999994,
+      "cuda_time_us": 4124.414999999994,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[1, 227, 11008], [1, 227, 11008], []]",
+      "calls": 108,
+      "self_cpu_time_us": 277.2900000000245,
+      "cpu_time_us": 577.0880000000197,
+      "self_cuda_time_us": 4050.183999999974,
+      "cuda_time_us": 4050.183999999974,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::silu_kernel(at::TensorIteratorBase&)::{lambda()#1}::operator()() const::{lambda()#6}::operator()() const::{lambda(c10::BFloat16)#1}, std::array<char*, 2ul> >(int, at::native::(anonymous namespace)::silu_kernel(at::TensorIteratorBase&)::{lambda()#1}::operator()() const::{lambda()#6}::operator()() const::{lambda(c10::BFloat16)#1}, std::array<char*, 2ul>)",
+      "input_shapes": "[]",
+      "calls": 2232,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 3488.078999998863,
+      "cuda_time_us": 3488.078999998863,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::add",
+      "input_shapes": "[[1, 1, 2048], [1, 1, 2048], []]",
+      "calls": 3456,
+      "self_cpu_time_us": 14480.073999980697,
+      "cpu_time_us": 24106.451999992394,
+      "self_cuda_time_us": 3164.620999995095,
+      "cuda_time_us": 3165.515999995114,
+      "self_cuda_memory_bytes": 14155776
+    },
+    {
+      "key": "void pytorch_flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 1, true>(pytorch_flash::Flash_fwd_params)",
+      "input_shapes": "[]",
+      "calls": 1260,
+      "self_cpu_time_us": 0.0,
+      "cpu_time_us": 0.0,
+      "self_cuda_time_us": 3022.55799999804,
+      "cuda_time_us": 3022.55799999804,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::neg",
+      "input_shapes": "[[1, 16, 1, 64]]",
+      "calls": 1728,
+      "self_cpu_time_us": 7595.910000002419,
+      "cpu_time_us": 11781.691000006162,
+      "self_cuda_time_us": 2849.7350000020233,
+      "cuda_time_us": 2849.7350000020233,
+      "self_cuda_memory_bytes": 3538944
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[1, 227, 2048], [1, 227, 2048], []]",
+      "calls": 470,
+      "self_cpu_time_us": 1280.5520000000397,
+      "cpu_time_us": 2701.01400000001,
+      "self_cuda_time_us": 2745.641000000209,
+      "cuda_time_us": 2796.6420000002126,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[3, 11008], [3, 11008], []]",
+      "calls": 1404,
+      "self_cpu_time_us": 3232.0579999880574,
+      "cpu_time_us": 6753.886999995302,
+      "self_cuda_time_us": 2692.813000005219,
+      "cuda_time_us": 2692.813000005219,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::silu",
+      "input_shapes": "[[1, 1, 11008]]",
+      "calls": 1728,
+      "self_cpu_time_us": 7406.550000002637,
+      "cpu_time_us": 12175.232000000367,
+      "self_cuda_time_us": 2412.4819999984757,
+      "cuda_time_us": 2413.8569999984757,
+      "self_cuda_memory_bytes": 38021632
+    }
+  ],
+  "top_self_cpu": [
+    {
+      "key": "cudaLaunchKernel",
+      "input_shapes": "[]",
+      "calls": 158782,
+      "self_cpu_time_us": 387329.15300001885,
+      "cpu_time_us": 406305.0390000189,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 470.50699999992503,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "cudaMemcpyAsync",
+      "input_shapes": "[]",
+      "calls": 17561,
+      "self_cpu_time_us": 378377.04900001816,
+      "cpu_time_us": 378377.04900001816,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::empty",
+      "input_shapes": "[[], [], [], [], [], []]",
+      "calls": 53902,
+      "self_cpu_time_us": 110393.38900001254,
+      "cpu_time_us": 110393.38900001254,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 4245424128
+    },
+    {
+      "key": "aten::empty_strided",
+      "input_shapes": "[[], [], [], [], [], []]",
+      "calls": 47814,
+      "self_cpu_time_us": 103837.42099997573,
+      "cpu_time_us": 103837.42099997573,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 1946104320
+    },
+    {
+      "key": "bitsandbytes::gemm_4bit",
+      "input_shapes": "[[1, 3, 2048], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]",
+      "calls": 3456,
+      "self_cpu_time_us": 63161.771000009816,
+      "cpu_time_us": 82602.53600000104,
+      "self_cuda_time_us": 400023.4539999957,
+      "cuda_time_us": 400138.96199999563,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::cat",
+      "input_shapes": "[[], []]",
+      "calls": 11236,
+      "self_cpu_time_us": 58656.50000001091,
+      "cpu_time_us": 115105.20700000439,
+      "self_cuda_time_us": 16369.453999994119,
+      "cuda_time_us": 16369.453999994119,
+      "self_cuda_memory_bytes": 117544448
+    },
+    {
+      "key": "bitsandbytes::gemm_4bit",
+      "input_shapes": "[[1, 3, 2048], [262144, 1], [], [32], [], [], [256], [8192], [256], []]",
+      "calls": 3456,
+      "self_cpu_time_us": 57862.510999994876,
+      "cpu_time_us": 76355.75799999863,
+      "self_cuda_time_us": 22830.605999994965,
+      "cuda_time_us": 22837.19799999491,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[1, 1, 2048], [1, 1, 2048], []]",
+      "calls": 23070,
+      "self_cpu_time_us": 47934.87999999893,
+      "cpu_time_us": 118776.22900000538,
+      "self_cuda_time_us": 26391.26600001818,
+      "cuda_time_us": 26393.026000017955,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "cudaStreamSynchronize",
+      "input_shapes": "[]",
+      "calls": 185,
+      "self_cpu_time_us": 44884.78299999595,
+      "cpu_time_us": 44884.78299999595,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[1, 3, 2048], [1, 3, 2048], []]",
+      "calls": 15552,
+      "self_cpu_time_us": 36950.09700001453,
+      "cpu_time_us": 80262.5800000171,
+      "self_cuda_time_us": 29043.9049999977,
+      "cuda_time_us": 29049.631999997888,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::mean",
+      "input_shapes": "[[1, 1, 2048], [], [], []]",
+      "calls": 6351,
+      "self_cpu_time_us": 36563.72999998226,
+      "cpu_time_us": 51214.18399999,
+      "self_cuda_time_us": 12253.982000006014,
+      "cuda_time_us": 12253.982000006014,
+      "self_cuda_memory_bytes": 3251712
+    },
+    {
+      "key": "bitsandbytes::gemm_4bit",
+      "input_shapes": "[[1, 3, 2048], [2097152, 1], [], [256], [], [], [], [65536], [256], []]",
+      "calls": 1728,
+      "self_cpu_time_us": 36377.546000005095,
+      "cpu_time_us": 46384.669000004884,
+      "self_cuda_time_us": 44233.52999999811,
+      "cuda_time_us": 44233.52999999811,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "bitsandbytes::gemm_4bit",
+      "input_shapes": "[[1, 3, 2048], [2097152, 1], [], [256], [], [], [2048], [65536], [256], []]",
+      "calls": 1728,
+      "self_cpu_time_us": 35865.23799999867,
+      "cpu_time_us": 45555.19000000312,
+      "self_cuda_time_us": 44658.221000006044,
+      "cuda_time_us": 44658.221000006044,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::pow",
+      "input_shapes": "[[1, 1, 2048], []]",
+      "calls": 6351,
+      "self_cpu_time_us": 35844.521999998615,
+      "cpu_time_us": 54020.8139999876,
+      "self_cuda_time_us": 5781.588000000935,
+      "cuda_time_us": 5781.588000000935,
+      "self_cuda_memory_bytes": 52027392
+    },
+    {
+      "key": "aten::constant_pad_nd",
+      "input_shapes": "[[1, 1, 2048], [], []]",
+      "calls": 10368,
+      "self_cpu_time_us": 34233.769000027416,
+      "cpu_time_us": 185851.31500000905,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 16574.84599998407,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::_to_copy",
+      "input_shapes": "[[1, 3, 2048], [], [], [], [], [], []]",
+      "calls": 15552,
+      "self_cpu_time_us": 32868.980000001175,
+      "cpu_time_us": 147691.46199999884,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 29049.631999997888,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "bitsandbytes::gemm_4bit",
+      "input_shapes": "[[1, 3, 11008], [11272192, 1], [], [1376], [], [], [], [352256], [256], []]",
+      "calls": 1728,
+      "self_cpu_time_us": 27429.266000008385,
+      "cpu_time_us": 36208.49400000158,
+      "self_cuda_time_us": 197693.40500000163,
+      "cuda_time_us": 197693.40500000163,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::_to_copy",
+      "input_shapes": "[[1, 1, 2048], [], [], [], [], [], []]",
+      "calls": 12702,
+      "self_cpu_time_us": 25788.305000013846,
+      "cpu_time_us": 113703.08600001561,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 17657.095000019486,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::add",
+      "input_shapes": "[[1, 1, 1], [], []]",
+      "calls": 6351,
+      "self_cpu_time_us": 25655.05800000293,
+      "cpu_time_us": 39660.960999990944,
+      "self_cuda_time_us": 5635.3580000085785,
+      "cuda_time_us": 5635.3580000085785,
+      "self_cuda_memory_bytes": 3251712
+    },
+    {
+      "key": "aten::mul",
+      "input_shapes": "[[1, 1, 2048], [1, 1, 1]]",
+      "calls": 6351,
+      "self_cpu_time_us": 25263.53199999666,
+      "cpu_time_us": 40775.25700000902,
+      "self_cuda_time_us": 7873.8389999834035,
+      "cuda_time_us": 7875.086999983541,
+      "self_cuda_memory_bytes": 52027392
+    },
+    {
+      "key": "aten::fill_",
+      "input_shapes": "[[1, 3, 2048], []]",
+      "calls": 10368,
+      "self_cpu_time_us": 23141.37699997623,
+      "cpu_time_us": 49297.72799997288,
+      "self_cuda_time_us": 7838.914999985602,
+      "cuda_time_us": 7838.914999985602,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::mul",
+      "input_shapes": "[[2048], [1, 1, 2048]]",
+      "calls": 6351,
+      "self_cpu_time_us": 21820.794999984937,
+      "cpu_time_us": 35862.462999986485,
+      "self_cuda_time_us": 6463.619999985021,
+      "cuda_time_us": 6463.619999985021,
+      "self_cuda_memory_bytes": 26013696
+    },
+    {
+      "key": "aten::slice",
+      "input_shapes": "[[1, 3, 2048], [], [], [], []]",
+      "calls": 18438,
+      "self_cpu_time_us": 21531.66900000903,
+      "cpu_time_us": 27186.311000011323,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::rsqrt",
+      "input_shapes": "[[1, 1, 1]]",
+      "calls": 6351,
+      "self_cpu_time_us": 20386.366000009395,
+      "cpu_time_us": 34518.70500000261,
+      "self_cuda_time_us": 6190.0990000020975,
+      "cuda_time_us": 6190.0990000020975,
+      "self_cuda_memory_bytes": 3251712
+    },
+    {
+      "key": "Activity Buffer Request",
+      "input_shapes": "[]",
+      "calls": 15,
+      "self_cpu_time_us": 16889.896000000284,
+      "cpu_time_us": 16889.896000000284,
+      "self_cuda_time_us": 136.3370000005234,
+      "cuda_time_us": 136.3370000005234,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::mul",
+      "input_shapes": "[[1, 16, 1, 128], [1, 1, 1, 128]]",
+      "calls": 3456,
+      "self_cpu_time_us": 15953.089000011038,
+      "cpu_time_us": 25552.91100000887,
+      "self_cuda_time_us": 5645.001000000193,
+      "cuda_time_us": 5646.601000000286,
+      "self_cuda_memory_bytes": 14155776
+    },
+    {
+      "key": "aten::add",
+      "input_shapes": "[[1, 1, 2048], [1, 1, 2048], []]",
+      "calls": 3456,
+      "self_cpu_time_us": 14480.073999980697,
+      "cpu_time_us": 24106.451999992394,
+      "self_cuda_time_us": 3164.620999995095,
+      "cuda_time_us": 3165.515999995114,
+      "self_cuda_memory_bytes": 14155776
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[1, 3, 11008], [1, 3, 11008], []]",
+      "calls": 5184,
+      "self_cpu_time_us": 12684.243999986298,
+      "cpu_time_us": 25924.377999991906,
+      "self_cuda_time_us": 9911.283000007941,
+      "cuda_time_us": 9911.283000007941,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::to",
+      "input_shapes": "[[1, 3, 2048], [], [], [], []]",
+      "calls": 15552,
+      "self_cpu_time_us": 12353.162000014505,
+      "cpu_time_us": 160044.62400001334,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 29049.631999997888,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "Command Buffer Full",
+      "input_shapes": "[]",
+      "calls": 51,
+      "self_cpu_time_us": 12161.931000000004,
+      "cpu_time_us": 12161.931000000004,
+      "self_cuda_time_us": 396.46600000002945,
+      "cuda_time_us": 396.46600000002945,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::mul",
+      "input_shapes": "[[1, 2, 1, 128], [1, 1, 1, 128]]",
+      "calls": 3456,
+      "self_cpu_time_us": 11245.371000002575,
+      "cpu_time_us": 18541.32400000788,
+      "self_cuda_time_us": 4330.8260000057635,
+      "cuda_time_us": 4330.8260000057635,
+      "self_cuda_memory_bytes": 1769472
+    },
+    {
+      "key": "aten::pad",
+      "input_shapes": "[[1, 1, 2048], [], [], []]",
+      "calls": 10368,
+      "self_cpu_time_us": 10686.172999998933,
+      "cpu_time_us": 196537.488000008,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 16574.84599998407,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::_to_copy",
+      "input_shapes": "[[1, 3, 11008], [], [], [], [], [], []]",
+      "calls": 5184,
+      "self_cpu_time_us": 10622.777000009926,
+      "cpu_time_us": 48252.411000003805,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 9911.283000007941,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::to",
+      "input_shapes": "[[1, 1, 2048], [], [], [], []]",
+      "calls": 19053,
+      "self_cpu_time_us": 10426.026999936803,
+      "cpu_time_us": 124129.11299995241,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 17657.095000019486,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[3, 2048], [3, 2048], []]",
+      "calls": 4212,
+      "self_cpu_time_us": 9822.767999997057,
+      "cpu_time_us": 20542.46999999952,
+      "self_cuda_time_us": 7973.500000008295,
+      "cuda_time_us": 7973.500000008295,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::slice",
+      "input_shapes": "[[1, 2, 299, 128], [], [], [], []]",
+      "calls": 8928,
+      "self_cpu_time_us": 9604.471000004374,
+      "cpu_time_us": 12198.497999982561,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[1, 2, 1, 128], [1, 2, 1, 128], []]",
+      "calls": 3456,
+      "self_cpu_time_us": 9430.325000003213,
+      "cpu_time_us": 18794.64800001192,
+      "self_cuda_time_us": 4372.809000004461,
+      "cuda_time_us": 4374.121000004379,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::narrow",
+      "input_shapes": "[[1, 3, 2048], [], [], []]",
+      "calls": 10368,
+      "self_cpu_time_us": 9370.677999973821,
+      "cpu_time_us": 23736.752999997174,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::copy_",
+      "input_shapes": "[[1, 3, 256], [1, 3, 256], []]",
+      "calls": 3456,
+      "self_cpu_time_us": 8609.635999996128,
+      "cpu_time_us": 17180.35399999839,
+      "self_cuda_time_us": 5840.849000006885,
+      "cuda_time_us": 5840.849000006885,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::_to_copy",
+      "input_shapes": "[[3, 2048], [], [], [], [], [], []]",
+      "calls": 4212,
+      "self_cpu_time_us": 7979.26500002094,
+      "cpu_time_us": 37359.73300001443,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 7973.500000008295,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::neg",
+      "input_shapes": "[[1, 16, 1, 64]]",
+      "calls": 1728,
+      "self_cpu_time_us": 7595.910000002419,
+      "cpu_time_us": 11781.691000006162,
+      "self_cuda_time_us": 2849.7350000020233,
+      "cuda_time_us": 2849.7350000020233,
+      "self_cuda_memory_bytes": 3538944
+    },
+    {
+      "key": "cuLaunchKernelEx",
+      "input_shapes": "[]",
+      "calls": 3276,
+      "self_cpu_time_us": 7535.7980000019015,
+      "cpu_time_us": 7535.7980000019015,
+      "self_cuda_time_us": 974.7310000000289,
+      "cuda_time_us": 974.7310000000289,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::silu",
+      "input_shapes": "[[1, 1, 11008]]",
+      "calls": 1728,
+      "self_cpu_time_us": 7406.550000002637,
+      "cpu_time_us": 12175.232000000367,
+      "self_cuda_time_us": 2412.4819999984757,
+      "cuda_time_us": 2413.8569999984757,
+      "self_cuda_memory_bytes": 38021632
+    },
+    {
+      "key": "aten::view",
+      "input_shapes": "[[11272192, 1], []]",
+      "calls": 5400,
+      "self_cpu_time_us": 7313.651000004494,
+      "cpu_time_us": 7313.651000004494,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::_to_copy",
+      "input_shapes": "[[1, 3, 256], [], [], [], [], [], []]",
+      "calls": 3456,
+      "self_cpu_time_us": 6932.900999992009,
+      "cpu_time_us": 32048.192999989085,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 5840.849000006885,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::mul",
+      "input_shapes": "[[1, 1, 11008], [1, 1, 11008]]",
+      "calls": 1728,
+      "self_cpu_time_us": 6819.889999995212,
+      "cpu_time_us": 10961.899999995163,
+      "self_cuda_time_us": 1824.5850000102655,
+      "cuda_time_us": 1824.5850000102655,
+      "self_cuda_memory_bytes": 38043648
+    },
+    {
+      "key": "aten::add",
+      "input_shapes": "[[1, 16, 1, 128], [1, 16, 1, 128], []]",
+      "calls": 1728,
+      "self_cpu_time_us": 6565.747000000847,
+      "cpu_time_us": 10523.072999993892,
+      "self_cuda_time_us": 1585.9609999961394,
+      "cuda_time_us": 1585.9609999961394,
+      "self_cuda_memory_bytes": 7077888
+    },
+    {
+      "key": "aten::slice",
+      "input_shapes": "[[1, 3, 11008], [], [], [], []]",
+      "calls": 5184,
+      "self_cpu_time_us": 6145.86100000728,
+      "cpu_time_us": 7704.120000001771,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::transpose",
+      "input_shapes": "[[1, 16, 1, 128], [], []]",
+      "calls": 4860,
+      "self_cpu_time_us": 5885.377000002423,
+      "cpu_time_us": 7336.7200000115845,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::as_strided",
+      "input_shapes": "[[1, 3, 2048], [], [], []]",
+      "calls": 18438,
+      "self_cpu_time_us": 5654.642000002292,
+      "cpu_time_us": 5654.642000002292,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::neg",
+      "input_shapes": "[[1, 2, 1, 64]]",
+      "calls": 1728,
+      "self_cpu_time_us": 5617.450000002747,
+      "cpu_time_us": 9478.557999998971,
+      "self_cuda_time_us": 1901.1390000041283,
+      "cuda_time_us": 1901.1390000041283,
+      "self_cuda_memory_bytes": 884736
+    },
+    {
+      "key": "aten::transpose",
+      "input_shapes": "[[1, 8, 2, 128], [], []]",
+      "calls": 6264,
+      "self_cpu_time_us": 5615.174999982177,
+      "cpu_time_us": 7121.675999984742,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::constant_pad_nd",
+      "input_shapes": "[[1, 1, 11008], [], []]",
+      "calls": 1728,
+      "self_cpu_time_us": 5491.392000006221,
+      "cpu_time_us": 31100.040999998455,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 3104.7879999915604,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::view",
+      "input_shapes": "[[2097152, 1], []]",
+      "calls": 3600,
+      "self_cpu_time_us": 5327.282000006167,
+      "cpu_time_us": 5327.282000006167,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::slice",
+      "input_shapes": "[[1, 16, 1, 128], [], [], [], []]",
+      "calls": 5184,
+      "self_cpu_time_us": 5299.451999996207,
+      "cpu_time_us": 7131.131000004738,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::add",
+      "input_shapes": "[[1, 2, 1, 128], [1, 2, 1, 128], []]",
+      "calls": 1728,
+      "self_cpu_time_us": 5104.035999996704,
+      "cpu_time_us": 8810.612999992038,
+      "self_cuda_time_us": 1632.1769999954267,
+      "cuda_time_us": 1632.1769999954267,
+      "self_cuda_memory_bytes": 884736
+    },
+    {
+      "key": "aten::transpose",
+      "input_shapes": "[[1, 1, 16, 128], [], []]",
+      "calls": 4860,
+      "self_cpu_time_us": 4941.083999986047,
+      "cpu_time_us": 6246.1779999997525,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::slice",
+      "input_shapes": "[[1, 1, 2048], [], [], [], []]",
+      "calls": 3504,
+      "self_cpu_time_us": 4597.074000001681,
+      "cpu_time_us": 5997.11700000125,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::reshape",
+      "input_shapes": "[[1, 1, 16, 128], []]",
+      "calls": 4860,
+      "self_cpu_time_us": 4410.335999971896,
+      "cpu_time_us": 6386.516999996005,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    },
+    {
+      "key": "aten::transpose",
+      "input_shapes": "[[1, 1, 2, 128], [], []]",
+      "calls": 3456,
+      "self_cpu_time_us": 4345.335000001447,
+      "cpu_time_us": 5454.715000004246,
+      "self_cuda_time_us": 0.0,
+      "cuda_time_us": 0.0,
+      "self_cuda_memory_bytes": 0
+    }
+  ],
+  "trace_file": "trace.json",
+  "scope_limits": [
+    "Profiler instrumentation changes timings; never use them as speedup measurements.",
+    "CUDA event totals can include nested or overlapping work and must not be summed as wall time.",
+    "One prompt and one process per profile; development data only.",
+    "GSM8K held-out indices 300-349 not used."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/profile_bnb_nf4_activationvec_closed_loop.py",
+  "source_sha256": "73aa39dea882cb15bff8287ec8ae69e86f19f08b957c3e323ffef36e21b03c2d"
+}

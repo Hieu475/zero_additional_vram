@@ -1,0 +1,91 @@
+{
+  "status": "completed",
+  "scope": "single-prefix shape diagnostic; not full-sequence exactness or a universal guarantee",
+  "protocol_sha256": "9f833c6baff42e8edcac90ab629499af308e8cc47598a8975140f1f1fa3a60a2",
+  "cohort_sha256": "01610458c693cb12d715bb0474ede6d354e1dee33c599d2cc08e7d805546ff08",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "family": "Qwen2",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "HumanEval/104",
+  "task": "humaneval",
+  "prompt_sha256": "bebe5af48f3614d96f23c19fa6134409f0b3bfe2f759662569f0987e15e0507c",
+  "prompt_token_count": 110,
+  "prompt_token_ids_sha256": "6b1324a60b0a1e50d93240e00ea33d76b0b48ffde5f84c5d4613ca1cc9b4e894",
+  "M": 9,
+  "candidate_ids": [
+    262,
+    470,
+    10615,
+    2561,
+    87,
+    369,
+    856,
+    304,
+    856
+  ],
+  "candidate_length": 9,
+  "linear_singleton_counts": {
+    "patched_modules": 253,
+    "split_forward_calls": 253,
+    "single_row_kernel_calls": 2277
+  },
+  "ordinary_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.125,
+      0.1875,
+      0.15234375,
+      0.142578125,
+      0.22265625,
+      0.21875,
+      0.1875,
+      0.1875,
+      0.193359375
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.25,
+    "kv_value_max_abs": 0.20703125,
+    "first_kv_different_layer": 1
+  },
+  "singleton_linear_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.171875,
+      0.171875,
+      0.201171875,
+      0.15625,
+      0.203125,
+      0.234375,
+      0.1875,
+      0.2265625,
+      0.1875
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.125,
+    "kv_value_max_abs": 0.1875,
+    "first_kv_different_layer": 1
+  },
+  "model_manifest": "experiments/exact_quantized_feasibility/crossmodel_shape_repeat_v1/session2/manifests/qwen25_3b.json"
+}

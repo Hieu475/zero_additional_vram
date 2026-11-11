@@ -1,0 +1,112 @@
+{
+  "schema": "zassd-bnb-fused-nf4-activationvec-multicycle-v1",
+  "classification": "development-only three-cycle greedy identity/state audit; finite evidence",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "cnndm_002",
+  "prompt_length": 419,
+  "greedy_bnb_tokens": [
+    576,
+    4549,
+    34334,
+    64452,
+    619,
+    37055,
+    61431
+  ],
+  "physical_rows": 3,
+  "patched_linear_count": 252,
+  "cycle_count": 3,
+  "all_cycles_pass": true,
+  "final_processed_greedy_tokens": 6,
+  "final_cache_sha256": "fccc2f5c14ab790d6a059b0ca9e539fb0638d787134b8e4487b9cab6b82a6236",
+  "singleton_final_reference_sha256": "fccc2f5c14ab790d6a059b0ca9e539fb0638d787134b8e4487b9cab6b82a6236",
+  "final_state_bitwise_equal": true,
+  "cycles": [
+    {
+      "cycle": 0,
+      "name": "reject_first_emit_pending",
+      "pending_input_token": 576,
+      "draft_tokens": [
+        151645,
+        34334
+      ],
+      "accepted_draft_count": 0,
+      "kept_input_rows": 1,
+      "emitted_token": 4549,
+      "expected_singleton_token": 4549,
+      "emitted_token_equal": true,
+      "selected_next_logits_bitwise_equal": true,
+      "selected_next_logits_max_abs_diff": 0.0,
+      "rollback_kv_sha256": "2e6d52cdd53dd684fe4ae9cbf70a09a835569fdc285f529b61fa984e95d84354",
+      "singleton_reference_kv_sha256": "2e6d52cdd53dd684fe4ae9cbf70a09a835569fdc285f529b61fa984e95d84354",
+      "rollback_kv_bitwise_equal": true,
+      "cache_length": 420,
+      "expected_cache_length": 420,
+      "all_layer_cache_lengths_equal": true,
+      "rejected_eos_draft": true
+    },
+    {
+      "cycle": 1,
+      "name": "accept_both_emit_bonus",
+      "pending_input_token": 4549,
+      "draft_tokens": [
+        34334,
+        64452
+      ],
+      "accepted_draft_count": 2,
+      "kept_input_rows": 3,
+      "emitted_token": 619,
+      "expected_singleton_token": 619,
+      "emitted_token_equal": true,
+      "selected_next_logits_bitwise_equal": true,
+      "selected_next_logits_max_abs_diff": 0.0,
+      "rollback_kv_sha256": "ca5c32933fb557ca28644d8884cd88ee56ce211b40a599990c2c223f6ce42f97",
+      "singleton_reference_kv_sha256": "ca5c32933fb557ca28644d8884cd88ee56ce211b40a599990c2c223f6ce42f97",
+      "rollback_kv_bitwise_equal": true,
+      "cache_length": 423,
+      "expected_cache_length": 423,
+      "all_layer_cache_lengths_equal": true,
+      "rejected_eos_draft": false
+    },
+    {
+      "cycle": 2,
+      "name": "accept_one_reject_second_eos",
+      "pending_input_token": 619,
+      "draft_tokens": [
+        37055,
+        151645
+      ],
+      "accepted_draft_count": 1,
+      "kept_input_rows": 2,
+      "emitted_token": 61431,
+      "expected_singleton_token": 61431,
+      "emitted_token_equal": true,
+      "selected_next_logits_bitwise_equal": true,
+      "selected_next_logits_max_abs_diff": 0.0,
+      "rollback_kv_sha256": "fccc2f5c14ab790d6a059b0ca9e539fb0638d787134b8e4487b9cab6b82a6236",
+      "singleton_reference_kv_sha256": "fccc2f5c14ab790d6a059b0ca9e539fb0638d787134b8e4487b9cab6b82a6236",
+      "rollback_kv_bitwise_equal": true,
+      "cache_length": 425,
+      "expected_cache_length": 425,
+      "all_layer_cache_lengths_equal": true,
+      "rejected_eos_draft": true
+    }
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/audit_bnb_nf4_activationvec_multicycle.py",
+  "source_sha256": "a29c1c28a040ad42d7700e22757617f31d228ea42099c6f78bb6656fda65dd50",
+  "integration_source": "scripts/audit_bnb_nf4_activationvec_block_integration.py",
+  "kernel_source": "scripts/benchmark_bnb_nf4_fused_inline_ldcs_activationvec_tailmask_half2.py",
+  "runtime": {
+    "torch": "2.11.0+cu128",
+    "triton": "3.6.0",
+    "cuda": "12.8",
+    "bitsandbytes": "0.50.0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+  },
+  "scope_limits": [
+    "Three scripted cycles: reject-first, accept-both/bonus, accept-one then reject-second EOS draft.",
+    "One prompt and finite greedy prefix; does not cover accepted target EOS or all draft patterns.",
+    "No end-to-end latency measurement or held-out GSM8K use."
+  ]
+}

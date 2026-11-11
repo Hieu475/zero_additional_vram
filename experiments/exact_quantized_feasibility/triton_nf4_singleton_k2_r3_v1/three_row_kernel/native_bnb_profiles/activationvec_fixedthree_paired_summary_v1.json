@@ -1,0 +1,161 @@
+{
+  "schema": "zassd-activationvec-fixedthree-paired-summary-v1",
+  "classification": "six selected development prompt clusters; descriptive prompt bootstrap, not population inference",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "runtime_scope": "RTX 4050 Laptop GPU, conda env ai, K=2/R=3, 64 generated tokens",
+  "exactness": "activationvec versus BNB fixed-row singleton; fixedthree versus matching custom fixed-three singleton",
+  "prompt_count": 5,
+  "all_runs_exact_to_own_reference": true,
+  "heldout_used": false,
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/112",
+      "generated_tokens": 64,
+      "paired_rounds": 4,
+      "activationvec_acceptance": {
+        "accepted": 24,
+        "drafted": 40
+      },
+      "fixedthree_acceptance": {
+        "accepted": 24,
+        "drafted": 40
+      },
+      "fixedthree_tokens_match_bnb_singleton": true,
+      "exact_to_own_reference": true,
+      "fixedthree_speedup_vs_own_singleton": 1.2163382822491584,
+      "fixedthree_speedup_vs_activationvec_block": 0.9788547892868323,
+      "activationvec_speedup_vs_original_bnb_latency": 1.1379720460058278,
+      "fixedthree_speedup_vs_original_bnb_latency": 1.1139093873073398
+    },
+    {
+      "prompt_id": "HumanEval/116",
+      "generated_tokens": 64,
+      "paired_rounds": 4,
+      "activationvec_acceptance": {
+        "accepted": 28,
+        "drafted": 32
+      },
+      "fixedthree_acceptance": {
+        "accepted": 28,
+        "drafted": 32
+      },
+      "fixedthree_tokens_match_bnb_singleton": true,
+      "exact_to_own_reference": true,
+      "fixedthree_speedup_vs_own_singleton": 1.3841070488973954,
+      "fixedthree_speedup_vs_activationvec_block": 0.9966472648432161,
+      "activationvec_speedup_vs_original_bnb_latency": 1.2607394725575074,
+      "fixedthree_speedup_vs_original_bnb_latency": 1.2565125470043186
+    },
+    {
+      "prompt_id": "HumanEval/120",
+      "generated_tokens": 64,
+      "paired_rounds": 4,
+      "activationvec_acceptance": {
+        "accepted": 19,
+        "drafted": 29
+      },
+      "fixedthree_acceptance": {
+        "accepted": 19,
+        "drafted": 29
+      },
+      "fixedthree_tokens_match_bnb_singleton": true,
+      "exact_to_own_reference": true,
+      "fixedthree_speedup_vs_own_singleton": 1.152995406576783,
+      "fixedthree_speedup_vs_activationvec_block": 1.0293757820503864,
+      "activationvec_speedup_vs_original_bnb_latency": 1.0503811332079922,
+      "fixedthree_speedup_vs_original_bnb_latency": 1.081236900446948
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "generated_tokens": 64,
+      "paired_rounds": 4,
+      "activationvec_acceptance": {
+        "accepted": 2,
+        "drafted": 26
+      },
+      "fixedthree_acceptance": {
+        "accepted": 2,
+        "drafted": 26
+      },
+      "fixedthree_tokens_match_bnb_singleton": false,
+      "exact_to_own_reference": true,
+      "fixedthree_speedup_vs_own_singleton": 0.9187294871805202,
+      "fixedthree_speedup_vs_activationvec_block": 1.0460168550751527,
+      "activationvec_speedup_vs_original_bnb_latency": 0.8073764220643567,
+      "fixedthree_speedup_vs_original_bnb_latency": 0.8445293458695875
+    },
+    {
+      "prompt_id": "HumanEval/124",
+      "generated_tokens": 64,
+      "paired_rounds": 4,
+      "activationvec_acceptance": {
+        "accepted": 6,
+        "drafted": 18
+      },
+      "fixedthree_acceptance": {
+        "accepted": 6,
+        "drafted": 22
+      },
+      "fixedthree_tokens_match_bnb_singleton": false,
+      "exact_to_own_reference": true,
+      "fixedthree_speedup_vs_own_singleton": 0.9915389739238458,
+      "fixedthree_speedup_vs_activationvec_block": 1.0275167496578157,
+      "activationvec_speedup_vs_original_bnb_latency": 0.8812549547171329,
+      "fixedthree_speedup_vs_original_bnb_latency": 0.905504226690794
+    }
+  ],
+  "across_prompt_summary": {
+    "fixedthree_speedup_vs_own_singleton": {
+      "geomean": 1.120752756366197,
+      "prompt_cluster_bootstrap_95pct": [
+        0.9867006773873641,
+        1.2672291016675692
+      ],
+      "min": 0.9187294871805202,
+      "max": 1.3841070488973954
+    },
+    "fixedthree_speedup_vs_activationvec_block": {
+      "geomean": 1.015388540429589,
+      "prompt_cluster_bootstrap_95pct": [
+        0.9923252612663063,
+        1.0356257341963393
+      ],
+      "min": 0.9788547892868323,
+      "max": 1.0460168550751527
+    },
+    "activationvec_speedup_vs_original_bnb_latency": {
+      "geomean": 1.014042828967132,
+      "prompt_cluster_bootstrap_95pct": [
+        0.8800194493497716,
+        1.166734822825547
+      ],
+      "min": 0.8073764220643567,
+      "max": 1.2607394725575074
+    },
+    "fixedthree_speedup_vs_original_bnb_latency": {
+      "geomean": 1.0296474680380274,
+      "prompt_cluster_bootstrap_95pct": [
+        0.9051424145809341,
+        1.1619591205416664
+      ],
+      "min": 0.8445293458695875,
+      "max": 1.2565125470043186
+    }
+  },
+  "input_sha256": {
+    "activationvec_fixedthree_linear_humaneval112_64_contract_paired_v1.json": "2aa21645e0e8166cae8d017fcdcec3bff3e5e69358660300e7a572330cc9edd5",
+    "activationvec_fixedthree_linear_humaneval116_64_contract_paired_v2.json": "f0049df644dc7eb49644b22ef05f9f7a3a61fdd3075e486cc38cb0120d8db91f",
+    "activationvec_fixedthree_linear_humaneval120_64_contract_paired_v1.json": "c121a791a3a3b6aa84f03bee8186b0302b9f28fadedad1bd42cb1b9f035d08b2",
+    "activationvec_fixedthree_linear_humaneval123_64_contract_paired_v2.json": "b4b95070f25b21683a0166dfcf59317f1e1b19460196a295fe35e593116d890f",
+    "activationvec_fixedthree_linear_humaneval124_64_contract_paired_v1.json": "bee5429885142b62e6b52296b03b816a4f676b8beaddb366167322cea9843fc2"
+  },
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_activationvec_fixedthree_paired.py",
+  "source_sha256": "09ba78b8946b943bf07c071a8a1d179984b46224fd4583234c9f07ebebd264ee",
+  "limits": [
+    "Six selected HumanEval prompt clusters, four same-process rounds per prompt.",
+    "Bootstrap resamples prompts, not independent model/GPU sessions.",
+    "Latency versus original BNB is reported separately; fixedthree token identity differs on some prompts.",
+    "No BNB state equivalence claim; GSM8K held-out indices 300-349 excluded."
+  ]
+}

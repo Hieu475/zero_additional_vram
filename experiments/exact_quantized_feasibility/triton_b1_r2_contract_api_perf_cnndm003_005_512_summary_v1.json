@@ -1,0 +1,123 @@
+{
+  "experiment": "triton_b1_contract_api_512_independent_session_summary",
+  "contract_id": "61f0c8f15fbc91b9ce86dd35da55360940accdc59642d1fe9faff985a2019bee",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "budget": 512,
+  "prompt_ids": [
+    "cnndm_003",
+    "cnndm_004",
+    "cnndm_005"
+  ],
+  "sessions": [
+    {
+      "artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_512_session0_v1.json",
+      "sha256": "4e47c016781ede72f02761d37a0270cef92299b4e824f0f8502ea35de7d66324",
+      "timing_pairs": 3
+    },
+    {
+      "artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_512_session1_v1.json",
+      "sha256": "73b9a998c0da4d683e6a5832c1079afd0e44811da87e53eab619fd814ab8db2a",
+      "timing_pairs": 3
+    }
+  ],
+  "timing_pair_count": 6,
+  "all_b1_exact": true,
+  "bnb_token_matches": 0,
+  "speedup_vs_b1": {
+    "geomean": 1.2460365385833143,
+    "range": [
+      1.1710968079873552,
+      1.2796491000280525
+    ],
+    "descriptive_paired_log_t_95_interval": [
+      1.1999410017620507,
+      1.293902827893009
+    ]
+  },
+  "speedup_vs_bnb": {
+    "geomean": 1.012257714819388,
+    "range": [
+      0.9266425716713105,
+      1.077680921763706
+    ],
+    "descriptive_paired_log_t_95_interval": [
+      0.9598047404064851,
+      1.0675772249024478
+    ]
+  },
+  "aggregate_acceptance": [
+    656,
+    1038
+  ],
+  "shared_prefixes_total": 2416,
+  "samples": [
+    {
+      "session_artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_512_session0_v1.json",
+      "prompt_id": "cnndm_003",
+      "speedup_vs_b1": 1.2153104655966627,
+      "speedup_vs_bnb": 1.0031399840034296,
+      "bnb_token_match": false,
+      "b1_exact": true,
+      "shared_prefixes": 414,
+      "accepted_draft_tokens": 98,
+      "draft_tokens": 162
+    },
+    {
+      "session_artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_512_session0_v1.json",
+      "prompt_id": "cnndm_004",
+      "speedup_vs_b1": 1.2647404651295675,
+      "speedup_vs_bnb": 1.0184253232996492,
+      "bnb_token_match": false,
+      "b1_exact": true,
+      "shared_prefixes": 394,
+      "accepted_draft_tokens": 118,
+      "draft_tokens": 192
+    },
+    {
+      "session_artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_512_session0_v1.json",
+      "prompt_id": "cnndm_005",
+      "speedup_vs_b1": 1.2796491000280525,
+      "speedup_vs_bnb": 1.0093979113413594,
+      "bnb_token_match": false,
+      "b1_exact": true,
+      "shared_prefixes": 400,
+      "accepted_draft_tokens": 112,
+      "draft_tokens": 165
+    },
+    {
+      "session_artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_512_session1_v1.json",
+      "prompt_id": "cnndm_003",
+      "speedup_vs_b1": 1.1710968079873552,
+      "speedup_vs_bnb": 0.9266425716713105,
+      "bnb_token_match": false,
+      "b1_exact": true,
+      "shared_prefixes": 414,
+      "accepted_draft_tokens": 98,
+      "draft_tokens": 162
+    },
+    {
+      "session_artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_512_session1_v1.json",
+      "prompt_id": "cnndm_004",
+      "speedup_vs_b1": 1.2711261278695576,
+      "speedup_vs_bnb": 1.077680921763706,
+      "bnb_token_match": false,
+      "b1_exact": true,
+      "shared_prefixes": 394,
+      "accepted_draft_tokens": 118,
+      "draft_tokens": 192
+    },
+    {
+      "session_artifact": "experiments/exact_quantized_feasibility/triton_b1_r2_contract_api_perf_cnndm003_005_512_session1_v1.json",
+      "prompt_id": "cnndm_005",
+      "speedup_vs_b1": 1.2782731770166416,
+      "speedup_vs_bnb": 1.044698561101622,
+      "bnb_token_match": false,
+      "b1_exact": true,
+      "shared_prefixes": 400,
+      "accepted_draft_tokens": 112,
+      "draft_tokens": 165
+    }
+  ],
+  "interpretation": "Descriptive paired intervals over six pairs from three fixed prompts repeated in two processes on one GPU; BNB token/state fidelity is not achieved."
+}

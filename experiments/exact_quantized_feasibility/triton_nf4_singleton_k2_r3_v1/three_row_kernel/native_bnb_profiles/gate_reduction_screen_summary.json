@@ -1,0 +1,127 @@
+{
+  "schema": "zassd-bnb-gate-reduction-screen-summary-v2",
+  "classification": "one-prompt actual-activation reduction screen informed by inspected SM89 SASS; partial numerical match only, not an exact kernel reconstruction",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "HumanEval/112",
+  "module": "layer0.mlp.gate_proj",
+  "profiles": [
+    {
+      "artifact": "gate_reduction_humaneval112_o256_v3.json",
+      "output_channels": 256,
+      "total_outputs": 768,
+      "half_product_then_full_k_sum_fp32": {
+        "exact_elements": 677,
+        "total_elements": 768,
+        "max_abs_diff": 0.0078125,
+        "mean_abs_diff": 7.5270734669175e-05
+      },
+      "fp32_product_full_k_sum": {
+        "exact_elements": 669,
+        "total_elements": 768,
+        "max_abs_diff": 0.0078125,
+        "mean_abs_diff": 9.651482105255127e-05
+      },
+      "public_dequant_half_product_full_k_sum": {
+        "exact_elements": 494,
+        "total_elements": 768,
+        "max_abs_diff": 0.0078125,
+        "mean_abs_diff": 0.0003651579318102449
+      }
+    },
+    {
+      "artifact": "gate_reduction_humaneval112_o1024_v2.json",
+      "output_channels": 1024,
+      "total_outputs": 3072,
+      "half_product_then_full_k_sum_fp32": {
+        "exact_elements": 2679,
+        "total_elements": 3072,
+        "max_abs_diff": 0.0078125,
+        "mean_abs_diff": 8.17575491964817e-05
+      },
+      "fp32_product_full_k_sum": {
+        "exact_elements": 2654,
+        "total_elements": 3072,
+        "max_abs_diff": 0.0078125,
+        "mean_abs_diff": 8.968062320491299e-05
+      },
+      "public_dequant_half_product_full_k_sum": {
+        "exact_elements": 2003,
+        "total_elements": 3072,
+        "max_abs_diff": 0.0078125,
+        "mean_abs_diff": 0.00034349848283454776
+      }
+    }
+  ],
+  "sass_observations": {
+    "kernel_symbol": "_Z14gemm_4bit_simtI6__halfLi3EEvPKT_PKhPKfS5_S7_S7_PS1_S3_iiiii",
+    "demangled": "gemm_4bit_simt<__half, 3>",
+    "architecture": "sm_89",
+    "disassembler": "CUDA nvdisasm 13.2.86",
+    "library_sha256": "d1a039f3caee90f95a7e46e95a8f4c9714ba57084b17d340d5b6710be70f224a",
+    "extracted_cubin_sha256": "43399b81d4f51faed89b956964f4a93c05bd37fe01df6d7fb03f19eb525c066a",
+    "sass_counts": {
+      "M1": {
+        "instructions": 938,
+        "HMUL2": 44,
+        "HADD2_F32": 33,
+        "FADD_FTZ": 41,
+        "SHFL_all": 37,
+        "FFMA_FTZ": 1
+      },
+      "M3": {
+        "instructions": 1248,
+        "HMUL2": 76,
+        "HADD2_F32": 97,
+        "FADD_FTZ": 124,
+        "SHFL_all": 47,
+        "FFMA_FTZ": 1
+      }
+    },
+    "observed_sequence": "The disassembly contains packed HMUL2 operations, HADD2.F32 conversions of half lanes, FADD.FTZ accumulation, SHFL.DOWN warp reductions, then FP16 output conversion/store. One FFMA.FTZ is present in each template and appears in scaling/dequant setup; the product/accumulation path contains HMUL2 and FADD, not an FFMA dot-product chain.",
+    "interpretation": "This supports testing FP16-rounded products followed by FP32 accumulation. M=1 and M=3 are distinct compiled templates with different instruction counts and layout, even though prior actual-input checks found row outputs invariant between them.",
+    "lane_strided_fp16_product_screen": {
+      "artifact": "gate_reduction_humaneval112_o256_v4.json",
+      "candidates": {
+        "strided_lane_accum_fp16_product/lanes16": {
+          "exact_elements": 677,
+          "total_elements": 768,
+          "max_abs_diff": 0.0078125,
+          "mean_abs_diff": 7.5270734669175e-05
+        },
+        "strided_lane_accum_fp16_product/lanes32": {
+          "exact_elements": 677,
+          "total_elements": 768,
+          "max_abs_diff": 0.0078125,
+          "mean_abs_diff": 7.5270734669175e-05
+        },
+        "strided_lane_accum_fp16_product/lanes64": {
+          "exact_elements": 677,
+          "total_elements": 768,
+          "max_abs_diff": 0.0078125,
+          "mean_abs_diff": 7.5270734669175e-05
+        },
+        "strided_lane_accum_fp16_product/lanes128": {
+          "exact_elements": 677,
+          "total_elements": 768,
+          "max_abs_diff": 0.0078125,
+          "mean_abs_diff": 7.5270734669175e-05
+        }
+      },
+      "interpretation": "All tested lane counts match the corresponding half-product/full-K candidate count (677/768); changing lane count does not expose the remaining BNB accumulation behavior in this probe."
+    }
+  },
+  "interpretation": [
+    "Rounding each reconstructed FP16 product before FP32 summation increases matches to 677/768 (88.2%) at 256 channels and 2679/3072 (87.2%) at 1024 channels.",
+    "The best simple schedule remains non-exact; SASS supports half-product rounding as one relevant numerical boundary but does not reveal enough runtime state to reconstruct the precise quantized dequantization and reduction order.",
+    "The reduction tile sizes tested after FP16 product rounding yield identical match counts in this probe; this does not establish that their per-value reduction order is equivalent."
+  ],
+  "source_sha256": "f6898e707808e0cf683d90f58be413adc6d1911288ac7dae5f11ec1d1431c4e2",
+  "limits": [
+    "One prompt, first-layer gate projection, and three forced token rows; output channels 0\u2013255 or 0\u20131023.",
+    "Static SASS inspection for one SM89 binary and one compiled M=1/M=3 kernel family; no cross-GPU/compiler claim.",
+    "Finite output probe; no proof, end-to-end exactness, or timing claim.",
+    "GSM8K held-out indices 300\u2013349 were not used.",
+    "Lane-strided FP16-product candidates were tested only at 256 output channels."
+  ]
+}

@@ -1,0 +1,417 @@
+{
+  "schema": "zassd-fallback-bnb-compare-summary-512-repeat-v1",
+  "classification": "six selected development prompt clusters; two independent paired processes per prompt; descriptive cluster bootstrap",
+  "runtime_scope": "Qwen/Qwen2.5-3B-Instruct NF4, RTX 4050 Laptop GPU, K=2/R=3, 512 tokens, four paired rounds per process",
+  "ratio_definition": "speedup = original BNB greedy latency / candidate latency; >1 means candidate faster",
+  "prompt_count": 6,
+  "independent_processes": 12,
+  "timing_rounds_per_mode": 48,
+  "b1_exact_processes": 12,
+  "timed_candidate_token_match_b1": true,
+  "original_bnb_token_match_rounds_per_mode": {
+    "activationvec": 48,
+    "fallback_every_other": 48,
+    "fallback_all": 48
+  },
+  "aggregate_speedup_vs_bnb": {
+    "activationvec": {
+      "geomean_across_prompts": 1.1480815658387808,
+      "prompt_cluster_bootstrap_95pct": [
+        0.9962579020054234,
+        1.3217563969915604
+      ],
+      "prompt_min": 0.87143089735097,
+      "prompt_max": 1.5129141736799485,
+      "prompts_faster_than_bnb": 4
+    },
+    "fallback_every_other": {
+      "geomean_across_prompts": 1.1964205382110749,
+      "prompt_cluster_bootstrap_95pct": [
+        1.0440081672921293,
+        1.3588655523207913
+      ],
+      "prompt_min": 0.9139519259279534,
+      "prompt_max": 1.5330892922881643,
+      "prompts_faster_than_bnb": 5
+    },
+    "fallback_all": {
+      "geomean_across_prompts": 1.2511708435594793,
+      "prompt_cluster_bootstrap_95pct": [
+        1.0946919489081188,
+        1.4036804412903559
+      ],
+      "prompt_min": 0.9468132225660127,
+      "prompt_max": 1.5511814783067954,
+      "prompts_faster_than_bnb": 5
+    }
+  },
+  "fallback_incremental_speedup_vs_activationvec": {
+    "fallback_every_other": {
+      "geomean_across_prompts": 1.042104127276861,
+      "prompt_cluster_bootstrap_95pct": [
+        1.0274033251966888,
+        1.0565954589017743
+      ],
+      "prompt_min": 1.0133352697457667,
+      "prompt_max": 1.0635129158215675,
+      "prompts_improved": 6
+    },
+    "fallback_all": {
+      "geomean_across_prompts": 1.0897926426032127,
+      "prompt_cluster_bootstrap_95pct": [
+        1.0561553332883487,
+        1.1212585114880025
+      ],
+      "prompt_min": 1.025293770983563,
+      "prompt_max": 1.1389435532657368,
+      "prompts_improved": 6
+    }
+  },
+  "prompts": [
+    {
+      "prompt_id": "HumanEval/112",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "activationvec": 1.5129141736799485,
+        "fallback_every_other": 1.5330892922881643,
+        "fallback_all": 1.5511814783067954
+      },
+      "speedup_vs_activationvec": {
+        "fallback_every_other": 1.0133352697457667,
+        "fallback_all": 1.025293770983563
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_bnb_compare_HumanEval112_512_v1.json",
+          "rounds": 4,
+          "empty_proposal_cycles": 22,
+          "speedup_vs_bnb": {
+            "activationvec": 1.5094719070978875,
+            "fallback_every_other": 1.5488031489116516,
+            "fallback_all": 1.554640028512936
+          },
+          "speedup_vs_activationvec": {
+            "fallback_every_other": 1.0260562926867467,
+            "fallback_all": 1.0299231282163368
+          },
+          "bnb_token_match_counts": {
+            "activationvec": 4,
+            "fallback_every_other": 4,
+            "fallback_all": 4
+          }
+        },
+        {
+          "artifact": "fallback_bnb_compare_HumanEval112_512_rep2_v1.json",
+          "rounds": 4,
+          "empty_proposal_cycles": 22,
+          "speedup_vs_bnb": {
+            "activationvec": 1.51636429015916,
+            "fallback_every_other": 1.5175348654089649,
+            "fallback_all": 1.5477306222094578
+          },
+          "speedup_vs_activationvec": {
+            "fallback_every_other": 1.0007719617623558,
+            "fallback_all": 1.020685222049779
+          },
+          "bnb_token_match_counts": {
+            "activationvec": 4,
+            "fallback_every_other": 4,
+            "fallback_all": 4
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/114",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "activationvec": 1.1583792452996464,
+        "fallback_every_other": 1.2054406243806355,
+        "fallback_all": 1.2882915736665872
+      },
+      "speedup_vs_activationvec": {
+        "fallback_every_other": 1.0406269184051338,
+        "fallback_all": 1.112150082880098
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_bnb_compare_HumanEval114_512_v1.json",
+          "rounds": 4,
+          "empty_proposal_cycles": 169,
+          "speedup_vs_bnb": {
+            "activationvec": 1.150246825000863,
+            "fallback_every_other": 1.2034091923608428,
+            "fallback_all": 1.2725406374059092
+          },
+          "speedup_vs_activationvec": {
+            "fallback_every_other": 1.0462182256925072,
+            "fallback_all": 1.1063196261419408
+          },
+          "bnb_token_match_counts": {
+            "activationvec": 4,
+            "fallback_every_other": 4,
+            "fallback_all": 4
+          }
+        },
+        {
+          "artifact": "fallback_bnb_compare_HumanEval114_512_rep2_v1.json",
+          "rounds": 4,
+          "empty_proposal_cycles": 169,
+          "speedup_vs_bnb": {
+            "activationvec": 1.1665691630489583,
+            "fallback_every_other": 1.2074754855881702,
+            "fallback_all": 1.304237467939446
+          },
+          "speedup_vs_activationvec": {
+            "fallback_every_other": 1.0350654927585252,
+            "fallback_all": 1.1180112669279516
+          },
+          "bnb_token_match_counts": {
+            "activationvec": 4,
+            "fallback_every_other": 4,
+            "fallback_all": 4
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/121",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "activationvec": 1.3176170429810923,
+        "fallback_every_other": 1.350619800948206,
+        "fallback_all": 1.3839741199521158
+      },
+      "speedup_vs_activationvec": {
+        "fallback_every_other": 1.025047306531832,
+        "fallback_all": 1.050361428857122
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_bnb_compare_HumanEval121_512_v1.json",
+          "rounds": 4,
+          "empty_proposal_cycles": 77,
+          "speedup_vs_bnb": {
+            "activationvec": 1.2998579805826727,
+            "fallback_every_other": 1.3338234981200086,
+            "fallback_all": 1.3611066798180962
+          },
+          "speedup_vs_activationvec": {
+            "fallback_every_other": 1.026130175792059,
+            "fallback_all": 1.0471195316337314
+          },
+          "bnb_token_match_counts": {
+            "activationvec": 4,
+            "fallback_every_other": 4,
+            "fallback_all": 4
+          }
+        },
+        {
+          "artifact": "fallback_bnb_compare_HumanEval121_512_rep2_v1.json",
+          "rounds": 4,
+          "empty_proposal_cycles": 77,
+          "speedup_vs_bnb": {
+            "activationvec": 1.3356187351913702,
+            "fallback_every_other": 1.3676276128621963,
+            "fallback_all": 1.407225747325855
+          },
+          "speedup_vs_activationvec": {
+            "fallback_every_other": 1.0239655800172942,
+            "fallback_all": 1.0536133630412312
+          },
+          "bnb_token_match_counts": {
+            "activationvec": 4,
+            "fallback_every_other": 4,
+            "fallback_all": 4
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "HumanEval/123",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "activationvec": 0.87143089735097,
+        "fallback_every_other": 0.9139519259279534,
+        "fallback_all": 0.9468132225660127
+      },
+      "speedup_vs_activationvec": {
+        "fallback_every_other": 1.0487944927202393,
+        "fallback_all": 1.0865040767365428
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_bnb_compare_HumanEval123_512_v1.json",
+          "rounds": 4,
+          "empty_proposal_cycles": 173,
+          "speedup_vs_bnb": {
+            "activationvec": 0.8769121883017378,
+            "fallback_every_other": 0.9091831881801341,
+            "fallback_all": 0.9587835673594094
+          },
+          "speedup_vs_activationvec": {
+            "fallback_every_other": 1.036800719968203,
+            "fallback_all": 1.0933632582028845
+          },
+          "bnb_token_match_counts": {
+            "activationvec": 4,
+            "fallback_every_other": 4,
+            "fallback_all": 4
+          }
+        },
+        {
+          "artifact": "fallback_bnb_compare_HumanEval123_512_rep2_v1.json",
+          "rounds": 4,
+          "empty_proposal_cycles": 173,
+          "speedup_vs_bnb": {
+            "activationvec": 0.8659838681551278,
+            "fallback_every_other": 0.9187456760825164,
+            "fallback_all": 0.9349923266778235
+          },
+          "speedup_vs_activationvec": {
+            "fallback_every_other": 1.0609270101529618,
+            "fallback_all": 1.07968792613852
+          },
+          "bnb_token_match_counts": {
+            "activationvec": 4,
+            "fallback_every_other": 4,
+            "fallback_all": 4
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "activationvec": 0.9795612922825316,
+        "fallback_every_other": 1.0417760861813379,
+        "fallback_all": 1.1156650188738435
+      },
+      "speedup_vs_activationvec": {
+        "fallback_every_other": 1.0635129158215675,
+        "fallback_all": 1.1389435532657368
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_bnb_compare_cnndm_004_512_v1.json",
+          "rounds": 4,
+          "empty_proposal_cycles": 234,
+          "speedup_vs_bnb": {
+            "activationvec": 0.9944097343528006,
+            "fallback_every_other": 1.0426306803191343,
+            "fallback_all": 1.1241489823820197
+          },
+          "speedup_vs_activationvec": {
+            "fallback_every_other": 1.048492029291847,
+            "fallback_all": 1.1304686021739905
+          },
+          "bnb_token_match_counts": {
+            "activationvec": 4,
+            "fallback_every_other": 4,
+            "fallback_all": 4
+          }
+        },
+        {
+          "artifact": "fallback_bnb_compare_cnndm_004_512_rep2_v1.json",
+          "rounds": 4,
+          "empty_proposal_cycles": 234,
+          "speedup_vs_bnb": {
+            "activationvec": 0.9649345658937344,
+            "fallback_every_other": 1.0409221925131846,
+            "fallback_all": 1.1072450839223231
+          },
+          "speedup_vs_activationvec": {
+            "fallback_every_other": 1.0787489942896484,
+            "fallback_all": 1.1474820397762193
+          },
+          "bnb_token_match_counts": {
+            "activationvec": 4,
+            "fallback_every_other": 4,
+            "fallback_all": 4
+          }
+        }
+      ]
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "independent_processes": 2,
+      "speedup_vs_bnb": {
+        "activationvec": 1.1617632383209846,
+        "fallback_every_other": 1.234124674362636,
+        "fallback_all": 1.3130970200803145
+      },
+      "speedup_vs_activationvec": {
+        "fallback_every_other": 1.062285871729106,
+        "fallback_all": 1.130262153911878
+      },
+      "sessions": [
+        {
+          "artifact": "fallback_bnb_compare_cnndm_003_512_v1.json",
+          "rounds": 4,
+          "empty_proposal_cycles": 163,
+          "speedup_vs_bnb": {
+            "activationvec": 1.1779505001754507,
+            "fallback_every_other": 1.2497812962356762,
+            "fallback_all": 1.3282305385683144
+          },
+          "speedup_vs_activationvec": {
+            "fallback_every_other": 1.060979469043501,
+            "fallback_all": 1.1275775496257952
+          },
+          "bnb_token_match_counts": {
+            "activationvec": 4,
+            "fallback_every_other": 4,
+            "fallback_all": 4
+          }
+        },
+        {
+          "artifact": "fallback_bnb_compare_cnndm_003_512_rep2_v1.json",
+          "rounds": 4,
+          "empty_proposal_cycles": 163,
+          "speedup_vs_bnb": {
+            "activationvec": 1.1457984199786235,
+            "fallback_every_other": 1.2186641906533,
+            "fallback_all": 1.298135929025035
+          },
+          "speedup_vs_activationvec": {
+            "fallback_every_other": 1.0635938830113205,
+            "fallback_all": 1.1329531498649246
+          },
+          "bnb_token_match_counts": {
+            "activationvec": 4,
+            "fallback_every_other": 4,
+            "fallback_all": 4
+          }
+        }
+      ]
+    }
+  ],
+  "input_sha256": {
+    "fallback_bnb_compare_HumanEval112_512_v1.json": "aa29f39297476d2b4a6c66feda312376e2c7e1900213156569e30755e013585a",
+    "fallback_bnb_compare_HumanEval112_512_rep2_v1.json": "56fca3920d6fe58f3f57e8855d54845d8ba11229c1fd484efa0a2c5daacaae76",
+    "fallback_bnb_compare_HumanEval114_512_v1.json": "aeb14f81ae58552fac4b88a3464c199ad0353e6c651f498f20646ce9de7285ff",
+    "fallback_bnb_compare_HumanEval114_512_rep2_v1.json": "7cf017321e5dc601683ef8260205885d88f183a58dba43663893c507b222860e",
+    "fallback_bnb_compare_HumanEval121_512_v1.json": "d9ad60ca801b4a099dd2398116490feacc16f5746015d5ae48439b7331cb34c0",
+    "fallback_bnb_compare_HumanEval121_512_rep2_v1.json": "b73262feece2dff41904f5a7d7b22b2750a58762a29c01c3af1756f01941a8d0",
+    "fallback_bnb_compare_HumanEval123_512_v1.json": "5153a45230a1f5e18d4cd86059e29aba94a973b29ea6650227c801573d1db7e7",
+    "fallback_bnb_compare_HumanEval123_512_rep2_v1.json": "f7b33bee0cbb7ef2f0bf8f1c6d3e5a392a156f19be0d392869fdaccc9f99497a",
+    "fallback_bnb_compare_cnndm_004_512_v1.json": "4eb7ff0e050fca24847982a05a226ee8ecf9311fd4fe3cb14810fbe2473e28a5",
+    "fallback_bnb_compare_cnndm_004_512_rep2_v1.json": "7f10d5b09ccf289f5f308a99370cd9b06cf7f054a96631901ddbdbcccc67d21f",
+    "fallback_bnb_compare_cnndm_003_512_v1.json": "a7355a615a9fa0ea36e7a6277cac5fa42523fb258855dda4fd3153f8d5137c14",
+    "fallback_bnb_compare_cnndm_003_512_rep2_v1.json": "2f6b1c143f738858f2c6f52d19e657149534fbf267f017d44bbaf82aa7d92c74"
+  },
+  "ablation_manifest_sha256": "9b05f1152c6aeff944fc92af4514205ba59a5d3f9819ebdbb5e396d0b173adab",
+  "comparison_manifest_sha256s": [
+    "43a1489440e06a2b561edcc02cc53e712c4bd24b4ccf9fef44d3cf880c58f48b",
+    "fa05d2cb13c65d58d057c9e1c2194771de3fb35a686815c76039f9bb2ccc6d63"
+  ],
+  "heldout_used": false,
+  "limits": [
+    "Six selected development prompts, one model and one GPU; prompt bootstrap is descriptive.",
+    "Original-BNB comparison is latency/token-ID only; no original-BNB KV-state identity claim.",
+    "GSM8K held-out indices 300-349 excluded."
+  ],
+  "source": "/home/nguyen_quoc_hieu/Documents/zero_additional_vram/scripts/summarize_activationvec_fallback_bnb_compare_512_repeats.py",
+  "source_sha256": "77e901a1243d13059ddae1a5950e8142f8481bb6ff8ef354b90c5232a48cddb8"
+}

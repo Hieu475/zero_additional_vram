@@ -1,0 +1,190 @@
+{
+  "experiment": "triton_b1_contract_gated_eos_branch_audit",
+  "status": "pass",
+  "scope": "development-only; finite branch audit; no proof or BNB equivalence",
+  "contract_id": "0295c5c92f6e6e6269b2ab3607635db1ab0fd33192351552e9f2232d23fbfc92",
+  "live_preflight": {
+    "status": "pass",
+    "model_state_sha256": "c6212d37bd02338c60536b1ca674b3e0c76fbcd810ba5df8e8e28b0e16f4f6cf",
+    "verified_source_count": 12
+  },
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "parameters": {
+    "k": 1,
+    "ngram_size": 3,
+    "physical_rows": 2,
+    "attention_strategy": "triton_batched",
+    "quantized_linear_strategy": "triton_nf4_group_scale_packed_rows2_n16_warp1_k256",
+    "max_new_tokens": 32
+  },
+  "prompt_files": [
+    {
+      "path": "experiments/exact_quantized_feasibility/b1_eos_candidate_prompt_v2.jsonl",
+      "sha256": "d44cab1e9741369ab75771eff9920768b458e1e7c93d93b0d516a346343312b7"
+    },
+    {
+      "path": "experiments/exact_quantized_feasibility/b1_eos_reject_prompt_v1.jsonl",
+      "sha256": "9a5aa1109cc522256a297180c233e19bee0a1aa21b9477a621db050bacfe7312"
+    }
+  ],
+  "runner_sha256": "87a721b277892f08eccb53eb91eb32771dbef4cd50364370be84c191833ef81c",
+  "branch_coverage": {
+    "accepted_eos_candidate": true,
+    "rejected_eos_candidate": true,
+    "eos_terminal": true,
+    "eos_draft_events": 2
+  },
+  "results": [
+    {
+      "id": "eos_candidate_v2",
+      "prompt_sha256": "a32c816b7c356fcad95eed6db408f2cb48d5308f2eb3d3c3dab806d55675f73b",
+      "prompt_tokens": 22,
+      "reference_token_ids": [
+        3925,
+        151645
+      ],
+      "block_token_ids": [
+        3925,
+        151645
+      ],
+      "token_match": true,
+      "reference_terminal_eos": true,
+      "block_terminal_eos": true,
+      "eos_draft_events": [
+        {
+          "cycle_index": 0,
+          "draft_tokens": [
+            151645
+          ],
+          "eos_candidate_index": 0,
+          "accepted": 1,
+          "rejected_at": null,
+          "accepted_eos": true,
+          "rejected_eos": false,
+          "emitted_tokens": [
+            3925,
+            151645
+          ]
+        }
+      ],
+      "block_cycle_trace": [
+        {
+          "output_start": 0,
+          "pending": 3925,
+          "draft_tokens": [
+            151645
+          ],
+          "accepted": 1,
+          "rejected_at": null,
+          "emitted_tokens": [
+            3925,
+            151645
+          ],
+          "draft_s": 2.760399365797639e-05,
+          "verify_s": 0.03160541599208955,
+          "commit_s": 5.333000444807112e-06,
+          "cycle_s": 0.0316895850119181,
+          "cache_len_after": 23,
+          "next_pending": null
+        }
+      ],
+      "reference_prefixes": [
+        0,
+        1
+      ],
+      "block_prefixes": [
+        0,
+        1
+      ],
+      "all_shared_kv_exact": true,
+      "same_prefix_domain": true,
+      "logical_lengths_exact": true,
+      "shared_prefix_count": 2
+    },
+    {
+      "id": "eos_draft_reject",
+      "prompt_sha256": "912a1d023d20abd34f4f684003fde43e45dddb112968d83103703970879cee7c",
+      "prompt_tokens": 55,
+      "reference_token_ids": [
+        3925,
+        55892,
+        151645
+      ],
+      "block_token_ids": [
+        3925,
+        55892,
+        151645
+      ],
+      "token_match": true,
+      "reference_terminal_eos": true,
+      "block_terminal_eos": true,
+      "eos_draft_events": [
+        {
+          "cycle_index": 0,
+          "draft_tokens": [
+            151645
+          ],
+          "eos_candidate_index": 0,
+          "accepted": 0,
+          "rejected_at": 0,
+          "accepted_eos": false,
+          "rejected_eos": true,
+          "emitted_tokens": [
+            3925
+          ]
+        }
+      ],
+      "block_cycle_trace": [
+        {
+          "output_start": 0,
+          "pending": 3925,
+          "draft_tokens": [
+            151645
+          ],
+          "accepted": 0,
+          "rejected_at": 0,
+          "emitted_tokens": [
+            3925
+          ],
+          "draft_s": 3.0961004085838795e-05,
+          "verify_s": 0.03007452900055796,
+          "commit_s": 4.5285996748134494e-05,
+          "cycle_s": 0.030205610004486516,
+          "cache_len_after": 56,
+          "next_pending": 55892
+        },
+        {
+          "output_start": 1,
+          "pending": 55892,
+          "draft_tokens": [],
+          "accepted": 0,
+          "rejected_at": null,
+          "emitted_tokens": [
+            55892
+          ],
+          "draft_s": 1.7946003936231136e-05,
+          "verify_s": 0.030193318001693115,
+          "commit_s": 4.0714003262110054e-05,
+          "cycle_s": 0.03028478700434789,
+          "cache_len_after": 57,
+          "next_pending": 151645
+        }
+      ],
+      "reference_prefixes": [
+        0,
+        1,
+        2
+      ],
+      "block_prefixes": [
+        0,
+        1,
+        2
+      ],
+      "all_shared_kv_exact": true,
+      "same_prefix_domain": true,
+      "logical_lengths_exact": true,
+      "shared_prefix_count": 3
+    }
+  ]
+}

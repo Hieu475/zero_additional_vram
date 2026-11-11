@@ -1,0 +1,167 @@
+{
+  "status": "finite long-context development audit; separate references per physical row schedule; not a universal proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "prompt_id": "cnndm_000",
+  "prompt_tokens": 397,
+  "generation_budget": 256,
+  "contract_groups": [
+    {
+      "k": 1,
+      "rows": 3,
+      "contract": "b1_reference_contract_v3.json",
+      "runs": [
+        "b1_cycle_long_k1_s0_v1",
+        "b1_cycle_long_cnndm_k1_s1_v1"
+      ],
+      "repeat": "b1_reference_repeat_long_cnndm_v1.json",
+      "oracle": "b1_cycle_oracle_long_cnndm_v2.json",
+      "reference_contract_id": "ca155f567ba080347f765335e8999b0256abafe87c88c0263ac38344b2b2ca27",
+      "session_count": 2,
+      "block_matches_b1": 2,
+      "shared_state_audits_passed": 2,
+      "matches_original_bnb": 0,
+      "speedup_vs_b1_each_session": [
+        1.2781684579894783,
+        1.3094467630447242
+      ],
+      "median_speedup_vs_b1": 1.2938076105171012,
+      "reference_repeat_all_conditions_pass": true,
+      "cycle_oracle_complete_paths": true,
+      "cycle_oracle_speedup_vs_singleton": 1.4563330543059305,
+      "cycle_oracle_gain_vs_fixed_k": 1.0216984543515308
+    },
+    {
+      "k": 2,
+      "rows": 3,
+      "contract": "b1_reference_contract_v3.json",
+      "runs": [
+        "b1_cycle_long_cnndm_k2_s0_v1",
+        "b1_cycle_long_cnndm_k2_s1_v1"
+      ],
+      "repeat": "b1_reference_repeat_long_cnndm_v1.json",
+      "oracle": "b1_cycle_oracle_long_cnndm_v2.json",
+      "reference_contract_id": "ca155f567ba080347f765335e8999b0256abafe87c88c0263ac38344b2b2ca27",
+      "session_count": 2,
+      "block_matches_b1": 2,
+      "shared_state_audits_passed": 2,
+      "matches_original_bnb": 0,
+      "speedup_vs_b1_each_session": [
+        1.4168149364991942,
+        1.494805514371669
+      ],
+      "median_speedup_vs_b1": 1.4558102254354317,
+      "reference_repeat_all_conditions_pass": true,
+      "cycle_oracle_complete_paths": true,
+      "cycle_oracle_speedup_vs_singleton": 1.4563330543059305,
+      "cycle_oracle_gain_vs_fixed_k": 1.0216984543515308
+    },
+    {
+      "k": 4,
+      "rows": 5,
+      "contract": "b1_reference_contract_rows5.json",
+      "runs": [
+        "b1_cycle_long_cnndm_k4_r5_s0_seed_v1",
+        "b1_cycle_long_cnndm_k4_r5_s1_v1"
+      ],
+      "repeat": "b1_reference_repeat_long_cnndm_k4_r5_v2.json",
+      "oracle": "b1_cycle_oracle_long_cnndm_k4_r5_v1.json",
+      "reference_contract_id": "db32a0aac8ce87a4faf44d3b917802d31ef93408e32120edba126a0991e9a568",
+      "session_count": 2,
+      "block_matches_b1": 2,
+      "shared_state_audits_passed": 2,
+      "matches_original_bnb": 0,
+      "speedup_vs_b1_each_session": [
+        1.7067915022976559,
+        1.7599192189557171
+      ],
+      "median_speedup_vs_b1": 1.7333553606266865,
+      "reference_repeat_all_conditions_pass": true,
+      "cycle_oracle_complete_paths": true,
+      "cycle_oracle_speedup_vs_singleton": 1.733368979217951,
+      "cycle_oracle_gain_vs_fixed_k": 1.0
+    },
+    {
+      "k": 8,
+      "rows": 9,
+      "contract": "b1_reference_contract_rows9.json",
+      "runs": [
+        "b1_cycle_long_cnndm_k8_r9_s0_seed_v1",
+        "b1_cycle_long_cnndm_k8_r9_s1_v1"
+      ],
+      "repeat": "b1_reference_repeat_long_cnndm_k8_r9_v2.json",
+      "oracle": "b1_cycle_oracle_long_cnndm_k8_r9_v1.json",
+      "reference_contract_id": "5384a3f519201f532d4481273e0ee9ded724674e7645a30e830251bc9a8a1d12",
+      "session_count": 2,
+      "block_matches_b1": 2,
+      "shared_state_audits_passed": 2,
+      "matches_original_bnb": 0,
+      "speedup_vs_b1_each_session": [
+        1.807321114755283,
+        1.8567896033757185
+      ],
+      "median_speedup_vs_b1": 1.8320553590655009,
+      "reference_repeat_all_conditions_pass": true,
+      "cycle_oracle_complete_paths": true,
+      "cycle_oracle_speedup_vs_singleton": 1.8320816662986887,
+      "cycle_oracle_gain_vs_fixed_k": 1.0
+    }
+  ],
+  "fixed_row_operator_probes": [
+    {
+      "physical_rows": 3,
+      "reference_contract_id": "ca155f567ba080347f765335e8999b0256abafe87c88c0263ac38344b2b2ca27",
+      "m_values": [
+        1,
+        2,
+        3
+      ],
+      "all_logits_bitwise": true,
+      "all_active_kv_bitwise": true,
+      "all_argmax_equal": true,
+      "m2_first_module_differences": 0,
+      "m2_attention_tensor_differences": 0
+    },
+    {
+      "physical_rows": 5,
+      "reference_contract_id": "db32a0aac8ce87a4faf44d3b917802d31ef93408e32120edba126a0991e9a568",
+      "m_values": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "all_logits_bitwise": true,
+      "all_active_kv_bitwise": true,
+      "all_argmax_equal": true,
+      "m2_first_module_differences": 0,
+      "m2_attention_tensor_differences": 0
+    },
+    {
+      "physical_rows": 9,
+      "reference_contract_id": "5384a3f519201f532d4481273e0ee9ded724674e7645a30e830251bc9a8a1d12",
+      "m_values": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "all_logits_bitwise": true,
+      "all_active_kv_bitwise": true,
+      "all_argmax_equal": true,
+      "m2_first_module_differences": 0,
+      "m2_attention_tensor_differences": 0
+    }
+  ],
+  "limitations": [
+    "One previously used development prompt only.",
+    "Different physical row counts define different singleton reference trajectories; speed ratios are each relative to their own reference.",
+    "Per-cycle oracles are hindsight diagnostics and omit selector/checkpoint/switch overhead."
+  ]
+}

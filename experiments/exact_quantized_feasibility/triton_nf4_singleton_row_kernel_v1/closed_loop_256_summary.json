@@ -1,0 +1,210 @@
+{
+  "status": "fixed 256-token singleton-optimized B1 closed-loop development screen",
+  "configuration": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "k": 1,
+    "physical_rows": 2,
+    "block_k": 32,
+    "attention_strategy": "triton_batched",
+    "quantized_linear_strategy": "N=16/K=256/one-warp with separate one-row singleton prototype",
+    "max_new_tokens": 256
+  },
+  "prompts": {
+    "cnndm_003": {
+      "sessions": [
+        {
+          "artifact": "closed_loop_cnndm003_256_s3_v1.json",
+          "token_kv_logical_lengths_exact": true,
+          "shared_state_prefixes": 256,
+          "timing_rounds": 1,
+          "bnb_token_matches": 0
+        },
+        {
+          "artifact": "closed_loop_cnndm003_256_s8_v1.json",
+          "token_kv_logical_lengths_exact": true,
+          "shared_state_prefixes": 256,
+          "timing_rounds": 2,
+          "bnb_token_matches": 0
+        }
+      ],
+      "speedup_vs_optimized_b1_geomean": 1.2396681227347726,
+      "speedup_vs_bnb_geomean": 1.1429480836275716,
+      "accepted_draft_tokens": 174,
+      "draft_tokens": 273,
+      "bnb_token_matches": 0
+    },
+    "cnndm_004": {
+      "sessions": [
+        {
+          "artifact": "closed_loop_cnndm004_256_s4_v1.json",
+          "token_kv_logical_lengths_exact": true,
+          "shared_state_prefixes": 256,
+          "timing_rounds": 2,
+          "bnb_token_matches": 0
+        },
+        {
+          "artifact": "closed_loop_cnndm004_256_s5_v1.json",
+          "token_kv_logical_lengths_exact": true,
+          "shared_state_prefixes": 256,
+          "timing_rounds": 2,
+          "bnb_token_matches": 0
+        }
+      ],
+      "speedup_vs_optimized_b1_geomean": 1.196487913197859,
+      "speedup_vs_bnb_geomean": 1.1209146502816096,
+      "accepted_draft_tokens": 220,
+      "draft_tokens": 336,
+      "bnb_token_matches": 0
+    },
+    "cnndm_005": {
+      "sessions": [
+        {
+          "artifact": "closed_loop_cnndm005_256_s6_v1.json",
+          "token_kv_logical_lengths_exact": true,
+          "shared_state_prefixes": 256,
+          "timing_rounds": 2,
+          "bnb_token_matches": 0
+        },
+        {
+          "artifact": "closed_loop_cnndm005_256_s7_v1.json",
+          "token_kv_logical_lengths_exact": true,
+          "shared_state_prefixes": 256,
+          "timing_rounds": 2,
+          "bnb_token_matches": 0
+        }
+      ],
+      "speedup_vs_optimized_b1_geomean": 1.2121330836481874,
+      "speedup_vs_bnb_geomean": 1.133675226611764,
+      "accepted_draft_tokens": 216,
+      "draft_tokens": 316,
+      "bnb_token_matches": 0
+    }
+  },
+  "paired_rounds": [
+    {
+      "prompt_id": "cnndm_003",
+      "artifact": "closed_loop_cnndm003_256_s3_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.2511583859216977,
+      "speedup_vs_original_bnb": 1.134446611956847,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "artifact": "closed_loop_cnndm003_256_s8_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.2186231766149072,
+      "speedup_vs_original_bnb": 1.1364661177122966,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "artifact": "closed_loop_cnndm003_256_s8_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.249495155195821,
+      "speedup_vs_original_bnb": 1.1580810538517299,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "artifact": "closed_loop_cnndm004_256_s4_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.2150588635689041,
+      "speedup_vs_original_bnb": 1.083333084271409,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "artifact": "closed_loop_cnndm004_256_s4_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.1939640916893168,
+      "speedup_vs_original_bnb": 1.1665209522799835,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "artifact": "closed_loop_cnndm004_256_s5_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.2013098089798449,
+      "speedup_vs_original_bnb": 1.1438497007321293,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "artifact": "closed_loop_cnndm004_256_s5_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.1759521660167784,
+      "speedup_vs_original_bnb": 1.092110716219257,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_005",
+      "artifact": "closed_loop_cnndm005_256_s6_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.2042901801049108,
+      "speedup_vs_original_bnb": 1.1220173424977877,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_005",
+      "artifact": "closed_loop_cnndm005_256_s6_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.1940110287268022,
+      "speedup_vs_original_bnb": 1.1325860740978466,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_005",
+      "artifact": "closed_loop_cnndm005_256_s7_v1.json",
+      "round": 0,
+      "speedup_vs_optimized_b1_singleton": 1.2258498593387313,
+      "speedup_vs_original_bnb": 1.097374191089337,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    },
+    {
+      "prompt_id": "cnndm_005",
+      "artifact": "closed_loop_cnndm005_256_s7_v1.json",
+      "round": 1,
+      "speedup_vs_optimized_b1_singleton": 1.2246851582821712,
+      "speedup_vs_original_bnb": 1.184483721996536,
+      "block_matches_b1": true,
+      "block_matches_bnb": false
+    }
+  ],
+  "all_runs_exact_to_optimized_b1": true,
+  "aggregate_descriptive_geomean_speedup_vs_optimized_b1_singleton": 1.2138336201217272,
+  "aggregate_descriptive_geomean_speedup_vs_original_bnb": 1.1315294120949306,
+  "bnb_token_matches": 0,
+  "bnb_token_comparisons": 11,
+  "limitations": [
+    "Three development prompts, two independent processes per prompt, eleven timing pairs total.",
+    "Exploratory results on one RTX 4050; not a general performance claim.",
+    "All exactness is under the experimental singleton reference; original BNB token/state identity is not established.",
+    "One-row kernel is not integrated or live-contract-pinned.",
+    "Held-out GSM8K indices 300-349 were not used."
+  ],
+  "artifacts": {
+    "cnndm_003": [
+      "closed_loop_cnndm003_256_s3_v1.json",
+      "closed_loop_cnndm003_256_s8_v1.json"
+    ],
+    "cnndm_004": [
+      "closed_loop_cnndm004_256_s4_v1.json",
+      "closed_loop_cnndm004_256_s5_v1.json"
+    ],
+    "cnndm_005": [
+      "closed_loop_cnndm005_256_s6_v1.json",
+      "closed_loop_cnndm005_256_s7_v1.json"
+    ]
+  }
+}

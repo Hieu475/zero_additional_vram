@@ -1,0 +1,799 @@
+{
+  "schema": "b1-architecture-capability-inventory-v1",
+  "scope": "runtime module-layout inventory; not a correctness proof or adapter validation",
+  "protocol": "experiments/exact_quantized_feasibility/crossmodel_shape_repeat_protocol_v1.json",
+  "protocol_sha256": "9f833c6baff42e8edcac90ab629499af308e8cc47598a8975140f1f1fa3a60a2",
+  "device": "cuda:0",
+  "models": [
+    {
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "family": "Qwen2",
+      "status": "completed",
+      "backend": {
+        "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+        "attention": "sdpa"
+      },
+      "model_class": "Qwen2ForCausalLM",
+      "model_type": "qwen2",
+      "operator_layout": {
+        "recognized": true,
+        "model_type": "qwen2",
+        "family": "Qwen2",
+        "complete": true,
+        "first_layer_projection_layout": {
+          "qkv": [
+            "self_attn.q_proj",
+            "self_attn.k_proj",
+            "self_attn.v_proj"
+          ],
+          "attention_output": "self_attn.o_proj",
+          "mlp_up": [
+            "mlp.gate_proj",
+            "mlp.up_proj"
+          ],
+          "mlp_down": "mlp.down_proj"
+        },
+        "module_presence": {
+          "self_attn.q_proj": true,
+          "self_attn.k_proj": true,
+          "self_attn.v_proj": true,
+          "self_attn.o_proj": true,
+          "mlp.gate_proj": true,
+          "mlp.up_proj": true,
+          "mlp.down_proj": true
+        },
+        "attention_class": "Qwen2Attention",
+        "attention_module_count": 24,
+        "evidence_artifact": "crossmodel_operator_qwen25_3b_cnndm002_m5_v1.json",
+        "missing_modules": []
+      },
+      "fixed_row_capability": {
+        "profile": "b1_fixed_row_experimental",
+        "supported": true,
+        "mode": "experimental_only",
+        "proof_status": "not_formally_proven",
+        "model_type": "qwen2",
+        "model_class": "Qwen2ForCausalLM",
+        "model_architectures": [
+          "Qwen2ForCausalLM"
+        ],
+        "attention_implementation": "sdpa",
+        "attention_module_count": 24,
+        "operator_layout": {
+          "recognized": true,
+          "model_type": "qwen2",
+          "family": "Qwen2",
+          "complete": true,
+          "first_layer_projection_layout": {
+            "qkv": [
+              "self_attn.q_proj",
+              "self_attn.k_proj",
+              "self_attn.v_proj"
+            ],
+            "attention_output": "self_attn.o_proj",
+            "mlp_up": [
+              "mlp.gate_proj",
+              "mlp.up_proj"
+            ],
+            "mlp_down": "mlp.down_proj"
+          },
+          "module_presence": {
+            "self_attn.q_proj": true,
+            "self_attn.k_proj": true,
+            "self_attn.v_proj": true,
+            "self_attn.o_proj": true,
+            "mlp.gate_proj": true,
+            "mlp.up_proj": true,
+            "mlp.down_proj": true
+          },
+          "attention_class": "Qwen2Attention",
+          "attention_module_count": 24,
+          "evidence_artifact": "crossmodel_operator_qwen25_3b_cnndm002_m5_v1.json",
+          "missing_modules": []
+        },
+        "adapter": "qwen2_padded.fixed_row_qwen2_schedule",
+        "adapter_status": "experimental_empirically_validated_prototype",
+        "evidence": "Pinned Qwen2 BNB NF4/SDPA probes and B1 development runs; no formal all-input proof.",
+        "shape_sensitivity_observed": true,
+        "shape_sensitivity_evidence": "Cross-model NF4/FP16/SDPA shape sweep; Qwen2 is the only family with a fixed-row prototype.",
+        "checks": {
+          "registered_adapter": true,
+          "model_class_matches": true,
+          "registered_operator_layout_matches_model": true,
+          "eval_mode": true,
+          "attention_implementation_supported": true,
+          "expected_attention_modules_present": true,
+          "no_sliding_window_attention": true
+        },
+        "rejection_reasons": [],
+        "runtime_checks_still_required": [
+          "batch size one and unpadded prompt",
+          "implicit positions and no caller-supplied attention mask",
+          "static preallocated KV cache and valid crop/rollback behavior",
+          "physical verification rows within the adapter's fixed row count",
+          "greedy output and committed KV comparison against the singleton reference"
+        ],
+        "capability_id": "80ae5f1bd637e5c611892c1087fe1531d76fbb62ab99e46d72f79d57e25d5b95"
+      }
+    },
+    {
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "family": "Qwen2",
+      "status": "completed",
+      "backend": {
+        "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+        "attention": "sdpa"
+      },
+      "model_class": "Qwen2ForCausalLM",
+      "model_type": "qwen2",
+      "operator_layout": {
+        "recognized": true,
+        "model_type": "qwen2",
+        "family": "Qwen2",
+        "complete": true,
+        "first_layer_projection_layout": {
+          "qkv": [
+            "self_attn.q_proj",
+            "self_attn.k_proj",
+            "self_attn.v_proj"
+          ],
+          "attention_output": "self_attn.o_proj",
+          "mlp_up": [
+            "mlp.gate_proj",
+            "mlp.up_proj"
+          ],
+          "mlp_down": "mlp.down_proj"
+        },
+        "module_presence": {
+          "self_attn.q_proj": true,
+          "self_attn.k_proj": true,
+          "self_attn.v_proj": true,
+          "self_attn.o_proj": true,
+          "mlp.gate_proj": true,
+          "mlp.up_proj": true,
+          "mlp.down_proj": true
+        },
+        "attention_class": "Qwen2Attention",
+        "attention_module_count": 28,
+        "evidence_artifact": "crossmodel_operator_qwen25_3b_cnndm002_m5_v1.json",
+        "missing_modules": []
+      },
+      "fixed_row_capability": {
+        "profile": "b1_fixed_row_experimental",
+        "supported": true,
+        "mode": "experimental_only",
+        "proof_status": "not_formally_proven",
+        "model_type": "qwen2",
+        "model_class": "Qwen2ForCausalLM",
+        "model_architectures": [
+          "Qwen2ForCausalLM"
+        ],
+        "attention_implementation": "sdpa",
+        "attention_module_count": 28,
+        "operator_layout": {
+          "recognized": true,
+          "model_type": "qwen2",
+          "family": "Qwen2",
+          "complete": true,
+          "first_layer_projection_layout": {
+            "qkv": [
+              "self_attn.q_proj",
+              "self_attn.k_proj",
+              "self_attn.v_proj"
+            ],
+            "attention_output": "self_attn.o_proj",
+            "mlp_up": [
+              "mlp.gate_proj",
+              "mlp.up_proj"
+            ],
+            "mlp_down": "mlp.down_proj"
+          },
+          "module_presence": {
+            "self_attn.q_proj": true,
+            "self_attn.k_proj": true,
+            "self_attn.v_proj": true,
+            "self_attn.o_proj": true,
+            "mlp.gate_proj": true,
+            "mlp.up_proj": true,
+            "mlp.down_proj": true
+          },
+          "attention_class": "Qwen2Attention",
+          "attention_module_count": 28,
+          "evidence_artifact": "crossmodel_operator_qwen25_3b_cnndm002_m5_v1.json",
+          "missing_modules": []
+        },
+        "adapter": "qwen2_padded.fixed_row_qwen2_schedule",
+        "adapter_status": "experimental_empirically_validated_prototype",
+        "evidence": "Pinned Qwen2 BNB NF4/SDPA probes and B1 development runs; no formal all-input proof.",
+        "shape_sensitivity_observed": true,
+        "shape_sensitivity_evidence": "Cross-model NF4/FP16/SDPA shape sweep; Qwen2 is the only family with a fixed-row prototype.",
+        "checks": {
+          "registered_adapter": true,
+          "model_class_matches": true,
+          "registered_operator_layout_matches_model": true,
+          "eval_mode": true,
+          "attention_implementation_supported": true,
+          "expected_attention_modules_present": true,
+          "no_sliding_window_attention": true
+        },
+        "rejection_reasons": [],
+        "runtime_checks_still_required": [
+          "batch size one and unpadded prompt",
+          "implicit positions and no caller-supplied attention mask",
+          "static preallocated KV cache and valid crop/rollback behavior",
+          "physical verification rows within the adapter's fixed row count",
+          "greedy output and committed KV comparison against the singleton reference"
+        ],
+        "capability_id": "cbc8d4f897cc2c31c00a1c5dafb66eae9fe9607ca4a326b77ac93954d5296876"
+      }
+    },
+    {
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "family": "Qwen2",
+      "status": "completed",
+      "backend": {
+        "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+        "attention": "sdpa"
+      },
+      "model_class": "Qwen2ForCausalLM",
+      "model_type": "qwen2",
+      "operator_layout": {
+        "recognized": true,
+        "model_type": "qwen2",
+        "family": "Qwen2",
+        "complete": true,
+        "first_layer_projection_layout": {
+          "qkv": [
+            "self_attn.q_proj",
+            "self_attn.k_proj",
+            "self_attn.v_proj"
+          ],
+          "attention_output": "self_attn.o_proj",
+          "mlp_up": [
+            "mlp.gate_proj",
+            "mlp.up_proj"
+          ],
+          "mlp_down": "mlp.down_proj"
+        },
+        "module_presence": {
+          "self_attn.q_proj": true,
+          "self_attn.k_proj": true,
+          "self_attn.v_proj": true,
+          "self_attn.o_proj": true,
+          "mlp.gate_proj": true,
+          "mlp.up_proj": true,
+          "mlp.down_proj": true
+        },
+        "attention_class": "Qwen2Attention",
+        "attention_module_count": 36,
+        "evidence_artifact": "crossmodel_operator_qwen25_3b_cnndm002_m5_v1.json",
+        "missing_modules": []
+      },
+      "fixed_row_capability": {
+        "profile": "b1_fixed_row_experimental",
+        "supported": true,
+        "mode": "experimental_only",
+        "proof_status": "not_formally_proven",
+        "model_type": "qwen2",
+        "model_class": "Qwen2ForCausalLM",
+        "model_architectures": [
+          "Qwen2ForCausalLM"
+        ],
+        "attention_implementation": "sdpa",
+        "attention_module_count": 36,
+        "operator_layout": {
+          "recognized": true,
+          "model_type": "qwen2",
+          "family": "Qwen2",
+          "complete": true,
+          "first_layer_projection_layout": {
+            "qkv": [
+              "self_attn.q_proj",
+              "self_attn.k_proj",
+              "self_attn.v_proj"
+            ],
+            "attention_output": "self_attn.o_proj",
+            "mlp_up": [
+              "mlp.gate_proj",
+              "mlp.up_proj"
+            ],
+            "mlp_down": "mlp.down_proj"
+          },
+          "module_presence": {
+            "self_attn.q_proj": true,
+            "self_attn.k_proj": true,
+            "self_attn.v_proj": true,
+            "self_attn.o_proj": true,
+            "mlp.gate_proj": true,
+            "mlp.up_proj": true,
+            "mlp.down_proj": true
+          },
+          "attention_class": "Qwen2Attention",
+          "attention_module_count": 36,
+          "evidence_artifact": "crossmodel_operator_qwen25_3b_cnndm002_m5_v1.json",
+          "missing_modules": []
+        },
+        "adapter": "qwen2_padded.fixed_row_qwen2_schedule",
+        "adapter_status": "experimental_empirically_validated_prototype",
+        "evidence": "Pinned Qwen2 BNB NF4/SDPA probes and B1 development runs; no formal all-input proof.",
+        "shape_sensitivity_observed": true,
+        "shape_sensitivity_evidence": "Cross-model NF4/FP16/SDPA shape sweep; Qwen2 is the only family with a fixed-row prototype.",
+        "checks": {
+          "registered_adapter": true,
+          "model_class_matches": true,
+          "registered_operator_layout_matches_model": true,
+          "eval_mode": true,
+          "attention_implementation_supported": true,
+          "expected_attention_modules_present": true,
+          "no_sliding_window_attention": true
+        },
+        "rejection_reasons": [],
+        "runtime_checks_still_required": [
+          "batch size one and unpadded prompt",
+          "implicit positions and no caller-supplied attention mask",
+          "static preallocated KV cache and valid crop/rollback behavior",
+          "physical verification rows within the adapter's fixed row count",
+          "greedy output and committed KV comparison against the singleton reference"
+        ],
+        "capability_id": "062622f89a4c12f35c8fe710d1fa330a217859e727fdbe10f43531e3748e02d7"
+      }
+    },
+    {
+      "model": "unsloth/Llama-3.2-1B-Instruct",
+      "revision": "5a8abab4a5d6f164389b1079fb721cfab8d7126c",
+      "family": "Llama",
+      "status": "completed",
+      "backend": {
+        "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+        "attention": "sdpa"
+      },
+      "model_class": "LlamaForCausalLM",
+      "model_type": "llama",
+      "operator_layout": {
+        "recognized": true,
+        "model_type": "llama",
+        "family": "Llama",
+        "complete": true,
+        "first_layer_projection_layout": {
+          "qkv": [
+            "self_attn.q_proj",
+            "self_attn.k_proj",
+            "self_attn.v_proj"
+          ],
+          "attention_output": "self_attn.o_proj",
+          "mlp_up": [
+            "mlp.gate_proj",
+            "mlp.up_proj"
+          ],
+          "mlp_down": "mlp.down_proj"
+        },
+        "module_presence": {
+          "self_attn.q_proj": true,
+          "self_attn.k_proj": true,
+          "self_attn.v_proj": true,
+          "self_attn.o_proj": true,
+          "mlp.gate_proj": true,
+          "mlp.up_proj": true,
+          "mlp.down_proj": true
+        },
+        "attention_class": "LlamaAttention",
+        "attention_module_count": 16,
+        "evidence_artifact": "crossmodel_operator_llama32_3b_cnndm002_m5_v1.json",
+        "missing_modules": []
+      },
+      "fixed_row_capability": {
+        "profile": "b1_fixed_row_experimental",
+        "supported": false,
+        "mode": "experimental_only",
+        "proof_status": "not_formally_proven",
+        "model_type": "llama",
+        "model_class": "LlamaForCausalLM",
+        "model_architectures": [
+          "LlamaForCausalLM"
+        ],
+        "attention_implementation": "sdpa",
+        "attention_module_count": 16,
+        "operator_layout": {
+          "recognized": true,
+          "model_type": "llama",
+          "family": "Llama",
+          "complete": true,
+          "first_layer_projection_layout": {
+            "qkv": [
+              "self_attn.q_proj",
+              "self_attn.k_proj",
+              "self_attn.v_proj"
+            ],
+            "attention_output": "self_attn.o_proj",
+            "mlp_up": [
+              "mlp.gate_proj",
+              "mlp.up_proj"
+            ],
+            "mlp_down": "mlp.down_proj"
+          },
+          "module_presence": {
+            "self_attn.q_proj": true,
+            "self_attn.k_proj": true,
+            "self_attn.v_proj": true,
+            "self_attn.o_proj": true,
+            "mlp.gate_proj": true,
+            "mlp.up_proj": true,
+            "mlp.down_proj": true
+          },
+          "attention_class": "LlamaAttention",
+          "attention_module_count": 16,
+          "evidence_artifact": "crossmodel_operator_llama32_3b_cnndm002_m5_v1.json",
+          "missing_modules": []
+        },
+        "adapter": null,
+        "adapter_status": "unregistered_shape_sensitivity_observed",
+        "evidence": "No architecture-specific fixed-row adapter is registered.",
+        "shape_sensitivity_observed": true,
+        "shape_sensitivity_evidence": "Cross-model NF4/FP16/SDPA shape sweep and operator-shape audits; no B1 fixed-row adapter registered.",
+        "checks": {
+          "registered_adapter": false,
+          "model_class_matches": false,
+          "registered_operator_layout_matches_model": true,
+          "eval_mode": true,
+          "attention_implementation_supported": false,
+          "expected_attention_modules_present": true,
+          "no_sliding_window_attention": true
+        },
+        "rejection_reasons": [
+          "registered_adapter",
+          "model_class_matches",
+          "attention_implementation_supported"
+        ],
+        "runtime_checks_still_required": [
+          "batch size one and unpadded prompt",
+          "implicit positions and no caller-supplied attention mask",
+          "static preallocated KV cache and valid crop/rollback behavior",
+          "physical verification rows within the adapter's fixed row count",
+          "greedy output and committed KV comparison against the singleton reference"
+        ],
+        "capability_id": "13ae4a58fc9631b3225165a36b54d749d123fa5edc7fdfeea6b294c9764b54dc"
+      }
+    },
+    {
+      "model": "unsloth/Llama-3.2-3B-Instruct",
+      "revision": "006f5dcd1393c3add266de40994ba96225e9689d",
+      "family": "Llama",
+      "status": "completed",
+      "backend": {
+        "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+        "attention": "sdpa"
+      },
+      "model_class": "LlamaForCausalLM",
+      "model_type": "llama",
+      "operator_layout": {
+        "recognized": true,
+        "model_type": "llama",
+        "family": "Llama",
+        "complete": true,
+        "first_layer_projection_layout": {
+          "qkv": [
+            "self_attn.q_proj",
+            "self_attn.k_proj",
+            "self_attn.v_proj"
+          ],
+          "attention_output": "self_attn.o_proj",
+          "mlp_up": [
+            "mlp.gate_proj",
+            "mlp.up_proj"
+          ],
+          "mlp_down": "mlp.down_proj"
+        },
+        "module_presence": {
+          "self_attn.q_proj": true,
+          "self_attn.k_proj": true,
+          "self_attn.v_proj": true,
+          "self_attn.o_proj": true,
+          "mlp.gate_proj": true,
+          "mlp.up_proj": true,
+          "mlp.down_proj": true
+        },
+        "attention_class": "LlamaAttention",
+        "attention_module_count": 28,
+        "evidence_artifact": "crossmodel_operator_llama32_3b_cnndm002_m5_v1.json",
+        "missing_modules": []
+      },
+      "fixed_row_capability": {
+        "profile": "b1_fixed_row_experimental",
+        "supported": false,
+        "mode": "experimental_only",
+        "proof_status": "not_formally_proven",
+        "model_type": "llama",
+        "model_class": "LlamaForCausalLM",
+        "model_architectures": [
+          "LlamaForCausalLM"
+        ],
+        "attention_implementation": "sdpa",
+        "attention_module_count": 28,
+        "operator_layout": {
+          "recognized": true,
+          "model_type": "llama",
+          "family": "Llama",
+          "complete": true,
+          "first_layer_projection_layout": {
+            "qkv": [
+              "self_attn.q_proj",
+              "self_attn.k_proj",
+              "self_attn.v_proj"
+            ],
+            "attention_output": "self_attn.o_proj",
+            "mlp_up": [
+              "mlp.gate_proj",
+              "mlp.up_proj"
+            ],
+            "mlp_down": "mlp.down_proj"
+          },
+          "module_presence": {
+            "self_attn.q_proj": true,
+            "self_attn.k_proj": true,
+            "self_attn.v_proj": true,
+            "self_attn.o_proj": true,
+            "mlp.gate_proj": true,
+            "mlp.up_proj": true,
+            "mlp.down_proj": true
+          },
+          "attention_class": "LlamaAttention",
+          "attention_module_count": 28,
+          "evidence_artifact": "crossmodel_operator_llama32_3b_cnndm002_m5_v1.json",
+          "missing_modules": []
+        },
+        "adapter": null,
+        "adapter_status": "unregistered_shape_sensitivity_observed",
+        "evidence": "No architecture-specific fixed-row adapter is registered.",
+        "shape_sensitivity_observed": true,
+        "shape_sensitivity_evidence": "Cross-model NF4/FP16/SDPA shape sweep and operator-shape audits; no B1 fixed-row adapter registered.",
+        "checks": {
+          "registered_adapter": false,
+          "model_class_matches": false,
+          "registered_operator_layout_matches_model": true,
+          "eval_mode": true,
+          "attention_implementation_supported": false,
+          "expected_attention_modules_present": true,
+          "no_sliding_window_attention": true
+        },
+        "rejection_reasons": [
+          "registered_adapter",
+          "model_class_matches",
+          "attention_implementation_supported"
+        ],
+        "runtime_checks_still_required": [
+          "batch size one and unpadded prompt",
+          "implicit positions and no caller-supplied attention mask",
+          "static preallocated KV cache and valid crop/rollback behavior",
+          "physical verification rows within the adapter's fixed row count",
+          "greedy output and committed KV comparison against the singleton reference"
+        ],
+        "capability_id": "776dab366d836232dbb31e7a5abdab0c0d2a2f00d40d5959f8fe9e5bd2f51e06"
+      }
+    },
+    {
+      "model": "microsoft/Phi-3.5-mini-instruct",
+      "revision": "2fe192450127e6a83f7441aef6e3ca586c338b77",
+      "family": "Phi3",
+      "status": "completed",
+      "backend": {
+        "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+        "attention": "sdpa"
+      },
+      "model_class": "Phi3ForCausalLM",
+      "model_type": "phi3",
+      "operator_layout": {
+        "recognized": true,
+        "model_type": "phi3",
+        "family": "Phi3",
+        "complete": true,
+        "first_layer_projection_layout": {
+          "qkv": [
+            "self_attn.qkv_proj"
+          ],
+          "attention_output": "self_attn.o_proj",
+          "mlp_up": [
+            "mlp.gate_up_proj"
+          ],
+          "mlp_down": "mlp.down_proj"
+        },
+        "module_presence": {
+          "self_attn.qkv_proj": true,
+          "self_attn.o_proj": true,
+          "mlp.gate_up_proj": true,
+          "mlp.down_proj": true
+        },
+        "attention_class": "Phi3Attention",
+        "attention_module_count": 32,
+        "evidence_artifact": "phi35_cnndm002_operator_shape_k4_v1.json",
+        "missing_modules": []
+      },
+      "fixed_row_capability": {
+        "profile": "b1_fixed_row_experimental",
+        "supported": false,
+        "mode": "experimental_only",
+        "proof_status": "not_formally_proven",
+        "model_type": "phi3",
+        "model_class": "Phi3ForCausalLM",
+        "model_architectures": [
+          "Phi3ForCausalLM"
+        ],
+        "attention_implementation": "sdpa",
+        "attention_module_count": 32,
+        "operator_layout": {
+          "recognized": true,
+          "model_type": "phi3",
+          "family": "Phi3",
+          "complete": true,
+          "first_layer_projection_layout": {
+            "qkv": [
+              "self_attn.qkv_proj"
+            ],
+            "attention_output": "self_attn.o_proj",
+            "mlp_up": [
+              "mlp.gate_up_proj"
+            ],
+            "mlp_down": "mlp.down_proj"
+          },
+          "module_presence": {
+            "self_attn.qkv_proj": true,
+            "self_attn.o_proj": true,
+            "mlp.gate_up_proj": true,
+            "mlp.down_proj": true
+          },
+          "attention_class": "Phi3Attention",
+          "attention_module_count": 32,
+          "evidence_artifact": "phi35_cnndm002_operator_shape_k4_v1.json",
+          "missing_modules": []
+        },
+        "adapter": null,
+        "adapter_status": "unregistered_shape_sensitivity_observed",
+        "evidence": "No architecture-specific fixed-row adapter is registered.",
+        "shape_sensitivity_observed": true,
+        "shape_sensitivity_evidence": "Cross-model NF4/FP16/SDPA shape sweep and fused qkv_proj audit; no B1 fixed-row adapter registered.",
+        "checks": {
+          "registered_adapter": false,
+          "model_class_matches": false,
+          "registered_operator_layout_matches_model": true,
+          "eval_mode": true,
+          "attention_implementation_supported": false,
+          "expected_attention_modules_present": true,
+          "no_sliding_window_attention": true
+        },
+        "rejection_reasons": [
+          "registered_adapter",
+          "model_class_matches",
+          "attention_implementation_supported"
+        ],
+        "runtime_checks_still_required": [
+          "batch size one and unpadded prompt",
+          "implicit positions and no caller-supplied attention mask",
+          "static preallocated KV cache and valid crop/rollback behavior",
+          "physical verification rows within the adapter's fixed row count",
+          "greedy output and committed KV comparison against the singleton reference"
+        ],
+        "capability_id": "69b6840b5ffddd7940f4b97ef32f1e143aec6cbbb4f629dc803ecca63a4641e0"
+      }
+    },
+    {
+      "model": "allenai/OLMo-2-0425-1B-Instruct",
+      "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+      "family": "OLMo2",
+      "status": "completed",
+      "backend": {
+        "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+        "attention": "sdpa"
+      },
+      "model_class": "Olmo2ForCausalLM",
+      "model_type": "olmo2",
+      "operator_layout": {
+        "recognized": true,
+        "model_type": "olmo2",
+        "family": "OLMo2",
+        "complete": true,
+        "first_layer_projection_layout": {
+          "qkv": [
+            "self_attn.q_proj",
+            "self_attn.k_proj",
+            "self_attn.v_proj"
+          ],
+          "attention_output": "self_attn.o_proj",
+          "mlp_up": [
+            "mlp.gate_proj",
+            "mlp.up_proj"
+          ],
+          "mlp_down": "mlp.down_proj"
+        },
+        "module_presence": {
+          "self_attn.q_proj": true,
+          "self_attn.k_proj": true,
+          "self_attn.v_proj": true,
+          "self_attn.o_proj": true,
+          "mlp.gate_proj": true,
+          "mlp.up_proj": true,
+          "mlp.down_proj": true
+        },
+        "attention_class": "Olmo2Attention",
+        "attention_module_count": 16,
+        "evidence_artifact": "crossmodel_operator_olmo2_1b_cnndm002_m5_v1.json",
+        "missing_modules": []
+      },
+      "fixed_row_capability": {
+        "profile": "b1_fixed_row_experimental",
+        "supported": false,
+        "mode": "experimental_only",
+        "proof_status": "not_formally_proven",
+        "model_type": "olmo2",
+        "model_class": "Olmo2ForCausalLM",
+        "model_architectures": [
+          "Olmo2ForCausalLM"
+        ],
+        "attention_implementation": "sdpa",
+        "attention_module_count": 16,
+        "operator_layout": {
+          "recognized": true,
+          "model_type": "olmo2",
+          "family": "OLMo2",
+          "complete": true,
+          "first_layer_projection_layout": {
+            "qkv": [
+              "self_attn.q_proj",
+              "self_attn.k_proj",
+              "self_attn.v_proj"
+            ],
+            "attention_output": "self_attn.o_proj",
+            "mlp_up": [
+              "mlp.gate_proj",
+              "mlp.up_proj"
+            ],
+            "mlp_down": "mlp.down_proj"
+          },
+          "module_presence": {
+            "self_attn.q_proj": true,
+            "self_attn.k_proj": true,
+            "self_attn.v_proj": true,
+            "self_attn.o_proj": true,
+            "mlp.gate_proj": true,
+            "mlp.up_proj": true,
+            "mlp.down_proj": true
+          },
+          "attention_class": "Olmo2Attention",
+          "attention_module_count": 16,
+          "evidence_artifact": "crossmodel_operator_olmo2_1b_cnndm002_m5_v1.json",
+          "missing_modules": []
+        },
+        "adapter": null,
+        "adapter_status": "unregistered_shape_sensitivity_observed",
+        "evidence": "No architecture-specific fixed-row adapter is registered.",
+        "shape_sensitivity_observed": true,
+        "shape_sensitivity_evidence": "Cross-model NF4/FP16/SDPA shape sweep and q_proj audit; no B1 fixed-row adapter registered.",
+        "checks": {
+          "registered_adapter": false,
+          "model_class_matches": false,
+          "registered_operator_layout_matches_model": true,
+          "eval_mode": true,
+          "attention_implementation_supported": false,
+          "expected_attention_modules_present": true,
+          "no_sliding_window_attention": true
+        },
+        "rejection_reasons": [
+          "registered_adapter",
+          "model_class_matches",
+          "attention_implementation_supported"
+        ],
+        "runtime_checks_still_required": [
+          "batch size one and unpadded prompt",
+          "implicit positions and no caller-supplied attention mask",
+          "static preallocated KV cache and valid crop/rollback behavior",
+          "physical verification rows within the adapter's fixed row count",
+          "greedy output and committed KV comparison against the singleton reference"
+        ],
+        "capability_id": "3a360f9f6927acbee0ff3ee1a18a62835beaeff6e510e4cd70c72b33d88b3828"
+      }
+    }
+  ],
+  "completed_models": 7,
+  "failed_models": 0
+}

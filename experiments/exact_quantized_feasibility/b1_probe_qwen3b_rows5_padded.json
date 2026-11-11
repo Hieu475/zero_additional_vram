@@ -1,0 +1,86 @@
+{
+  "status": "experimental fixed-row schedule; finite test, not universal proof",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "prompt_id": "gsm8k_000",
+  "prompt_length": 75,
+  "physical_rows": 5,
+  "attention_strategy": "padded",
+  "rows": [
+    {
+      "m": 1,
+      "token_inputs": [
+        5512
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 76,
+      "block_cache_length": 76
+    },
+    {
+      "m": 2,
+      "token_inputs": [
+        5512,
+        11
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 77,
+      "block_cache_length": 77
+    },
+    {
+      "m": 3,
+      "token_inputs": [
+        5512,
+        11,
+        582
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 78,
+      "block_cache_length": 78
+    },
+    {
+      "m": 4,
+      "token_inputs": [
+        5512,
+        11,
+        582,
+        1184
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 79,
+      "block_cache_length": 79
+    },
+    {
+      "m": 5,
+      "token_inputs": [
+        5512,
+        11,
+        582,
+        1184,
+        311
+      ],
+      "bitwise_logits": true,
+      "max_logit_difference": 0.0,
+      "same_argmax": true,
+      "bitwise_kv": true,
+      "sequential_cache_length": 80,
+      "block_cache_length": 80
+    }
+  ]
+}

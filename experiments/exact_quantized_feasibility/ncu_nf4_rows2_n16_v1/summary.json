@@ -1,0 +1,49 @@
+{
+  "title": "Nsight Compute basic profile for N=16 packed NF4 two-row kernel",
+  "device": "NVIDIA GeForce RTX 4050 Laptop GPU (compute capability 8.9)",
+  "environment": "Conda env ai",
+  "strategy": "triton_nf4_group_scale_packed_rows2_n16_k256",
+  "physical_rows": 2,
+  "rows": 2,
+  "block_n": 16,
+  "block_k": 256,
+  "kernel": "_packed_two_rows_kernel",
+  "launch_geometry": {
+    "grid": [1, 128, 1],
+    "block": [128, 1, 1],
+    "dynamic_shared_memory_kib": 2.048,
+    "static_shared_memory_bytes": 0
+  },
+  "measurements": {
+    "q_proj": {
+      "duration_us": 27.072,
+      "registers_per_thread": 64,
+      "theoretical_occupancy_pct": 66.67,
+      "achieved_occupancy_pct": 48.14,
+      "dram_throughput_pct_peak": 42.26,
+      "compute_throughput_pct_peak": 61.17,
+      "local_memory_sectors": 0,
+      "block_limit_registers": 8,
+      "waves_per_sm": 0.8,
+      "report": "q_proj.ncu-rep"
+    },
+    "down_proj": {
+      "duration_us": 131.04,
+      "registers_per_thread": 72,
+      "theoretical_occupancy_pct": 58.33,
+      "achieved_occupancy_pct": 46.06,
+      "dram_throughput_pct_peak": 60.34,
+      "compute_throughput_pct_peak": 67.35,
+      "local_memory_sectors": 0,
+      "block_limit_registers": 7,
+      "waves_per_sm": 0.91,
+      "report": "down_proj.ncu-rep"
+    }
+  },
+  "scope_and_limits": [
+    "Each number is from one Nsight Compute profiled launch; it is not a latency benchmark.",
+    "A separate local-memory counter run observed zero local-memory sectors for both launches; this is evidence of no runtime local-memory spill traffic in these exact compiled launches, not a guarantee for other shapes or compiler configurations.",
+    "Both projections are register-limited in theoretical occupancy; achieved occupancy is lower than theoretical.",
+    "The compute and DRAM utilization readings indicate both resources are material; this does not isolate a single bottleneck."
+  ]
+}

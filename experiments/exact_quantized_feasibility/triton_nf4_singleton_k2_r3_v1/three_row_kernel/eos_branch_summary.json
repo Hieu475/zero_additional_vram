@@ -1,0 +1,67 @@
+{
+  "schema": "zassd-nf4-fixed-three-rows-eos-branch-summary-v1",
+  "scope": "Two constructed development fixtures; one accepted EOS draft and one rejected EOS draft under the experimental K2/R3 three-row path.",
+  "accepted_eos": {
+    "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/eos_accept_trace.json",
+    "token_match_b1": true,
+    "all_shared_states_equal": true,
+    "shared_state_prefixes": 2,
+    "block_terminal_eos": true,
+    "accepted_eos_candidate_seen": true,
+    "events": [
+      {
+        "cycle_index": 0,
+        "draft_tokens": [
+          151645
+        ],
+        "eos_candidate_index": 0,
+        "accepted": 1,
+        "rejected_at": null,
+        "accepted_eos_candidate": true,
+        "rejected_eos_candidate": false,
+        "emitted_tokens": [
+          3925,
+          151645
+        ]
+      }
+    ],
+    "block_tokens": [
+      3925,
+      151645
+    ]
+  },
+  "rejected_eos": {
+    "artifact": "experiments/exact_quantized_feasibility/triton_nf4_singleton_k2_r3_v1/three_row_kernel/eos_reject_trace.json",
+    "token_match_b1": true,
+    "all_shared_states_equal": true,
+    "shared_state_prefixes": 3,
+    "block_terminal_eos": true,
+    "rejected_eos_candidate_seen": true,
+    "events": [
+      {
+        "cycle_index": 0,
+        "draft_tokens": [
+          151645
+        ],
+        "eos_candidate_index": 0,
+        "accepted": 0,
+        "rejected_at": 0,
+        "accepted_eos_candidate": false,
+        "rejected_eos_candidate": true,
+        "emitted_tokens": [
+          3925
+        ]
+      }
+    ],
+    "block_tokens": [
+      3925,
+      55892,
+      151645
+    ]
+  },
+  "limits": [
+    "One process per constructed fixture on one RTX 4050.",
+    "This finite branch audit does not prove all EOS/pending-token/cache rollback paths.",
+    "No GSM8K held-out data used."
+  ]
+}

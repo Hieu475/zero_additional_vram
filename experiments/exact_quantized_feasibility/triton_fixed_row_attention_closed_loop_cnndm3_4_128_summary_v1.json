@@ -1,0 +1,93 @@
+{
+  "status": "development-only closed-loop fixed-row attention validation",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "reference": "fixed-row B1 using Triton fixed-row attention; not BNB-equivalent",
+  "configuration": {
+    "k": 2,
+    "ngram_size": 3,
+    "physical_rows": 3,
+    "max_new_tokens": 128,
+    "block_k": 32,
+    "attention_strategy": "triton_batched",
+    "quantized_linear_strategy": "fixed_rows"
+  },
+  "prompts": {
+    "cnndm_003": {
+      "runs": 2,
+      "token_kv_length_exact_to_b1": true,
+      "shared_kv_prefixes": 128,
+      "speedup_vs_b1_geomean": 1.4738922090107034,
+      "speedup_vs_original_bnb_geomean": 1.117941189047685,
+      "all_timed_outputs_match_original_bnb": false,
+      "accepted_draft_tokens": 38,
+      "draft_tokens": 70,
+      "artifact": "triton_fixed_row_attention_closed_loop_cnndm003_k2_r3_128_s0_v1.json"
+    },
+    "cnndm_004": {
+      "runs": 2,
+      "token_kv_length_exact_to_b1": true,
+      "shared_kv_prefixes": 128,
+      "speedup_vs_b1_geomean": 1.2872863956805118,
+      "speedup_vs_original_bnb_geomean": 0.9185937089858982,
+      "all_timed_outputs_match_original_bnb": false,
+      "accepted_draft_tokens": 22,
+      "draft_tokens": 58,
+      "artifact": "triton_fixed_row_attention_closed_loop_cnndm004_k2_r3_128_s1_v1.json"
+    }
+  },
+  "paired_timing_rounds": [
+    {
+      "prompt_id": "cnndm_003",
+      "round": 0,
+      "block_matches_b1": true,
+      "block_matches_original_bnb": false,
+      "speedup_vs_b1": 1.5008339895866725,
+      "speedup_vs_bnb": 1.0839850649731395,
+      "acceptance": 38,
+      "draft_tokens": 70
+    },
+    {
+      "prompt_id": "cnndm_003",
+      "round": 1,
+      "block_matches_b1": true,
+      "block_matches_original_bnb": false,
+      "speedup_vs_b1": 1.4474340658960658,
+      "speedup_vs_bnb": 1.1529609978531583,
+      "acceptance": 38,
+      "draft_tokens": 70
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "round": 0,
+      "block_matches_b1": true,
+      "block_matches_original_bnb": false,
+      "speedup_vs_b1": 1.2964805262387384,
+      "speedup_vs_bnb": 0.9115463924182027,
+      "acceptance": 22,
+      "draft_tokens": 58
+    },
+    {
+      "prompt_id": "cnndm_004",
+      "round": 1,
+      "block_matches_b1": true,
+      "block_matches_original_bnb": false,
+      "speedup_vs_b1": 1.2781574662842086,
+      "speedup_vs_bnb": 0.9256955095285382,
+      "acceptance": 22,
+      "draft_tokens": 58
+    }
+  ],
+  "aggregate_descriptive_geomean_speedup_vs_b1": 1.377432898314461,
+  "aggregate_descriptive_geomean_speedup_vs_original_bnb": 1.0133773942985989,
+  "timed_outputs_matching_original_bnb": 0,
+  "timed_runs": 4,
+  "limitations": [
+    "Only two development prompts; timing is descriptive and not a generalization claim.",
+    "No original-BNB token identity: all timed block outputs diverged from BNB.",
+    "Held-out GSM8K indices 300\u2013349 were not used."
+  ],
+  "artifacts": [
+    "triton_fixed_row_attention_closed_loop_cnndm003_k2_r3_128_s0_v1.json",
+    "triton_fixed_row_attention_closed_loop_cnndm004_k2_r3_128_s1_v1.json"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "status": "completed",
+  "scope": "single-prefix shape diagnostic; not full-sequence exactness or a universal guarantee",
+  "protocol_sha256": "9f833c6baff42e8edcac90ab629499af308e8cc47598a8975140f1f1fa3a60a2",
+  "cohort_sha256": "01610458c693cb12d715bb0474ede6d354e1dee33c599d2cc08e7d805546ff08",
+  "model": "unsloth/Llama-3.2-3B-Instruct",
+  "revision": "006f5dcd1393c3add266de40994ba96225e9689d",
+  "family": "Llama",
+  "backend": {
+    "quantization": "bitsandbytes NF4, double_quant=True, FP16 compute",
+    "attention": "sdpa"
+  },
+  "prompt_id": "gsm8k_057",
+  "task": "gsm8k",
+  "prompt_sha256": "08b78a955d65a516d71029ff129278b6417030e46ee9ee427c64050e4588e306",
+  "prompt_token_count": 73,
+  "prompt_token_ids_sha256": "c136ad723f1e6c83e536aef3cfc90213cac8abe75589e3c0e893a8cbe5ffe950",
+  "M": 5,
+  "candidate_ids": [
+    4815,
+    567,
+    15166,
+    220,
+    16
+  ],
+  "candidate_length": 5,
+  "linear_singleton_counts": {
+    "patched_modules": 197,
+    "split_forward_calls": 197,
+    "single_row_kernel_calls": 985
+  },
+  "ordinary_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.1328125,
+      0.25,
+      0.15625,
+      0.1875,
+      0.13671875
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.078125,
+    "kv_value_max_abs": 0.0537109375,
+    "first_kv_different_layer": 0
+  },
+  "singleton_linear_batch_vs_sequential": {
+    "per_row_logit_max_abs": [
+      0.171875,
+      0.21875,
+      0.1640625,
+      0.19921875,
+      0.1875
+    ],
+    "argmax_equal_by_row": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "kv_key_max_abs": 0.0703125,
+    "kv_value_max_abs": 0.0546875,
+    "first_kv_different_layer": 1
+  },
+  "model_manifest": "experiments/exact_quantized_feasibility/crossmodel_shape_repeat_v1/session1/manifests/llama32_3b.json"
+}
