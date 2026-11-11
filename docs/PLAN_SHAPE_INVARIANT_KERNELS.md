@@ -236,3 +236,20 @@ Giới hạn: một GPU (RTX 4050), K=2 cố định, greedy, batch 1; tốc đ�
 **Llama-3.2 + kiểm tra EOS (06/11/2026):** Llama-3.2-1B/3B (bản sao unsloth, không cần token) chạy không sửa kernel: 100/100 exact mỗi mô hình, 1.27x và 1.24x. `scripts/run_wp8_eos.sh` chạy lại 6 ô (600 lượt, đều exact) ghi vị trí EOS: tỷ lệ prompt có EOS trong 128 token 0–26%; tăng tốc chỉ trên prompt không có EOS 1.18/1.32/1.21/1.23/1.29/1.19x so với 1.18/1.32/1.20/1.24/1.27/1.18x khi tính hết (lệch <2%): văn bản sau EOS không làm phồng số đo. Tổng cộng 1000 cặp prompt-mô hình, 7 mô hình, 4 họ, 0 lệch. Mẫu 5 prompt đầu của Llama-3B cho 1.37x, ở n=100 là 1.24x: không rút kết luận từ mẫu nhỏ.
 
 **Mistral-7B-Instruct-v0.3 (06/11/2026, `scripts/run_wp5_mistral7b.sh`, `results/kernels/wp8_mistral7b_*.json`):** mô hình 7B (bản NF4 dựng sẵn của unsloth) vừa GPU 6 GB với cache ngắn; chạy không sửa kernel. GSM8K 100/100 exact, 38.1 -> 45.8 tok/s = 1.20x; HumanEval 100/100 exact, 35.5 -> 44.1 = 1.24x (1.28x trên 55 prompt không EOS). Bước đích ~27 ms (gấp ~1.8 lần 3B); tăng PLD tương đương mô hình nhỏ. Tổng: 1200 cặp prompt-mô hình, 8 mô hình, 5 họ, 0 lệch. Mô hình nháp thần kinh trên 7B chưa thử (không có bản nháp cùng tokenizer sẵn).
+
+## 18. Bộ nháp học được và bản lai (10–11/11/2026)
+
+Chi tiết, phương pháp và rủi ro: `docs/DRAFTER_2X_PLAN.md` (mục 9–12). Tóm tắt: nguồn nháp là điểm nghẽn (mục 17 kết luận bão hòa với n-gram), nên thêm bộ nháp học được kiểu EAGLE (đầu vào trạng thái ẩn cuối và embedding của pend; LM head thu gọn 16384 token vì LM head đầy đủ tốn ~3 ms/lần đọc), chạy trong cùng CUDA graph, xác minh bằng kernel bất biến. Chi phí bộ nháp K=3 đo thật 2.0 ms/bước (không phải 1 ms như giả định ban đầu). Mô phỏng sau khi dùng đúng chi phí thấp hơn số đo ~6%, khớp mức hiệu chuẩn.
+
+Đo thật, tăng tốc so với baseline M=1 exact, trung bình 2–3 lượt xen kẽ, 100 prompt mỗi lượt, K=3 (`scripts/summarize_drafter_runs.py`; 18 ô đều exact):
+
+| Mô hình | Tập | PLD | Bộ nháp | Bản lai |
+|---|---|---|---|---|
+| Qwen2.5-3B | GSM8K | 1.217±0.004 | **1.696±0.023** | 1.655±0.024 |
+| Qwen2.5-3B | HumanEval | 1.389±0.002 | 1.370±0.001 | **1.584±0.025** |
+| Qwen2.5-3B | CNN/DM | 1.250±0.002 | 1.108 | 1.240±0.024 |
+| Qwen2.5-1.5B | GSM8K | 1.229±0.001 | **1.576±0.014** | 1.567±0.010 |
+| Qwen2.5-1.5B | HumanEval | 1.529±0.001 | 1.340±0.012 | **1.704±0.010** |
+| Qwen2.5-1.5B | CNN/DM | **1.550±0.002** | 1.068±0.009 | 1.472±0.009 |
+
+Kết luận: tăng tốc cao nhất đo được 1.70x (chưa đạt 2x); bộ nháp thắng trên toán, PLD thắng hoặc hòa trên tóm tắt, bản lai thắng trên code ở cả hai mô hình. Khối biến đổi theo độ tin cậy là kết quả âm (mô phỏng). Giới hạn: một GPU, hai kích thước cùng họ Qwen, CNN/DM của 3B (PLD, bộ nháp) chỉ 2 lượt; bộ nháp phải huấn luyện riêng cho từng mô hình.

@@ -40,6 +40,7 @@ def main() -> None:
     ap.add_argument("--model", default=MODEL); ap.add_argument("--revision", default=REVISION)
     ap.add_argument("--ops", default="lm_head,rmsnorm,sdpa")
     ap.add_argument("--use-m2", action="store_true", help="also capture an M=2 block graph for single-draft lookups")
+    ap.add_argument("--all-m", action="store_true", help="capture a block graph for every size 2..K+1 (needed for K>=3)")
     ap.add_argument("--output", type=Path, required=True)
     a = ap.parse_args()
     if a.output.exists():
@@ -67,7 +68,7 @@ def main() -> None:
     cache = StaticCache(config=cache_cfg, max_cache_len=a.max_cache_len)
     prefix_t = torch.zeros(1, dtype=torch.int32, device=dev); IM.PREFIX_TENSOR = prefix_t
     ids1 = torch.zeros((1, 1), dtype=torch.long, device=dev); cp1 = torch.zeros(1, dtype=torch.long, device=dev)
-    block_sizes = [M] + ([2] if a.use_m2 and M > 2 else [])
+    block_sizes = list(range(2, M + 1)) if a.all_m else [M] + ([2] if a.use_m2 and M > 2 else [])
     idsB = {m: torch.zeros((1, m), dtype=torch.long, device=dev) for m in block_sizes}
     cpB = {m: torch.arange(m, device=dev) for m in block_sizes}
 
